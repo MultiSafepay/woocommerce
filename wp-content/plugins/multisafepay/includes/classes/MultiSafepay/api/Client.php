@@ -180,7 +180,7 @@ class Client
         }
 
         if (curl_errno($ch)) {
-            $str = __('Unable to communicatie with the MultiSafepay payment server', 'multisafepay') . '('
+            $str = __('Unable to communicate with the MultiSafepay payment server', 'multisafepay') . '('
                     . curl_errno($ch) . '): ' . curl_error($ch) . '.';
             throw new Exception($str);
         }
