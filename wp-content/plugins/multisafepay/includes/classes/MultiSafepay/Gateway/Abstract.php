@@ -85,6 +85,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
                 break;
             case 'seconds':
                 $time_active = (get_option('multisafepay_time_active'));
+                break;
             default:
                 $time_active = (30 * 24 * 60 * 60); // 30 days
                 break;
