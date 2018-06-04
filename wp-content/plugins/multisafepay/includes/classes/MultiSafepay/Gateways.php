@@ -137,7 +137,8 @@ class MultiSafepay_Gateways
     public static function _getGateways($arrDefault)
     {
         $paymentOptions = array(
-              'MultiSafepay_Gateway_Alipay'
+              'MultiSafepay_Gateway_Afterpay'
+            , 'MultiSafepay_Gateway_Alipay'
             , 'MultiSafepay_Gateway_Amex'
             , 'MultiSafepay_Gateway_Bancontact'
             , 'MultiSafepay_Gateway_Banktrans'
