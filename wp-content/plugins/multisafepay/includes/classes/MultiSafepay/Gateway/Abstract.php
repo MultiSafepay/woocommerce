@@ -114,7 +114,42 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
     function setToShipped($order_id)
     {
-        return true;
+        $msp = new Client();
+
+        $msp->setApiKey($this->getApiKey());
+        $msp->setApiUrl($this->getTestMode());
+
+        try {
+            $msg = null;
+            $transactie = $msp->orders->get($order_id, 'orders', array(), false);
+        } catch (Exception $e) {
+            $msg = htmlspecialchars($e->getMessage());
+            $this->write_log($msg);
+        }
+
+        if ($msp->error) {
+            return new WP_Error('multisafepay', 'Can\'t receive transaction data to update correct information at MultiSafepay:' . $msp->error_code . ' - ' . $msp->error);
+        }
+
+        $endpoint = 'orders/' . $order_id;
+        $setShipping = array("tracktrace_code" => null,
+            "carrier" => null,
+            "ship_date" => date('Y-m-d H:i:s'),
+            "reason" => 'Shipped');
+
+        try {
+            $msg = null;
+            $response = $msp->orders->patch($setShipping, $endpoint);
+        } catch (Exception $e) {
+            $msg = htmlspecialchars($e->getMessage());
+            $this->write_log($msg);
+        }
+
+        if ($msp->error) {
+            return new WP_Error('multisafepay', 'Transaction status can\'t be updated:' . $msp->error_code . ' - ' . $msp->error);
+        } else {
+            return true;
+        }
     }
 
     public function getIcon()
@@ -151,7 +186,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         add_filter('woocommerce_available_payment_gateways', array ('MultiSafepay_Gateway_Einvoice', 'einvoice_filter_gateways'));
 
         add_action('woocommerce_update_options_payment_gateways_'.$this->id, array($this, 'process_admin_options'));
-//        add_action('woocommerce_order_status_completed', array($this, 'setToShipped'), 13);
+        add_action('woocommerce_order_status_completed', array($this, 'setToShipped'), 13);
     }
 
     public function init_settings($form_fields = array())
