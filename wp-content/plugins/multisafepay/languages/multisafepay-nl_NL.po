@@ -587,8 +587,8 @@ msgid "Please configure your MultiSafepay API Key."
 msgstr "Configureer de MultiSafepay API-Sleutel"
 
 #: includes/classes/MultiSafepay/api/Client.php:183
-msgid "Unable to communicatie with the MultiSafepay payment server"
-msgstr "Niet mogelijk te communiserern met de server van MultiSafepay"
+msgid "Unable to communicate with the MultiSafepay payment server"
+msgstr "Niet mogelijk te communiceren met de server van MultiSafepay"
 
 #: multisafepay.php:47
 msgid ""
