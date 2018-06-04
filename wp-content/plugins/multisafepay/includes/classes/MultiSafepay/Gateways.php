@@ -159,6 +159,7 @@ class MultiSafepay_Gateways
             , 'MultiSafepay_Gateway_Payafter'
             , 'MultiSafepay_Gateway_Paypal'
             , 'MultiSafepay_Gateway_Paysafecard'
+            , 'MultiSafepay_Gateway_Santander'
             , 'MultiSafepay_Gateway_Sofort'
             , 'MultiSafepay_Gateway_Trustly'
             , 'MultiSafepay_Gateway_Visa');

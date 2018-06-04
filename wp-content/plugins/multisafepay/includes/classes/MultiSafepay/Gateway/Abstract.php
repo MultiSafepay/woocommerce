@@ -185,6 +185,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         add_filter('woocommerce_available_payment_gateways', array ('MultiSafepay_Gateway_Payafter', 'payafter_filter_gateways'));
         add_filter('woocommerce_available_payment_gateways', array ('MultiSafepay_Gateway_Klarna', 'klarna_filter_gateways'));
         add_filter('woocommerce_available_payment_gateways', array ('MultiSafepay_Gateway_Einvoice', 'einvoice_filter_gateways'));
+        add_filter('woocommerce_available_payment_gateways', array ('MultiSafepay_Gateway_Santander', 'santander_filter_gateways'));
 
         add_action('woocommerce_update_options_payment_gateways_'.$this->id, array($this, 'process_admin_options'));
         add_action('woocommerce_order_status_completed', array($this, 'setToShipped'), 13);
