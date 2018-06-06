@@ -328,6 +328,7 @@ class MultiSafepay_Gateways
         $type           = filter_input(INPUT_GET, 'type',           FILTER_SANITIZE_STRING);
         $transactionid  = filter_input(INPUT_GET, 'transactionid',  FILTER_SANITIZE_STRING);
         $identifier     = filter_input(INPUT_GET, 'identifier',     FILTER_SANITIZE_STRING);
+        $cancel_order   = filter_input(INPUT_GET, 'cancel_order',   FILTER_SANITIZE_STRING);
 
         if (empty($transactionid) && empty($identifier)) {
             return;
@@ -386,8 +387,6 @@ class MultiSafepay_Gateways
 
         $updated    = false;
         $status     = $transactie->status;
-        $amount     = $transactie->amount / 100;
-        $gateway    = $transactie->payment_details->type;
 
         $tablename = $wpdb->prefix . 'woocommerce_multisafepay';
         $sql = $wpdb->prepare("SELECT orderid FROM {$tablename} WHERE trixid = %s", $transactionid);
@@ -396,9 +395,18 @@ class MultiSafepay_Gateways
         if (!empty($orderid)) {
             $order = new WC_Order($orderid);
         } else {
-            $order = new WC_Order($transactie->var2);
+            $order = property_exists($transactie, 'var2') ? new WC_Order($transactie->var2) : new WC_Order($transactionid);
         }
 
+        if ($cancel_order && ($status != 'completed')) {
+            $order->update_status('wc-cancelled');
+            $location = wc_get_cart_url();
+            wp_safe_redirect($location);
+            exit();
+        }
+
+        $amount     = $transactie->amount / 100;
+        $gateway    = $transactie->payment_details->type;
 
         if ($transactie->fastcheckout == 'YES' && empty($orderid)) {
             // No correct transaction, go back to checkout-page.
