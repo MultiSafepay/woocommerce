@@ -20,13 +20,13 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class ObjectCore
+class MultiSafepay_ObjectCore
 {
 
     protected $mspapi;
     public $result;
 
-    public function __construct(Client $mspapi)
+    public function __construct(MultiSafepay_Client $mspapi)
     {
         $this->mspapi = $mspapi;
     }

@@ -115,7 +115,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
     function setToShipped($order_id)
     {
-        $msp = new Client();
+        $msp = new MultiSafepay_Client();
 
         $msp->setApiKey($this->getApiKey());
         $msp->setApiUrl($this->getTestMode());
@@ -242,7 +242,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     {
         global $woocommerce;
         $order = new WC_Order($order_id);
-        $msp   = new Client();
+        $msp   = new MultiSafepay_Client();
 
         $msp->setApiKey($this->getApiKey());
         $msp->setApiUrl($this->getTestMode());
@@ -308,7 +308,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
             return new WP_Error('multisafepay', "Refund amount must be greater than 0.00 " );
         }
 
-        $msp = new Client();
+        $msp = new MultiSafepay_Client();
         $msp->setApiKey($this->getApiKey());
         $msp->setApiUrl($this->getTestMode());
 

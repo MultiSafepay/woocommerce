@@ -20,7 +20,7 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class ObjectIssuers extends ObjectCore
+class MultiSafepay_ObjectIssuers extends MultiSafepay_ObjectCore
 {
 
     public $success;

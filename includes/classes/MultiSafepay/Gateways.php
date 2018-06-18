@@ -73,7 +73,7 @@ class MultiSafepay_Gateways
 
         // Get real payment method
         //
-        $msp    = new Client();
+        $msp    = new MultiSafepay_Client();
         $helper = new MultiSafepay_Helper_Helper();
 
         $msp->setApiKey($helper->getApiKey());
@@ -369,7 +369,7 @@ class MultiSafepay_Gateways
             return;
         }
 
-        $msp = new Client();
+        $msp = new MultiSafepay_Client();
         $helper = new MultiSafepay_Helper_Helper();
 
         $msp->setApiKey($helper->getApiKey());
@@ -726,7 +726,7 @@ class MultiSafepay_Gateways
 
 
         global $woocommerce;
-        $msp = new Client();
+        $msp = new MultiSafepay_Client();
         $helper = new MultiSafepay_Helper_Helper();
         $fco = new MultiSafepay_Gateway_Fastcheckout();
 

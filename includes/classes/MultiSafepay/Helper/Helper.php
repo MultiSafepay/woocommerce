@@ -45,7 +45,7 @@ class MultiSafepay_Helper_Helper
 
 }
 
-class CheckConnection
+class MultiSafepay_CheckConnection
 {
 
     public function testConnection($api, $test_mode)
@@ -79,7 +79,7 @@ class CheckConnection
             "description" => 'Check Connection-' . time()
         );
 
-        $msp = new Client();
+        $msp = new MultiSafepay_Client();
         $msp->setApiKey($api);
         $msp->setApiUrl($test_mode);
 
