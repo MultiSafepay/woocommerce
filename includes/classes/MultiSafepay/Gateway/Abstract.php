@@ -228,15 +228,14 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
     public function process_payment($order_id)
     {
-        global $woocommerce;
-        $order = new WC_Order($order_id);
+        global $wpdb, $woocommerce;
         $msp   = new MultiSafepay_Client();
 
         $msp->setApiKey($this->getApiKey());
         $msp->setApiUrl($this->getTestMode());
 
-        // Compatiblity Woocommerce 2.x and 3.x
-        $orderID     = (method_exists($order,'get_id'))     ? $order->get_id()      : $order->id;
+        $order = wc_get_order($order_id);
+
 
         list ($this->shopping_cart, $this->checkout_options) = $this->getCart($order_id);
 
@@ -256,7 +255,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
                 "notification_url"  => add_query_arg('type=initial', '', $this->getNurl()),
 //                "redirect_url"      => add_query_arg('type=redirect', '', $this->getNurl()),
                 "redirect_url"      => add_query_arg('utm_nooverride', '1', $this->get_return_url($order)),
-                "cancel_url"        => htmlspecialchars_decode(add_query_arg('key', $orderID, $order->get_cancel_order_url())),
+                "cancel_url"        => htmlspecialchars_decode(add_query_arg('key', $order_id, $order->get_cancel_order_url())),
                 "close_window"      => true
             ),
             "customer"              => $this->setCustomer($msp, $order),
@@ -285,6 +284,9 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
             return array(   'result'    => 'error',
                             'redirect'  => wc_get_cart_url() );
         } else {
+
+            $wpdb->query("INSERT INTO " . $wpdb->prefix . 'woocommerce_multisafepay' . " (trixid, orderid, status) VALUES ('" . $my_order['order_id'] . "', '" . $my_order['var2'] . "','')");
+
             return array(   'result'    => 'success',
                             'redirect'  => $msp->orders->getPaymentLink() );
         }
@@ -300,9 +302,11 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         $msp->setApiKey($this->getApiKey());
         $msp->setApiUrl($this->getTestMode());
 
-        $order = new WC_Order($order_id);
+        $order   = wc_get_order($order_id);
+        $trns_id = $order->get_order_number();
 
-        $endpoint = 'orders/'.$order_id.'/refunds';
+
+        $endpoint = 'orders/'.$trns_id.'/refunds';
         $refund   = array(  "currency"      => $order->get_currency(),
                             "amount"        => $amount * 100,
                             "description"   => $reason );
@@ -325,7 +329,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
     public function getCart($order_id)
     {
-        $order = new WC_Order($order_id);
+        $order = wc_get_order($order_id);
 
         $shopping_cart                             = array();
         $checkout_options                          = array();
@@ -501,7 +505,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
     public function getGatewayInfo($order_id)
     {
-        $order = new WC_Order($order_id);
+        $order = wc_get_order($order_id);
 
         switch ($this->getGatewayCode()){
 
