@@ -25,7 +25,7 @@ class MultiSafepay_Gateways
 
     public static function register()
     {
-        update_option('multisafepay_version', '3.0.4', 'yes');
+        update_option('multisafepay_version', '3.1.0', 'yes');
 
         add_filter('woocommerce_payment_gateways',              array(__CLASS__, '_getGateways'));
         add_filter('woocommerce_payment_gateways_settings',     array(__CLASS__, '_addGlobalSettings'), 1);
@@ -137,7 +137,8 @@ class MultiSafepay_Gateways
     public static function _getGateways($arrDefault)
     {
         $paymentOptions = array(
-              'MultiSafepay_Gateway_Alipay'
+              'MultiSafepay_Gateway_Afterpay'
+            , 'MultiSafepay_Gateway_Alipay'
             , 'MultiSafepay_Gateway_Amex'
             , 'MultiSafepay_Gateway_Bancontact'
             , 'MultiSafepay_Gateway_Banktrans'
@@ -158,7 +159,9 @@ class MultiSafepay_Gateways
             , 'MultiSafepay_Gateway_Payafter'
             , 'MultiSafepay_Gateway_Paypal'
             , 'MultiSafepay_Gateway_Paysafecard'
+            , 'MultiSafepay_Gateway_Santander'
             , 'MultiSafepay_Gateway_Sofort'
+            , 'MultiSafepay_Gateway_Trustly'
             , 'MultiSafepay_Gateway_Visa');
 
         $giftCards = array(
@@ -325,6 +328,7 @@ class MultiSafepay_Gateways
         $type           = filter_input(INPUT_GET, 'type',           FILTER_SANITIZE_STRING);
         $transactionid  = filter_input(INPUT_GET, 'transactionid',  FILTER_SANITIZE_STRING);
         $identifier     = filter_input(INPUT_GET, 'identifier',     FILTER_SANITIZE_STRING);
+        $cancel_order   = filter_input(INPUT_GET, 'cancel_order',   FILTER_SANITIZE_STRING);
 
         if (empty($transactionid) && empty($identifier)) {
             return;
@@ -383,8 +387,6 @@ class MultiSafepay_Gateways
 
         $updated    = false;
         $status     = $transactie->status;
-        $amount     = $transactie->amount / 100;
-        $gateway    = $transactie->payment_details->type;
 
         $tablename = $wpdb->prefix . 'woocommerce_multisafepay';
         $sql = $wpdb->prepare("SELECT orderid FROM {$tablename} WHERE trixid = %s", $transactionid);
@@ -393,9 +395,18 @@ class MultiSafepay_Gateways
         if (!empty($orderid)) {
             $order = new WC_Order($orderid);
         } else {
-            $order = new WC_Order($transactie->var2);
+            $order = property_exists($transactie, 'var2') ? new WC_Order($transactie->var2) : new WC_Order($transactionid);
         }
 
+        if ($cancel_order && ($status != 'completed')) {
+            $order->update_status('wc-cancelled');
+            $location = wc_get_cart_url();
+            wp_safe_redirect($location);
+            exit();
+        }
+
+        $amount     = $transactie->amount / 100;
+        $gateway    = $transactie->payment_details->type;
 
         if ($transactie->fastcheckout == 'YES' && empty($orderid)) {
             // No correct transaction, go back to checkout-page.

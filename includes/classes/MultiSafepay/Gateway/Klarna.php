@@ -23,12 +23,6 @@
 class MultiSafepay_Gateway_Klarna extends MultiSafepay_Gateway_Abstract
 {
 
-    public function __construct()
-    {
-        add_action('woocommerce_order_status_completed', array($this, 'setToShipped'), 13);
-        parent::__construct();
-    }
-
     public static function getCode()
     {
         return "multisafepay_klarna";
@@ -174,53 +168,6 @@ class MultiSafepay_Gateway_Klarna extends MultiSafepay_Gateway_Abstract
         $this->GatewayInfo = $this->getGatewayInfo($order_id);
 
         return parent::process_payment($order_id);
-    }
-
-    function setToShipped($order_id)
-    {
-        $msp = new Client();
-
-        $msp->setApiKey($this->getApiKey());
-        $msp->setApiUrl($this->getTestMode());
-
-        $order = new WC_Order($order_id);
-
-        try {
-            $msg = null;
-            $transactie = $msp->orders->get($order_id, 'orders', array(), false);
-        } catch (Exception $e) {
-
-            $msg = htmlspecialchars($e->getMessage());
-            $this->write_log($msg);
-        }
-
-        if ($msp->error) {
-            return new WP_Error('multisafepay', 'Can\'t receive transaction data to update correct information at MultiSafepay:' . $msp->error_code . ' - ' . $msp->error);
-        }
-
-        $ext_trns_id = $transactie->payment_details->external_transaction_id;
-
-        $endpoint = 'orders/' . $order_id;
-        $setShipping = array("tracktrace_code" => null,
-            "carrier" => null,
-            "ship_date" => date('Y-m-d H:i:s'),
-            "reason" => 'Shipped');
-
-        try {
-            $msg = null;
-            $response = $msp->orders->patch($setShipping, $endpoint);
-        } catch (Exception $e) {
-            $msg = htmlspecialchars($e->getMessage());
-            $this->write_log($msg);
-        }
-
-        if ($msp->error) {
-            return new WP_Error('multisafepay', 'Transaction status can\'t be updated:' . $msp->error_code . ' - ' . $msp->error);
-        } else {
-            $order->add_order_note(__('Klarna Invoice: ') . '<br /><a href="https://online.klarna.com/invoices/' . $ext_trns_id . '.pdf">https://online.klarna.com/invoices/' . $ext_trns_id . '.pdf</a>');
-            echo '<div class="updated"><p>Transaction updated to status shipped.</p></div>';
-            return true;
-        }
     }
 
 }
