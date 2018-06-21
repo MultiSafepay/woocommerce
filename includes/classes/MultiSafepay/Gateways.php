@@ -124,7 +124,7 @@ class MultiSafepay_Gateways
         // Initial payment method differens from real payment method.
         if ($payment_method != false && get_post_meta( $orderID, '_payment_method', true ) != $payment_method) {
 
-            $order->add_order_note( sprintf(__('Payment started with %s, but finaly paid by %s', 'multisafepay'), get_post_meta( $orderID, '_payment_method_title', true ), $payment_method_title));
+            $order->add_order_note( sprintf(__('Payment started with %s, but finally paid by %s', 'multisafepay'), get_post_meta( $orderID, '_payment_method_title', true ), $payment_method_title));
 
             update_post_meta( $orderID, '_payment_method',        $payment_method);
             update_post_meta( $orderID, '_payment_method_title',  $payment_method_title );
