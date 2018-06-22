@@ -120,18 +120,6 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         $msp->setApiKey($this->getApiKey());
         $msp->setApiUrl($this->getTestMode());
 
-        try {
-            $msg = null;
-            $transactie = $msp->orders->get($order_id, 'orders', array(), false);
-        } catch (Exception $e) {
-            $msg = htmlspecialchars($e->getMessage());
-            $this->write_log($msg);
-        }
-
-        if ($msp->error) {
-            return new WP_Error('multisafepay', 'Can\'t receive transaction data to update correct information at MultiSafepay:' . $msp->error_code . ' - ' . $msp->error);
-        }
-
         $endpoint = 'orders/' . $order_id;
         $setShipping = array("tracktrace_code" => null,
             "carrier" => null,
