@@ -453,8 +453,8 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
             $method_id = explode(':', $shipping['method_id']);
 
             $shopping_cart['items'][] = array(
-                'name'              => $shipping['type'],
-                'description'       => $shipping['name'],
+                'name'              => $shipping['name'],
+                'description'       => $shipping['type'],
                 'unit_price'        => $shipping['cost'],
                 'quantity'          => 1,
                 'merchant_item_id'  => 'msp-shipping',
