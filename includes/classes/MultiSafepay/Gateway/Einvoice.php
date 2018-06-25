@@ -122,7 +122,7 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
                             </p>
 
                             <p class="form-row form-row-wide">' . __('By confirming this order you agree with the ', 'multisafepay') .
-                    '<a href="http://www.multifactor.nl/consument-betalingsvoorwaarden-2/" target="_blank">Terms and conditions of MultiFactor</a>
+                    '<a href="https://www.multifactor.nl/voorwaarden/betalingsvoorwaarden-consument/" target="_blank">Terms and conditions of MultiFactor</a>
                             </p>';
         }
         $description_text = $this->get_option('description');

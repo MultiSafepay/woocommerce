@@ -111,7 +111,7 @@ class MultiSafepay_Gateway_Payafter extends MultiSafepay_Gateway_Abstract
                                 <input type="text" class="input-text" name="pad_account" id="pad_account" placeholder=""/>
                             </p>';
 
-            $description .= '<p class="form-row form-row-wide">' . __('By confirming this order you agree with the ', 'multisafepay') . '<br><a href="http://www.multifactor.nl/consument-betalingsvoorwaarden-2/" target="_blank">' . __('Terms and conditions of MultiFactor', 'multisafepay') . '</a>';
+            $description .= '<p class="form-row form-row-wide">' . __('By confirming this order you agree with the ', 'multisafepay') . '<br><a href="https://www.multifactor.nl/voorwaarden/betalingsvoorwaarden-consument/" target="_blank">' . __('Terms and conditions of MultiFactor', 'multisafepay') . '</a>';
         }
 
         $description_text = $this->get_option('description');
