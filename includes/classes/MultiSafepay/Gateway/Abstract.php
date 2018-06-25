@@ -472,6 +472,30 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         }
 
 
+        // Fee
+        foreach ($order->get_items('fee') as $fee) {
+
+			$tax_table_selector = 'fee';
+            $tax_percentage     = round($fee['total_tax'] / $fee['total'], 2);
+
+			$shopping_cart['items'][] = array(
+				'name'              => $fee['name'],
+				'description'       => $fee['name'],
+				'unit_price'        => $fee['total'],
+				'quantity'          => 1,
+				'merchant_item_id'  => 'fee',
+				'tax_table_selector'=> $tax_table_selector,
+				'weight'            => array('unit' => 0, 'value' => 'KG') );
+
+			if (!in_array($tax_table_selector, $tax_array)) {
+				array_push($checkout_options['tax_tables']['alternate'],
+					array(  'name'  => $tax_table_selector,
+							'rules' => array(array(
+							'rate'  => $tax_percentage))));
+				array_push($tax_array, $tax_table_selector);
+			}
+		}
+
         return ( array($shopping_cart, $checkout_options) );
     }
 
