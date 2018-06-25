@@ -108,21 +108,15 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
         if ($settings['direct'] == 'yes') {
 
             $description = '<p class="form-row form-row-wide  validate-required">
-                                <label for="msp_birthday" class="">' . __('Birthday', 'multisafepay') .
-                    '<abbr class="required" title="required">*</abbr>
+                                <label for="msp_birthday" class="">' . __('Birthday', 'multisafepay') . '<abbr class="required" title="required">*</abbr>
                                 </label>
                                 <input type="text" class="input-text" name="einvoice_birthday" id="einvoice_birthday" placeholder="dd-mm-yyyy"/>
                             </p>
 
                             <p class="form-row form-row-wide  validate-required">
-                                <label for="msp_account" class="">' . __('Account', 'multisafepay') .
-                    '<abbr class="required" title="required">*</abbr>
+                                <label for="msp_account" class="">' . __('Account', 'multisafepay') . '<abbr class="required" title="required">*</abbr>
                                 </label>
                                 <input type="text" class="input-text" name="einvoice_account" id="einvoice_account" placeholder=""/>
-                            </p>
-
-                            <p class="form-row form-row-wide">' . __('By confirming this order you agree with the ', 'multisafepay') .
-                    '<a href="https://www.multifactor.nl/voorwaarden/betalingsvoorwaarden-consument/" target="_blank">Terms and conditions of MultiFactor</a>
                             </p>';
         }
         $description_text = $this->get_option('description');
