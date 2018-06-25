@@ -366,71 +366,6 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
           }
          */
 
-        // Shipping
-        foreach ($order->get_items('shipping') as $shipping) {
-
-            $taxes = $shipping['taxes']['total'];
-            $taxes = array_shift($taxes);
-
-            $cost  = $shipping['cost'];
-
-            $tax_table_selector = 'shipping';
-
-            if ( $cost > 0 ){
-                $tax_percentage  = round($taxes / $cost, 2);
-            }else{
-                $tax_percentage = 0;
-            }
-
-            $method_id = explode(':', $shipping['method_id']);
-
-            $shopping_cart['items'][] = array(
-                'name'              => $shipping['type'],
-                'description'       => $shipping['name'],
-                'unit_price'        => $shipping['cost'],
-                'quantity'          => 1,
-                'merchant_item_id'  => 'msp-shipping',
-//                'merchant_item_id'  => $method_id[0],
-                'tax_table_selector'=> $tax_table_selector,
-                'weight'            => array('unit' => 0, 'value' => 'KG') );
-
-            if (!in_array($tax_table_selector, $tax_array)) {
-                array_push($checkout_options['tax_tables']['alternate'],
-                    array(  'name'  => $tax_table_selector,
-                            'rules' => array(array(
-                            'rate'  => $tax_percentage))));
-                array_push($tax_array, $tax_table_selector);
-            }
-        }
-
-
-        //add coupon discount
-        foreach ($order->get_items('coupon') as $coupon) {
-
-            $tax_table_selector = $coupon['type'];
-            if ( $coupon['discount_amount'] > 0 ){
-                $tax_percentage     = round($coupon['discount_amount_tax'] / $coupon['discount_amount'], 2);
-            }else{
-                $tax_percentage = 0;
-            }
-
-            $shopping_cart['items'][] = array(
-                'name'              => $coupon['type'],
-                'description'       => $coupon['name'],
-                'unit_price'        => -$coupon['discount_amount'],
-                'quantity'          => 1,
-                'merchant_item_id'  => $coupon['type'],
-                'tax_table_selector'=> $tax_table_selector,
-                'weight'            => array('unit' => 0, 'value' => 'KG') );
-
-            if (!in_array($tax_table_selector, $tax_array)) {
-                array_push($checkout_options['tax_tables']['alternate'],
-                    array(  'name'  => $tax_table_selector,
-                            'rules' => array(array(
-                            'rate'  => $tax_percentage))));
-                array_push($tax_array, $tax_table_selector);
-            }
-        }
 
         //add item data
         $items = "<ul>\n";
@@ -470,6 +405,72 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
             }
         }
         $items .= "</ul>\n";
+
+       //add coupon discount
+        foreach ($order->get_items('coupon') as $coupon) {
+
+            $tax_table_selector = $coupon['type'];
+            if ( $coupon['discount_amount'] > 0 ){
+                $tax_percentage     = round($coupon['discount_amount_tax'] / $coupon['discount_amount'], 2);
+            }else{
+                $tax_percentage = 0;
+            }
+
+            $shopping_cart['items'][] = array(
+                'name'              => $coupon['type'],
+                'description'       => $coupon['name'],
+                'unit_price'        => -$coupon['discount_amount'],
+                'quantity'          => 1,
+                'merchant_item_id'  => $coupon['type'],
+                'tax_table_selector'=> $tax_table_selector,
+                'weight'            => array('unit' => 0, 'value' => 'KG') );
+
+            if (!in_array($tax_table_selector, $tax_array)) {
+                array_push($checkout_options['tax_tables']['alternate'],
+                    array(  'name'  => $tax_table_selector,
+                            'rules' => array(array(
+                            'rate'  => $tax_percentage))));
+                array_push($tax_array, $tax_table_selector);
+            }
+        }
+
+        // Shipping
+        foreach ($order->get_items('shipping') as $shipping) {
+
+            $taxes = $shipping['taxes']['total'];
+            $taxes = array_shift($taxes);
+
+            $cost  = $shipping['cost'];
+
+            $tax_table_selector = 'shipping';
+
+            if ( $cost > 0 ){
+                $tax_percentage  = round($taxes / $cost, 2);
+            }else{
+                $tax_percentage = 0;
+            }
+
+            $method_id = explode(':', $shipping['method_id']);
+
+            $shopping_cart['items'][] = array(
+                'name'              => $shipping['type'],
+                'description'       => $shipping['name'],
+                'unit_price'        => $shipping['cost'],
+                'quantity'          => 1,
+                'merchant_item_id'  => 'msp-shipping',
+//                'merchant_item_id'  => $method_id[0],
+                'tax_table_selector'=> $tax_table_selector,
+                'weight'            => array('unit' => 0, 'value' => 'KG') );
+
+            if (!in_array($tax_table_selector, $tax_array)) {
+                array_push($checkout_options['tax_tables']['alternate'],
+                    array(  'name'  => $tax_table_selector,
+                            'rules' => array(array(
+                            'rate'  => $tax_percentage))));
+                array_push($tax_array, $tax_table_selector);
+            }
+        }
+
 
         return ( array($shopping_cart, $checkout_options) );
     }
