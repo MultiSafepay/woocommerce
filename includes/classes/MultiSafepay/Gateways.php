@@ -636,7 +636,23 @@ class MultiSafepay_Gateways
                 break;
             case 'shipped' :
                 if ($gateway == 'KLARNA') {
-                    $order->add_order_note(__('Klarna Invoice: ') . '<br /><a href="https://online.klarna.com/invoices/' . $transactie->payment_details->external_transaction_id . '.pdf">https://online.klarna.com/invoices/' . $transactie->payment_details->external_transaction_id . '.pdf</a>');
+
+                    $settings = (array) get_option("woocommerce_multisafepay_klarna_settings");
+                    $klarna_eid    = $settings['eid'];
+                    $klarna_secret = $settings['secret'];
+                    if ($klarna_eid && $klarna_secret) {
+
+                        $invoice_nr    = $transactie->payment_details->external_transaction_id;
+
+                        $secretParts = array($klarna_eid, $invoice_nr, $klarna_secret);
+                        $secret = urlencode(base64_encode(hash('sha512', implode(':', $secretParts), true)));
+
+                        $url = 'https://online.klarna.com/invoices/'.  $invoice_nr . '.pdf?secret='. $secret;
+
+                        $order->add_order_note(__('Klarna Invoice: ') . '<br /><a href=' . $url . '>' . $url . '</a>');
+                    }else{
+                        $order->add_order_note(__('Klarna Invoice: ') . __('not available.'));
+                    }
                 }
                 break;
         }
