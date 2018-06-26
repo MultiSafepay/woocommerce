@@ -505,11 +505,11 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
         return (array(  'referrer'      => $_SERVER['HTTP_REFERER'],
                         'user_agent'    => $_SERVER['HTTP_USER_AGENT'],
-                        'birthday'      => $gebdat ,
-                        'bankaccount'   => $account,
+                        'birthday'      => isset ($gebdat)  ? $gebdat  : '',
+                        'bankaccount'   => isset ($account) ? $account : '',
                         'phone'         => $billingPhone,
                         'email'         => $billingEmail,
-                        'gender'        => $gender) );
+                        'gender'        => isset ($gender)  ? $gender  : '') );
     }
 
     public function setItemList($items)
