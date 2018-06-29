@@ -1,3 +1,28 @@
+# Release Notes - Woo-Commerce 3.2.0 (Jul 6th, 2018) #
+
+## Improvements ##
+
+PLGWOOS-232: Add TrustPay payment method
+PLGWOOS-213: Add support for external fee plugin(s)
+
+## Fixes ##
+
+PLGWOOS-176: Restrict autoload to load only MultiSafepay classes
+PLGWOOS-191: Refactor the way an order and transaction are retrieved
+PLGWOOS-241: Remove status request on setting to shipped
+PLGWOOS-195: Update Klarna Invoice link
+PLGWOOS-231: Update Klarna payment method logo
+PLGWOOS-197: Correct MultiFactor Terms and Condition link
+PLGWOOS-242: Remove terms and conditions for Einvoicing
+PLGWOOS-244: Shipment name now used on payment page instead of type
+PLGWOOS-243: Payment page shopping cart reorganized
+PLGWOOS-253: FastCheckout load correct first and last name
+PLGWOOS-235: Rename KBC/CBC to KBC
+PLGWOOS-236: Rename ING-Homepay to ING HomePay
+PLGWOOS-247: Notice message 'Undefined variable' for E-Invoice, Pay After Delivery and Klarna
+PLGWOOS-249: Remove whitespace at file headers
+PLGWOOS-259: Direct E-Invoice returns unnecessary message 'Missing gender'
+
 # Release Notes - Woo-Commerce 3.1.0 (Jun 15th, 2018) #
 
 ## Improvements ##
