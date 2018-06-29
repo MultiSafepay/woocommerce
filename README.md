@@ -31,6 +31,7 @@ Paymentmethods:
 23. Trustly
 24. AfterPay
 25. Santander Betaalplan
+26. TrustPay
 
 The following giftcards are supported:
 1. Wijncadeau
