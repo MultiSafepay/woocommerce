@@ -25,7 +25,7 @@ class MultiSafepay_Gateways
 
     public static function register()
     {
-        update_option('multisafepay_version', '3.1.0', 'yes');
+        update_option('multisafepay_version', '3.2.0', 'yes');
 
         add_filter('woocommerce_payment_gateways',              array(__CLASS__, '_getGateways'));
         add_filter('woocommerce_payment_gateways_settings',     array(__CLASS__, '_addGlobalSettings'), 1);
