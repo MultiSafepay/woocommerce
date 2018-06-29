@@ -426,8 +426,8 @@ class MultiSafepay_Gateways
                 $wpdb->query("INSERT INTO " . $wpdb->prefix . 'woocommerce_multisafepay' . " (trixid, orderid, status) VALUES ('" . $trns_id . "', '" . $order_id . "', '" . $status . "'  )");
 
                 $billing_address = array();
-                $billing_address['firstname'] = $transactie->customer->first_name;
-                $billing_address['lastname'] = $transactie->customer->last_name;
+                $billing_address['first_name'] = $transactie->customer->first_name;
+                $billing_address['last_name'] = $transactie->customer->last_name;
                 $billing_address['address_1'] = $transactie->customer->address1 . $transactie->customer->house_number;
                 $billing_address['address_2'] = $transactie->customer->address2;
                 $billing_address['city'] = $transactie->customer->city;
@@ -437,8 +437,8 @@ class MultiSafepay_Gateways
                 $billing_address['phone'] = $transactie->customer->phone1;
                 $billing_address['email'] = $transactie->customer->email;
 
-                $shipping_address['firstname'] = $transactie->delivery->first_name;
-                $shipping_address['lastname'] = $transactie->delivery->last_name;
+                $shipping_address['first_name'] = $transactie->delivery->first_name;
+                $shipping_address['last_name'] = $transactie->delivery->last_name;
                 $shipping_address['address_1'] = $transactie->delivery->address1 . $transactie->delivery->house_number;
                 $shipping_address['address_2'] = $transactie->delivery->address2;
                 $shipping_address['city'] = $transactie->delivery->city;
