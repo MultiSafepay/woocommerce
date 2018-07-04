@@ -523,7 +523,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
                 break;
             case 'EINVOICE':
                 $account = $_POST['einvoice_account'];
-                $gender = $_POST['einvoice_gender'];
+                $gebdat = $_POST['einvoice_birthday'];
                 break;
         }
 
