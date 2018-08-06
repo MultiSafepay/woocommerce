@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Kbc extends MultiSafepay_Gateway_Abstract
 
     public static function getName()
     {
-        return __('KBC/CBC', 'multisafepay');
+        return __('KBC', 'multisafepay');
     }
 
     public static function getSettings()

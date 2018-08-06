@@ -20,7 +20,7 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class Client
+class MultiSafepay_Client
 {
 
     public $orders;
@@ -36,9 +36,9 @@ class Client
 
     public function __construct()
     {
-        $this->orders = new ObjectOrders($this);
-        $this->issuers = new ObjectIssuers($this);
-        $this->gateways = new ObjectGateways($this);
+        $this->orders = new MultiSafepay_ObjectOrders($this);
+        $this->issuers = new MultiSafepay_ObjectIssuers($this);
+        $this->gateways = new MultiSafepay_ObjectGateways($this);
     }
 
     public function getRequest()

@@ -22,7 +22,6 @@
  */
 class MultiSafepay_Helper_Helper
 {
-
     public static function write_log($log)
     {
         if (get_option('multisafepay_debugmode') == 'yes') {
@@ -42,10 +41,9 @@ class MultiSafepay_Helper_Helper
     {
         return (get_option('multisafepay_testmode') == 'yes' ? true : false);
     }
-
 }
 
-class CheckConnection
+class MultiSafepay_CheckConnection
 {
 
     public function testConnection($api, $test_mode)
@@ -79,7 +77,7 @@ class CheckConnection
             "description" => 'Check Connection-' . time()
         );
 
-        $msp = new Client();
+        $msp = new MultiSafepay_Client();
         $msp->setApiKey($api);
         $msp->setApiUrl($test_mode);
 

@@ -20,19 +20,41 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class MultiSafepay_ObjectIssuers extends MultiSafepay_ObjectCore
+class MultiSafepay_Gateway_Trustpay extends MultiSafepay_Gateway_Abstract
 {
 
-    public $success;
-    public $data;
-
-    public function get($endpoint = 'issuers', $type = 'ideal', $body = array(), $query_string = false)
+    public static function getCode()
     {
-        $result = parent::get($endpoint, $type, $body, $query_string);
-        $this->success = $result->success;
-        $this->data = $result->data;
+        return "multisafepay_trustpay";
+    }
 
-        return $this->data;
+    public static function getName()
+    {
+        return __('TrustPay', 'multisafepay');
+    }
+
+    public static function getSettings()
+    {
+        return get_option('woocommerce_multisafepay_trustpay_settings');
+    }
+
+    public static function getTitle()
+    {
+        $settings = self::getSettings();
+        if (!isset ($settings['title']))
+            $settings['title'] = '';
+
+        return ($settings['title']);
+    }
+
+    public static function getGatewayCode()
+    {
+        return "TRUSTPAY";
+    }
+
+    public function getType()
+    {
+        return "redirect";
     }
 
 }

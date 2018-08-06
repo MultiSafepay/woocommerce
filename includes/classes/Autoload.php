@@ -32,23 +32,27 @@ class MultiSafepay_Autoload
     public static function spl_autoload_register($class_name)
     {
 
-        $file_name = dirname(__FILE__) . '/' . str_replace('_', '/', $class_name) . '.php';
+        if (substr($class_name, 0, 12) !== 'MultiSafepay') {
+            return;
+        }
 
+        $file_name = dirname(__FILE__) . '/' . str_replace('_', '/', $class_name) . '.php';
         if (file_exists($file_name)) {
             require_once $file_name;
+            return;
+        }
+
+        $class_name = str_replace("Object", "Object/", $class_name);
+        $file_name  = dirname(__FILE__) . '/' . str_replace('_', '/api/', $class_name) . '.php';
+        if (file_exists($file_name)) {
+            require_once $file_name;
+            return;
         }else{
 
-            $file_name = 'MultiSafepay/api/'. $class_name;
-            if (file_exists($file_name)) {
-                require_once $file_name;
-            }
-            else{
-                $name = str_replace("Object", "Object/", $file_name);
-                $file_name = realpath(dirname(__FILE__) . "/{$name}.php");
-                if ($file_name) {
-                    require_once $file_name;
-                }
-            }
+            $log = "FATAL!!  $class_name from $file_name.\n";
+            $string = sprintf ("%s\n%s\n%s\n%s: %s\n\n",  date ('Y-m-d H:i:s'), __FILE__ , __METHOD__ , 'DEBUG:',  $log);
+            error_log($string, 3, "MultiSafepay.log");
+
         }
     }
 }

@@ -78,10 +78,17 @@ class MultiSafepay_Gateway_Klarna extends MultiSafepay_Gateway_Abstract
             'default' => 'yes');
 
 
-        $this->form_fields['eid'] = array('title' => __('Merchant-ID', 'multisafepay'),
+        $this->form_fields['eid'] = array('title' => __('Klarna EID', 'multisafepay'),
             'type' => 'text',
             'description' => __('The EID from Klarna (Merchant-ID)', 'multisafepay'),
             'default' => '');
+
+
+        $this->form_fields['secret'] = array('title' => __('Klarna Secret', 'multisafepay'),
+            'type' => 'text',
+            'description' => __('The Shared Secret from Klarna', 'multisafepay'),
+            'default' => '');
+
 
         $this->form_fields['minamount'] = array('title' => __('Minimal order amount', 'multisafepay'),
             'type' => 'text',

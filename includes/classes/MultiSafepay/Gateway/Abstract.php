@@ -115,22 +115,10 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
     function setToShipped($order_id)
     {
-        $msp = new Client();
+        $msp = new MultiSafepay_Client();
 
         $msp->setApiKey($this->getApiKey());
         $msp->setApiUrl($this->getTestMode());
-
-        try {
-            $msg = null;
-            $transactie = $msp->orders->get($order_id, 'orders', array(), false);
-        } catch (Exception $e) {
-            $msg = htmlspecialchars($e->getMessage());
-            $this->write_log($msg);
-        }
-
-        if ($msp->error) {
-            return new WP_Error('multisafepay', 'Can\'t receive transaction data to update correct information at MultiSafepay:' . $msp->error_code . ' - ' . $msp->error);
-        }
 
         $endpoint = 'orders/' . $order_id;
         $setShipping = array("tracktrace_code" => null,
@@ -240,15 +228,14 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
     public function process_payment($order_id)
     {
-        global $woocommerce;
-        $order = new WC_Order($order_id);
-        $msp   = new Client();
+        global $wpdb, $woocommerce;
+        $msp   = new MultiSafepay_Client();
 
         $msp->setApiKey($this->getApiKey());
         $msp->setApiUrl($this->getTestMode());
 
-        // Compatiblity Woocommerce 2.x and 3.x
-        $orderID     = (method_exists($order,'get_id'))     ? $order->get_id()      : $order->id;
+        $order = wc_get_order($order_id);
+
 
         list ($this->shopping_cart, $this->checkout_options) = $this->getCart($order_id);
 
@@ -268,7 +255,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
                 "notification_url"  => add_query_arg('type=initial', '', $this->getNurl()),
 //                "redirect_url"      => add_query_arg('type=redirect', '', $this->getNurl()),
                 "redirect_url"      => add_query_arg('utm_nooverride', '1', $this->get_return_url($order)),
-                "cancel_url"        => htmlspecialchars_decode(add_query_arg('key', $orderID, $order->get_cancel_order_url())),
+                "cancel_url"        => htmlspecialchars_decode(add_query_arg('key', $order_id, $order->get_cancel_order_url())),
                 "close_window"      => true
             ),
             "customer"              => $this->setCustomer($msp, $order),
@@ -297,6 +284,9 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
             return array(   'result'    => 'error',
                             'redirect'  => wc_get_cart_url() );
         } else {
+
+            $wpdb->query("INSERT INTO " . $wpdb->prefix . 'woocommerce_multisafepay' . " (trixid, orderid, status) VALUES ('" . $my_order['order_id'] . "', '" . $my_order['var2'] . "','')");
+
             return array(   'result'    => 'success',
                             'redirect'  => $msp->orders->getPaymentLink() );
         }
@@ -308,13 +298,15 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
             return new WP_Error('multisafepay', "Refund amount must be greater than 0.00 " );
         }
 
-        $msp = new Client();
+        $msp = new MultiSafepay_Client();
         $msp->setApiKey($this->getApiKey());
         $msp->setApiUrl($this->getTestMode());
 
-        $order = new WC_Order($order_id);
+        $order   = wc_get_order($order_id);
+        $trns_id = $order->get_order_number();
 
-        $endpoint = 'orders/'.$order_id.'/refunds';
+
+        $endpoint = 'orders/'.$trns_id.'/refunds';
         $refund   = array(  "currency"      => $order->get_currency(),
                             "amount"        => $amount * 100,
                             "description"   => $reason );
@@ -337,7 +329,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
     public function getCart($order_id)
     {
-        $order = new WC_Order($order_id);
+        $order = wc_get_order($order_id);
 
         $shopping_cart                             = array();
         $checkout_options                          = array();
@@ -378,71 +370,6 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
           }
          */
 
-        // Shipping
-        foreach ($order->get_items('shipping') as $shipping) {
-
-            $taxes = $shipping['taxes']['total'];
-            $taxes = array_shift($taxes);
-
-            $cost  = $shipping['cost'];
-
-            $tax_table_selector = 'shipping';
-
-            if ( $cost > 0 ){
-                $tax_percentage  = round($taxes / $cost, 2);
-            }else{
-                $tax_percentage = 0;
-            }
-
-            $method_id = explode(':', $shipping['method_id']);
-
-            $shopping_cart['items'][] = array(
-                'name'              => $shipping['type'],
-                'description'       => $shipping['name'],
-                'unit_price'        => $shipping['cost'],
-                'quantity'          => 1,
-                'merchant_item_id'  => 'msp-shipping',
-//                'merchant_item_id'  => $method_id[0],
-                'tax_table_selector'=> $tax_table_selector,
-                'weight'            => array('unit' => 0, 'value' => 'KG') );
-
-            if (!in_array($tax_table_selector, $tax_array)) {
-                array_push($checkout_options['tax_tables']['alternate'],
-                    array(  'name'  => $tax_table_selector,
-                            'rules' => array(array(
-                            'rate'  => $tax_percentage))));
-                array_push($tax_array, $tax_table_selector);
-            }
-        }
-
-
-        //add coupon discount
-        foreach ($order->get_items('coupon') as $coupon) {
-
-            $tax_table_selector = $coupon['type'];
-            if ( $coupon['discount_amount'] > 0 ){
-                $tax_percentage     = round($coupon['discount_amount_tax'] / $coupon['discount_amount'], 2);
-            }else{
-                $tax_percentage = 0;
-            }
-
-            $shopping_cart['items'][] = array(
-                'name'              => $coupon['type'],
-                'description'       => $coupon['name'],
-                'unit_price'        => -$coupon['discount_amount'],
-                'quantity'          => 1,
-                'merchant_item_id'  => $coupon['type'],
-                'tax_table_selector'=> $tax_table_selector,
-                'weight'            => array('unit' => 0, 'value' => 'KG') );
-
-            if (!in_array($tax_table_selector, $tax_array)) {
-                array_push($checkout_options['tax_tables']['alternate'],
-                    array(  'name'  => $tax_table_selector,
-                            'rules' => array(array(
-                            'rate'  => $tax_percentage))));
-                array_push($tax_array, $tax_table_selector);
-            }
-        }
 
         //add item data
         $items = "<ul>\n";
@@ -483,12 +410,102 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         }
         $items .= "</ul>\n";
 
+       //add coupon discount
+        foreach ($order->get_items('coupon') as $coupon) {
+
+            $tax_table_selector = $coupon['type'];
+            if ( $coupon['discount_amount'] > 0 ){
+                $tax_percentage     = round($coupon['discount_amount_tax'] / $coupon['discount_amount'], 2);
+            }else{
+                $tax_percentage = 0;
+            }
+
+            $shopping_cart['items'][] = array(
+                'name'              => $coupon['type'],
+                'description'       => $coupon['name'],
+                'unit_price'        => -$coupon['discount_amount'],
+                'quantity'          => 1,
+                'merchant_item_id'  => $coupon['type'],
+                'tax_table_selector'=> $tax_table_selector,
+                'weight'            => array('unit' => 0, 'value' => 'KG') );
+
+            if (!in_array($tax_table_selector, $tax_array)) {
+                array_push($checkout_options['tax_tables']['alternate'],
+                    array(  'name'  => $tax_table_selector,
+                            'rules' => array(array(
+                            'rate'  => $tax_percentage))));
+                array_push($tax_array, $tax_table_selector);
+            }
+        }
+
+        // Shipping
+        foreach ($order->get_items('shipping') as $shipping) {
+
+            $taxes = $shipping['taxes']['total'];
+            $taxes = array_shift($taxes);
+
+            $cost  = $shipping['cost'];
+
+            $tax_table_selector = 'shipping';
+
+            if ( $cost > 0 ){
+                $tax_percentage  = round($taxes / $cost, 2);
+            }else{
+                $tax_percentage = 0;
+            }
+
+            $method_id = explode(':', $shipping['method_id']);
+
+            $shopping_cart['items'][] = array(
+                'name'              => $shipping['name'],
+                'description'       => $shipping['type'],
+                'unit_price'        => $shipping['cost'],
+                'quantity'          => 1,
+                'merchant_item_id'  => 'msp-shipping',
+//                'merchant_item_id'  => $method_id[0],
+                'tax_table_selector'=> $tax_table_selector,
+                'weight'            => array('unit' => 0, 'value' => 'KG') );
+
+            if (!in_array($tax_table_selector, $tax_array)) {
+                array_push($checkout_options['tax_tables']['alternate'],
+                    array(  'name'  => $tax_table_selector,
+                            'rules' => array(array(
+                            'rate'  => $tax_percentage))));
+                array_push($tax_array, $tax_table_selector);
+            }
+        }
+
+
+        // Fee
+        foreach ($order->get_items('fee') as $fee) {
+
+			$tax_table_selector = 'fee';
+            $tax_percentage     = round($fee['total_tax'] / $fee['total'], 2);
+
+			$shopping_cart['items'][] = array(
+				'name'              => $fee['name'],
+				'description'       => $fee['name'],
+				'unit_price'        => $fee['total'],
+				'quantity'          => 1,
+				'merchant_item_id'  => 'fee',
+				'tax_table_selector'=> $tax_table_selector,
+				'weight'            => array('unit' => 0, 'value' => 'KG') );
+
+			if (!in_array($tax_table_selector, $tax_array)) {
+				array_push($checkout_options['tax_tables']['alternate'],
+					array(  'name'  => $tax_table_selector,
+							'rules' => array(array(
+							'rate'  => $tax_percentage))));
+				array_push($tax_array, $tax_table_selector);
+			}
+		}
+
         return ( array($shopping_cart, $checkout_options) );
     }
 
     public function getGatewayInfo($order_id)
     {
-        $order = new WC_Order($order_id);
+        $order = wc_get_order($order_id);
 
         switch ($this->getGatewayCode()){
 
@@ -506,7 +523,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
                 break;
             case 'EINVOICE':
                 $account = $_POST['einvoice_account'];
-                $gender = $_POST['einvoice_gender'];
+                $gebdat = $_POST['einvoice_birthday'];
                 break;
         }
 
@@ -516,11 +533,11 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
         return (array(  'referrer'      => $_SERVER['HTTP_REFERER'],
                         'user_agent'    => $_SERVER['HTTP_USER_AGENT'],
-                        'birthday'      => $gebdat ,
-                        'bankaccount'   => $account,
+                        'birthday'      => isset ($gebdat)  ? $gebdat  : '',
+                        'bankaccount'   => isset ($account) ? $account : '',
                         'phone'         => $billingPhone,
                         'email'         => $billingEmail,
-                        'gender'        => $gender) );
+                        'gender'        => isset ($gender)  ? $gender  : '') );
     }
 
     public function setItemList($items)
