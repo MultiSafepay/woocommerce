@@ -559,6 +559,10 @@ class MultiSafepay_Gateways
 
         }
 
+        //If order does not exist. return message
+        if(!$order){
+            exit("Order does not exist");
+        }
 
         $orderStatus = $order->get_status();
 
