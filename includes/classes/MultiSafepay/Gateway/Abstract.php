@@ -554,23 +554,19 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     {
 
         // Compatiblity Woocommerce 2.x and 3.x
-        $shipping_address_1     = (method_exists($order,'get_shipping_address_1'))  ? $order->get_shipping_address_1()  : $order->shipping_address_1;
-        $shipping_first_name    = (method_exists($order,'get_shipping_first_name')) ? $order->get_shipping_first_name() : $order->shipping_first_name;
-        $shipping_last_name     = (method_exists($order,'get_shipping_last_name'))  ? $order->get_shipping_last_name()  : $order->shipping_last_name;
-        $shipping_address_2     = (method_exists($order,'get_shipping_address_2'))  ? $order->get_shipping_address_2()  : $order->shipping_address_2;
-        $shipping_postcode      = (method_exists($order,'get_shipping_postcode'))   ? $order->get_shipping_postcode()   : $order->shipping_postcode;
-        $shipping_city          = (method_exists($order,'get_shipping_city'))       ? $order->get_shipping_city()       : $order->shipping_city;
-        $shipping_state         = (method_exists($order,'get_shipping_state'))      ? $order->get_shipping_state()      : $order->shipping_state;
-        $shipping_country       = (method_exists($order,'get_shipping_country'))    ? $order->get_shipping_country()    : $order->shipping_country;
+        $shipping_address_1     = method_exists($order,'get_shipping_address_1')  ? $order->get_shipping_address_1()  : $order->shipping_address_1;
+        $shipping_first_name    = method_exists($order,'get_shipping_first_name') ? $order->get_shipping_first_name() : $order->shipping_first_name;
+        $shipping_last_name     = method_exists($order,'get_shipping_last_name')  ? $order->get_shipping_last_name()  : $order->shipping_last_name;
+        $shipping_address_2     = method_exists($order,'get_shipping_address_2')  ? $order->get_shipping_address_2()  : $order->shipping_address_2;
+        $shipping_postcode      = method_exists($order,'get_shipping_postcode')   ? $order->get_shipping_postcode()   : $order->shipping_postcode;
+        $shipping_city          = method_exists($order,'get_shipping_city')       ? $order->get_shipping_city()       : $order->shipping_city;
+        $shipping_state         = method_exists($order,'get_shipping_state')      ? $order->get_shipping_state()      : $order->shipping_state;
+        $shipping_country       = method_exists($order,'get_shipping_country')    ? $order->get_shipping_country()    : $order->shipping_country;
 
         $address = $shipping_address_1;
         list ($street, $houseNumber) = $msp->parseCustomerAddress($address);
 
-        return ( array( "locale"        => $this->getLocale(),
-                        "ip_address"    => $_SERVER['REMOTE_ADDR'],
-                        "referrer"      => $_SERVER['HTTP_REFERER'],
-                        "user_agent"    => $_SERVER['HTTP_USER_AGENT'],
-                        "first_name"    => $shipping_first_name,
+        return array(   "first_name"    => $shipping_first_name,
                         "last_name"     => $shipping_last_name,
                         "address1"      => $street,
                         "address2"      => $shipping_address_2,
@@ -578,27 +574,28 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
                         "zip_code"      => $shipping_postcode,
                         "city"          => $shipping_city,
                         "state"         => $shipping_state,
-                        "country"       => $shipping_country ));
+                        "country"       => $shipping_country );
     }
 
     public function setCustomer($msp, $order)
     {
-        $billing_address_1     = (method_exists($order,'get_billing_address_1'))  ? $order->get_billing_address_1()  : $order->billing_address_1;
-        $billing_first_name    = (method_exists($order,'get_billing_first_name')) ? $order->get_billing_first_name() : $order->billing_first_name;
-        $billing_last_name     = (method_exists($order,'get_billing_last_name'))  ? $order->get_billing_last_name()  : $order->billing_last_name;
-        $billing_address_2     = (method_exists($order,'get_billing_address_2'))  ? $order->get_billing_address_2()  : $order->billing_address_2;
-        $billing_postcode      = (method_exists($order,'get_billing_postcode'))   ? $order->get_billing_postcode()   : $order->billing_postcode;
-        $billing_city          = (method_exists($order,'get_billing_city'))       ? $order->get_billing_city()       : $order->billing_city;
-        $billing_state         = (method_exists($order,'get_billing_state'))      ? $order->get_billing_state()      : $order->billing_state;
-        $billing_country       = (method_exists($order,'get_billing_country'))    ? $order->get_billing_country()    : $order->billing_country;
-        $billing_phone         = (method_exists($order,'get_billing_phone'))      ? $order->get_billing_phone()      : $order->billing_phone;
-        $billing_email         = (method_exists($order,'get_billing_email'))      ? $order->get_billing_email()      : $order->billing_email;
+        $billing_address_1     = method_exists($order,'get_billing_address_1')  ? $order->get_billing_address_1()  : $order->billing_address_1;
+        $billing_first_name    = method_exists($order,'get_billing_first_name') ? $order->get_billing_first_name() : $order->billing_first_name;
+        $billing_last_name     = method_exists($order,'get_billing_last_name')  ? $order->get_billing_last_name()  : $order->billing_last_name;
+        $billing_address_2     = method_exists($order,'get_billing_address_2')  ? $order->get_billing_address_2()  : $order->billing_address_2;
+        $billing_postcode      = method_exists($order,'get_billing_postcode')   ? $order->get_billing_postcode()   : $order->billing_postcode;
+        $billing_city          = method_exists($order,'get_billing_city')       ? $order->get_billing_city()       : $order->billing_city;
+        $billing_state         = method_exists($order,'get_billing_state')      ? $order->get_billing_state()      : $order->billing_state;
+        $billing_country       = method_exists($order,'get_billing_country')    ? $order->get_billing_country()    : $order->billing_country;
+        $billing_phone         = method_exists($order,'get_billing_phone')      ? $order->get_billing_phone()      : $order->billing_phone;
+        $billing_email         = method_exists($order,'get_billing_email')      ? $order->get_billing_email()      : $order->billing_email;
+        $ip_address            = class_exists('WC_Geolocation', false)          ? WC_Geolocation::get_ip_address() : $_SERVER['REMOTE_ADDR'];
 
         $address = $billing_address_1;
         list ($street, $houseNumber) = $msp->parseCustomerAddress($address);
 
-        return ( array( "locale"        => $this->getLocale(),
-                        "ip_address"    => $_SERVER['REMOTE_ADDR'],
+        return array(   "locale"        => $this->getLocale(),
+                        "ip_address"    => $ip_address,
                         "referrer"      => $_SERVER['HTTP_REFERER'],
                         "user_agent"    => $_SERVER['HTTP_USER_AGENT'],
                         "first_name"    => $billing_first_name,
@@ -611,7 +608,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
                         "state"         => $billing_state,
                         "country"       => $billing_country,
                         "phone"         => $billing_phone,
-                        "email"         => $billing_email));
+                        "email"         => $billing_email);
     }
 
     public function setGoogleAnalytics()
