@@ -331,176 +331,172 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     {
         $order = wc_get_order($order_id);
 
-        $shopping_cart                             = array();
-        $checkout_options                          = array();
-        $checkout_options['tax_tables']['default'] = array('shipping_taxed' => 'true',
-            'rate' => '0.21');
+        $shopping_cart = array();
+        $checkout_options = array();
+        $checkout_options['tax_tables']['default'] = array(
+            'shipping_taxed' => 'true',
+            'rate' => '0.21'
+        );
 
-        //Add BTW 0%
-        $checkout_options['tax_tables']['alternate'][] = array('name' => 'BTW-0',
-            'rules' => array(array('rate' => '0.00')));
+        // Add BTW 0%
+        $checkout_options['tax_tables']['alternate'][] = array(
+            'name' => 'BTW-0',
+            'rules' => array(array('rate' => '0.00'))
+        );
 
         $tax_array = array('BTW-0');
 
-        // Fee
-        /*              foreach ($order->get_items('fee') as $fee) {
-
-          $taxes = unserialize($fee['taxes']);
-          $taxes = array_shift ($taxes);
-
-          $tax_table_selector = 'fee';
-          $tax_percentage = round($taxes /$fee['cost'], 2);
-
-          $method_id = explode (':', $fee['method_id']);
-
-          $shopping_cart['items'][] = array (
-          'name'  		     => $fee['type'],
-          'description' 		 => $fee['name'],
-          'unit_price'  		 => $fee['cost'],
-          'quantity'    		 => 1,
-          'merchant_item_id' 	 => $method_id[0],
-          'tax_table_selector' => $tax_table_selector,
-          'weight' 		     => array ('unit'=> 0,  'value'=> 'KG')
-          );
-
-          if (!in_array($tax_table_selector, $tax_array)) {
-          array_push($checkout_options['tax_tables']['alternate'], array ('name' => $tax_table_selector, 'rules' => array (array ('rate' => $tax_percentage))));
-          array_push($tax_array, $tax_table_selector);
-          }
-          }
-         */
-
-
-        //add item data
-        $items = "<ul>\n";
+        // Add item data
         foreach ($order->get_items() as $item) {
 
-            $items .= "<li>".$item['qty'].' x : '.$item['name']."</li>\n";
-
-            if ( $item['line_subtotal'] > 0 ){
+            if ($item['line_subtotal'] > 0) {
                 $tax_percentage = round($item['line_subtotal_tax'] / $item['line_subtotal'], 2);
-            }else{
+            } else {
                 $tax_percentage = 0;
             }
 
-            $product_price  = round($item['line_subtotal'] / $item['qty'], 5);
+            $product_price = round($item['line_subtotal'] / $item['qty'], 5);
 
             if ($item['line_subtotal_tax'] > 0) {
-                $tax_table_selector = 'BTW-'.$tax_percentage * 100;
+                $tax_table_selector = 'BTW-' . $tax_percentage * 100;
             } else {
                 $tax_table_selector = 'BTW-0';
             }
 
             $shopping_cart['items'][] = array(
-                'name'              => $item['name'],
-                'description'       => '',
-                'unit_price'        => $product_price,
-                'quantity'          => $item['qty'],
-                'merchant_item_id'  => $item['product_id'],
-                'tax_table_selector'=> $tax_table_selector,
-                'weight'            => array('unit' => 0, 'value' => 'KG') );
+                'name' => $item['name'],
+                'description' => '',
+                'unit_price' => $product_price,
+                'quantity' => $item['qty'],
+                'merchant_item_id' => $item['product_id'],
+                'tax_table_selector' => $tax_table_selector,
+                'weight' => array('unit' => 0, 'value' => 'KG')
+            );
 
             if (!in_array($tax_table_selector, $tax_array)) {
-                array_push($checkout_options['tax_tables']['alternate'],
-                    array(  'name'  => $tax_table_selector,
-                            'rules' => array(array(
-                            'rate'  => $tax_percentage))));
-                array_push($tax_array, $tax_table_selector);
+                $checkout_options['tax_tables']['alternate'][] =
+                    array(
+                        'name' => $tax_table_selector,
+                        'rules' => array(
+                            array(
+                                'rate' => $tax_percentage
+                            )
+                        )
+                    );
+                $tax_array[] = $tax_table_selector;
             }
         }
-        $items .= "</ul>\n";
 
-       //add coupon discount
+        // Add coupon discount
         foreach ($order->get_items('coupon') as $coupon) {
 
             $tax_table_selector = $coupon['type'];
-            if ( $coupon['discount_amount'] > 0 ){
-                $tax_percentage     = round($coupon['discount_amount_tax'] / $coupon['discount_amount'], 2);
-            }else{
+            if ($coupon['discount_amount'] > 0) {
+                $tax_percentage = round($coupon['discount_amount_tax'] / $coupon['discount_amount'], 2);
+            } else {
                 $tax_percentage = 0;
             }
 
             $shopping_cart['items'][] = array(
-                'name'              => $coupon['type'],
-                'description'       => $coupon['name'],
-                'unit_price'        => -$coupon['discount_amount'],
-                'quantity'          => 1,
-                'merchant_item_id'  => $coupon['type'],
-                'tax_table_selector'=> $tax_table_selector,
-                'weight'            => array('unit' => 0, 'value' => 'KG') );
+                'name' => $coupon['type'],
+                'description' => $coupon['name'],
+                'unit_price' => -$coupon['discount_amount'],
+                'quantity' => 1,
+                'merchant_item_id' => $coupon['type'],
+                'tax_table_selector' => $tax_table_selector,
+                'weight' => array('unit' => 0, 'value' => 'KG')
+            );
 
             if (!in_array($tax_table_selector, $tax_array)) {
-                array_push($checkout_options['tax_tables']['alternate'],
-                    array(  'name'  => $tax_table_selector,
-                            'rules' => array(array(
-                            'rate'  => $tax_percentage))));
-                array_push($tax_array, $tax_table_selector);
+                $checkout_options['tax_tables']['alternate'][] =
+                    array(
+                        'name' => $tax_table_selector,
+                        'rules' => array(
+                            array(
+                                'rate' => $tax_percentage
+                            )
+                        )
+                    );
+                $tax_array[] = $tax_table_selector;
             }
         }
 
-        // Shipping
+        // Add shipping
         foreach ($order->get_items('shipping') as $shipping) {
 
             $taxes = $shipping['taxes']['total'];
             $taxes = array_shift($taxes);
 
-            $cost  = $shipping['cost'];
+            $cost = $shipping['cost'];
 
             $tax_table_selector = 'shipping';
 
-            if ( $cost > 0 ){
-                $tax_percentage  = round($taxes / $cost, 2);
-            }else{
+            if ($cost > 0) {
+                $tax_percentage = round($taxes / $cost, 2);
+            } else {
                 $tax_percentage = 0;
             }
 
-            $method_id = explode(':', $shipping['method_id']);
-
             $shopping_cart['items'][] = array(
-                'name'              => $shipping['name'],
-                'description'       => $shipping['type'],
-                'unit_price'        => $shipping['cost'],
-                'quantity'          => 1,
-                'merchant_item_id'  => 'msp-shipping',
-//                'merchant_item_id'  => $method_id[0],
-                'tax_table_selector'=> $tax_table_selector,
-                'weight'            => array('unit' => 0, 'value' => 'KG') );
+                'name' => $shipping['name'],
+                'description' => $shipping['type'],
+                'unit_price' => $shipping['cost'],
+                'quantity' => 1,
+                'merchant_item_id' => 'msp-shipping',
+                'tax_table_selector' => $tax_table_selector,
+                'weight' => array('unit' => 0, 'value' => 'KG')
+            );
 
             if (!in_array($tax_table_selector, $tax_array)) {
-                array_push($checkout_options['tax_tables']['alternate'],
-                    array(  'name'  => $tax_table_selector,
-                            'rules' => array(array(
-                            'rate'  => $tax_percentage))));
-                array_push($tax_array, $tax_table_selector);
+                $checkout_options['tax_tables']['alternate'][] =
+                    array(
+                        'name' => $tax_table_selector,
+                        'rules' => array(
+                            array(
+                                'rate' => $tax_percentage
+                            )
+                        )
+                    );
+                $tax_array[] = $tax_table_selector;
             }
         }
 
-
-        // Fee
+        // Add fee
         foreach ($order->get_items('fee') as $fee) {
 
-			$tax_table_selector = 'fee';
-            $tax_percentage     = round($fee['total_tax'] / $fee['total'], 2);
+            $tax_table_selector = 'fee';
 
-			$shopping_cart['items'][] = array(
-				'name'              => $fee['name'],
-				'description'       => $fee['name'],
-				'unit_price'        => $fee['total'],
-				'quantity'          => 1,
-				'merchant_item_id'  => 'fee',
-				'tax_table_selector'=> $tax_table_selector,
-				'weight'            => array('unit' => 0, 'value' => 'KG') );
+            if ($fee['total'] > 0) {
+                $tax_percentage = round($fee['total_tax'] / $fee['total'], 2);
+            } else {
+                $tax_percentage = 0;
+            }
 
-			if (!in_array($tax_table_selector, $tax_array)) {
-				array_push($checkout_options['tax_tables']['alternate'],
-					array(  'name'  => $tax_table_selector,
-							'rules' => array(array(
-							'rate'  => $tax_percentage))));
-				array_push($tax_array, $tax_table_selector);
-			}
-		}
+            $shopping_cart['items'][] = array(
+                'name' => $fee['name'],
+                'description' => $fee['name'],
+                'unit_price' => $fee['total'],
+                'quantity' => 1,
+                'merchant_item_id' => 'fee',
+                'tax_table_selector' => $tax_table_selector,
+                'weight' => array('unit' => 0, 'value' => 'KG')
+            );
 
-        return ( array($shopping_cart, $checkout_options) );
+            if (!in_array($tax_table_selector, $tax_array)) {
+                $checkout_options['tax_tables']['alternate'][] =
+                    array(
+                        'name' => $tax_table_selector,
+                        'rules' => array(
+                            array(
+                                'rate' => $tax_percentage
+                            )
+                        )
+                    );
+                $tax_array[] = $tax_table_selector;
+            }
+        }
+
+        return array($shopping_cart, $checkout_options);
     }
 
     public function getGatewayInfo($order_id)
