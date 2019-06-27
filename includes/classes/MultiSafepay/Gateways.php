@@ -322,11 +322,16 @@ class MultiSafepay_Gateways
     public static function Multisafepay_Response()
     {
 
+        $page           = filter_input(INPUT_GET, 'page',           FILTER_SANITIZE_STRING);
         $type           = filter_input(INPUT_GET, 'type',           FILTER_SANITIZE_STRING);
         $trns_id        = filter_input(INPUT_GET, 'transactionid',  FILTER_SANITIZE_STRING);
         $identifier     = filter_input(INPUT_GET, 'identifier',     FILTER_SANITIZE_STRING);
         $cancel_order   = filter_input(INPUT_GET, 'cancel_order',   FILTER_SANITIZE_STRING);
 
+        // If not initialized by MultiSafepay
+        if ($page != 'multisafepaynotify'){
+            return true;
+        }
         if (empty($trns_id) && empty($identifier)) {
             return;
         }
