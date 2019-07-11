@@ -1,58 +1,27 @@
-# WooCommerce
-MultiSafepay plug-in for WooCommerce
+<p align="center">
+  <img src="https://www.multisafepay.com/img/multisafepaylogo.svg" width="400px" position="center">
+</p>
 
-The MultiSafepay plug-in for WooCommerce allows you to integrate add all paymentmethods and giftcards offered by MultiSafepay into your WooCommerce webshop.
+# MultiSafepay plug-in for WooCommerce
 
-The MultiSafepay plug-in for WooCommerce has support for:
+Easily integrate MultiSafepay payment solutions into your WooCommerce webshop with the free and completely new MultiSafepay WooCommerce plugin.
 
-Paymentmethods:
-1. iDEAL
-2. Klarna Invoice
-3. Dotpay
-4. EPS
-5. ING Homepay
-6. Belfius
-7. AliPay
-8. KBC
-9. PayPal
-10. Pay After Delivery
-11. Direct Debit
-12. American Express
-13. Bancontact
-14. Maestro
-15. Sofort
-16. Banktransfer
-17. Giropay
-18. Mastercard
-19. Visa
-20. E-Invoicing
-21. Ferbuy
-22. Paysafecard
-23. Trustly
-24. AfterPay
-25. Santander Betaalplan
-26. TrustPay
+[![Latest Stable Version](https://img.shields.io/github/release/multisafepay/woocommerce.svg)](https://github.com/MultiSafepay/WooCommerce)
 
-The following giftcards are supported:
-1. Wijncadeau
-2. Fijncadeau
-3. Wellnessgiftcard
-4. Fietsenbon
-5. Beauty and Wellness
-6. Webshopgiftcard
-7. Parfumcadeaukaart
-8. Fashioncheque
-9. Erotiekbon
-10. Boekenbon
-11. Gezondheidsbon
-12. Fashiongiftcard
-13. Lief Cadeaucard
-14. Nationale tuinbon
-15. Goodcard
-16. Givacard
-17. Yourgift
-18. Sport en Fit
-19. VVV Bon
-20. Podium
-21. Winkel Cheque
-22. Bioscoopbon
+## About MultiSafepay ##
+MultiSafepay is a collecting payment service provider which means we take care of the agreements, technical details and payment collection required for each payment method. You can start selling online today and manage all your transactions from one place.
+## Supported Payment Methods ##
+The supported Payment Methods & Giftcards for this plugin can be found over here: [Payment Methods & Giftcards](https://docs.multisafepay.com/plugins/woocommerce/faq/#available-payment-methods-in-woocommerce)
+
+## Requirements
+- To use the plugin you need a MultiSafepay account. You can create a test account on https://testmerchant.multisafepay.com/signup
+- WooCommerce
+
+## Installation through backend
+1. Navigate to the backend of your webshop and navigate to ‘Plugins->Add New’. Click on Browse file
+2. Upload the Plugin_WooCommerce_x.x.x.zip file.
+
+For additional information or instructions please see our [installation & configuration manual](https://docs.multisafepay.com/plugins/woocommerce/manual/)
+
+## Support
+You can create issues on our repository. If you need any additional help or support, please contact <a href="mailto:techsupport@multisafepay.com">techsupport@multisafepay.com</a>
