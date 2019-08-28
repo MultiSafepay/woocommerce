@@ -55,5 +55,4 @@ class MultiSafepay_ObjectOrders extends MultiSafepay_ObjectCore
     {
         return $this->data->payment_url;
     }
-
 }

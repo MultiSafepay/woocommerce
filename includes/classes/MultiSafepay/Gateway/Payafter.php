@@ -41,8 +41,9 @@ class MultiSafepay_Gateway_Payafter extends MultiSafepay_Gateway_Abstract
     public static function getTitle()
     {
         $settings = self::getSettings();
-        if (!isset ($settings['title']))
+        if (!isset($settings['title'])) {
             $settings['title'] = '';
+        }
 
         return ($settings['title']);
     }
@@ -56,10 +57,11 @@ class MultiSafepay_Gateway_Payafter extends MultiSafepay_Gateway_Abstract
     {
         $settings = get_option('woocommerce_multisafepay_payafter_settings');
 
-        if ($settings['direct'] == 'yes')
+        if ($settings['direct'] == 'yes') {
             return "direct";
-        else
+        } else {
             return "redirect";
+        }
     }
 
     public function init_settings($form_fields = array())
@@ -68,8 +70,9 @@ class MultiSafepay_Gateway_Payafter extends MultiSafepay_Gateway_Abstract
 
         $warning = $this->getWarning();
 
-        if (is_array($warning))
+        if (is_array($warning)) {
             $this->form_fields['warning'] = $warning;
+        }
 
         $this->form_fields['direct'] = array('title' => __('Enable', 'multisafepay'),
             'type' => 'checkbox',
@@ -96,7 +99,6 @@ class MultiSafepay_Gateway_Payafter extends MultiSafepay_Gateway_Abstract
         $settings = (array) get_option('woocommerce_multisafepay_payafter_settings');
 
         if ($settings['direct'] == 'yes') {
-
             $description = '<p class="form-row form-row-wide  validate-required">
                                 <label for="msp_birthday" class="">' . __('Birthday', 'multisafepay') .
                     '<abbr class="required" title="required">*</abbr>
@@ -115,8 +117,9 @@ class MultiSafepay_Gateway_Payafter extends MultiSafepay_Gateway_Abstract
         }
 
         $description_text = $this->get_option('description');
-        if (!empty($description_text))
+        if (!empty($description_text)) {
             $description .= '<p>' . $description_text . '</p>';
+        }
 
         echo $description;
     }
@@ -133,21 +136,24 @@ class MultiSafepay_Gateway_Payafter extends MultiSafepay_Gateway_Abstract
 
         $settings = (array) get_option("woocommerce_multisafepay_payafter_settings");
 
-        if (!empty($settings['minamount']) && $woocommerce->cart->total < $settings['minamount'])
+        if (!empty($settings['minamount']) && $woocommerce->cart->total < $settings['minamount']) {
             unset($gateways['multisafepay_payafter']);
+        }
 
-        if (!empty($settings['maxamount']) && $woocommerce->cart->total > $settings['maxamount'])
+        if (!empty($settings['maxamount']) && $woocommerce->cart->total > $settings['maxamount']) {
             unset($gateways['multisafepay_payafter']);
+        }
 
         // Compatiblity Woocommerce 2.x and 3.x
-        if (method_exists($woocommerce->customer,'get_billing_country')){
+        if (method_exists($woocommerce->customer, 'get_billing_country')) {
             $billingCountry = $woocommerce->customer->get_billing_country();
-        }elseif (method_exists($woocommerce->customer,'get_country')){
+        } elseif (method_exists($woocommerce->customer, 'get_country')) {
             $billingCountry = $woocommerce->customer->get_country();
         }
 
-        if (isset ($woocommerce->customer) && $billingCountry != 'NL')
+        if (isset($woocommerce->customer) && $billingCountry != 'NL') {
             unset($gateways['multisafepay_payafter']);
+        }
 
         return $gateways;
     }
@@ -159,5 +165,4 @@ class MultiSafepay_Gateway_Payafter extends MultiSafepay_Gateway_Abstract
 
         return parent::process_payment($order_id);
     }
-
 }

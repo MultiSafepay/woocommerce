@@ -41,8 +41,9 @@ class MultiSafepay_Gateway_Santander extends MultiSafepay_Gateway_Abstract
     public static function getTitle()
     {
         $settings = self::getSettings();
-        if (!isset ($settings['title']))
+        if (!isset($settings['title'])) {
             $settings['title'] = '';
+        }
 
         return ($settings['title']);
     }
@@ -63,8 +64,9 @@ class MultiSafepay_Gateway_Santander extends MultiSafepay_Gateway_Abstract
 
         $warning = $this->getWarning();
 
-        if (is_array($warning))
+        if (is_array($warning)) {
             $this->form_fields['warning'] = $warning;
+        }
 
         $this->form_fields['minamount'] = array('title' => __('Minimal order amount', 'multisafepay'),
             'type' => 'text',
@@ -89,16 +91,16 @@ class MultiSafepay_Gateway_Santander extends MultiSafepay_Gateway_Abstract
 
         $settings = (array) get_option("woocommerce_multisafepay_santander_settings");
 
-        if (!empty($settings['minamount']) && $woocommerce->cart->total < $settings['minamount'])
+        if (!empty($settings['minamount']) && $woocommerce->cart->total < $settings['minamount']) {
             unset($gateways['multisafepay_santander']);
+        }
 
-        if (!empty($settings['maxamount']) && $woocommerce->cart->total > $settings['maxamount'])
+        if (!empty($settings['maxamount']) && $woocommerce->cart->total > $settings['maxamount']) {
             unset($gateways['multisafepay_santander']);
+        }
 
 
 
         return $gateways;
     }
 }
-
-?>

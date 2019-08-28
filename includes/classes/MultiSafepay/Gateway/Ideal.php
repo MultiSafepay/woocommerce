@@ -41,8 +41,9 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
     public static function getTitle()
     {
         $settings = self::getSettings();
-        if (!isset ($settings['title']))
+        if (!isset($settings['title'])) {
             $settings['title'] = '';
+        }
 
         return ($settings['title']);
     }
@@ -56,18 +57,20 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
     {
         $settings = get_option('woocommerce_multisafepay_ideal_settings');
 
-        if ($settings['direct'] == 'yes' && isset($_POST['ideal_issuer']))
+        if ($settings['direct'] == 'yes' && isset($_POST['ideal_issuer'])) {
             return "direct";
-        else
+        } else {
             return "redirect";
+        }
     }
 
     public function getGatewayInfo($order_id)
     {
-        if (isset($_POST['ideal_issuer']))
+        if (isset($_POST['ideal_issuer'])) {
             return (array("issuer_id" => $_POST['ideal_issuer']));
-        else
+        } else {
             return ('');
+        }
     }
 
     public function init_settings($form_fields = array())
@@ -76,8 +79,9 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
 
         $warning = $this->getWarning();
 
-        if (is_array($warning))
+        if (is_array($warning)) {
             $this->form_fields['warning'] = $warning;
+        }
 
         $this->form_fields['direct'] = array('title' => __('Enable', 'multisafepay'),
             'type'          => 'checkbox',
@@ -92,7 +96,6 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
         $description = '';
         $settings = (array) get_option('woocommerce_multisafepay_ideal_settings');
         if ($settings['direct'] == 'yes') {
-
             $description = '';
 
             $msp = new MultiSafepay_Client();
@@ -104,7 +107,6 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
                 $msg = null;
                 $issuers = $msp->issuers->get();
             } catch (Exception $e) {
-
                 $msg = htmlspecialchars($e->getMessage());
                 $this->write_log($msg);
                 wc_add_notice($msg, 'error');
@@ -121,8 +123,9 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
         }
 
         $description_text = $this->get_option('description');
-        if (!empty($description_text))
+        if (!empty($description_text)) {
             $description .= '<p>' . $description_text . '</p>';
+        }
 
         echo $description;
     }
@@ -145,5 +148,4 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
 
         return parent::process_payment($order_id);
     }
-
 }

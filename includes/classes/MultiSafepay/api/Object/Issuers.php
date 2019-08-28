@@ -34,5 +34,4 @@ class MultiSafepay_ObjectIssuers extends MultiSafepay_ObjectCore
 
         return $this->data;
     }
-
 }
