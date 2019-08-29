@@ -34,5 +34,4 @@ class MultiSafepay_ObjectGateways extends MultiSafepay_ObjectCore
 
         return $this->data;
     }
-
 }

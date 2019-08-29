@@ -76,5 +76,4 @@ class MultiSafepay_ObjectCore
 
         return $object;
     }
-
 }

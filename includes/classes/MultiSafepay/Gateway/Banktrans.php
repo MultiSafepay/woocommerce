@@ -41,8 +41,9 @@ class MultiSafepay_Gateway_Banktrans extends MultiSafepay_Gateway_Abstract
     public static function getTitle()
     {
         $settings = self::getSettings();
-        if (!isset ($settings['title']))
+        if (!isset($settings['title'])) {
             $settings['title'] = '';
+        }
 
         return ($settings['title']);
     }
@@ -56,10 +57,11 @@ class MultiSafepay_Gateway_Banktrans extends MultiSafepay_Gateway_Abstract
     {
         $settings = get_option('woocommerce_multisafepay_banktrans_settings');
 
-        if ($settings['direct'] == 'yes')
+        if ($settings['direct'] == 'yes') {
             return "direct";
-        else
+        } else {
             return "redirect";
+        }
     }
 
     public function init_settings($form_fields = array())
@@ -68,8 +70,9 @@ class MultiSafepay_Gateway_Banktrans extends MultiSafepay_Gateway_Abstract
 
         $warning = $this->getWarning();
 
-        if (is_array($warning))
+        if (is_array($warning)) {
             $this->form_fields['warning'] = $warning;
+        }
 
         $this->form_fields['direct'] = array(
             'title' => __('Direct', 'woocommerce'),
@@ -84,5 +87,4 @@ class MultiSafepay_Gateway_Banktrans extends MultiSafepay_Gateway_Abstract
             'default' => 'no');
         parent::init_settings($this->form_fields);
     }
-
 }

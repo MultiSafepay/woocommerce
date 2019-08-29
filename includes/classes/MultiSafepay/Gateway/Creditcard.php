@@ -41,8 +41,9 @@ class MultiSafepay_Gateway_Creditcard extends MultiSafepay_Gateway_Abstract
     public static function getTitle()
     {
         $settings = self::getSettings();
-        if (!isset ($settings['title']))
+        if (!isset($settings['title'])) {
             $settings['title'] = '';
+        }
 
         return ($settings['title']);
     }
@@ -62,8 +63,9 @@ class MultiSafepay_Gateway_Creditcard extends MultiSafepay_Gateway_Abstract
         $description = '';
 
         $description_text = $this->get_option('description');
-        if (!empty($description_text))
+        if (!empty($description_text)) {
             $description .= '<p>' . $description_text . '</p>';
+        }
 
         $msp = new MultiSafepay_Client();
 
@@ -106,5 +108,4 @@ class MultiSafepay_Gateway_Creditcard extends MultiSafepay_Gateway_Abstract
         }
         return true;
     }
-
 }

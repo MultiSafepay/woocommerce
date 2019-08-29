@@ -158,10 +158,11 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         $this->method_title         = $this->getName();
         $this->method_description   = sprintf(__('Activate this module to accept %s transactions by MultiSafepay', 'multisafepay'), $this->getName());
 
-        if ($this->canRefund())
+        if ($this->canRefund()) {
             $this->supports = array('products', 'refunds');
-        else
+        } else {
             $this->supports = array('products');
+        }
 
         $this->init_settings();
         $this->title = $this->getTitle() ? $this->getTitle() : $this->getName();
@@ -185,8 +186,9 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
         $warning = $this->getWarning();
 
-        if (is_array($warning))
+        if (is_array($warning)) {
             $this->form_fields['warning'] = $warning;
+        }
 
 
         $this->form_fields['enabled'] = array(
@@ -284,7 +286,6 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
             return array(   'result'    => 'error',
                             'redirect'  => wc_get_cart_url() );
         } else {
-
             $wpdb->query("INSERT INTO " . $wpdb->prefix . 'woocommerce_multisafepay' . " (trixid, orderid, status) VALUES ('" . $my_order['order_id'] . "', '" . $my_order['var2'] . "','')");
 
             return array(   'result'    => 'success',
@@ -294,8 +295,8 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
     public function process_refund($order_id, $amount = null, $reason = '')
     {
-        if ( $amount <= 0) {
-            return new WP_Error('multisafepay', "Refund amount must be greater than 0.00 " );
+        if ($amount <= 0) {
+            return new WP_Error('multisafepay', "Refund amount must be greater than 0.00 ");
         }
 
         $msp = new MultiSafepay_Client();
@@ -348,7 +349,6 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
         // Add item data
         foreach ($order->get_items() as $item) {
-
             if ($item['line_subtotal'] > 0) {
                 $tax_percentage = round($item['line_subtotal_tax'] / $item['line_subtotal'], 2);
             } else {
@@ -389,7 +389,6 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
         // Add coupon discount
         foreach ($order->get_items('coupon') as $coupon) {
-
             $tax_table_selector = $coupon['type'];
             if ($coupon['discount_amount'] > 0) {
                 $tax_percentage = round($coupon['discount_amount_tax'] / $coupon['discount_amount'], 2);
@@ -423,7 +422,6 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
         // Add shipping
         foreach ($order->get_items('shipping') as $shipping) {
-
             $taxes = $shipping['taxes']['total'];
             $taxes = array_shift($taxes);
 
@@ -463,7 +461,6 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
         // Add fee
         foreach ($order->get_items('fee') as $fee) {
-
             $tax_table_selector = 'fee';
 
             if ($fee['total'] > 0) {
@@ -503,8 +500,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     {
         $order = wc_get_order($order_id);
 
-        switch ($this->getGatewayCode()){
-
+        switch ($this->getGatewayCode()) {
             case 'KLARNA':
                 $gender = $_POST['klarna_gender'];
                 $gebdat = $_POST['klarna_birthday'];
@@ -524,16 +520,16 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         }
 
         // Compatiblity Woocommerce 2.x and 3.x
-        $billingPhone  = (method_exists($order,'get_billing_phone'))     ? $order->get_billing_phone()      : $order->billing_phone;
-        $billingEmail  = (method_exists($order,'get_billing_email'))     ? $order->get_billing_email()      : $order->billing_email;
+        $billingPhone  = (method_exists($order, 'get_billing_phone'))     ? $order->get_billing_phone()      : $order->billing_phone;
+        $billingEmail  = (method_exists($order, 'get_billing_email'))     ? $order->get_billing_email()      : $order->billing_email;
 
         return (array(  'referrer'      => $_SERVER['HTTP_REFERER'],
                         'user_agent'    => $_SERVER['HTTP_USER_AGENT'],
-                        'birthday'      => isset ($gebdat)  ? $gebdat  : '',
-                        'bankaccount'   => isset ($account) ? $account : '',
+                        'birthday'      => isset($gebdat)  ? $gebdat  : '',
+                        'bankaccount'   => isset($account) ? $account : '',
                         'phone'         => $billingPhone,
                         'email'         => $billingEmail,
-                        'gender'        => isset ($gender)  ? $gender  : '') );
+                        'gender'        => isset($gender)  ? $gender  : '') );
     }
 
     public function setItemList($items)
@@ -550,14 +546,14 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     {
 
         // Compatiblity Woocommerce 2.x and 3.x
-        $shipping_address_1     = method_exists($order,'get_shipping_address_1')  ? $order->get_shipping_address_1()  : $order->shipping_address_1;
-        $shipping_first_name    = method_exists($order,'get_shipping_first_name') ? $order->get_shipping_first_name() : $order->shipping_first_name;
-        $shipping_last_name     = method_exists($order,'get_shipping_last_name')  ? $order->get_shipping_last_name()  : $order->shipping_last_name;
-        $shipping_address_2     = method_exists($order,'get_shipping_address_2')  ? $order->get_shipping_address_2()  : $order->shipping_address_2;
-        $shipping_postcode      = method_exists($order,'get_shipping_postcode')   ? $order->get_shipping_postcode()   : $order->shipping_postcode;
-        $shipping_city          = method_exists($order,'get_shipping_city')       ? $order->get_shipping_city()       : $order->shipping_city;
-        $shipping_state         = method_exists($order,'get_shipping_state')      ? $order->get_shipping_state()      : $order->shipping_state;
-        $shipping_country       = method_exists($order,'get_shipping_country')    ? $order->get_shipping_country()    : $order->shipping_country;
+        $shipping_address_1     = method_exists($order, 'get_shipping_address_1')  ? $order->get_shipping_address_1()  : $order->shipping_address_1;
+        $shipping_first_name    = method_exists($order, 'get_shipping_first_name') ? $order->get_shipping_first_name() : $order->shipping_first_name;
+        $shipping_last_name     = method_exists($order, 'get_shipping_last_name')  ? $order->get_shipping_last_name()  : $order->shipping_last_name;
+        $shipping_address_2     = method_exists($order, 'get_shipping_address_2')  ? $order->get_shipping_address_2()  : $order->shipping_address_2;
+        $shipping_postcode      = method_exists($order, 'get_shipping_postcode')   ? $order->get_shipping_postcode()   : $order->shipping_postcode;
+        $shipping_city          = method_exists($order, 'get_shipping_city')       ? $order->get_shipping_city()       : $order->shipping_city;
+        $shipping_state         = method_exists($order, 'get_shipping_state')      ? $order->get_shipping_state()      : $order->shipping_state;
+        $shipping_country       = method_exists($order, 'get_shipping_country')    ? $order->get_shipping_country()    : $order->shipping_country;
 
         $address = $shipping_address_1;
         list ($street, $houseNumber) = $msp->parseCustomerAddress($address);
@@ -575,16 +571,16 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
     public function setCustomer($msp, $order)
     {
-        $billing_address_1     = method_exists($order,'get_billing_address_1')  ? $order->get_billing_address_1()  : $order->billing_address_1;
-        $billing_first_name    = method_exists($order,'get_billing_first_name') ? $order->get_billing_first_name() : $order->billing_first_name;
-        $billing_last_name     = method_exists($order,'get_billing_last_name')  ? $order->get_billing_last_name()  : $order->billing_last_name;
-        $billing_address_2     = method_exists($order,'get_billing_address_2')  ? $order->get_billing_address_2()  : $order->billing_address_2;
-        $billing_postcode      = method_exists($order,'get_billing_postcode')   ? $order->get_billing_postcode()   : $order->billing_postcode;
-        $billing_city          = method_exists($order,'get_billing_city')       ? $order->get_billing_city()       : $order->billing_city;
-        $billing_state         = method_exists($order,'get_billing_state')      ? $order->get_billing_state()      : $order->billing_state;
-        $billing_country       = method_exists($order,'get_billing_country')    ? $order->get_billing_country()    : $order->billing_country;
-        $billing_phone         = method_exists($order,'get_billing_phone')      ? $order->get_billing_phone()      : $order->billing_phone;
-        $billing_email         = method_exists($order,'get_billing_email')      ? $order->get_billing_email()      : $order->billing_email;
+        $billing_address_1     = method_exists($order, 'get_billing_address_1')  ? $order->get_billing_address_1()  : $order->billing_address_1;
+        $billing_first_name    = method_exists($order, 'get_billing_first_name') ? $order->get_billing_first_name() : $order->billing_first_name;
+        $billing_last_name     = method_exists($order, 'get_billing_last_name')  ? $order->get_billing_last_name()  : $order->billing_last_name;
+        $billing_address_2     = method_exists($order, 'get_billing_address_2')  ? $order->get_billing_address_2()  : $order->billing_address_2;
+        $billing_postcode      = method_exists($order, 'get_billing_postcode')   ? $order->get_billing_postcode()   : $order->billing_postcode;
+        $billing_city          = method_exists($order, 'get_billing_city')       ? $order->get_billing_city()       : $order->billing_city;
+        $billing_state         = method_exists($order, 'get_billing_state')      ? $order->get_billing_state()      : $order->billing_state;
+        $billing_country       = method_exists($order, 'get_billing_country')    ? $order->get_billing_country()    : $order->billing_country;
+        $billing_phone         = method_exists($order, 'get_billing_phone')      ? $order->get_billing_phone()      : $order->billing_phone;
+        $billing_email         = method_exists($order, 'get_billing_email')      ? $order->get_billing_email()      : $order->billing_email;
         $ip_address            = class_exists('WC_Geolocation', false)          ? WC_Geolocation::get_ip_address() : $_SERVER['REMOTE_ADDR'];
 
         $address = $billing_address_1;
@@ -631,8 +627,11 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     public function write_log($log)
     {
         if (get_option('multisafepay_debugmode') == 'yes') {
-            if (is_array($log) || is_object($log)) error_log(print_r($log, true));
-            else error_log($log);
+            if (is_array($log) || is_object($log)) {
+                error_log(print_r($log, true));
+            } else {
+                error_log($log);
+            }
         }
     }
 }
