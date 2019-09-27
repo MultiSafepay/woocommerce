@@ -1,0 +1,13 @@
+name: Code sniffer
+on: [push]
+jobs:
+  code_sniffer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install Code sniffer
+        run: |
+          composer global require "squizlabs/php_codesniffer=*"
+      - name: Run code sniffer
+        run: |
+          ~/.composer/vendor/bin/phpcs --standard=phpcs.ruleset.xml -n -v ${GITHUB_WORKSPACE}
