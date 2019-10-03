@@ -73,7 +73,7 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
         }
     }
 
-    public function init_settings($form_fields = array())
+    public function init_form_fields($form_fields = array())
     {
         $this->form_fields = array();
 
@@ -88,7 +88,7 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
             'label'         => sprintf(__('Direct %s', 'multisafepay'), $this->getName()),
             'description'   => __('Enable of disable the selection of the preferred bank within the website.', 'multisafepay'),
             'default'       => 'yes');
-        parent::init_settings($this->form_fields);
+        parent::init_form_fields($this->form_fields);
     }
 
     public function payment_fields()
@@ -122,9 +122,8 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
             $description .= '</p>';
         }
 
-        $description_text = $this->get_option('description');
-        if (!empty($description_text)) {
-            $description .= '<p>' . $description_text . '</p>';
+        if (!empty($this->description)) {
+            $description .= '<p>' . $this->description . '</p>';
         }
 
         echo $description;

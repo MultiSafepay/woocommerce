@@ -64,7 +64,7 @@ class MultiSafepay_Gateway_Banktrans extends MultiSafepay_Gateway_Abstract
         }
     }
 
-    public function init_settings($form_fields = array())
+    public function init_form_fields($form_fields = array())
     {
         $this->form_fields = array();
 
@@ -74,17 +74,11 @@ class MultiSafepay_Gateway_Banktrans extends MultiSafepay_Gateway_Abstract
             $this->form_fields['warning'] = $warning;
         }
 
-        $this->form_fields['direct'] = array(
-            'title' => __('Direct', 'woocommerce'),
-            'type' => 'checkbox',
-            'label' => sprintf(__('Direct %s', 'multisafepay'), $this->getName()),
-            'default' => 'no');
-
         $this->form_fields['direct'] = array('title' => __('Enable', 'multisafepay'),
             'type' => 'checkbox',
             'label' => sprintf(__('Direct %s', 'multisafepay'), $this->getName()),
             'description' => __('If enabled, the consumer receives an e-mail with payment details, no extra credentals are needed during checkout.', 'multisafepay'),
             'default' => 'no');
-        parent::init_settings($this->form_fields);
+        parent::init_form_fields($this->form_fields);
     }
 }

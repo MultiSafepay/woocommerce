@@ -64,7 +64,7 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
         }
     }
 
-    public function init_settings($form_fields = array())
+    public function init_form_fields($form_fields = array())
     {
         $this->form_fields = array();
 
@@ -75,18 +75,11 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
         }
 
         $this->form_fields['direct'] = array(
-            'title' => __('Direct', 'multisafepay'),
-            'type' => 'checkbox',
-            'label' => sprintf(__('Direct %s', 'multisafepay'), $this->getName()),
-            'default' => 'no');
-
-
-        $this->form_fields['direct'] = array('title' => __('Enable', 'multisafepay'),
+            'title' => __('Enable', 'multisafepay'),
             'type' => 'checkbox',
             'label' => sprintf(__('Direct %s', 'multisafepay'), $this->getName()),
             'description' => __('If enable extra credentials can be filled in checkout form, otherwise an extra form will be used.', 'multisafepay'),
             'default' => 'yes');
-
 
         $this->form_fields['minamount'] = array(
             'title' => __('Minimal order amount', 'multisafepay'),
@@ -100,7 +93,7 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
             'description' => __('The maximal order amount in euro\'s  for an order to use this payment method', 'multisafepay'),
             'css' => 'width: 100px;');
 
-        parent::init_settings($this->form_fields);
+        parent::init_form_fields($this->form_fields);
     }
 
     public function payment_fields()
@@ -121,9 +114,9 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
                                 <input type="text" class="input-text" name="einvoice_account" id="einvoice_account" placeholder=""/>
                             </p>';
         }
-        $description_text = $this->get_option('description');
-        if (!empty($description_text)) {
-            $description .= '<p>' . $description_text . '</p>';
+
+        if (!empty($this->description)) {
+            $description .= '<p>' . $this->description . '</p>';
         }
 
         echo $description;

@@ -69,11 +69,6 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         return (get_option('multisafepay_show_images') == 'yes' ? true : false);
     }
 
-    public static function getDescription()
-    {
-        return get_option('multisafepay_gateway_title');
-    }
-
     public static function getTimeActive()
     {
         switch (get_option('multisafepay_time_unit')) {
@@ -164,8 +159,13 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
             $this->supports = array('products');
         }
 
+        $this->init_form_fields();
         $this->init_settings();
-        $this->title = $this->getTitle() ? $this->getTitle() : $this->getName();
+
+        // Define user set variables.
+        $this->title        = $this->get_option('title');
+        $this->description  = $this->get_option('description');
+        $this->instructions = $this->get_option('instructions');
 
         if ($this->getShowImages()) {
             $this->icon = $this->getIcon();
@@ -180,7 +180,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         add_action('woocommerce_order_status_completed', array($this, 'setToShipped'), 13);
     }
 
-    public function init_settings($form_fields = array())
+    public function init_form_fields($form_fields = array())
     {
         $this->form_fields = array();
 
@@ -219,14 +219,8 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
         $this->form_fields  = array_merge($this->form_fields, $form_fields);
 
-        parent::init_settings();
+        parent::init_form_fields();
     }
-
-    public function payment_fields()
-    {
-        echo $this->get_option('description');
-    }
-
 
     public function process_payment($order_id)
     {

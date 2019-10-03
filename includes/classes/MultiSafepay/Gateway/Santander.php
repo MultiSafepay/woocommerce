@@ -58,7 +58,7 @@ class MultiSafepay_Gateway_Santander extends MultiSafepay_Gateway_Abstract
         return "redirect";
     }
 
-    public function init_settings($form_fields = array())
+    public function init_form_fields($form_fields = array())
     {
         $this->form_fields = array();
 
@@ -80,7 +80,7 @@ class MultiSafepay_Gateway_Santander extends MultiSafepay_Gateway_Abstract
             'default' => '1000',
             'css' => 'width: 100px;');
 
-        parent::init_settings($this->form_fields);
+        parent::init_form_fields($this->form_fields);
     }
 
 

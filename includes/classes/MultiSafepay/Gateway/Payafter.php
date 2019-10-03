@@ -64,7 +64,7 @@ class MultiSafepay_Gateway_Payafter extends MultiSafepay_Gateway_Abstract
         }
     }
 
-    public function init_settings($form_fields = array())
+    public function init_form_fields($form_fields = array())
     {
         $this->form_fields = array();
 
@@ -90,7 +90,7 @@ class MultiSafepay_Gateway_Payafter extends MultiSafepay_Gateway_Abstract
             'description' => __('The maximal order amount in euro\'s  for an order to use this payment method', 'multisafepay'),
             'css' => 'width: 100px;');
 
-        parent::init_settings($this->form_fields);
+        parent::init_form_fields($this->form_fields);
     }
 
     public function payment_fields()
@@ -116,9 +116,8 @@ class MultiSafepay_Gateway_Payafter extends MultiSafepay_Gateway_Abstract
             $description .= '<p class="form-row form-row-wide">' . __('By confirming this order you agree with the ', 'multisafepay') . '<br><a href="https://www.multifactor.nl/voorwaarden/betalingsvoorwaarden-consument/" target="_blank">' . __('Terms and conditions of MultiFactor', 'multisafepay') . '</a>';
         }
 
-        $description_text = $this->get_option('description');
-        if (!empty($description_text)) {
-            $description .= '<p>' . $description_text . '</p>';
+        if (!empty($this->description)) {
+            $description .= '<p>' . $this->description . '</p>';
         }
 
         echo $description;

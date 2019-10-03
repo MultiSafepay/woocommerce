@@ -62,9 +62,8 @@ class MultiSafepay_Gateway_Creditcard extends MultiSafepay_Gateway_Abstract
     {
         $description = '';
 
-        $description_text = $this->get_option('description');
-        if (!empty($description_text)) {
-            $description .= '<p>' . $description_text . '</p>';
+        if (!empty($this->description)) {
+            $description .= '<p>' . $this->description . '</p>';
         }
 
         $msp = new MultiSafepay_Client();
