@@ -23,10 +23,14 @@
 
 class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 {
+    /**
+     * @var string
+     */
+    const MULTISAFEPAY_PLUGIN_VERSION = '3.2.0';
 
     public static function getVersion()
     {
-        return get_option('multisafepay_version');
+        return self::MULTISAFEPAY_PLUGIN_VERSION;
     }
 
     public static function getCode()
@@ -606,11 +610,13 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     {
         global $woocommerce;
 
-        return ( array( "shop"          => "WooCommerce",
-                        "shop_version"  => 'WooCommerce '.$woocommerce->version,
-                        "plugin_version"=> '('.get_option('multisafepay_version').')',
-                        "partner"       => '',
-                        "shop_root_url" => ''));
+        return ([
+            'shop' => 'WooCommerce',
+            'shop_version' => 'WooCommerce ' . $woocommerce->version,
+            'plugin_version' => '(' . self::MULTISAFEPAY_PLUGIN_VERSION . ')',
+            'partner' => '',
+            'shop_root_url' => ''
+        ]);
     }
 
     public function getLocale()
