@@ -47,7 +47,7 @@ function error_woocommerce_not_active()
     echo '<div class="error"><p>' . __('To use the Multisafepay plug-in it is required that Woocommerce is active', 'multisafepay') . '</p></div>';
 }
 
-function error_curl_not_installed()
+function msp_error_curl_not_installed()
 {
     echo '<div class="error"><p>' . __('Curl is not installed.<br />In order to use the MultiSafepay plug-in, you must install CURL.<br />Ask your system administrator to install php_curl', 'multisafepay') . '</p></div>';
 }
@@ -55,7 +55,7 @@ function error_curl_not_installed()
 
 // Curl is niet geinstalleerd. foutmelding weergeven
 if (!function_exists('curl_version')) {
-    add_action('admin_notices', __('error_curl_not_installed', 'multisafepay'));
+    add_action('admin_notices', __('msp_error_curl_not_installed', 'multisafepay'));
 }
 
 
