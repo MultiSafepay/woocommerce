@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Ing extends MultiSafepay_Gateway_Abstract
 
     public static function getName()
     {
-        return __('ING HomePay', 'multisafepay');
+        return __("ING Home'Pay", 'multisafepay');
     }
 
     public static function getSettings()
