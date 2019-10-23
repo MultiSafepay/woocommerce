@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultiSafepay\n"
-"POT-Creation-Date: 2019-10-21 14:07+0200\n"
-"PO-Revision-Date: 2019-10-21 14:09+0200\n"
+"POT-Creation-Date: 2019-10-23 12:04+0200\n"
+"PO-Revision-Date: 2019-10-23 12:04+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -442,12 +442,12 @@ msgstr "Test modus"
 #: includes/classes/MultiSafepay/Gateways.php:233
 #, php-format
 msgid "Activate %s"
-msgstr "Aktiveer %s"
+msgstr "Activeer %s"
 
 #: includes/classes/MultiSafepay/Gateways.php:218
 msgid "Only enable if the API-Key is from a MultiSafepay Test-account."
 msgstr ""
-"Enkel aktiveren indien de API-Sleutel van een MultiSafepay Test-account is."
+"Enkel activeren indien de API-Sleutel van een MultiSafepay Test-account is."
 
 #: includes/classes/MultiSafepay/Gateways.php:223
 #: includes/classes/MultiSafepay/Gateways.php:224
@@ -459,7 +459,7 @@ msgstr ""
 #: includes/classes/MultiSafepay/Gateways.php:236
 #, php-format
 msgid "When enabled %s will be available during checkout."
-msgstr "Indien geaktiveerd is %s beschikbaar tijdens het afrekenen."
+msgstr "Indien geactiveerd is %s beschikbaar tijdens het afrekenen."
 
 #: includes/classes/MultiSafepay/Gateways.php:232
 #: includes/classes/MultiSafepay/Gateways.php:233
@@ -512,7 +512,7 @@ msgstr "Verzend een factuur"
 #: includes/classes/MultiSafepay/Gateways.php:269
 msgid "When enabled an invoice is send after a transaction is completed"
 msgstr ""
-"Indien geaktiveerd wordt er een factuur gestuurd nadat de betaling is "
+"Indien geactiveerd wordt er een factuur gestuurd nadat de betaling is "
 "afgerond"
 
 #: includes/classes/MultiSafepay/Gateways.php:274
@@ -533,12 +533,12 @@ msgstr "Debug"
 
 #: includes/classes/MultiSafepay/Gateways.php:283
 msgid "Activate debug mode"
-msgstr "Aktiveer debug modus"
+msgstr "Activeer debug modus"
 
 #: includes/classes/MultiSafepay/Gateways.php:286
 msgid "When enabled (and wordpress debug is enabled it will log transactions)"
 msgstr ""
-"Indien geaktiveerd ( en de WordPress Debug-modus is aktief) worden de "
+"Indien geactiveerd ( en de WordPress Debug-modus is actief) worden de "
 "transacties naar een logbestand geschreven"
 
 #: includes/classes/MultiSafepay/Gateways.php:290
@@ -628,7 +628,7 @@ msgstr "Niet mogelijk te communiceren met de server van MultiSafepay"
 msgid ""
 "To use the Multisafepay plug-in it is required that Woocommerce is active"
 msgstr ""
-"Om de MultiSafepay plug-in te gebruiken  dient  WooCommerce aktief te zijn."
+"Om de MultiSafepay plug-in te gebruiken  dient  WooCommerce actief te zijn."
 
 #: multisafepay.php:52
 msgid ""
@@ -643,88 +643,3 @@ msgstr ""
 #| msgid "error_curl_not_installed"
 msgid "msp_error_curl_not_installed"
 msgstr "error_curl_is niet geinstalleerd"
-
-#~ msgid "Direct"
-#~ msgstr "Directe"
-
-#~ msgid "Merchant-ID"
-#~ msgstr "Klantnummer"
-
-#~ msgid ""
-#~ "To use the Multisafepay plugin it is required that woocommerce is active"
-#~ msgstr ""
-#~ "WooCommerce dient geinstalleerd te zijn voordat gebruik gemaakt kan "
-#~ "worden van de MultiSafepay plug-in"
-
-#~ msgid "There is a new version of the MultiSafepay plugin available. "
-#~ msgstr "Er is een nieuwe versie van de MultiSafepay plug-in beschikbaar"
-
-#~ msgid "View version"
-#~ msgstr "Bekijk  de wijzigingen"
-
-#~ msgid " details"
-#~ msgstr "details"
-
-#~ msgid " or "
-#~ msgstr "of"
-
-#~ msgid "download now."
-#~ msgstr "download nu."
-
-#~ msgid "Payment error:"
-#~ msgstr "Betalingsfout:"
-
-#~ msgid "Unable to get transaction. Error: "
-#~ msgstr "Kan de transactie niet vinden. Fout:"
-
-#~ msgid "Return to website"
-#~ msgstr "Keer terug naar de website"
-
-#~ msgid "Accountnumber"
-#~ msgstr "Rekeningnummer"
-
-#~ msgid ""
-#~ "Curl is not installed.<br />In order to use the MultiSafepay plug-in, you "
-#~ "must install install CURL.<br />Ask your system administrator to install "
-#~ "php_curl"
-#~ msgstr ""
-#~ "Curl is niet geinstalleerd.<br />Installeer CURL om deze plug-in te "
-#~ "kunnen gebruiken.<br />Vraag uw systeembeheerder"
-
-#~ msgid ""
-#~ "The minimal amount in euro's  for an order to show this payment method"
-#~ msgstr ""
-#~ "Het minimale orderbedrag in euro's om met deze betaalmethode te kunnen "
-#~ "afrekenen"
-
-#~ msgid "The minimal amount in euro's  for an order to show E-Invoice"
-#~ msgstr "Minimum orderbedrag in euro's om via E-Invoice te kunnen afrekenen"
-
-#~ msgid "The max order amount in euro's  for an order to show E-Invoice"
-#~ msgstr "Maximum orderbedrag in euro's om via E-Invoice te kunnen afrekenen"
-
-#~ msgid "The minimal amount in euro's  for an order to show Klarna"
-#~ msgstr "Minimum orderbedrag in euro's om via Klarna  te kunnen afrekenen"
-
-#~ msgid "The max order amount in euro's  for an order to show Klarna"
-#~ msgstr "Maximum orderbedrag in euro's om via Klarna  te kunnen afrekenen"
-
-#~ msgid "The minimal amount in euro's for an order to show Pay After Delivery"
-#~ msgstr ""
-#~ "Minimum orderbedrag in euro's om via Betaal Na Ontvangst  te kunnen "
-#~ "afrekenen"
-
-#~ msgid ""
-#~ "The max order amount in euro's for an order to show Pay After Delivery"
-#~ msgstr ""
-#~ "Maximum orderbedrag in euro's om via Betaal Na Ontvangst  te kunnen "
-#~ "afrekenen"
-
-#~ msgid "Activate Test mode."
-#~ msgstr "Aktiveer Test modus"
-
-#~ msgid ""
-#~ "Enable if the API-Key is from your MultiSafepay TEST-account, otherwise "
-#~ "leave empty."
-#~ msgstr ""
-#~ "Aktiveer enkel indien de API-Sleutel van uw MultiSafepay Test-account is."
