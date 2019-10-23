@@ -579,13 +579,13 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         $billing_country       = method_exists($order, 'get_billing_country')    ? $order->get_billing_country()    : $order->billing_country;
         $billing_phone         = method_exists($order, 'get_billing_phone')      ? $order->get_billing_phone()      : $order->billing_phone;
         $billing_email         = method_exists($order, 'get_billing_email')      ? $order->get_billing_email()      : $order->billing_email;
-        $ip_address            = class_exists('WC_Geolocation', false)          ? WC_Geolocation::get_ip_address() : $_SERVER['REMOTE_ADDR'];
+        $ip_address            = class_exists('WC_Geolocation', false)    ? WC_Geolocation::get_ip_address() : $_SERVER['REMOTE_ADDR'];
 
         $address = $billing_address_1;
         list ($street, $houseNumber) = $msp->parseCustomerAddress($address);
 
         return array(   "locale"        => $this->getLocale(),
-                        "ip_address"    => $ip_address,
+                        "ip_address"    => $this->parseIpAddress($ip_address),
                         "referrer"      => $_SERVER['HTTP_REFERER'],
                         "user_agent"    => $_SERVER['HTTP_USER_AGENT'],
                         "first_name"    => $billing_first_name,
@@ -633,5 +633,14 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
                 error_log($log);
             }
         }
+    }
+
+    /**
+     * @param $ipAddress
+     * @return string
+     */
+    public function parseIpAddress($ipAddress)
+    {
+        return trim(reset(explode(',', $ipAddress)));
     }
 }
