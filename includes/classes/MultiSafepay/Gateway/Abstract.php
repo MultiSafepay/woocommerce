@@ -494,19 +494,15 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         return array($shopping_cart, $checkout_options);
     }
 
+    /**
+     * @param $order_id
+     * @return array
+     */
     public function getGatewayInfo($order_id)
     {
         $order = wc_get_order($order_id);
 
         switch ($this->getGatewayCode()) {
-            case 'KLARNA':
-                $gender = $_POST['klarna_gender'];
-                $gebdat = $_POST['klarna_birthday'];
-
-                // Swap format to YYYY-MM-DD and replace delimiter to - so YYYY/MM/DD will become YYYY-MM-DD
-                $gebdat = preg_replace("/(^(\d{2}).(\d{2}).(\d{4}))/", "$4-$3-$2", $gebdat);
-                $gebdat = preg_replace("/[^0-9]/", "-", $gebdat);
-                break;
             case 'PAYAFTER':
                 $gebdat = $_POST['pad_birthday'];
                 $account = $_POST['pad_account'];
@@ -521,13 +517,14 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         $billingPhone  = (method_exists($order, 'get_billing_phone'))     ? $order->get_billing_phone()      : $order->billing_phone;
         $billingEmail  = (method_exists($order, 'get_billing_email'))     ? $order->get_billing_email()      : $order->billing_email;
 
-        return (array(  'referrer'      => $_SERVER['HTTP_REFERER'],
-                        'user_agent'    => $_SERVER['HTTP_USER_AGENT'],
-                        'birthday'      => isset($gebdat)  ? $gebdat  : '',
-                        'bankaccount'   => isset($account) ? $account : '',
-                        'phone'         => $billingPhone,
-                        'email'         => $billingEmail,
-                        'gender'        => isset($gender)  ? $gender  : '') );
+        return [
+            'referrer' => $_SERVER['HTTP_REFERER'],
+            'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+            'birthday' => isset($gebdat) ? $gebdat : '',
+            'bankaccount' => isset($account) ? $account : '',
+            'phone' => $billingPhone,
+            'email' => $billingEmail
+        ];
     }
 
     public function setItemList($items)

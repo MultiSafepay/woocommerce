@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultiSafepay\n"
-"POT-Creation-Date: 2019-10-23 12:04+0200\n"
-"PO-Revision-Date: 2019-10-23 12:04+0200\n"
+"POT-Creation-Date: 2019-10-24 10:38+0200\n"
+"PO-Revision-Date: 2019-10-24 10:39+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -25,7 +25,6 @@ msgstr "Activeer deze module om %s betalingen te accepteren door MultiSafepay"
 #: includes/classes/MultiSafepay/Gateway/Banktrans.php:77
 #: includes/classes/MultiSafepay/Gateway/Einvoice.php:78
 #: includes/classes/MultiSafepay/Gateway/Ideal.php:86
-#: includes/classes/MultiSafepay/Gateway/Klarna.php:77
 #: includes/classes/MultiSafepay/Gateway/Payafter.php:77
 msgid "Enable"
 msgstr "Activeren"
@@ -75,7 +74,6 @@ msgstr "Bankoverboeking"
 #: includes/classes/MultiSafepay/Gateway/Banktrans.php:79
 #: includes/classes/MultiSafepay/Gateway/Einvoice.php:80
 #: includes/classes/MultiSafepay/Gateway/Ideal.php:88
-#: includes/classes/MultiSafepay/Gateway/Klarna.php:79
 #: includes/classes/MultiSafepay/Gateway/Payafter.php:79
 #, php-format
 msgid "Direct %s"
@@ -131,7 +129,6 @@ msgid "E-Invoice"
 msgstr ""
 
 #: includes/classes/MultiSafepay/Gateway/Einvoice.php:81
-#: includes/classes/MultiSafepay/Gateway/Klarna.php:80
 #: includes/classes/MultiSafepay/Gateway/Payafter.php:80
 msgid ""
 "If enable extra credentials can be filled in checkout form, otherwise an "
@@ -141,14 +138,14 @@ msgstr ""
 "afrekenscherm, anders verschijnt er een extra formulier."
 
 #: includes/classes/MultiSafepay/Gateway/Einvoice.php:85
-#: includes/classes/MultiSafepay/Gateway/Klarna.php:96
+#: includes/classes/MultiSafepay/Gateway/Klarna.php:77
 #: includes/classes/MultiSafepay/Gateway/Payafter.php:83
 #: includes/classes/MultiSafepay/Gateway/Santander.php:71
 msgid "Minimal order amount"
 msgstr "Minimum orderbedrag"
 
 #: includes/classes/MultiSafepay/Gateway/Einvoice.php:87
-#: includes/classes/MultiSafepay/Gateway/Klarna.php:98
+#: includes/classes/MultiSafepay/Gateway/Klarna.php:79
 #: includes/classes/MultiSafepay/Gateway/Payafter.php:85
 #: includes/classes/MultiSafepay/Gateway/Santander.php:73
 msgid ""
@@ -158,14 +155,14 @@ msgstr ""
 "afrekenen"
 
 #: includes/classes/MultiSafepay/Gateway/Einvoice.php:91
-#: includes/classes/MultiSafepay/Gateway/Klarna.php:101
+#: includes/classes/MultiSafepay/Gateway/Klarna.php:82
 #: includes/classes/MultiSafepay/Gateway/Payafter.php:88
 #: includes/classes/MultiSafepay/Gateway/Santander.php:77
 msgid "Maximal order amount"
 msgstr "Maximum orderbedrag"
 
 #: includes/classes/MultiSafepay/Gateway/Einvoice.php:93
-#: includes/classes/MultiSafepay/Gateway/Klarna.php:103
+#: includes/classes/MultiSafepay/Gateway/Klarna.php:84
 #: includes/classes/MultiSafepay/Gateway/Payafter.php:90
 #: includes/classes/MultiSafepay/Gateway/Santander.php:79
 msgid ""
@@ -175,7 +172,6 @@ msgstr ""
 "afrekenen"
 
 #: includes/classes/MultiSafepay/Gateway/Einvoice.php:106
-#: includes/classes/MultiSafepay/Gateway/Klarna.php:118
 #: includes/classes/MultiSafepay/Gateway/Payafter.php:103
 msgid "Birthday"
 msgstr "Geboortedatum"
@@ -266,46 +262,6 @@ msgstr "KBC"
 #: includes/classes/MultiSafepay/Gateway/Klarna.php:33
 msgid "Klarna"
 msgstr ""
-
-#: includes/classes/MultiSafepay/Gateway/Klarna.php:84
-#, fuzzy
-#| msgid "Klarna Invoice: "
-msgid "Klarna EID"
-msgstr "Klarna Factuur"
-
-#: includes/classes/MultiSafepay/Gateway/Klarna.php:86
-msgid "The EID from Klarna (Merchant-ID)"
-msgstr "Het EID van Klarna ( klantnummer)"
-
-#: includes/classes/MultiSafepay/Gateway/Klarna.php:90
-#, fuzzy
-#| msgid "Klarna Invoice: "
-msgid "Klarna Secret"
-msgstr "Klarna Factuur"
-
-#: includes/classes/MultiSafepay/Gateway/Klarna.php:92
-msgid "The Shared Secret from Klarna"
-msgstr ""
-
-#: includes/classes/MultiSafepay/Gateway/Klarna.php:125
-msgid "Gender"
-msgstr "Geslacht"
-
-#: includes/classes/MultiSafepay/Gateway/Klarna.php:128
-msgid "Male"
-msgstr "Man"
-
-#: includes/classes/MultiSafepay/Gateway/Klarna.php:129
-msgid "Female"
-msgstr "Vrouw"
-
-#: includes/classes/MultiSafepay/Gateway/Klarna.php:132
-msgid ""
-"By submitting this form I hereby agree with the Terms and conditions for "
-"Klarna "
-msgstr ""
-"Met het bevestigen van deze order gaat u akkoord met de Algemene voorwaarden "
-"van Klarna"
 
 #: includes/classes/MultiSafepay/Gateway/Liefcadeaukaart.php:33
 msgid "Lief-cadeaukaart"
@@ -582,20 +538,11 @@ msgstr "Klarna reserverings nummer"
 msgid "Payment %s via Multisafepay."
 msgstr "Betaling %s door MultiSafepay"
 
-#: includes/classes/MultiSafepay/Gateways.php:645
-#: includes/classes/MultiSafepay/Gateways.php:647
-msgid "Klarna Invoice: "
-msgstr "Klarna Factuur"
-
-#: includes/classes/MultiSafepay/Gateways.php:647
-msgid "not available."
-msgstr ""
-
-#: includes/classes/MultiSafepay/Gateways.php:729
+#: includes/classes/MultiSafepay/Gateways.php:710
 msgid "Pay with FastCheckout"
 msgstr "Betaal via FastCheckout"
 
-#: includes/classes/MultiSafepay/Gateways.php:785
+#: includes/classes/MultiSafepay/Gateways.php:766
 msgid ""
 "There are no shipping methods available. Please double check your address, "
 "or contact us if you need any help."
