@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultiSafepay\n"
-"POT-Creation-Date: 2019-10-24 10:38+0200\n"
-"PO-Revision-Date: 2019-10-24 10:39+0200\n"
+"POT-Creation-Date: 2019-10-29 15:33+0100\n"
+"PO-Revision-Date: 2019-10-29 15:33+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -15,13 +15,13 @@ msgstr ""
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: includes/classes/MultiSafepay/Gateway/Abstract.php:158
+#: includes/classes/MultiSafepay/Gateway/Abstract.php:153
 #, fuzzy, php-format
 #| msgid "Activate this module to accept %s transactions by MultiSafepay"
 msgid "Activate this module to accept %s transactions by MultiSafepay"
 msgstr "Activeer deze module om %s betalingen te accepteren door MultiSafepay"
 
-#: includes/classes/MultiSafepay/Gateway/Abstract.php:199
+#: includes/classes/MultiSafepay/Gateway/Abstract.php:194
 #: includes/classes/MultiSafepay/Gateway/Banktrans.php:77
 #: includes/classes/MultiSafepay/Gateway/Einvoice.php:78
 #: includes/classes/MultiSafepay/Gateway/Ideal.php:86
@@ -29,24 +29,24 @@ msgstr "Activeer deze module om %s betalingen te accepteren door MultiSafepay"
 msgid "Enable"
 msgstr "Activeren"
 
-#: includes/classes/MultiSafepay/Gateway/Abstract.php:201
+#: includes/classes/MultiSafepay/Gateway/Abstract.php:196
 #, php-format
 msgid "%s"
 msgstr ""
 
-#: includes/classes/MultiSafepay/Gateway/Abstract.php:206
+#: includes/classes/MultiSafepay/Gateway/Abstract.php:201
 msgid "Title"
 msgstr "Titel"
 
-#: includes/classes/MultiSafepay/Gateway/Abstract.php:208
+#: includes/classes/MultiSafepay/Gateway/Abstract.php:203
 msgid "This controls the title which the user sees during checkout."
 msgstr "Dit bepaalt de titel die de gebruiker ziet tijdens het betalen."
 
-#: includes/classes/MultiSafepay/Gateway/Abstract.php:214
+#: includes/classes/MultiSafepay/Gateway/Abstract.php:209
 msgid "Customer Message"
 msgstr "Omschrijving voor gebruiker"
 
-#: includes/classes/MultiSafepay/Gateway/Abstract.php:216
+#: includes/classes/MultiSafepay/Gateway/Abstract.php:211
 #, php-format
 msgid "Pay with %s"
 msgstr "Betaal met %s"
@@ -458,50 +458,36 @@ msgid "%s during checkout."
 msgstr "%s tijdens het afrekenen"
 
 #: includes/classes/MultiSafepay/Gateways.php:265
-msgid "Invoice"
-msgstr "Factuur"
-
-#: includes/classes/MultiSafepay/Gateways.php:266
-msgid "Send Invoice"
-msgstr "Verzend een factuur"
-
-#: includes/classes/MultiSafepay/Gateways.php:269
-msgid "When enabled an invoice is send after a transaction is completed"
-msgstr ""
-"Indien geactiveerd wordt er een factuur gestuurd nadat de betaling is "
-"afgerond"
-
-#: includes/classes/MultiSafepay/Gateways.php:274
 msgid "Analytics"
 msgstr ""
 
-#: includes/classes/MultiSafepay/Gateways.php:275
+#: includes/classes/MultiSafepay/Gateways.php:266
 msgid "Google Analytics"
 msgstr ""
 
-#: includes/classes/MultiSafepay/Gateways.php:277
+#: includes/classes/MultiSafepay/Gateways.php:268
 msgid "Your Google Analytics tracking code"
 msgstr "Uw Google Analytics tracking code"
 
-#: includes/classes/MultiSafepay/Gateways.php:282
+#: includes/classes/MultiSafepay/Gateways.php:273
 msgid "Debug"
 msgstr "Debug"
 
-#: includes/classes/MultiSafepay/Gateways.php:283
+#: includes/classes/MultiSafepay/Gateways.php:274
 msgid "Activate debug mode"
 msgstr "Activeer debug modus"
 
-#: includes/classes/MultiSafepay/Gateways.php:286
+#: includes/classes/MultiSafepay/Gateways.php:277
 msgid "When enabled (and wordpress debug is enabled it will log transactions)"
 msgstr ""
 "Indien geactiveerd ( en de WordPress Debug-modus is actief) worden de "
 "transacties naar een logbestand geschreven"
 
-#: includes/classes/MultiSafepay/Gateways.php:290
+#: includes/classes/MultiSafepay/Gateways.php:281
 msgid "Notification-URL"
 msgstr "Notificatie-URL"
 
-#: includes/classes/MultiSafepay/Gateways.php:293
+#: includes/classes/MultiSafepay/Gateways.php:284
 msgid ""
 "Copy&Paste this URL to your website configuration Notification-URL at your "
 "Multisafepay dashboard."
@@ -509,40 +495,40 @@ msgstr ""
 "Kopieer & plak deze URL in de website configuratie binnen het MultiSafepay "
 "dashboard"
 
-#: includes/classes/MultiSafepay/Gateways.php:567
-#: includes/classes/MultiSafepay/Gateways.php:578
-#: includes/classes/MultiSafepay/Gateways.php:603
+#: includes/classes/MultiSafepay/Gateways.php:558
+#: includes/classes/MultiSafepay/Gateways.php:569
+#: includes/classes/MultiSafepay/Gateways.php:594
+#: includes/classes/MultiSafepay/Gateways.php:604
 #: includes/classes/MultiSafepay/Gateways.php:613
-#: includes/classes/MultiSafepay/Gateways.php:622
-#: includes/classes/MultiSafepay/Gateways.php:628
+#: includes/classes/MultiSafepay/Gateways.php:619
 #, php-format
 msgid "Multisafepay payment status %s"
 msgstr "MultiSafepay betaalstatus %s"
 
-#: includes/classes/MultiSafepay/Gateways.php:572
+#: includes/classes/MultiSafepay/Gateways.php:563
 msgid "Banktransfer payment. Waiting for payment update"
 msgstr "Bankoverboeking. Wacht op betaling"
 
-#: includes/classes/MultiSafepay/Gateways.php:585
+#: includes/classes/MultiSafepay/Gateways.php:576
 #, php-format
 msgid "Validation error: Multisafepay amounts do not match (gross %s)."
 msgstr "Validatie fout: Het orderbedrag komt niet overeen. %s"
 
-#: includes/classes/MultiSafepay/Gateways.php:596
+#: includes/classes/MultiSafepay/Gateways.php:587
 msgid "Klarna Reservation number: "
 msgstr "Klarna reserverings nummer"
 
-#: includes/classes/MultiSafepay/Gateways.php:602
-#: includes/classes/MultiSafepay/Gateways.php:621
+#: includes/classes/MultiSafepay/Gateways.php:593
+#: includes/classes/MultiSafepay/Gateways.php:612
 #, php-format
 msgid "Payment %s via Multisafepay."
 msgstr "Betaling %s door MultiSafepay"
 
-#: includes/classes/MultiSafepay/Gateways.php:710
+#: includes/classes/MultiSafepay/Gateways.php:701
 msgid "Pay with FastCheckout"
 msgstr "Betaal via FastCheckout"
 
-#: includes/classes/MultiSafepay/Gateways.php:766
+#: includes/classes/MultiSafepay/Gateways.php:757
 msgid ""
 "There are no shipping methods available. Please double check your address, "
 "or contact us if you need any help."

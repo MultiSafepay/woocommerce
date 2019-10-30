@@ -262,15 +262,6 @@ class MultiSafepay_Gateways
         );
 
         $addedSettings[] = array(
-            'name'      => __('Invoice', 'multisafepay'),
-            'desc'      => __('Send Invoice', 'multisafepay'),
-            'type'      => 'checkbox',
-            'default'   => 'yes',
-            'desc_tip'  => __('When enabled an invoice is send after a transaction is completed', 'multisafepay'),
-            'id'        => 'multisafepay_send_invoice',
-        );
-
-        $addedSettings[] = array(
             'name'      => __('Analytics', 'multisafepay'),
             'desc'      => __('Google Analytics', 'multisafepay'),
             'type'      => 'text',

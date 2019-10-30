@@ -92,11 +92,6 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         return ($time_active);
     }
 
-    public static function getSendInvoice()
-    {
-        return get_option('multisafepay_send_invoice');
-    }
-
     public static function getDebugMode()
     {
         return (get_option('multisafepay_debugmode') == 'yes' ? true : false);
