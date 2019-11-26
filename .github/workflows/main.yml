@@ -1,7 +1,8 @@
-name: Code sniffer
+name: Build
 on: [push]
 jobs:
   code_sniffer:
+    name: Code sniffer
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -11,3 +12,23 @@ jobs:
       - name: Run code sniffer
         run: |
           ~/.composer/vendor/bin/phpcs --standard=phpcs.ruleset.xml -n -v ${GITHUB_WORKSPACE}
+  phpunit:
+    name: Php Unit
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
+          MYSQL_ROOT_PASSWORD: password
+        ports:
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install composer packages
+        run: composer install --prefer-source
+      - name: Install Wordpress
+        run: bash bin/install-wp-tests.sh woocommerce_test root password 127.0.0.1:${{ job.services.mysql.ports['3306'] }}
+      - name: Run phpunit
+        run: vendor/bin/phpunit
