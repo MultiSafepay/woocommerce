@@ -66,5 +66,5 @@ if (is_plugin_active('woocommerce/woocommerce.php') || is_plugin_active_for_netw
     MultiSafepay_Autoload::register();
     MultiSafepay_Gateways::register();
 } else {
-    add_action('admin_notices', error_woocommerce_not_active);
+    add_action('admin_notices', 'error_woocommerce_not_active');
 }
