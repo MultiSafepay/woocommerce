@@ -20,7 +20,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-class Multisafepay_Test_Gateway_Ideal extends WC_Unit_Test_Case
+class Multisafepay_Test_Helper_Helper extends WC_Unit_Test_Case
 {
     public function testGetApiKey()
     {
@@ -30,6 +30,6 @@ class Multisafepay_Test_Gateway_Ideal extends WC_Unit_Test_Case
 
         update_option('multisafepay_api_key', '12345');
 
-        $this->assertEquals('12345', MultiSafepay_Gateway_Ideal::getApiKey());
+        $this->assertEquals('12345', MultiSafepay_Helper_Helper::getApiKey());
     }
 }

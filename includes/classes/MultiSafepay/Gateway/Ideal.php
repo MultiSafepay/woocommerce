@@ -99,9 +99,10 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
             $description = '';
 
             $msp = new MultiSafepay_Client();
+            $helper = new MultiSafepay_Helper_Helper();
 
-            $msp->setApiKey($this->getApiKey());
-            $msp->setApiUrl($this->getTestMode());
+            $msp->setApiKey($helper->getApiKey());
+            $msp->setApiUrl($helper->getTestMode());
 
             try {
                 $msg = null;

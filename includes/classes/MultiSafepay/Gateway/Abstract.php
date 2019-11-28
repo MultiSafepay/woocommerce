@@ -43,16 +43,6 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         throw new Exception('Please implement the getName method');
     }
 
-    public static function getApiKey()
-    {
-        return get_option('multisafepay_api_key');
-    }
-
-    public static function getTestMode()
-    {
-        return (get_option('multisafepay_testmode') == 'yes' ? true : false);
-    }
-
     public static function getEnabled()
     {
         return get_option('multisafepay_enabled');
@@ -110,9 +100,10 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     function setToShipped($order_id)
     {
         $msp = new MultiSafepay_Client();
+        $helper = new MultiSafepay_Helper_Helper();
 
-        $msp->setApiKey($this->getApiKey());
-        $msp->setApiUrl($this->getTestMode());
+        $msp->setApiKey($helper->getApiKey());
+        $msp->setApiUrl($helper->getTestMode());
 
         $endpoint = 'orders/' . $order_id;
         $setShipping = array("tracktrace_code" => null,
@@ -225,9 +216,10 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     {
         global $wpdb, $woocommerce;
         $msp   = new MultiSafepay_Client();
+        $helper = new MultiSafepay_Helper_Helper();
 
-        $msp->setApiKey($this->getApiKey());
-        $msp->setApiUrl($this->getTestMode());
+        $msp->setApiKey($helper->getApiKey());
+        $msp->setApiUrl($helper->getTestMode());
 
         $order = wc_get_order($order_id);
 
@@ -293,8 +285,10 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         }
 
         $msp = new MultiSafepay_Client();
-        $msp->setApiKey($this->getApiKey());
-        $msp->setApiUrl($this->getTestMode());
+        $helper = new MultiSafepay_Helper_Helper();
+
+        $msp->setApiKey($helper->getApiKey());
+        $msp->setApiUrl($helper->getTestMode());
 
         $order   = wc_get_order($order_id);
         $trns_id = $order->get_order_number();
