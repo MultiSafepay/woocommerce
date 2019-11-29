@@ -31,4 +31,6 @@ jobs:
       - name: Install Wordpress
         run: bash bin/install-wp-tests.sh woocommerce_test root password 127.0.0.1:${{ job.services.mysql.ports['3306'] }}
       - name: Run phpunit
-        run: vendor/bin/phpunit
+        run: vendor/bin/phpunit --coverage-clover=coverage.xml
+      - name: upload code coverage
+        run: bash <(curl -s https://codecov.io/bash) -t ${{ secrets.CODECOV_TOKEN }}
