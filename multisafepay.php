@@ -23,10 +23,10 @@
 
 /*
   Plugin Name: Multisafepay
-  Plugin URI: http://www.multisafepay.com
+  Plugin URI: https://docs.multisafepay.com/integrations/woocommerce/
   Description: Multisafepay Payment Plugin
   Author: Multisafepay
-  Author URI:http://www.multisafepay.com
+  Author URI: https://www.multisafepay.com
   Version: 3.2.0
 
   Copyright: ? 2012 Multisafepay(email : techsupport@multisafepay.com)
