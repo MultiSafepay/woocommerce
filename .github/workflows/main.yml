@@ -1,5 +1,8 @@
 name: Build
-on: [push]
+on:
+  push:
+  schedule:
+    - cron: '0 2 * * 0' # Weekly on Sundays at 02:00
 jobs:
   code_sniffer:
     name: Code sniffer
