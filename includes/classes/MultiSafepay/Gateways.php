@@ -174,7 +174,7 @@ class MultiSafepay_Gateways
             , 'MultiSafepay_Gateway_Parfumcadeaukaart'
             , 'MultiSafepay_Gateway_Podiumcadeaukaart'
             , 'MultiSafepay_Gateway_Sportenfit'
-            , 'MultiSafepay_Gateway_VVVBon'
+            , 'MultiSafepay_Gateway_Vvvcadeaukaart'
             , 'MultiSafepay_Gateway_Webshopgiftcard'
             , 'MultiSafepay_Gateway_Wellnessgiftcard'
             , 'MultiSafepay_Gateway_Wijncadeau'
