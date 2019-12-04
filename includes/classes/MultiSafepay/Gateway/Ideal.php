@@ -109,7 +109,7 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
                 $issuers = $msp->issuers->get();
             } catch (Exception $e) {
                 $msg = htmlspecialchars($e->getMessage());
-                $this->write_log($msg);
+                $helper->write_log($msg);
                 wc_add_notice($msg, 'error');
             }
 

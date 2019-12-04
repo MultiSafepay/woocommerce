@@ -43,11 +43,6 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         throw new Exception('Please implement the getName method');
     }
 
-    public static function getEnabled()
-    {
-        return get_option('multisafepay_enabled');
-    }
-
     public static function getTitle()
     {
         return get_option('multisafepay_gateway_title');
@@ -82,11 +77,6 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         return ($time_active);
     }
 
-    public static function getDebugMode()
-    {
-        return (get_option('multisafepay_debugmode') == 'yes' ? true : false);
-    }
-
     public static function getWarning()
     {
         return null;
@@ -116,7 +106,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
             $response = $msp->orders->patch($setShipping, $endpoint);
         } catch (Exception $e) {
             $msg = htmlspecialchars($e->getMessage());
-            $this->write_log($msg);
+            $helper->write_log($msg);
         }
 
         if ($msp->error) {
@@ -259,14 +249,14 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
             $msp->orders->post($my_order);
         } catch (Exception $e) {
             $msg = htmlspecialchars($e->getMessage());
-            $this->write_log($msg);
+            $helper->write_log($msg);
             wc_add_notice($msg, 'error');
         }
 
         if (!empty($msp->error_code)) {
-            $this->write_log('msp->transactiondata:');
-            $this->write_log($msp);
-            $this->write_log('msp->End debug');
+            $helper->write_log('msp->transactiondata:');
+            $helper->write_log($msp);
+            $helper->write_log('msp->End debug');
 
             return array(   'result'    => 'error',
                             'redirect'  => wc_get_cart_url() );
@@ -304,7 +294,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
             $msp->orders->post($refund, $endpoint);
         } catch (Exception $e) {
             $msg = 'Error: '.htmlspecialchars($e->getMessage());
-            $this->write_log($msg);
+            $helper->write_log($msg);
             wc_add_notice($msg, 'error');
         }
 
@@ -610,16 +600,6 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         return (get_locale());
     }
 
-    public function write_log($log)
-    {
-        if (get_option('multisafepay_debugmode') == 'yes') {
-            if (is_array($log) || is_object($log)) {
-                error_log(print_r($log, true));
-            } else {
-                error_log($log);
-            }
-        }
-    }
 
     /**
      * @param $ipAddress

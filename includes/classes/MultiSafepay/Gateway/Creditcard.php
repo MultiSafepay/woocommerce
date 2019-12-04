@@ -77,7 +77,7 @@ class MultiSafepay_Gateway_Creditcard extends MultiSafepay_Gateway_Abstract
             $gateways = $msp->gateways->get();
         } catch (Exception $e) {
             $msg = htmlspecialchars($e->getMessage());
-            $this->write_log($msg);
+            $helper->write_log($msg);
             wc_add_notice($msg, 'error');
         }
 
