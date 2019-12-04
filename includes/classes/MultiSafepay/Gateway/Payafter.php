@@ -22,6 +22,11 @@
  */
 class MultiSafepay_Gateway_Payafter extends MultiSafepay_Gateway_Abstract
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->has_fields = self::isDirect(self::getSettings());
+    }
 
     public static function getCode()
     {

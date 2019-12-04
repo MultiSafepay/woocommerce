@@ -126,10 +126,22 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         return ($image);
     }
 
+    /**
+     * @param $settings
+     * @return bool
+     */
+    public static function isDirect($settings)
+    {
+        if (!isset($settings['direct'])) {
+            return false;
+        }
+        return $settings['direct'] === 'yes';
+    }
+
     public function __construct()
     {
         $this->id                   = $this->getCode();
-        $this->has_fields           = true;
+        $this->has_fields           = false;
         $this->method_title         = $this->getName();
         $this->method_description   = sprintf(__('Activate this module to accept %s transactions by MultiSafepay', 'multisafepay'), $this->getName());
 
