@@ -91,7 +91,7 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
         $this->form_fields['direct'] = array('title' => __('Enable', 'multisafepay'),
             'type'          => 'checkbox',
             'label'         => sprintf(__('Direct %s', 'multisafepay'), $this->getName()),
-            'description'   => __('Enable of disable the selection of the preferred bank within the website.', 'multisafepay'),
+            'description'   => __('Enable or disable the selection of the preferred bank within the website.', 'multisafepay'),
             'default'       => 'yes');
         parent::init_form_fields($this->form_fields);
     }
@@ -118,7 +118,7 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
                 wc_add_notice($msg, 'error');
             }
 
-            $description .= __('Choose your bank', 'multisafepay') . '<br/>';
+            $description .= __('Please select an issuer', 'multisafepay') . '<br/>';
             $description .= '<select id="ideal_issuer" name="ideal_issuer" class="required-entry">';
             $description .= '<option value="">' . __('Please choose...', 'multisafepay') . '</option>';
             foreach ($issuers as $issuer) {

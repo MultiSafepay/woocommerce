@@ -146,7 +146,7 @@ class MultiSafepay_Client
     public function processAPIRequest($http_method, $api_method, $http_body = null)
     {
         if (empty($this->api_key)) {
-            throw new Exception(__('Please configure your MultiSafepay API Key.', 'multisafepay'));
+            throw new Exception(__('Please configure your MultiSafepay API key.', 'multisafepay'));
         }
 
         $url = $this->api_url . $api_method;

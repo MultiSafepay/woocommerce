@@ -143,7 +143,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         $this->id                   = $this->getCode();
         $this->has_fields           = false;
         $this->method_title         = $this->getName();
-        $this->method_description   = sprintf(__('Activate this module to accept %s transactions by MultiSafepay', 'multisafepay'), $this->getName());
+        $this->method_description   = sprintf(__('Enable this module to accept %s transactions via MultiSafepay', 'multisafepay'), $this->getName());
 
         if ($this->canRefund()) {
             $this->supports = array('products', 'refunds');
@@ -193,13 +193,13 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         $this->form_fields['title'] = array(
             'title'         => __('Title', 'woocommerce'),
             'type'          => 'text',
-            'description'   => __('This controls the title which the user sees during checkout.', 'woocommerce'),
+            'description'   => __('The title shown during checkout', 'woocommerce'),
             'default'       => $this->getName(),
             'desc_tip'      => true,
         );
 
         $this->form_fields['description'] = array(
-            'title'         => __('Customer Message', 'woocommerce'),
+            'title'         => __('Customer message', 'woocommerce'),
             'type'          => 'textarea',
             'default'       => sprintf(__('Pay with %s', 'multisafepay'), $this->getName()),
         );

@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Webshopgiftcard extends MultiSafepay_Gateway_Abstract
 
     public static function getName()
     {
-        return __('Webshop-giftcard', 'multisafepay');
+        return __('Webshop Giftcard', 'multisafepay');
     }
 
     public static function getSettings()

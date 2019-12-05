@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Nationaletuinbon extends MultiSafepay_Gateway_Abstrac
 
     public static function getName()
     {
-        return __('Nationale-tuinbon', 'multisafepay');
+        return __('Nationale Tuinbon', 'multisafepay');
     }
 
     public static function getSettings()

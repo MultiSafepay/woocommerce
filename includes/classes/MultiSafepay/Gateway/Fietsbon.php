@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Fietsbon extends MultiSafepay_Gateway_Abstract
 
     public static function getName()
     {
-        return __('Fietsbon', 'multisafepay');
+        return __('Fietsenbon', 'multisafepay');
     }
 
     public static function getSettings()

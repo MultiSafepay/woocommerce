@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Wellnessgiftcard extends MultiSafepay_Gateway_Abstrac
 
     public static function getName()
     {
-        return __('Wellness-giftcard', 'multisafepay');
+        return __('Wellness Giftcard', 'multisafepay');
     }
 
     public static function getSettings()

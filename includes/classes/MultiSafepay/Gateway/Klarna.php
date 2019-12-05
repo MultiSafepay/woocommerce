@@ -74,14 +74,14 @@ class MultiSafepay_Gateway_Klarna extends MultiSafepay_Gateway_Abstract
             $this->form_fields['warning'] = $warning;
         }
 
-        $this->form_fields['minamount'] = array('title' => __('Minimal order amount', 'multisafepay'),
+        $this->form_fields['minamount'] = array('title' => __('Minimum order amount', 'multisafepay'),
             'type' => 'text',
-            'description' => __('The minimal order amount in euro\'s  for an order to use this payment method', 'multisafepay'),
+            'description' => __('The minimum order amount in euro\'s for an order to use this payment method', 'multisafepay'),
             'css' => 'width: 100px;');
 
-        $this->form_fields['maxamount'] = array('title' => __('Maximal order amount', 'multisafepay'),
+        $this->form_fields['maxamount'] = array('title' => __('Maximum order amount', 'multisafepay'),
             'type' => 'text',
-            'description' => __('The maximal order amount in euro\'s  for an order to use this payment method', 'multisafepay'),
+            'description' => __('The maximum order amount in euro\'s for an order to use this payment method', 'multisafepay'),
             'css' => 'width: 100px;');
 
         parent::init_form_fields($this->form_fields);

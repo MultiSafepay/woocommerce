@@ -22,14 +22,14 @@
  */
 
 /*
-  Plugin Name: Multisafepay
+  Plugin Name: MultiSafepay
   Plugin URI: https://docs.multisafepay.com/integrations/woocommerce/
-  Description: Multisafepay Payment Plugin
-  Author: Multisafepay
+  Description: MultiSafepay Payment Plugin
+  Author: MultiSafepay
   Author URI: https://www.multisafepay.com
   Version: 3.2.0
 
-  Copyright: ? 2012 Multisafepay(email : techsupport@multisafepay.com)
+  Copyright: ? 2012 MultiSafepay (email : integration@multisafepay.com)
   License: GNU General Public License v3.0
   License URI: http://www.gnu.org/licenses/gpl-3.0.html
  */
@@ -44,16 +44,16 @@ load_plugin_textdomain('multisafepay', false, plugin_basename(dirname(__FILE__))
 
 function error_woocommerce_not_active()
 {
-    echo '<div class="error"><p>' . __('To use the Multisafepay plug-in it is required that Woocommerce is active', 'multisafepay') . '</p></div>';
+    echo '<div class="error"><p>' . __('Activate WooCommerce to use the MultiSafepay plugin', 'multisafepay') . '</p></div>';
 }
 
 function msp_error_curl_not_installed()
 {
-    echo '<div class="error"><p>' . __('Curl is not installed.<br />In order to use the MultiSafepay plug-in, you must install CURL.<br />Ask your system administrator to install php_curl', 'multisafepay') . '</p></div>';
+    echo '<div class="error"><p>' . __('cURL is not installed.<br />In order to use the MultiSafepay plugin, you must install cURL.<br />Ask your system administrator to install php_curl', 'multisafepay') . '</p></div>';
 }
 
 
-// Curl is niet geinstalleerd. foutmelding weergeven
+// cURL is niet geinstalleerd. foutmelding weergeven
 if (!function_exists('curl_version')) {
     add_action('admin_notices', __('msp_error_curl_not_installed', 'multisafepay'));
 }

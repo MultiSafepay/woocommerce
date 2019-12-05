@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Fashioncheque extends MultiSafepay_Gateway_Abstract
 
     public static function getName()
     {
-        return __('Fashion-Cheque', 'multisafepay');
+        return __('Fashioncheque', 'multisafepay');
     }
 
     public static function getSettings()

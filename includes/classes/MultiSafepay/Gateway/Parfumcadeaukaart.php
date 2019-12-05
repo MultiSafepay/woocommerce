@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Parfumcadeaukaart extends MultiSafepay_Gateway_Abstra
 
     public static function getName()
     {
-        return __('Parfum-cadeaukaart', 'multisafepay');
+        return __('Parfum Cadeaukaart', 'multisafepay');
     }
 
     public static function getSettings()

@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Banktrans extends MultiSafepay_Gateway_Abstract
 
     public static function getName()
     {
-        return __('Banktransfer', 'multisafepay');
+        return __('Bank transfer', 'multisafepay');
     }
 
     public static function getSettings()
@@ -77,7 +77,7 @@ class MultiSafepay_Gateway_Banktrans extends MultiSafepay_Gateway_Abstract
         $this->form_fields['direct'] = array('title' => __('Enable', 'multisafepay'),
             'type' => 'checkbox',
             'label' => sprintf(__('Direct %s', 'multisafepay'), $this->getName()),
-            'description' => __('If enabled, the consumer receives an e-mail with payment details, no extra credentals are needed during checkout.', 'multisafepay'),
+            'description' => __('If enabled, the consumer receives an e-mail with payment details, and no extra information is required during checkout.', 'multisafepay'),
             'default' => 'no');
         parent::init_form_fields($this->form_fields);
     }

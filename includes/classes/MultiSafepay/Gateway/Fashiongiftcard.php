@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Fashiongiftcard extends MultiSafepay_Gateway_Abstract
 
     public static function getName()
     {
-        return __('Fashion-Giftcard', 'multisafepay');
+        return __('Fashion Giftcard', 'multisafepay');
     }
 
     public static function getSettings()

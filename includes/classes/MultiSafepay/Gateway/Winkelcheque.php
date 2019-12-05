@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Winkelcheque extends MultiSafepay_Gateway_Abstract
 
     public static function getName()
     {
-        return __('Winkelcheque', 'multisafepay');
+        return __('Winkel Cheque', 'multisafepay');
     }
 
     public static function getSettings()

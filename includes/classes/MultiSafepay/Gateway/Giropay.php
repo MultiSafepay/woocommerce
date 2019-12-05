@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Giropay extends MultiSafepay_Gateway_Abstract
 
     public static function getName()
     {
-        return __('GiroPay', 'multisafepay');
+        return __('Giropay', 'multisafepay');
     }
 
     public static function getSettings()

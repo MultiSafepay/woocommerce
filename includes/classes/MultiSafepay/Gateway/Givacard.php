@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Givacard extends MultiSafepay_Gateway_Abstract
 
     public static function getName()
     {
-        return __('Givacard', 'multisafepay');
+        return __('GivaCard', 'multisafepay');
     }
 
     public static function getSettings()

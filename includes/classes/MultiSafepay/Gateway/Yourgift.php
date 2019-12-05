@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Yourgift extends MultiSafepay_Gateway_Abstract
 
     public static function getName()
     {
-        return __('Yourgift', 'multisafepay');
+        return __('YourGift', 'multisafepay');
     }
 
     public static function getSettings()

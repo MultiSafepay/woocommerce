@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Beautyandwellness extends MultiSafepay_Gateway_Abstra
 
     public static function getName()
     {
-        return __('Beauty and wellness', 'multisafepay');
+        return __('Beauty & Wellness', 'multisafepay');
     }
 
     public static function getSettings()

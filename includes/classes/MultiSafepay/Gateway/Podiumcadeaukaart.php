@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Podiumcadeaukaart extends MultiSafepay_Gateway_Abstra
 
     public static function getName()
     {
-        return __('Podium-Cadeaukaart', 'multisafepay');
+        return __('Podium Cadeaukaart', 'multisafepay');
     }
 
     public static function getSettings()

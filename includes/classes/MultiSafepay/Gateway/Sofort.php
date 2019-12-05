@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Sofort extends MultiSafepay_Gateway_Abstract
 
     public static function getName()
     {
-        return __('Sofort', 'multisafepay');
+        return __('SOFORT Banking ', 'multisafepay');
     }
 
     public static function getSettings()

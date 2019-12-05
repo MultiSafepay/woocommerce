@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Dirdeb extends MultiSafepay_Gateway_Abstract
 
     public static function getName()
     {
-        return __('DirectDebit', 'multisafepay');
+        return __('Direct Debit', 'multisafepay');
     }
 
     public static function getSettings()

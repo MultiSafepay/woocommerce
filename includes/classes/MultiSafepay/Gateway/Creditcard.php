@@ -35,7 +35,7 @@ class MultiSafepay_Gateway_Creditcard extends MultiSafepay_Gateway_Abstract
 
     public static function getName()
     {
-        return __('Creditcard', 'multisafepay');
+        return __('Credit card', 'multisafepay');
     }
 
     public static function getSettings()
@@ -86,7 +86,7 @@ class MultiSafepay_Gateway_Creditcard extends MultiSafepay_Gateway_Abstract
             wc_add_notice($msg, 'error');
         }
 
-        $description .= __('Select CreditCard', 'multisafepay') . '<br/>';
+        $description .= __('Select a credit card', 'multisafepay') . '<br/>';
         $description .= '<select id="cc_issuer" name="cc_issuer" class="required-entry">';
 
         foreach ($gateways as $gateway) {
@@ -108,7 +108,7 @@ class MultiSafepay_Gateway_Creditcard extends MultiSafepay_Gateway_Abstract
     public function validate_fields()
     {
         if (empty($_POST['cc_issuer'])) {
-            wc_add_notice(__('Error: ', 'multisafepay') . ' ' . __('Please select a CreditCard.', 'multisafepay'));
+            wc_add_notice(__('Error: ', 'multisafepay') . ' ' . __('Please select a credit card', 'multisafepay'));
             return false;
         }
         return true;

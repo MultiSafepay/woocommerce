@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Fijncadeau extends MultiSafepay_Gateway_Abstract
 
     public static function getName()
     {
-        return __('FijnCadeau', 'multisafepay');
+        return __('Fijncadeau', 'multisafepay');
     }
 
     public static function getSettings()

@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Liefcadeaukaart extends MultiSafepay_Gateway_Abstract
 
     public static function getName()
     {
-        return __('Lief-cadeaukaart', 'multisafepay');
+        return __('Lief Cadeaukaart', 'multisafepay');
     }
 
     public static function getSettings()
