@@ -29,6 +29,12 @@ class Multisafepay_Test_Gateway_Abstract extends WC_Unit_Test_Case
         }
     }
 
+    public function tearDown()
+    {
+        parent::tearDown();
+        delete_option('woocommerce_multisafepay_amex_settings');
+    }
+
     public function updateIdealDirectSettings($type)
     {
         update_option('woocommerce_multisafepay_ideal_settings', ['direct' => $type]);
@@ -46,5 +52,27 @@ class Multisafepay_Test_Gateway_Abstract extends WC_Unit_Test_Case
     {
         $settings = $this->updateIdealDirectSettings('no');
         $this->assertFalse(MultiSafepay_Gateway_Abstract::isDirect($settings));
+    }
+
+    /**
+     * @return void
+     */
+    public function testgetMaxAmountReturnsFloatAmountWhenSet()
+    {
+        if (!get_option('woocommerce_multisafepay_amex_settings')) {
+            add_option('woocommerce_multisafepay_amex_settings');
+        }
+        update_option('woocommerce_multisafepay_amex_settings', ['max_amount' => 13]);
+        $gateway = new MultiSafepay_Gateway_Amex();
+        $this->assertSame($gateway->getMaxAmount(), 13.00);
+    }
+
+    /**
+     * @return void
+     */
+    public function testgetMaxAmountReturnsZeroWhenNotSet()
+    {
+        $gateway = new MultiSafepay_Gateway_Amex();
+        $this->assertSame($gateway->getMaxAmount(), 0.00);
     }
 }

@@ -621,4 +621,12 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     {
         return trim(reset(explode(',', $ipAddress)));
     }
+
+    /**
+     * @return float
+     */
+    public function getMaxAmount()
+    {
+        return isset($this->settings['max_amount']) ? (float) $this->settings['max_amount'] : 0.00;
+    }
 }
