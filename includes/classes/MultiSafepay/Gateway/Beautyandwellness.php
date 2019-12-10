@@ -25,7 +25,7 @@ class MultiSafepay_Gateway_Beautyandwellness extends MultiSafepay_Gateway_Abstra
 
     public static function getCode()
     {
-        return "multisafepay_beautyandwellness";
+        return 'multisafepay_beautyandwellness';
     }
 
     public static function getName()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Beautyandwellness extends MultiSafepay_Gateway_Abstra
 
     public static function getGatewayCode()
     {
-        return "BEAUTYANDWELLNESS";
+        return 'BEAUTYANDWELLNESS';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

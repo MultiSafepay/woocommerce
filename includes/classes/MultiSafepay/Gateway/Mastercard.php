@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Mastercard extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_mastercard";
+        return 'multisafepay_mastercard';
     }
 
     public static function getName()
@@ -55,12 +55,12 @@ class MultiSafepay_Gateway_Mastercard extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "MASTERCARD";
+        return 'MASTERCARD';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 
     /**

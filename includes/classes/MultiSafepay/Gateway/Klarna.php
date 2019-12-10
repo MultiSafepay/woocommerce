@@ -25,7 +25,7 @@ class MultiSafepay_Gateway_Klarna extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_klarna";
+        return 'multisafepay_klarna';
     }
 
     public static function getName()
@@ -50,7 +50,7 @@ class MultiSafepay_Gateway_Klarna extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "KLARNA";
+        return 'KLARNA';
     }
 
     /**
@@ -58,7 +58,7 @@ class MultiSafepay_Gateway_Klarna extends MultiSafepay_Gateway_Abstract
      */
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 
     /**
@@ -92,7 +92,7 @@ class MultiSafepay_Gateway_Klarna extends MultiSafepay_Gateway_Abstract
 
         global $woocommerce;
 
-        $settings = (array) get_option("woocommerce_multisafepay_klarna_settings");
+        $settings = (array) get_option('woocommerce_multisafepay_klarna_settings');
 
         if (!empty($settings['minamount']) && $woocommerce->cart->total < $settings['minamount']) {
             unset($gateways['multisafepay_klarna']);

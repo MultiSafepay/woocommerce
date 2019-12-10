@@ -25,7 +25,7 @@ class MultiSafepay_Gateway_Sportenfit extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_sportenfit";
+        return 'multisafepay_sportenfit';
     }
 
     public static function getName()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Sportenfit extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "SPORTENFIT";
+        return 'SPORTENFIT';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

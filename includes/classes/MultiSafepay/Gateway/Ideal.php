@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_ideal";
+        return 'multisafepay_ideal';
     }
 
     public static function getName()
@@ -55,7 +55,7 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "IDEAL";
+        return 'IDEAL';
     }
 
     public function getType()
@@ -63,16 +63,16 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
         $settings = get_option('woocommerce_multisafepay_ideal_settings');
 
         if ($settings['direct'] == 'yes' && isset($_POST['ideal_issuer'])) {
-            return "direct";
+            return 'direct';
         } else {
-            return "redirect";
+            return 'redirect';
         }
     }
 
     public function getGatewayInfo($order_id)
     {
         if (isset($_POST['ideal_issuer'])) {
-            return (array("issuer_id" => $_POST['ideal_issuer']));
+            return (array('issuer_id' => $_POST['ideal_issuer']));
         } else {
             return ('');
         }

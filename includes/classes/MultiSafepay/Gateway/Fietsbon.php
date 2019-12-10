@@ -25,7 +25,7 @@ class MultiSafepay_Gateway_Fietsbon extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_fietsbon";
+        return 'multisafepay_fietsbon';
     }
 
     public static function getName()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Fietsbon extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "FIETSBON";
+        return 'FIETSBON';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

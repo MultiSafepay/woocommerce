@@ -37,10 +37,10 @@
 
 
 // Load plugin functions
-require_once(ABSPATH . '/wp-admin/includes/plugin.php');
+require_once ABSPATH . '/wp-admin/includes/plugin.php';
 
 // Load textdomain
-load_plugin_textdomain('multisafepay', false, plugin_basename(dirname(__FILE__)) . "/languages");
+load_plugin_textdomain('multisafepay', false, plugin_basename(dirname(__FILE__)) . '/languages');
 
 function error_woocommerce_not_active()
 {
@@ -60,7 +60,7 @@ if (!function_exists('curl_version')) {
 
 
 if (is_plugin_active('woocommerce/woocommerce.php') || is_plugin_active_for_network('woocommerce/woocommerce.php')) {
-    //Autoloader laden en registreren
+    // Autoloader laden en registreren
     require_once dirname(__FILE__) . '/includes/classes/Autoload.php';
 
     MultiSafepay_Autoload::register();

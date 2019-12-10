@@ -25,7 +25,7 @@ class MultiSafepay_Gateway_Santander extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_santander";
+        return 'multisafepay_santander';
     }
 
     public static function getName()
@@ -50,12 +50,12 @@ class MultiSafepay_Gateway_Santander extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "SANTANDER";
+        return 'SANTANDER';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 
     public function init_form_fields($form_fields = array())
@@ -89,7 +89,7 @@ class MultiSafepay_Gateway_Santander extends MultiSafepay_Gateway_Abstract
 
         global $woocommerce;
 
-        $settings = (array) get_option("woocommerce_multisafepay_santander_settings");
+        $settings = (array) get_option('woocommerce_multisafepay_santander_settings');
 
         if (!empty($settings['minamount']) && $woocommerce->cart->total < $settings['minamount']) {
             unset($gateways['multisafepay_santander']);

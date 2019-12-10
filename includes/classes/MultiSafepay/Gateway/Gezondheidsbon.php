@@ -25,7 +25,7 @@ class MultiSafepay_Gateway_Gezondheidsbon extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_gezondheidsbon";
+        return 'multisafepay_gezondheidsbon';
     }
 
     public static function getName()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Gezondheidsbon extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "GEZONDHEIDSBON";
+        return 'GEZONDHEIDSBON';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

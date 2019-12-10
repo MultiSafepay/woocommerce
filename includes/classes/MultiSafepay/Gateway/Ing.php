@@ -25,7 +25,7 @@ class MultiSafepay_Gateway_Ing extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_ing";
+        return 'multisafepay_ing';
     }
 
     public static function getName()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Ing extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "INGHOME";
+        return 'INGHOME';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

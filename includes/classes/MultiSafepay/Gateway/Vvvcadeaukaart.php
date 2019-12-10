@@ -25,7 +25,7 @@ class MultiSafepay_Gateway_Vvvcadeaukaart extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_vvvcadeaukaart";
+        return 'multisafepay_vvvcadeaukaart';
     }
 
     public static function getName()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Vvvcadeaukaart extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "VVVGIFTCRD";
+        return 'VVVGIFTCRD';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

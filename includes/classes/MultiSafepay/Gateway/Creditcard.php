@@ -31,7 +31,7 @@ class MultiSafepay_Gateway_Creditcard extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_creditcard";
+        return 'multisafepay_creditcard';
     }
 
     public static function getName()
@@ -56,12 +56,12 @@ class MultiSafepay_Gateway_Creditcard extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return ( empty($_POST['cc_issuer']) ? "CREDITCARDS" : $_POST['cc_issuer']);
+        return ( empty($_POST['cc_issuer']) ? 'CREDITCARDS' : $_POST['cc_issuer']);
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 
     public function payment_fields()

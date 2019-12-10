@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_einvoice";
+        return 'multisafepay_einvoice';
     }
 
     public static function getName()
@@ -55,7 +55,7 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "EINVOICE";
+        return 'EINVOICE';
     }
 
     public function getType()
@@ -63,9 +63,9 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
         $settings = get_option('woocommerce_multisafepay_einvoice_settings');
 
         if ($settings['direct'] == 'yes') {
-            return "direct";
+            return 'direct';
         } else {
-            return "redirect";
+            return 'redirect';
         }
     }
 
@@ -104,7 +104,7 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
     public function payment_fields()
     {
         $description = '';
-        $settings = (array) get_option("woocommerce_multisafepay_einvoice_settings");
+        $settings = (array) get_option('woocommerce_multisafepay_einvoice_settings');
 
         if ($settings['direct'] == 'yes') {
             $description = '<p class="form-row form-row-wide  validate-required">
@@ -136,7 +136,7 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
     {
         global $woocommerce;
 
-        $settings = (array) get_option("woocommerce_multisafepay_einvoice_settings");
+        $settings = (array) get_option('woocommerce_multisafepay_einvoice_settings');
 
         if (!empty($settings['minamount']) && $woocommerce->cart->total < $settings['minamount']) {
             unset($gateways['multisafepay_einvoice']);

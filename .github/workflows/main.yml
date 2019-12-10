@@ -9,12 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Install Code sniffer
-        run: |
-          composer global require "squizlabs/php_codesniffer=*"
+      - name: Install system dependencies
+        run: composer install
       - name: Run code sniffer
         run: |
-          ~/.composer/vendor/bin/phpcs --standard=phpcs.ruleset.xml -n -v ${GITHUB_WORKSPACE}
+          vendor/bin/phpcs --standard=phpcs.ruleset.xml -v .
   phpunit:
     name: Php Unit
     runs-on: ubuntu-latest

@@ -42,7 +42,7 @@ class MultiSafepay_Autoload
             return;
         }
 
-        $class_name = str_replace("Object", "Object/", $class_name);
+        $class_name = str_replace('Object', 'Object/', $class_name);
         $file_name  = dirname(__FILE__) . '/' . str_replace('_', '/api/', $class_name) . '.php';
         if (file_exists($file_name)) {
             require_once $file_name;
@@ -50,7 +50,7 @@ class MultiSafepay_Autoload
         } else {
             $log = "FATAL!!  $class_name from $file_name.\n";
             $string = sprintf("%s\n%s\n%s\n%s: %s\n\n", date('Y-m-d H:i:s'), __FILE__, __METHOD__, 'DEBUG:', $log);
-            error_log($string, 3, "MultiSafepay.log");
+            error_log($string, 3, 'MultiSafepay.log');
         }
     }
 }

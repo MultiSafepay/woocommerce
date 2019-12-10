@@ -47,7 +47,7 @@ class MultiSafepay_Gateways
             }
         }
 
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
         $woocommerce_tables = "CREATE TABLE {$wpdb->prefix}woocommerce_multisafepay
                                 (   id bigint(20) NOT NULL auto_increment,
@@ -64,7 +64,7 @@ class MultiSafepay_Gateways
     {
         global $wpdb;
 
-        $trns_id  = filter_input(INPUT_GET, 'transactionid', FILTER_SANITIZE_STRING);
+        $trns_id = filter_input(INPUT_GET, 'transactionid', FILTER_SANITIZE_STRING);
 
         if (empty($trns_id)) {
             return;
@@ -94,7 +94,7 @@ class MultiSafepay_Gateways
             $sql = $wpdb->prepare("SELECT orderid FROM {$tablename} WHERE trixid = %s", $trns_id);
             $order_id = $wpdb->get_var($sql);
         }
-        $order   = wc_get_order($order_id);
+        $order = wc_get_order($order_id);
 
 
         $payment_method       = false;
@@ -115,7 +115,7 @@ class MultiSafepay_Gateways
             }
         }
 
-        //Initial payment method differs from real payment method.
+        // Initial payment method differs from real payment method.
         if ($payment_method != false && get_post_meta($order_id, '_payment_method', true) != $payment_method) {
             $order->add_order_note(sprintf(__('Payment started with %s, but paid with %s', 'multisafepay'), get_post_meta($order_id, '_payment_method_title', true), $payment_method_title));
 
@@ -182,7 +182,7 @@ class MultiSafepay_Gateways
             , 'MultiSafepay_Gateway_Yourgift');
 
 
-        $giftcards_enabled = get_option("multisafepay_giftcards_enabled") == 'yes' ? true : false;
+        $giftcards_enabled = get_option('multisafepay_giftcards_enabled') == 'yes' ? true : false;
         if ($giftcards_enabled) {
             $paymentOptions = array_merge($paymentOptions, $giftCards);
         }
@@ -404,7 +404,7 @@ class MultiSafepay_Gateways
                 // Compatiblity Woocommerce 2.x and 3.x
                 $order_id = (method_exists($order, 'get_id')) ? $order->get_id() : $order->id;
 
-                $wpdb->query("INSERT INTO " . $wpdb->prefix . 'woocommerce_multisafepay' . " (trixid, orderid, status) VALUES ('" . $trns_id . "', '" . $order_id . "', '" . $status . "'  )");
+                $wpdb->query('INSERT INTO ' . $wpdb->prefix . 'woocommerce_multisafepay' . " (trixid, orderid, status) VALUES ('" . $trns_id . "', '" . $order_id . "', '" . $status . "'  )");
 
                 $billing_address = array();
                 $billing_address['first_name'] = $transactie->customer->first_name;
@@ -434,13 +434,15 @@ class MultiSafepay_Gateways
                 foreach ($woocommerce->shipping->load_shipping_methods() as $shipping_method) {
                     if ($shipping_method->method_title == $transactie->order_adjustment->shipping->flat_rate_shipping->name) {
                         $item = new WC_Order_Item_Shipping();
-                        $item->set_props(array(
+                        $item->set_props(
+                            array(
                             'method_title' => $transactie->order_adjustment->shipping->flat_rate_shipping->name,
                             'method_id' => $shipping_method->id,
                             'total' => wc_format_decimal($transactie->order_adjustment->shipping->flat_rate_shipping->cost),
                             'taxes' => $shipping_method->taxes,
                             'order_id' => $order_id,
-                        ));
+                            )
+                        );
                         $order->add_item($item);
                         break;
                     }
@@ -501,7 +503,7 @@ class MultiSafepay_Gateways
 
                     if (!empty($sku->{'Coupon-code'})) {
                         $code = $sku->Coupon - code;
-                        $unit_price = (float)str_replace('-', '', $product->unit_price);
+                        $unit_price = (float) str_replace('-', '', $product->unit_price);
                         update_post_meta($order_id, '_cart_discount', $unit_price);
                         update_post_meta($order_id, '_order_total', $amount);
                         update_post_meta($order_id, '_cart_discount_tax', 0);
@@ -529,7 +531,7 @@ class MultiSafepay_Gateways
         }
 
         if (!$order) {
-            exit("Order does not exist");
+            exit('Order does not exist');
         }
 
         $orderStatus = $order->get_status();
@@ -573,7 +575,7 @@ class MultiSafepay_Gateways
                 }
                 if ($status == 'completed' && $gateway == 'KLARNA') {
                     $order->add_order_note(
-                        __('Klarna reservation number: ', 'multisafepay') .$transactie->payment_details->external_transaction_id
+                        __('Klarna reservation number: ', 'multisafepay') . $transactie->payment_details->external_transaction_id
                     );
                 }
                 break;
@@ -627,7 +629,7 @@ class MultiSafepay_Gateways
             return;
         }
 
-        header("Content-type: text/plain");
+        header('Content-type: text/plain');
         $cancel_order = filter_input(INPUT_GET, 'cancel_order', FILTER_SANITIZE_STRING);
         if ($cancel_order) {
             if ($status == 'completed') {
@@ -666,7 +668,7 @@ class MultiSafepay_Gateways
             return;
         }
 
-        if (get_option('multisafepay_fco_enabled') == "yes") {
+        if (get_option('multisafepay_fco_enabled') == 'yes') {
             $woocommerce->fco_added = true;
             add_action('woocommerce_proceed_to_checkout', array(__CLASS__, 'getButtonFCO'), 12);
             add_action('woocommerce_review_order_after_submit', array(__CLASS__, 'getButtonFCO'), 12);
@@ -680,14 +682,14 @@ class MultiSafepay_Gateways
             return;
         }
 
-//        $button_locale_code = get_locale();
-//        $image = plugins_url('/Images/' . $button_locale_code . '/button.png', __FILE__);
+        // $button_locale_code = get_locale();
+        // $image = plugins_url('/Images/' . $button_locale_code . '/button.png', __FILE__);
         $image = plugins_url('/Images/button.png', __FILE__);
 
         echo '<div id="msp_fastcheckout" >';
         echo '<a class="checkout-button"  style="width:219px;border:none;margin-bottom:15px;" href="' . add_query_arg('action', 'doFastCheckout', add_query_arg('wc-api', 'MultiSafepay_Gateways', home_url('/'))) . '">';
         echo "<img src='" . $image . "' style='border:none;vertical-align: center;width: 219px;border-radius: 0px;box-shadow: none;padding: 0px;' border='0' alt='" . __('Pay with Fastcheckout', 'multisafepay') . "'/>";
-        echo "</a>";
+        echo '</a>';
         echo '</div>';
     }
 
@@ -705,26 +707,26 @@ class MultiSafepay_Gateways
 
         $order_id = uniqid();
         $my_order = array(
-                    "type" => 'checkout',
-                    "order_id" => $order_id,
-                    "currency" => get_woocommerce_currency(),
-                    "amount" => round(WC()->cart->subtotal * 100),
-                    "description" => 'Order #' . $order_id,
-                    "var2" => $order_id,
-                    "items" => $fco->setItemList($fco->getItemsFCO()),
-                    "manual" => false,
-                    "seconds_active" => $fco->getTimeActive(),
-                    "payment_options" => array(
-                        "notification_url" => $fco->getNurl() . '&type=initial',
-                        "redirect_url" => $fco->getNurl() . '&type=redirect',
-                        "cancel_url" => wc_get_cart_url() . 'index.php?type=cancel&cancel_order=true',
-                        "close_window" => true
+                    'type' => 'checkout',
+                    'order_id' => $order_id,
+                    'currency' => get_woocommerce_currency(),
+                    'amount' => round(WC()->cart->subtotal * 100),
+                    'description' => 'Order #' . $order_id,
+                    'var2' => $order_id,
+                    'items' => $fco->setItemList($fco->getItemsFCO()),
+                    'manual' => false,
+                    'seconds_active' => $fco->getTimeActive(),
+                    'payment_options' => array(
+                        'notification_url' => $fco->getNurl() . '&type=initial',
+                        'redirect_url' => $fco->getNurl() . '&type=redirect',
+                        'cancel_url' => wc_get_cart_url() . 'index.php?type=cancel&cancel_order=true',
+                        'close_window' => true
                     ),
-                    "google_analytics" => $fco->setGoogleAnalytics(),
-                    "plugin" => $fco->setPlugin($woocommerce),
-                    "gateway_info" => '',
-                    "shopping_cart" => $fco->setCartFCO(),
-                    "checkout_options" => $fco->setCheckoutOptionsFCO(),
+                    'google_analytics' => $fco->setGoogleAnalytics(),
+                    'plugin' => $fco->setPlugin($woocommerce),
+                    'gateway_info' => '',
+                    'shopping_cart' => $fco->setCartFCO(),
+                    'checkout_options' => $fco->setCheckoutOptionsFCO(),
         );
 
         try {

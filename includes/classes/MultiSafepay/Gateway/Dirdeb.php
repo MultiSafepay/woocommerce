@@ -25,7 +25,7 @@ class MultiSafepay_Gateway_Dirdeb extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_dirdeb";
+        return 'multisafepay_dirdeb';
     }
 
     public static function getName()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Dirdeb extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "DIRDEB";
+        return 'DIRDEB';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

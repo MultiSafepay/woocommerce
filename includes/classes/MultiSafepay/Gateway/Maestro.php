@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Maestro extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_maestro";
+        return 'multisafepay_maestro';
     }
 
     public static function getName()
@@ -55,12 +55,12 @@ class MultiSafepay_Gateway_Maestro extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "MAESTRO";
+        return 'MAESTRO';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 
     /**

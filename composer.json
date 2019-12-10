@@ -6,7 +6,8 @@
   "require": {},
   "require-dev": {
     "woocommerce/woocommerce": "^3.8",
-    "phpunit/phpunit": "~6.5"
+    "phpunit/phpunit": "~6.5",
+    "woocommerce/woocommerce-sniffs": "^0.0.9"
   },
   "extra": {
     "installer-paths": {

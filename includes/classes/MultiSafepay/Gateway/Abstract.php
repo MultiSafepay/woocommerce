@@ -96,10 +96,10 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         $msp->setApiUrl($helper->getTestMode());
 
         $endpoint = 'orders/' . $order_id;
-        $setShipping = array("tracktrace_code" => null,
-            "carrier" => null,
-            "ship_date" => date('Y-m-d H:i:s'),
-            "reason" => 'Shipped');
+        $setShipping = array('tracktrace_code' => null,
+            'carrier' => null,
+            'ship_date' => date('Y-m-d H:i:s'),
+            'reason' => 'Shipped');
 
         try {
             $msg = null;
@@ -118,9 +118,9 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
     public function getIcon()
     {
-//        $button_locale_code = get_locale();
-//        $image              = plugins_url('/Images/'.$button_locale_code.'/'.$this->getCode().'.png', dirname(__FILE__));
-          $image              = plugins_url('/Images/'.$this->getCode().'.png', dirname(__FILE__));
+        // $button_locale_code = get_locale();
+        // $image              = plugins_url('/Images/'.$button_locale_code.'/'.$this->getCode().'.png', dirname(__FILE__));
+          $image = plugins_url('/Images/' . $this->getCode() . '.png', dirname(__FILE__));
 
 
         return ($image);
@@ -168,7 +168,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         add_filter('woocommerce_available_payment_gateways', array ('MultiSafepay_Gateway_Einvoice', 'einvoice_filter_gateways'));
         add_filter('woocommerce_available_payment_gateways', array ('MultiSafepay_Gateway_Santander', 'santander_filter_gateways'));
 
-        add_action('woocommerce_update_options_payment_gateways_'.$this->id, array($this, 'process_admin_options'));
+        add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
         add_action('woocommerce_order_status_completed', array($this, 'setToShipped'), 13);
     }
 
@@ -209,7 +209,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
             'default'       => $this->getGatewayCode(),
         );
 
-        $this->form_fields  = array_merge($this->form_fields, $form_fields);
+        $this->form_fields = array_merge($this->form_fields, $form_fields);
 
         parent::init_form_fields();
     }
@@ -229,31 +229,31 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         list ($this->shopping_cart, $this->checkout_options) = $this->getCart($order_id);
 
         $my_order = array(
-            "type"                  => $this->getType(),
-            "order_id"              => $order->get_order_number(),
-            "currency"              => get_woocommerce_currency(),
-            "amount"                => round($order->get_total() * 100),
-            "description"           => 'Order #'.$order->get_order_number(),
-//            "var1"                  => $order->order_key,
-            "var2"                  => $order_id,
-            "items"                 => $this->setItemList($order->get_items()),
-            "manual"                => false,
-            "gateway"               => $this->getGatewayCode(),
-            "seconds_active"        => $this->getTimeActive(),
-            "payment_options"       => array(
-                "notification_url"  => add_query_arg('type=initial', '', $this->getNurl()),
-//                "redirect_url"      => add_query_arg('type=redirect', '', $this->getNurl()),
-                "redirect_url"      => add_query_arg('utm_nooverride', '1', $this->get_return_url($order)),
-                "cancel_url"        => htmlspecialchars_decode(add_query_arg('key', $order_id, $order->get_cancel_order_url())),
-                "close_window"      => true
+            'type'                  => $this->getType(),
+            'order_id'              => $order->get_order_number(),
+            'currency'              => get_woocommerce_currency(),
+            'amount'                => round($order->get_total() * 100),
+            'description'           => 'Order #' . $order->get_order_number(),
+        // "var1"                  => $order->order_key,
+            'var2'                  => $order_id,
+            'items'                 => $this->setItemList($order->get_items()),
+            'manual'                => false,
+            'gateway'               => $this->getGatewayCode(),
+            'seconds_active'        => $this->getTimeActive(),
+            'payment_options'       => array(
+                'notification_url'  => add_query_arg('type=initial', '', $this->getNurl()),
+        // "redirect_url"      => add_query_arg('type=redirect', '', $this->getNurl()),
+                'redirect_url'      => add_query_arg('utm_nooverride', '1', $this->get_return_url($order)),
+                'cancel_url'        => htmlspecialchars_decode(add_query_arg('key', $order_id, $order->get_cancel_order_url())),
+                'close_window'      => true
             ),
-            "customer"              => $this->setCustomer($msp, $order),
-            "delivery"              => $this->setDelivery($msp, $order),
-            "google_analytics"      => $this->setGoogleAnalytics(),
-            "plugin"                => $this->setPlugin(),
-            "gateway_info"          => isset($this->GatewayInfo) ? $this->GatewayInfo : array(),
-            "shopping_cart"         => isset($this->shopping_cart) ? $this->shopping_cart : array(),
-            "checkout_options"      => isset($this->checkout_options) ? $this->checkout_options : array(),
+            'customer'              => $this->setCustomer($msp, $order),
+            'delivery'              => $this->setDelivery($msp, $order),
+            'google_analytics'      => $this->setGoogleAnalytics(),
+            'plugin'                => $this->setPlugin(),
+            'gateway_info'          => isset($this->GatewayInfo) ? $this->GatewayInfo : array(),
+            'shopping_cart'         => isset($this->shopping_cart) ? $this->shopping_cart : array(),
+            'checkout_options'      => isset($this->checkout_options) ? $this->checkout_options : array(),
         );
 
         try {
@@ -273,7 +273,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
             return array(   'result'    => 'error',
                             'redirect'  => wc_get_cart_url() );
         } else {
-            $wpdb->query("INSERT INTO " . $wpdb->prefix . 'woocommerce_multisafepay' . " (trixid, orderid, status) VALUES ('" . $my_order['order_id'] . "', '" . $my_order['var2'] . "','')");
+            $wpdb->query('INSERT INTO ' . $wpdb->prefix . 'woocommerce_multisafepay' . " (trixid, orderid, status) VALUES ('" . $my_order['order_id'] . "', '" . $my_order['var2'] . "','')");
 
             return array(   'result'    => 'success',
                             'redirect'  => $msp->orders->getPaymentLink() );
@@ -283,7 +283,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     public function process_refund($order_id, $amount = null, $reason = '')
     {
         if ($amount <= 0) {
-            return new WP_Error('multisafepay', "Refund amount must be greater than 0.00 ");
+            return new WP_Error('multisafepay', 'Refund amount must be greater than 0.00 ');
         }
 
         $msp = new MultiSafepay_Client();
@@ -296,22 +296,22 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         $trns_id = $order->get_order_number();
 
 
-        $endpoint = 'orders/'.$trns_id.'/refunds';
-        $refund   = array(  "currency"      => $order->get_currency(),
-                            "amount"        => $amount * 100,
-                            "description"   => $reason );
+        $endpoint = 'orders/' . $trns_id . '/refunds';
+        $refund   = array(  'currency'      => $order->get_currency(),
+                            'amount'        => $amount * 100,
+                            'description'   => $reason );
 
         try {
             $msg = null;
             $msp->orders->post($refund, $endpoint);
         } catch (Exception $e) {
-            $msg = 'Error: '.htmlspecialchars($e->getMessage());
+            $msg = 'Error: ' . htmlspecialchars($e->getMessage());
             $helper->write_log($msg);
             wc_add_notice($msg, 'error');
         }
 
         if ($msg) {
-            return new WP_Error('multisafepay', 'Order can\'t be refunded: '.$msg);
+            return new WP_Error('multisafepay', 'Order can\'t be refunded: ' . $msg);
         } else {
             return true;
         }
@@ -522,7 +522,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     {
         $list = '<ul>';
         foreach ($items as $item) {
-            $list .= '<li>'.absint($item['qty']).' x '.html_entity_decode($item['name'], ENT_NOQUOTES, 'UTF-8').'</li>';
+            $list .= '<li>' . absint($item['qty']) . ' x ' . html_entity_decode($item['name'], ENT_NOQUOTES, 'UTF-8') . '</li>';
         }
         $list .= '</ul>';
         return ($list);
@@ -544,15 +544,15 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         $address = $shipping_address_1;
         list ($street, $houseNumber) = $msp->parseCustomerAddress($address);
 
-        return array(   "first_name"    => $shipping_first_name,
-                        "last_name"     => $shipping_last_name,
-                        "address1"      => $street,
-                        "address2"      => $shipping_address_2,
-                        "house_number"  => $houseNumber,
-                        "zip_code"      => $shipping_postcode,
-                        "city"          => $shipping_city,
-                        "state"         => $shipping_state,
-                        "country"       => $shipping_country );
+        return array(   'first_name'    => $shipping_first_name,
+                        'last_name'     => $shipping_last_name,
+                        'address1'      => $street,
+                        'address2'      => $shipping_address_2,
+                        'house_number'  => $houseNumber,
+                        'zip_code'      => $shipping_postcode,
+                        'city'          => $shipping_city,
+                        'state'         => $shipping_state,
+                        'country'       => $shipping_country );
     }
 
     public function setCustomer($msp, $order)
@@ -572,26 +572,26 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         $address = $billing_address_1;
         list ($street, $houseNumber) = $msp->parseCustomerAddress($address);
 
-        return array(   "locale"        => $this->getLocale(),
-                        "ip_address"    => $this->parseIpAddress($ip_address),
-                        "referrer"      => $_SERVER['HTTP_REFERER'],
-                        "user_agent"    => $_SERVER['HTTP_USER_AGENT'],
-                        "first_name"    => $billing_first_name,
-                        "last_name"     => $billing_last_name,
-                        "address1"      => $street,
-                        "address2"      => $billing_address_2,
-                        "house_number"  => $houseNumber,
-                        "zip_code"      => $billing_postcode,
-                        "city"          => $billing_city,
-                        "state"         => $billing_state,
-                        "country"       => $billing_country,
-                        "phone"         => $billing_phone,
-                        "email"         => $billing_email);
+        return array(   'locale'        => $this->getLocale(),
+                        'ip_address'    => $this->parseIpAddress($ip_address),
+                        'referrer'      => $_SERVER['HTTP_REFERER'],
+                        'user_agent'    => $_SERVER['HTTP_USER_AGENT'],
+                        'first_name'    => $billing_first_name,
+                        'last_name'     => $billing_last_name,
+                        'address1'      => $street,
+                        'address2'      => $billing_address_2,
+                        'house_number'  => $houseNumber,
+                        'zip_code'      => $billing_postcode,
+                        'city'          => $billing_city,
+                        'state'         => $billing_state,
+                        'country'       => $billing_country,
+                        'phone'         => $billing_phone,
+                        'email'         => $billing_email);
     }
 
     public function setGoogleAnalytics()
     {
-        return ( array("account" => get_option('multisafepay_ga')));
+        return ( array('account' => get_option('multisafepay_ga')));
     }
 
     public function setPlugin()

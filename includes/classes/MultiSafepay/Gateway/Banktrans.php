@@ -25,7 +25,7 @@ class MultiSafepay_Gateway_Banktrans extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_banktrans";
+        return 'multisafepay_banktrans';
     }
 
     public static function getName()
@@ -50,7 +50,7 @@ class MultiSafepay_Gateway_Banktrans extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "BANKTRANS";
+        return 'BANKTRANS';
     }
 
     public function getType()
@@ -58,9 +58,9 @@ class MultiSafepay_Gateway_Banktrans extends MultiSafepay_Gateway_Abstract
         $settings = get_option('woocommerce_multisafepay_banktrans_settings');
 
         if ($settings['direct'] == 'yes') {
-            return "direct";
+            return 'direct';
         } else {
-            return "redirect";
+            return 'redirect';
         }
     }
 

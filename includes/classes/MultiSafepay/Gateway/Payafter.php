@@ -30,7 +30,7 @@ class MultiSafepay_Gateway_Payafter extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_payafter";
+        return 'multisafepay_payafter';
     }
 
     public static function getName()
@@ -55,7 +55,7 @@ class MultiSafepay_Gateway_Payafter extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "PAYAFTER";
+        return 'PAYAFTER';
     }
 
     public function getType()
@@ -63,9 +63,9 @@ class MultiSafepay_Gateway_Payafter extends MultiSafepay_Gateway_Abstract
         $settings = get_option('woocommerce_multisafepay_payafter_settings');
 
         if ($settings['direct'] == 'yes') {
-            return "direct";
+            return 'direct';
         } else {
-            return "redirect";
+            return 'redirect';
         }
     }
 
@@ -138,7 +138,7 @@ class MultiSafepay_Gateway_Payafter extends MultiSafepay_Gateway_Abstract
 
         global $woocommerce;
 
-        $settings = (array) get_option("woocommerce_multisafepay_payafter_settings");
+        $settings = (array) get_option('woocommerce_multisafepay_payafter_settings');
 
         if (!empty($settings['minamount']) && $woocommerce->cart->total < $settings['minamount']) {
             unset($gateways['multisafepay_payafter']);
