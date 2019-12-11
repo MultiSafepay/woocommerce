@@ -328,12 +328,8 @@ class MultiSafepay_Gateways
         global $wpdb, $woocommerce;
 
         $redirect = false;
-        $initial_request = false;
 
         switch ($type) {
-            case 'initial':
-                $initial_request = true;
-                break;
             case 'redirect':
                 $redirect = true;
                 break;
@@ -625,9 +621,6 @@ class MultiSafepay_Gateways
             wp_redirect($return_url);
             exit();
         }
-        if ($initial_request) {
-            return;
-        }
 
         header('Content-type: text/plain');
         $cancel_order = filter_input(INPUT_GET, 'cancel_order', FILTER_SANITIZE_STRING);
@@ -717,7 +710,7 @@ class MultiSafepay_Gateways
                     'manual' => false,
                     'seconds_active' => $fco->getTimeActive(),
                     'payment_options' => array(
-                        'notification_url' => $fco->getNurl() . '&type=initial',
+                        'notification_url' => $fco->getNurl(),
                         'redirect_url' => $fco->getNurl() . '&type=redirect',
                         'cancel_url' => wc_get_cart_url() . 'index.php?type=cancel&cancel_order=true',
                         'close_window' => true

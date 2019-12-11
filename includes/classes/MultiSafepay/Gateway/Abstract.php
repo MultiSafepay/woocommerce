@@ -234,15 +234,13 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
             'currency'              => get_woocommerce_currency(),
             'amount'                => round($order->get_total() * 100),
             'description'           => 'Order #' . $order->get_order_number(),
-        // "var1"                  => $order->order_key,
             'var2'                  => $order_id,
             'items'                 => $this->setItemList($order->get_items()),
             'manual'                => false,
             'gateway'               => $this->getGatewayCode(),
             'seconds_active'        => $this->getTimeActive(),
             'payment_options'       => array(
-                'notification_url'  => add_query_arg('type=initial', '', $this->getNurl()),
-        // "redirect_url"      => add_query_arg('type=redirect', '', $this->getNurl()),
+                'notification_url'  => $this->getNurl(),
                 'redirect_url'      => add_query_arg('utm_nooverride', '1', $this->get_return_url($order)),
                 'cancel_url'        => htmlspecialchars_decode(add_query_arg('key', $order_id, $order->get_cancel_order_url())),
                 'close_window'      => true
