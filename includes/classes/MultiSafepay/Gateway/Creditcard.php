@@ -54,9 +54,12 @@ class MultiSafepay_Gateway_Creditcard extends MultiSafepay_Gateway_Abstract
         return ($settings['title']);
     }
 
+    /**
+     * @return string
+     */
     public static function getGatewayCode()
     {
-        return ( empty($_POST['cc_issuer']) ? 'CREDITCARDS' : $_POST['cc_issuer']);
+        return ( empty($_POST['cc_issuer']) ? 'CREDITCARDS' : sanitize_text_field($_POST['cc_issuer']));
     }
 
     public function getType()
@@ -106,6 +109,9 @@ class MultiSafepay_Gateway_Creditcard extends MultiSafepay_Gateway_Abstract
         echo $description;
     }
 
+    /**
+     * @return bool
+     */
     public function validate_fields()
     {
         if (empty($_POST['cc_issuer'])) {

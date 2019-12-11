@@ -495,15 +495,15 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
         switch ($this->getGatewayCode()) {
             case 'PAYAFTER':
-                $gebdat = $_POST['pad_birthday'];
-                $account = $_POST['pad_account'];
+                $gebdat = sanitize_text_field($_POST['pad_birthday']);
+                $account = sanitize_text_field($_POST['pad_account']);
                 break;
             case 'EINVOICE':
-                $account = $_POST['einvoice_account'];
-                $gebdat = $_POST['einvoice_birthday'];
+                $account = sanitize_text_field($_POST['einvoice_account']);
+                $gebdat = sanitize_text_field($_POST['einvoice_birthday']);
                 break;
         }
-
+        
         // Compatiblity Woocommerce 2.x and 3.x
         $billingPhone  = (method_exists($order, 'get_billing_phone'))     ? $order->get_billing_phone()      : $order->billing_phone;
         $billingEmail  = (method_exists($order, 'get_billing_email'))     ? $order->get_billing_email()      : $order->billing_email;

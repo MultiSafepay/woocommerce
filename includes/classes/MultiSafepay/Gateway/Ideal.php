@@ -58,6 +58,9 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
         return 'IDEAL';
     }
 
+    /**
+     * @return string
+     */
     public function getType()
     {
         $settings = get_option('woocommerce_multisafepay_ideal_settings');
@@ -69,10 +72,14 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
         }
     }
 
+    /**
+     * @param $order_id
+     * @return array|string
+     */
     public function getGatewayInfo($order_id)
     {
         if (isset($_POST['ideal_issuer'])) {
-            return (array('issuer_id' => $_POST['ideal_issuer']));
+            return (array('issuer_id' => sanitize_text_field($_POST['ideal_issuer'])));
         } else {
             return ('');
         }
@@ -88,11 +95,13 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
             $this->form_fields['warning'] = $warning;
         }
 
-        $this->form_fields['direct'] = array('title' => __('Enable', 'multisafepay'),
-            'type'          => 'checkbox',
-            'label'         => sprintf(__('Direct %s', 'multisafepay'), $this->getName()),
-            'description'   => __('Enable or disable the selection of the preferred bank within the website.', 'multisafepay'),
-            'default'       => 'yes');
+        $this->form_fields['direct'] = array(
+            'title' => __('Enable', 'multisafepay'),
+            'type' => 'checkbox',
+            'label' => sprintf(__('Direct %s', 'multisafepay'), $this->getName()),
+            'description' => __('Enable or disable the selection of the preferred bank within the website.', 'multisafepay'),
+            'default' => 'yes'
+        );
         parent::init_form_fields($this->form_fields);
     }
 
@@ -135,6 +144,9 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
         echo $description;
     }
 
+    /**
+     * @return bool
+     */
     public function validate_fields()
     {
         $settings = get_option('woocommerce_multisafepay_ideal_settings');
