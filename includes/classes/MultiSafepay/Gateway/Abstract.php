@@ -633,6 +633,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
      */
     public function parseIpAddress($ipAddress)
     {
-        return trim(reset(explode(',', $ipAddress)));
+        $ipAddresses = explode(',', $ipAddress);
+        return trim(reset($ipAddresses));
     }
 }
