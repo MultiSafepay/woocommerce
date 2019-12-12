@@ -171,6 +171,7 @@ class MultiSafepay_Gateways
             , 'MultiSafepay_Gateway_Goodcard'
             , 'MultiSafepay_Gateway_Liefcadeaukaart'
             , 'MultiSafepay_Gateway_Nationaletuinbon'
+            , 'MultiSafepay_Gateway_Ohmygood'
             , 'MultiSafepay_Gateway_Parfumcadeaukaart'
             , 'MultiSafepay_Gateway_Podiumcadeaukaart'
             , 'MultiSafepay_Gateway_Sportenfit'
