@@ -25,7 +25,7 @@ class MultiSafepay_Gateway_Erotiekbon extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_erotiekbon";
+        return 'multisafepay_erotiekbon';
     }
 
     public static function getName()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Erotiekbon extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "EROTIEKBON";
+        return 'EROTIEKBON';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

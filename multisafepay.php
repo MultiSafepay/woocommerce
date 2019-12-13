@@ -22,14 +22,14 @@
  */
 
 /*
-  Plugin Name: Multisafepay
-  Plugin URI: http://www.multisafepay.com
-  Description: Multisafepay Payment Plugin
-  Author: Multisafepay
-  Author URI:http://www.multisafepay.com
+  Plugin Name: MultiSafepay
+  Plugin URI: https://docs.multisafepay.com/integrations/woocommerce/
+  Description: MultiSafepay Payment Plugin
+  Author: MultiSafepay
+  Author URI: https://www.multisafepay.com
   Version: 3.3.0
 
-  Copyright: ? 2012 Multisafepay(email : techsupport@multisafepay.com)
+  Copyright: ? 2012 MultiSafepay (email : integration@multisafepay.com)
   License: GNU General Public License v3.0
   License URI: http://www.gnu.org/licenses/gpl-3.0.html
  */
@@ -37,34 +37,34 @@
 
 
 // Load plugin functions
-require_once(ABSPATH . '/wp-admin/includes/plugin.php');
+require_once ABSPATH . '/wp-admin/includes/plugin.php';
 
 // Load textdomain
-load_plugin_textdomain('multisafepay', false, plugin_basename(dirname(__FILE__)) . "/languages");
+load_plugin_textdomain('multisafepay', false, plugin_basename(dirname(__FILE__)) . '/languages');
 
 function error_woocommerce_not_active()
 {
-    echo '<div class="error"><p>' . __('To use the Multisafepay plug-in it is required that Woocommerce is active', 'multisafepay') . '</p></div>';
+    echo '<div class="error"><p>' . __('Activate WooCommerce to use the MultiSafepay plugin', 'multisafepay') . '</p></div>';
 }
 
 function msp_error_curl_not_installed()
 {
-    echo '<div class="error"><p>' . __('Curl is not installed.<br />In order to use the MultiSafepay plug-in, you must install CURL.<br />Ask your system administrator to install php_curl', 'multisafepay') . '</p></div>';
+    echo '<div class="error"><p>' . __('cURL is not installed.<br />In order to use the MultiSafepay plugin, you must install cURL.<br />Ask your system administrator to install php_curl', 'multisafepay') . '</p></div>';
 }
 
 
-// Curl is niet geinstalleerd. foutmelding weergeven
+// cURL is niet geinstalleerd. foutmelding weergeven
 if (!function_exists('curl_version')) {
     add_action('admin_notices', __('msp_error_curl_not_installed', 'multisafepay'));
 }
 
 
 if (is_plugin_active('woocommerce/woocommerce.php') || is_plugin_active_for_network('woocommerce/woocommerce.php')) {
-    //Autoloader laden en registreren
+    // Autoloader laden en registreren
     require_once dirname(__FILE__) . '/includes/classes/Autoload.php';
 
     MultiSafepay_Autoload::register();
     MultiSafepay_Gateways::register();
 } else {
-    add_action('admin_notices', error_woocommerce_not_active);
+    add_action('admin_notices', 'error_woocommerce_not_active');
 }

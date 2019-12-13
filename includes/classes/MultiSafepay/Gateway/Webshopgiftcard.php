@@ -25,12 +25,12 @@ class MultiSafepay_Gateway_Webshopgiftcard extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_webshopgiftcard";
+        return 'multisafepay_webshopgiftcard';
     }
 
     public static function getName()
     {
-        return __('Webshop-giftcard', 'multisafepay');
+        return __('Webshop Giftcard', 'multisafepay');
     }
 
     public static function getSettings()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Webshopgiftcard extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "WEBSHOPGIFTCARD";
+        return 'WEBSHOPGIFTCARD';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

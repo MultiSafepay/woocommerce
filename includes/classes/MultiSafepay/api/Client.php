@@ -102,7 +102,7 @@ class MultiSafepay_Client
         $numberAddition = '';
 
         $results = array();
-        $pattern_adress = "/^(.*)\s(\d+)(.*)/";
+        $pattern_adress = '/^(.*)\s(\d+)(.*)/';
 
         preg_match($pattern_adress, trim($adress), $results);
         if (count($results) == 0) {
@@ -123,7 +123,7 @@ class MultiSafepay_Client
         }
 
         return array($street, $number, $numberAddition);
-        //  return array('street' => $street, 'number' => $number, 'numberAddition' => $numberAddition);
+        // return array('street' => $street, 'number' => $number, 'numberAddition' => $numberAddition);
     }
 
     private function rstrpos($haystack, $needle, $offset = null)
@@ -146,26 +146,26 @@ class MultiSafepay_Client
     public function processAPIRequest($http_method, $api_method, $http_body = null)
     {
         if (empty($this->api_key)) {
-            throw new Exception(__('Please configure your MultiSafepay API Key.', 'multisafepay'));
+            throw new Exception(__('Please configure your MultiSafepay API key.', 'multisafepay'));
         }
 
         $url = $this->api_url . $api_method;
         $ch = curl_init($url);
 
         $request_headers = array(
-            "Accept: application/json",
-            "api_key:" . $this->api_key,
+            'Accept: application/json',
+            'api_key:' . $this->api_key,
         );
 
         if ($http_body !== null) {
-            $request_headers[] = "Content-Type: application/json";
+            $request_headers[] = 'Content-Type: application/json';
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $http_body);
         }
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-        curl_setopt($ch, CURLOPT_ENCODING, "");
+        curl_setopt($ch, CURLOPT_ENCODING, '');
         curl_setopt($ch, CURLOPT_TIMEOUT, 120);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);

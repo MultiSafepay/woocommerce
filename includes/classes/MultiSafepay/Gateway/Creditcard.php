@@ -22,15 +22,21 @@
  */
 class MultiSafepay_Gateway_Creditcard extends MultiSafepay_Gateway_Abstract
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->has_fields = true;
+        $this->max_amount = $this->getMaxAmount();
+    }
 
     public static function getCode()
     {
-        return "multisafepay_creditcard";
+        return 'multisafepay_creditcard';
     }
 
     public static function getName()
     {
-        return __('Creditcard', 'multisafepay');
+        return __('Credit card', 'multisafepay');
     }
 
     public static function getSettings()
@@ -48,14 +54,17 @@ class MultiSafepay_Gateway_Creditcard extends MultiSafepay_Gateway_Abstract
         return ($settings['title']);
     }
 
+    /**
+     * @return string
+     */
     public static function getGatewayCode()
     {
-        return ( empty($_POST['cc_issuer']) ? "CREDITCARDS" : $_POST['cc_issuer']);
+        return ( empty($_POST['cc_issuer']) ? 'CREDITCARDS' : sanitize_text_field($_POST['cc_issuer']));
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 
     public function payment_fields()
@@ -67,20 +76,21 @@ class MultiSafepay_Gateway_Creditcard extends MultiSafepay_Gateway_Abstract
         }
 
         $msp = new MultiSafepay_Client();
+        $helper = new MultiSafepay_Helper_Helper();
 
-        $msp->setApiKey($this->getApiKey());
-        $msp->setApiUrl($this->getTestMode());
+        $msp->setApiKey($helper->getApiKey());
+        $msp->setApiUrl($helper->getTestMode());
 
         try {
             $msg = null;
             $gateways = $msp->gateways->get();
         } catch (Exception $e) {
             $msg = htmlspecialchars($e->getMessage());
-            $this->write_log($msg);
+            $helper->write_log($msg);
             wc_add_notice($msg, 'error');
         }
 
-        $description .= __('Select CreditCard', 'multisafepay') . '<br/>';
+        $description .= __('Select a credit card', 'multisafepay') . '<br/>';
         $description .= '<select id="cc_issuer" name="cc_issuer" class="required-entry">';
 
         foreach ($gateways as $gateway) {
@@ -99,12 +109,35 @@ class MultiSafepay_Gateway_Creditcard extends MultiSafepay_Gateway_Abstract
         echo $description;
     }
 
+    /**
+     * @return bool
+     */
     public function validate_fields()
     {
         if (empty($_POST['cc_issuer'])) {
-            wc_add_notice(__('Error: ', 'multisafepay') . ' ' . __('Please select a CreditCard.', 'multisafepay'));
+            wc_add_notice(__('Error: ', 'multisafepay') . ' ' . __('Please select a credit card', 'multisafepay'));
             return false;
         }
         return true;
+    }
+
+    /**
+     * Setup the settings field for the payment methods.
+     *
+     * @param array $form_fields
+     */
+    public function init_form_fields($form_fields = [])
+    {
+        $this->form_fields = [
+            'max_amount' => [
+                'title' => __('Maximum order amount', 'multisafepay'),
+                'type' => 'price',
+                'description'=> __('The maximum order amount in euro\'s for an order to use this payment method', 'multisafepay'),
+                'css' => 'width: 100px;',
+                'desc_tip' => true,
+                'placeholder' => wc_format_localized_price('0.00'),
+            ],
+        ];
+        parent::init_form_fields($this->form_fields);
     }
 }

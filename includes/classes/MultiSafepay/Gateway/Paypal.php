@@ -25,7 +25,7 @@ class MultiSafepay_Gateway_Paypal extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_paypal";
+        return 'multisafepay_paypal';
     }
 
     public static function getName()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Paypal extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "PAYPAL";
+        return 'PAYPAL';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

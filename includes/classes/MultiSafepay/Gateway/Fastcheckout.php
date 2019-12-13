@@ -76,7 +76,7 @@ class MultiSafepay_Gateway_Fastcheckout extends MultiSafepay_Gateway_Abstract
                 }
 
                 if (!empty($meta)) {
-                    $name .= " - " . str_replace(", \n", " - ", $meta);
+                    $name .= ' - ' . str_replace(", \n", ' - ', $meta);
                 }
             }
 
@@ -177,8 +177,8 @@ class MultiSafepay_Gateway_Fastcheckout extends MultiSafepay_Gateway_Abstract
 
         WC()->shipping->calculate_shipping($this->get_shipping_packages());
         foreach (WC()->shipping->packages[0]['rates'] as $rate) {
-            $checkout_options['shipping_methods']['flat_rate_shipping'][] = array("name" => $rate->label,
-                "price" => number_format($rate->cost, '2', '.', ''));
+            $checkout_options['shipping_methods']['flat_rate_shipping'][] = array('name' => $rate->label,
+                'price' => number_format($rate->cost, '2', '.', ''));
         }
 
         return ($checkout_options);
@@ -239,7 +239,6 @@ class MultiSafepay_Gateway_Fastcheckout extends MultiSafepay_Gateway_Abstract
             $package['destination']['country']   = $data['countrycode'];
             $package['destination']['postcode']  = $data['zipcode'];
             $package['contents_cost']            = $data['amount'];
-            ;
         }
 
         array_push($packages, $package);

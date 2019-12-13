@@ -25,12 +25,12 @@ class MultiSafepay_Gateway_Liefcadeaukaart extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_liefcadeaukaart";
+        return 'multisafepay_liefcadeaukaart';
     }
 
     public static function getName()
     {
-        return __('Lief-cadeaukaart', 'multisafepay');
+        return __('Lief Cadeaukaart', 'multisafepay');
     }
 
     public static function getSettings()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Liefcadeaukaart extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "LIEF";
+        return 'LIEF';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

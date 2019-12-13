@@ -25,12 +25,12 @@ class MultiSafepay_Gateway_Giropay extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_giropay";
+        return 'multisafepay_giropay';
     }
 
     public static function getName()
     {
-        return __('GiroPay', 'multisafepay');
+        return __('Giropay', 'multisafepay');
     }
 
     public static function getSettings()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Giropay extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "GIROPAY";
+        return 'GIROPAY';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }
