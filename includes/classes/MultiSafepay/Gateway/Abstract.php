@@ -107,32 +107,35 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         return true;
     }
 
-    function setToShipped($order_id)
+    /**
+     * @param $order_id
+     *
+     * @return bool|WP_Error
+     */
+    public function setToShipped($order_id)
     {
-        $msp = new MultiSafepay_Client();
+        $order = wc_get_order($order_id);
 
+        $msp = new MultiSafepay_Client();
         $msp->setApiKey($this->getApiKey());
         $msp->setApiUrl($this->getTestMode());
 
-        $endpoint = 'orders/' . $order_id;
-        $setShipping = array("tracktrace_code" => null,
-            "carrier" => null,
-            "ship_date" => date('Y-m-d H:i:s'),
-            "reason" => 'Shipped');
+        $endpoint = 'orders/' .$order->get_order_number();
+        $setShipping = array(
+            'tracktrace_code' => null,
+            'carrier'         => null,
+            'ship_date'       => date('Y-m-d H:i:s'),
+            'reason'          => 'Shipped');
 
         try {
-            $msg = null;
-            $response = $msp->orders->patch($setShipping, $endpoint);
+            $msp->orders->patch($setShipping, $endpoint);
         } catch (Exception $e) {
             $msg = htmlspecialchars($e->getMessage());
             $this->write_log($msg);
+            return new WP_Error('multisafepay', 'Transaction status can\'t be updated:' . $msg);
         }
 
-        if ($msp->error) {
-            return new WP_Error('multisafepay', 'Transaction status can\'t be updated:' . $msp->error_code . ' - ' . $msp->error);
-        } else {
-            return true;
-        }
+        return true;
     }
 
     public function getIcon()
