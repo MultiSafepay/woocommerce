@@ -25,16 +25,14 @@ class MultiSafepay_Gateways
 
     public static function register()
     {
-        update_option('multisafepay_version', '3.2.0', 'yes');
+        add_filter('woocommerce_payment_gateways', array(__CLASS__, '_getGateways'));
+        add_filter('woocommerce_payment_gateways_settings', array(__CLASS__, '_addGlobalSettings'), 1);
 
-        add_filter('woocommerce_payment_gateways',              array(__CLASS__, '_getGateways'));
-        add_filter('woocommerce_payment_gateways_settings',     array(__CLASS__, '_addGlobalSettings'), 1);
+        add_action('wp_loaded', array(__CLASS__, 'MultiSafepay_Response'));
+        add_action('init', array(__CLASS__, 'addFCO'));
+        add_action('woocommerce_api_' . strtolower(get_class()), array(__CLASS__, 'doFastCheckout'));
 
-        add_action('wp_loaded',                                 array(__CLASS__, 'MultiSafepay_Response'));
-        add_action('init',                                      array(__CLASS__, 'addFCO'));
-        add_action('woocommerce_api_' . strtolower(get_class()),array(__CLASS__, 'doFastCheckout'));
-
-        add_action('woocommerce_payment_complete',        array(__CLASS__, 'getRealPaymentMethod'), 10, 1);
+        add_action('woocommerce_payment_complete', array(__CLASS__, 'getRealPaymentMethod'), 10, 1);
 
         global $wpdb;
         $wpdb->hide_errors();
@@ -49,7 +47,7 @@ class MultiSafepay_Gateways
             }
         }
 
-        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
         $woocommerce_tables = "CREATE TABLE {$wpdb->prefix}woocommerce_multisafepay
                                 (   id bigint(20) NOT NULL auto_increment,
@@ -62,12 +60,13 @@ class MultiSafepay_Gateways
     }
 
 
-   public static function getRealPaymentMethod() {
+    public static function getRealPaymentMethod()
+    {
         global $wpdb;
 
-        $trns_id  = filter_input(INPUT_GET, 'transactionid',  FILTER_SANITIZE_STRING);
+        $trns_id  = filter_input(INPUT_GET, 'transactionid', FILTER_SANITIZE_STRING);
 
-        if ( empty ($trns_id )) {
+        if (empty($trns_id)) {
             return;
         }
 
@@ -88,9 +87,9 @@ class MultiSafepay_Gateways
             return;
         }
 
-        if ($transactie->fastcheckout == 'NO' &&  isset ($transactie->var2)) {
+        if ($transactie->fastcheckout == 'NO' &&  isset($transactie->var2)) {
             $order_id = $transactie->var2;
-        }else{
+        } else {
             $tablename = $wpdb->prefix . 'woocommerce_multisafepay';
             $sql = $wpdb->prepare("SELECT orderid FROM {$tablename} WHERE trixid = %s", $trns_id);
             $order_id = $wpdb->get_var($sql);
@@ -105,12 +104,10 @@ class MultiSafepay_Gateways
         $tablename = $wpdb->prefix . 'options';
         $results   = $wpdb->get_results("SELECT option_name, option_value FROM {$tablename} WHERE `option_name` like 'woocommerce_multisafepay_%'");
 
-        foreach( $results as $result)
-        {
-            $options = get_option( $result->option_name, array());
+        foreach ($results as $result) {
+            $options = get_option($result->option_name, array());
 
-            if ( isset ($options['gateway'])  && ( $gateway == $options['gateway']) )
-            {
+            if (isset($options['gateway'])  && ( $gateway == $options['gateway'])) {
                 preg_match('/woocommerce_(.*)_settings/', $result->option_name, $matches);
                 $payment_method         = $matches[1];
                 $payment_method_title   = $options['title'];
@@ -119,12 +116,11 @@ class MultiSafepay_Gateways
         }
 
         // Initial payment method differens from real payment method.
-        if ($payment_method != false && get_post_meta( $order_id, '_payment_method', true ) != $payment_method) {
+        if ($payment_method != false && get_post_meta($order_id, '_payment_method', true) != $payment_method) {
+            $order->add_order_note(sprintf(__('Payment started with %s, but finally paid by %s', 'multisafepay'), get_post_meta($order_id, '_payment_method_title', true), $payment_method_title));
 
-            $order->add_order_note( sprintf(__('Payment started with %s, but finally paid by %s', 'multisafepay'), get_post_meta( $order_id, '_payment_method_title', true ), $payment_method_title));
-
-            update_post_meta( $order_id, '_payment_method',        $payment_method);
-            update_post_meta( $order_id, '_payment_method_title',  $payment_method_title );
+            update_post_meta($order_id, '_payment_method', $payment_method);
+            update_post_meta($order_id, '_payment_method_title', $payment_method_title);
         }
     }
 
@@ -266,15 +262,6 @@ class MultiSafepay_Gateways
         );
 
         $addedSettings[] = array(
-            'name'      => __('Invoice', 'multisafepay'),
-            'desc'      => __('Send Invoice', 'multisafepay'),
-            'type'      => 'checkbox',
-            'default'   => 'yes',
-            'desc_tip'  => __('When enabled an invoice is send after a transaction is completed', 'multisafepay'),
-            'id'        => 'multisafepay_send_invoice',
-        );
-
-        $addedSettings[] = array(
             'name'      => __('Analytics', 'multisafepay'),
             'desc'      => __('Google Analytics', 'multisafepay'),
             'type'      => 'text',
@@ -319,22 +306,28 @@ class MultiSafepay_Gateways
         return true;
     }
 
+    /**
+     * @return bool|void
+     */
     public static function Multisafepay_Response()
     {
+        $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
+        $type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
+        $trns_id = filter_input(INPUT_GET, 'transactionid', FILTER_SANITIZE_STRING);
+        $identifier = filter_input(INPUT_GET, 'identifier', FILTER_SANITIZE_STRING);
+        $cancel_order = filter_input(INPUT_GET, 'cancel_order', FILTER_SANITIZE_STRING);
 
-        $type           = filter_input(INPUT_GET, 'type',           FILTER_SANITIZE_STRING);
-        $trns_id        = filter_input(INPUT_GET, 'transactionid',  FILTER_SANITIZE_STRING);
-        $identifier     = filter_input(INPUT_GET, 'identifier',     FILTER_SANITIZE_STRING);
-        $cancel_order   = filter_input(INPUT_GET, 'cancel_order',   FILTER_SANITIZE_STRING);
-
+        // If not initialized by MultiSafepay
+        if ($page != 'multisafepaynotify') {
+            return true;
+        }
         if (empty($trns_id) && empty($identifier)) {
             return;
         }
 
         global $wpdb, $woocommerce;
-        $helper = new MultiSafepay_Helper_Helper();
 
-        $redirect        = false;
+        $redirect = false;
         $initial_request = false;
 
         switch ($type) {
@@ -348,18 +341,11 @@ class MultiSafepay_Gateways
                 return true;
             case 'shipping':
                 $fco = new MultiSafepay_Gateway_Fastcheckout();
-                print_r ($fco->get_shipping_methods_xml());
+                print_r($fco->get_shipping_methods_xml());
                 exit;
-/*
-            case 'feeds':
-                require_once dirname(__FILE__) . '/Helper/Feeds.php';
-                return true;
-                break;
-*/
             default:
                 break;
         }
-
 
         // If no transaction-id there is nothing to process..
         if (empty($trns_id)) {
@@ -376,26 +362,22 @@ class MultiSafepay_Gateways
             $msg = null;
             $transactie = $msp->orders->get($trns_id, 'orders', array(), false);
         } catch (Exception $e) {
-
             $msg = htmlspecialchars($e->getMessage());
             $helper->write_log($msg);
             return;
         }
 
-        $updated  = false;
-        $status   = $transactie->status;
+        $updated = false;
+        $status = $transactie->status;
 
-
-        if ($transactie->fastcheckout == 'NO' &&  isset ($transactie->var2)) {
+        if ($transactie->fastcheckout == 'NO' && isset($transactie->var2)) {
             $order_id = $transactie->var2;
-        }else{
+        } else {
             $tablename = $wpdb->prefix . 'woocommerce_multisafepay';
             $sql = $wpdb->prepare("SELECT orderid FROM {$tablename} WHERE trixid = %s", $trns_id);
             $order_id = $wpdb->get_var($sql);
         }
-        $order   = wc_get_order($order_id);
-
-
+        $order = wc_get_order($order_id);
 
         if ($cancel_order && ($status != 'completed')) {
             $order->update_status('wc-cancelled');
@@ -404,8 +386,8 @@ class MultiSafepay_Gateways
             exit();
         }
 
-        $amount     = $transactie->amount / 100;
-        $gateway    = $transactie->payment_details->type;
+        $amount = $transactie->amount / 100;
+        $gateway = $transactie->payment_details->type;
 
         if ($transactie->fastcheckout == 'YES' && empty($order_id)) {
             // No correct transaction, go back to checkout-page.
@@ -417,11 +399,10 @@ class MultiSafepay_Gateways
             $amount = $transactie->amount / 100;
 
             if (!empty($transactie->shopping_cart)) {
-
                 $order = wc_create_order();
 
                 // Compatiblity Woocommerce 2.x and 3.x
-                $order_id     = (method_exists($order,'get_id'))     ? $order->get_id()      : $order->id;
+                $order_id = (method_exists($order, 'get_id')) ? $order->get_id() : $order->id;
 
                 $wpdb->query("INSERT INTO " . $wpdb->prefix . 'woocommerce_multisafepay' . " (trixid, orderid, status) VALUES ('" . $trns_id . "', '" . $order_id . "', '" . $status . "'  )");
 
@@ -451,13 +432,16 @@ class MultiSafepay_Gateways
 
                 // Add shipping method
                 foreach ($woocommerce->shipping->load_shipping_methods() as $shipping_method) {
-
                     if ($shipping_method->method_title == $transactie->order_adjustment->shipping->flat_rate_shipping->name) {
-                        $shipping['method_title'] = $transactie->order_adjustment->shipping->flat_rate_shipping->name;
-                        $shipping['total'] = $transactie->order_adjustment->shipping->flat_rate_shipping->cost;
-
-                        $rate = new WC_Shipping_Rate($shipping_method->id, isset($shipping['method_title']) ? $shipping['method_title'] : '', isset($shipping['total']) ? floatval($shipping['total']) : 0, array(), $shipping_method->id);
-                        $order->add_shipping($rate);
+                        $item = new WC_Order_Item_Shipping();
+                        $item->set_props(array(
+                            'method_title' => $transactie->order_adjustment->shipping->flat_rate_shipping->name,
+                            'method_id' => $shipping_method->id,
+                            'total' => wc_format_decimal($transactie->order_adjustment->shipping->flat_rate_shipping->cost),
+                            'taxes' => $shipping_method->taxes,
+                            'order_id' => $order_id,
+                        ));
+                        $order->add_item($item);
                         break;
                     }
                 }
@@ -486,15 +470,24 @@ class MultiSafepay_Gateways
 
                 // TODO: Check if products are filled correctly
                 foreach ($transactie->shopping_cart->items as $product) {
-
                     $sku = json_decode($product->merchant_item_id);
 
                     // Product
                     $product_id = null;
                     if (!empty($sku->sku)) {
-                        $product_id = $wpdb->get_var($wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE meta_key='_sku' AND meta_value='%s' LIMIT 1", $sku->sku));
+                        $product_id = $wpdb->get_var(
+                            $wpdb->prepare(
+                                "SELECT post_id FROM $wpdb->postmeta WHERE meta_key='_sku' AND meta_value='%s' LIMIT 1",
+                                $sku->sku
+                            )
+                        );
                     } elseif (!empty($sku->id)) {
-                        $product_id = $wpdb->get_var($wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE post_id='%s' LIMIT 1", $sku->id));
+                        $product_id = $wpdb->get_var(
+                            $wpdb->prepare(
+                                "SELECT post_id FROM $wpdb->postmeta WHERE post_id='%s' LIMIT 1",
+                                $sku->id
+                            )
+                        );
                     }
 
                     if ($product_id) {
@@ -507,9 +500,8 @@ class MultiSafepay_Gateways
                     $applied_discount_tax = 0;
 
                     if (!empty($sku->{'Coupon-code'})) {
-
                         $code = $sku->Coupon - code;
-                        $unit_price = (float) str_replace('-', '', $product->unit_price);
+                        $unit_price = (float)str_replace('-', '', $product->unit_price);
                         update_post_meta($order_id, '_cart_discount', $unit_price);
                         update_post_meta($order_id, '_order_total', $amount);
                         update_post_meta($order_id, '_cart_discount_tax', 0);
@@ -517,36 +509,14 @@ class MultiSafepay_Gateways
                         $order->calculate_taxes();
                         $tax_percentage = 0;
                         $order_data = get_post_meta($order_id);
-                        $new_order_tax = round($order_data['_order_tax'][0] - (($unit_price * (1 + $tax_percentage)) - $unit_price), 2);
+                        $new_order_tax = round(
+                            $order_data['_order_tax'][0] - (($unit_price * (1 + $tax_percentage)) - $unit_price),
+                            2
+                        );
                         update_post_meta($order_id, '_order_tax', $new_order_tax);
                         $order->add_coupon($code, $unit_price, $applied_discount_tax);
                     }
-
-/*
-                    // Ordercoupon
-                    $applied_discount_tax = 0;
-                    if (!empty($sku->ordercoupon)) {
-                        $code = $sku->ordercoupon;
-                        $amount = (float) str_replace('-', '', $product['unit_price']);
-                        update_post_meta($order_id, '_cart_discount', $amount);
-                        update_post_meta($order_id, '_order_total', $details['transaction']['amount'] / 100);
-                        $tax_percentage = (($details['transaction']['amount'] / 100) - ($details['order-total']['total'] - $details['total-tax']['total'] + $details['shipping']['cost'])) / ($details['order-total']['total'] - $details['total-tax']['total'] + $details['shipping']['cost']);
-                        $applied_discount_tax = round(($amount * (1 + $tax_percentage)) - $amount, 2);
-                        update_post_meta($order_id, '_cart_discount_tax', $applied_discount_tax);
-                        $order->calculate_taxes();
-                        $order_data = get_post_meta($order_id);
-                        $new_order_tax = round($order_data['_order_tax'][0] - (($amount * (1 + $tax_percentage)) - $amount), 2);
-                        update_post_meta($order_id, '_order_tax', $new_order_tax);
-                        $id = $order->add_coupon($code, $amount, $applied_discount_tax);
-                    }
-
-                    // Cart Fee
-                    if (!empty($sku->fee)) {
-                        //TODO PROCESS CART FEE
-                    }
-*/
                 }
-
 
                 update_post_meta($order_id, '_order_total', $transactie->amount / 100);
                 $order->calculate_taxes();
@@ -556,9 +526,11 @@ class MultiSafepay_Gateways
                     wc_update_order_item_meta($key, 'tax_amount', $data - $applied_discount_tax);
                 }
             }
-
         }
 
+        if (!$order) {
+            exit("Order does not exist");
+        }
 
         $orderStatus = $order->get_status();
 
@@ -570,7 +542,10 @@ class MultiSafepay_Gateways
                 break;
             case 'initialized':
                 if ($gateway == 'BANKTRANS') {
-                    $order->update_status('wc-on-hold', sprintf(__('Banktransfer payment. Waiting for payment update', 'multisafepay'), $amount));
+                    $order->update_status(
+                        'wc-on-hold',
+                        sprintf(__('Banktransfer payment. Waiting for payment update', 'multisafepay'), $amount)
+                    );
                     $return_url = $order->get_checkout_order_received_url();
                     $updated = true;
                     break;
@@ -583,7 +558,10 @@ class MultiSafepay_Gateways
             case 'completed':
                 if ($order->get_total() != $amount) {
                     if ($orderStatus != 'processing') {
-                        $order->update_status('wc-on-hold', sprintf(__('Validation error: Multisafepay amounts do not match (gross %s).', 'multisafepay'), $amount));
+                        $order->update_status(
+                            'wc-on-hold',
+                            sprintf(__('Validation error: Multisafepay amounts do not match (gross %s).', 'multisafepay'), $amount)
+                        );
                     }
                 }
 
@@ -594,19 +572,22 @@ class MultiSafepay_Gateways
                     $updated = true;
                 }
                 if ($status == 'completed' && $gateway == 'KLARNA') {
-                    $order->add_order_note(__('Klarna Reservation number: ', 'multisafepay') . $transactie->payment_details->external_transaction_id);
+                    $order->add_order_note(
+                        __('Klarna Reservation number: ', 'multisafepay') .$transactie->payment_details->external_transaction_id
+                    );
                 }
-
                 break;
             case 'refunded':
                 if ($order->get_total() == $amount) {
-                    $order->update_status('wc-refunded', sprintf(__('Payment %s via Multisafepay.', 'multisafepay'), strtolower($status)));
+                    $order->update_status(
+                        'wc-refunded',
+                        sprintf(__('Payment %s via Multisafepay.', 'multisafepay'), strtolower($status))
+                    );
                     $order->add_order_note(sprintf(__('Multisafepay payment status %s', 'multisafepay'), $status));
                 }
                 $updated = true;
                 break;
             case 'uncleared':
-
                 if ($orderStatus == 'on-hold') {
                     break;
                 }
@@ -619,38 +600,20 @@ class MultiSafepay_Gateways
             case 'declined':
             case 'expired':
                 // Only change the orderstatus if the current status is pending or on-hold
-                if ( $orderStatus == 'pending' ||  $orderStatus == 'on-hold') {
-                    $order->update_status('wc-failed', sprintf(__('Payment %s via Multisafepay.', 'multisafepay'), strtolower($status)));
+                if ($orderStatus == 'pending' || $orderStatus == 'on-hold') {
+                    $order->update_status(
+                        'wc-failed',
+                        sprintf(__('Payment %s via Multisafepay.', 'multisafepay'), strtolower($status))
+                    );
                     $order->add_order_note(sprintf(__('Multisafepay payment status %s', 'multisafepay'), $status));
                     $updated = true;
                 }
                 break;
-            case 'void' :
+            case 'void':
                 $order->update_status('wc-cancelled');
                 $order->add_order_note(sprintf(__('Multisafepay payment status %s', 'multisafepay'), $status));
 
                 $updated = true;
-                break;
-            case 'shipped' :
-                if ($gateway == 'KLARNA') {
-
-                    $settings = (array) get_option("woocommerce_multisafepay_klarna_settings");
-                    $klarna_eid    = $settings['eid'];
-                    $klarna_secret = $settings['secret'];
-                    if ($klarna_eid && $klarna_secret) {
-
-                        $invoice_nr    = $transactie->payment_details->external_transaction_id;
-
-                        $secretParts = array($klarna_eid, $invoice_nr, $klarna_secret);
-                        $secret = urlencode(base64_encode(hash('sha512', implode(':', $secretParts), true)));
-
-                        $url = 'https://online.klarna.com/invoices/'.  $invoice_nr . '.pdf?secret='. $secret;
-
-                        $order->add_order_note(__('Klarna Invoice: ') . '<br /><a href=' . $url . '>' . $url . '</a>');
-                    }else{
-                        $order->add_order_note(__('Klarna Invoice: ') . __('not available.'));
-                    }
-                }
                 break;
         }
 
@@ -678,9 +641,6 @@ class MultiSafepay_Gateways
             }
         }
 
-
-
-
         if ($cancel_order && ($status != 'completed')) {
             $order->update_status('wc-cancelled');
             $location = wc_get_cart_url();
@@ -697,10 +657,6 @@ class MultiSafepay_Gateways
 
         exit('OK');
     }
-
-
-
-
 
     public static function addFCO()
     {
@@ -776,7 +732,6 @@ class MultiSafepay_Gateways
             $msp->orders->post($my_order);
             $url = $msp->orders->getPaymentLink();
         } catch (Exception $e) {
-
             $msg = htmlspecialchars($e->getMessage());
             $helper->write_log('error: ' . $msg);
         }
@@ -795,5 +750,4 @@ class MultiSafepay_Gateways
             wp_redirect($url);
         }
     }
-
 }

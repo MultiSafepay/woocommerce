@@ -187,5 +187,4 @@ class MultiSafepay_Client
         curl_close($ch);
         return $body;
     }
-
 }

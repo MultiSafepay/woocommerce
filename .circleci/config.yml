@@ -1,0 +1,21 @@
+version: 2.1
+jobs:
+  code_sniffer:
+    docker:
+      - image: circleci/php:7.1-apache-node-browsers
+    working_directory: /var/www/html
+    steps:
+      - checkout:
+          path: /var/www/html
+      - run:
+          name: Install code sniffer
+          command: composer global require "squizlabs/php_codesniffer=*"
+      - run:
+          name: Run Code Sniffer
+          command: |
+            ~/.composer/vendor/bin/phpcs --standard=phpcs.ruleset.xml -n -v /var/www/html
+workflows:
+  version: 2
+  default_check:
+    jobs:
+      - code_sniffer

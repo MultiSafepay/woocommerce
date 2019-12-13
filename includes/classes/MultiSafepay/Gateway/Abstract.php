@@ -23,10 +23,14 @@
 
 class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 {
+    /**
+     * @var string
+     */
+    const MULTISAFEPAY_PLUGIN_VERSION = '3.3.0';
 
     public static function getVersion()
     {
-        return get_option('multisafepay_version');
+        return self::MULTISAFEPAY_PLUGIN_VERSION;
     }
 
     public static function getCode()
@@ -69,11 +73,6 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         return (get_option('multisafepay_show_images') == 'yes' ? true : false);
     }
 
-    public static function getDescription()
-    {
-        return get_option('multisafepay_gateway_title');
-    }
-
     public static function getTimeActive()
     {
         switch (get_option('multisafepay_time_unit')) {
@@ -93,11 +92,6 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         return ($time_active);
     }
 
-    public static function getSendInvoice()
-    {
-        return get_option('multisafepay_send_invoice');
-    }
-
     public static function getDebugMode()
     {
         return (get_option('multisafepay_debugmode') == 'yes' ? true : false);
@@ -113,32 +107,35 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         return true;
     }
 
-    function setToShipped($order_id)
+    /**
+     * @param $order_id
+     *
+     * @return bool|WP_Error
+     */
+    public function setToShipped($order_id)
     {
-        $msp = new MultiSafepay_Client();
+        $order = wc_get_order($order_id);
 
+        $msp = new MultiSafepay_Client();
         $msp->setApiKey($this->getApiKey());
         $msp->setApiUrl($this->getTestMode());
 
-        $endpoint = 'orders/' . $order_id;
-        $setShipping = array("tracktrace_code" => null,
-            "carrier" => null,
-            "ship_date" => date('Y-m-d H:i:s'),
-            "reason" => 'Shipped');
+        $endpoint = 'orders/' .$order->get_order_number();
+        $setShipping = array(
+            'tracktrace_code' => null,
+            'carrier'         => null,
+            'ship_date'       => date('Y-m-d H:i:s'),
+            'reason'          => 'Shipped');
 
         try {
-            $msg = null;
-            $response = $msp->orders->patch($setShipping, $endpoint);
+            $msp->orders->patch($setShipping, $endpoint);
         } catch (Exception $e) {
             $msg = htmlspecialchars($e->getMessage());
             $this->write_log($msg);
+            return new WP_Error('multisafepay', 'Transaction status can\'t be updated:' . $msg);
         }
 
-        if ($msp->error) {
-            return new WP_Error('multisafepay', 'Transaction status can\'t be updated:' . $msp->error_code . ' - ' . $msp->error);
-        } else {
-            return true;
-        }
+        return true;
     }
 
     public function getIcon()
@@ -158,13 +155,19 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         $this->method_title         = $this->getName();
         $this->method_description   = sprintf(__('Activate this module to accept %s transactions by MultiSafepay', 'multisafepay'), $this->getName());
 
-        if ($this->canRefund())
+        if ($this->canRefund()) {
             $this->supports = array('products', 'refunds');
-        else
+        } else {
             $this->supports = array('products');
+        }
 
+        $this->init_form_fields();
         $this->init_settings();
-        $this->title = $this->getTitle() ? $this->getTitle() : $this->getName();
+
+        // Define user set variables.
+        $this->title        = $this->get_option('title');
+        $this->description  = $this->get_option('description');
+        $this->instructions = $this->get_option('instructions');
 
         if ($this->getShowImages()) {
             $this->icon = $this->getIcon();
@@ -179,14 +182,15 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         add_action('woocommerce_order_status_completed', array($this, 'setToShipped'), 13);
     }
 
-    public function init_settings($form_fields = array())
+    public function init_form_fields($form_fields = array())
     {
         $this->form_fields = array();
 
         $warning = $this->getWarning();
 
-        if (is_array($warning))
+        if (is_array($warning)) {
             $this->form_fields['warning'] = $warning;
+        }
 
 
         $this->form_fields['enabled'] = array(
@@ -217,14 +221,8 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
         $this->form_fields  = array_merge($this->form_fields, $form_fields);
 
-        parent::init_settings();
+        parent::init_form_fields();
     }
-
-    public function payment_fields()
-    {
-        echo $this->get_option('description');
-    }
-
 
     public function process_payment($order_id)
     {
@@ -284,7 +282,6 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
             return array(   'result'    => 'error',
                             'redirect'  => wc_get_cart_url() );
         } else {
-
             $wpdb->query("INSERT INTO " . $wpdb->prefix . 'woocommerce_multisafepay' . " (trixid, orderid, status) VALUES ('" . $my_order['order_id'] . "', '" . $my_order['var2'] . "','')");
 
             return array(   'result'    => 'success',
@@ -294,8 +291,8 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
     public function process_refund($order_id, $amount = null, $reason = '')
     {
-        if ( $amount <= 0) {
-            return new WP_Error('multisafepay', "Refund amount must be greater than 0.00 " );
+        if ($amount <= 0) {
+            return new WP_Error('multisafepay', "Refund amount must be greater than 0.00 ");
         }
 
         $msp = new MultiSafepay_Client();
@@ -331,192 +328,179 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     {
         $order = wc_get_order($order_id);
 
-        $shopping_cart                             = array();
-        $checkout_options                          = array();
-        $checkout_options['tax_tables']['default'] = array('shipping_taxed' => 'true',
-            'rate' => '0.21');
+        $shopping_cart = array();
+        $checkout_options = array();
+        $checkout_options['tax_tables']['default'] = array(
+            'shipping_taxed' => 'true',
+            'rate' => '0.21'
+        );
 
-        //Add BTW 0%
-        $checkout_options['tax_tables']['alternate'][] = array('name' => 'BTW-0',
-            'rules' => array(array('rate' => '0.00')));
+        // Add BTW 0%
+        $checkout_options['tax_tables']['alternate'][] = array(
+            'name' => 'BTW-0',
+            'rules' => array(array('rate' => '0.00'))
+        );
 
         $tax_array = array('BTW-0');
 
-        // Fee
-        /*              foreach ($order->get_items('fee') as $fee) {
-
-          $taxes = unserialize($fee['taxes']);
-          $taxes = array_shift ($taxes);
-
-          $tax_table_selector = 'fee';
-          $tax_percentage = round($taxes /$fee['cost'], 2);
-
-          $method_id = explode (':', $fee['method_id']);
-
-          $shopping_cart['items'][] = array (
-          'name'  		     => $fee['type'],
-          'description' 		 => $fee['name'],
-          'unit_price'  		 => $fee['cost'],
-          'quantity'    		 => 1,
-          'merchant_item_id' 	 => $method_id[0],
-          'tax_table_selector' => $tax_table_selector,
-          'weight' 		     => array ('unit'=> 0,  'value'=> 'KG')
-          );
-
-          if (!in_array($tax_table_selector, $tax_array)) {
-          array_push($checkout_options['tax_tables']['alternate'], array ('name' => $tax_table_selector, 'rules' => array (array ('rate' => $tax_percentage))));
-          array_push($tax_array, $tax_table_selector);
-          }
-          }
-         */
-
-
-        //add item data
-        $items = "<ul>\n";
+        // Add item data
         foreach ($order->get_items() as $item) {
-
-            $items .= "<li>".$item['qty'].' x : '.$item['name']."</li>\n";
-
-            if ( $item['line_subtotal'] > 0 ){
+            if ($item['line_subtotal'] > 0) {
                 $tax_percentage = round($item['line_subtotal_tax'] / $item['line_subtotal'], 2);
-            }else{
+            } else {
                 $tax_percentage = 0;
             }
 
-            $product_price  = round($item['line_subtotal'] / $item['qty'], 5);
+            $product_price = round($item['line_subtotal'] / $item['qty'], 5);
 
             if ($item['line_subtotal_tax'] > 0) {
-                $tax_table_selector = 'BTW-'.$tax_percentage * 100;
+                $tax_table_selector = 'BTW-' . $tax_percentage * 100;
             } else {
                 $tax_table_selector = 'BTW-0';
             }
 
             $shopping_cart['items'][] = array(
-                'name'              => $item['name'],
-                'description'       => '',
-                'unit_price'        => $product_price,
-                'quantity'          => $item['qty'],
-                'merchant_item_id'  => $item['product_id'],
-                'tax_table_selector'=> $tax_table_selector,
-                'weight'            => array('unit' => 0, 'value' => 'KG') );
+                'name' => $item['name'],
+                'description' => '',
+                'unit_price' => $product_price,
+                'quantity' => $item['qty'],
+                'merchant_item_id' => $item['product_id'],
+                'tax_table_selector' => $tax_table_selector,
+                'weight' => array('unit' => 0, 'value' => 'KG')
+            );
 
             if (!in_array($tax_table_selector, $tax_array)) {
-                array_push($checkout_options['tax_tables']['alternate'],
-                    array(  'name'  => $tax_table_selector,
-                            'rules' => array(array(
-                            'rate'  => $tax_percentage))));
-                array_push($tax_array, $tax_table_selector);
+                $checkout_options['tax_tables']['alternate'][] =
+                    array(
+                        'name' => $tax_table_selector,
+                        'rules' => array(
+                            array(
+                                'rate' => $tax_percentage
+                            )
+                        )
+                    );
+                $tax_array[] = $tax_table_selector;
             }
         }
-        $items .= "</ul>\n";
 
-       //add coupon discount
+        // Add coupon discount
         foreach ($order->get_items('coupon') as $coupon) {
-
             $tax_table_selector = $coupon['type'];
-            if ( $coupon['discount_amount'] > 0 ){
-                $tax_percentage     = round($coupon['discount_amount_tax'] / $coupon['discount_amount'], 2);
-            }else{
+            if ($coupon['discount_amount'] > 0) {
+                $tax_percentage = round($coupon['discount_amount_tax'] / $coupon['discount_amount'], 2);
+            } else {
                 $tax_percentage = 0;
             }
 
             $shopping_cart['items'][] = array(
-                'name'              => $coupon['type'],
-                'description'       => $coupon['name'],
-                'unit_price'        => -$coupon['discount_amount'],
-                'quantity'          => 1,
-                'merchant_item_id'  => $coupon['type'],
-                'tax_table_selector'=> $tax_table_selector,
-                'weight'            => array('unit' => 0, 'value' => 'KG') );
+                'name' => $coupon['type'],
+                'description' => $coupon['name'],
+                'unit_price' => -$coupon['discount_amount'],
+                'quantity' => 1,
+                'merchant_item_id' => $coupon['type'],
+                'tax_table_selector' => $tax_table_selector,
+                'weight' => array('unit' => 0, 'value' => 'KG')
+            );
 
             if (!in_array($tax_table_selector, $tax_array)) {
-                array_push($checkout_options['tax_tables']['alternate'],
-                    array(  'name'  => $tax_table_selector,
-                            'rules' => array(array(
-                            'rate'  => $tax_percentage))));
-                array_push($tax_array, $tax_table_selector);
+                $checkout_options['tax_tables']['alternate'][] =
+                    array(
+                        'name' => $tax_table_selector,
+                        'rules' => array(
+                            array(
+                                'rate' => $tax_percentage
+                            )
+                        )
+                    );
+                $tax_array[] = $tax_table_selector;
             }
         }
 
-        // Shipping
+        // Add shipping
         foreach ($order->get_items('shipping') as $shipping) {
-
             $taxes = $shipping['taxes']['total'];
             $taxes = array_shift($taxes);
 
-            $cost  = $shipping['cost'];
+            $cost = $shipping['cost'];
 
             $tax_table_selector = 'shipping';
 
-            if ( $cost > 0 ){
-                $tax_percentage  = round($taxes / $cost, 2);
-            }else{
+            if ($cost > 0) {
+                $tax_percentage = round($taxes / $cost, 2);
+            } else {
                 $tax_percentage = 0;
             }
 
-            $method_id = explode(':', $shipping['method_id']);
-
             $shopping_cart['items'][] = array(
-                'name'              => $shipping['name'],
-                'description'       => $shipping['type'],
-                'unit_price'        => $shipping['cost'],
-                'quantity'          => 1,
-                'merchant_item_id'  => 'msp-shipping',
-//                'merchant_item_id'  => $method_id[0],
-                'tax_table_selector'=> $tax_table_selector,
-                'weight'            => array('unit' => 0, 'value' => 'KG') );
+                'name' => $shipping['name'],
+                'description' => $shipping['type'],
+                'unit_price' => $shipping['cost'],
+                'quantity' => 1,
+                'merchant_item_id' => 'msp-shipping',
+                'tax_table_selector' => $tax_table_selector,
+                'weight' => array('unit' => 0, 'value' => 'KG')
+            );
 
             if (!in_array($tax_table_selector, $tax_array)) {
-                array_push($checkout_options['tax_tables']['alternate'],
-                    array(  'name'  => $tax_table_selector,
-                            'rules' => array(array(
-                            'rate'  => $tax_percentage))));
-                array_push($tax_array, $tax_table_selector);
+                $checkout_options['tax_tables']['alternate'][] =
+                    array(
+                        'name' => $tax_table_selector,
+                        'rules' => array(
+                            array(
+                                'rate' => $tax_percentage
+                            )
+                        )
+                    );
+                $tax_array[] = $tax_table_selector;
             }
         }
 
-
-        // Fee
+        // Add fee
         foreach ($order->get_items('fee') as $fee) {
+            $tax_table_selector = 'fee';
 
-			$tax_table_selector = 'fee';
-            $tax_percentage     = round($fee['total_tax'] / $fee['total'], 2);
+            if ($fee['total'] > 0) {
+                $tax_percentage = round($fee['total_tax'] / $fee['total'], 2);
+            } else {
+                $tax_percentage = 0;
+            }
 
-			$shopping_cart['items'][] = array(
-				'name'              => $fee['name'],
-				'description'       => $fee['name'],
-				'unit_price'        => $fee['total'],
-				'quantity'          => 1,
-				'merchant_item_id'  => 'fee',
-				'tax_table_selector'=> $tax_table_selector,
-				'weight'            => array('unit' => 0, 'value' => 'KG') );
+            $shopping_cart['items'][] = array(
+                'name' => $fee['name'],
+                'description' => $fee['name'],
+                'unit_price' => $fee['total'],
+                'quantity' => 1,
+                'merchant_item_id' => 'fee',
+                'tax_table_selector' => $tax_table_selector,
+                'weight' => array('unit' => 0, 'value' => 'KG')
+            );
 
-			if (!in_array($tax_table_selector, $tax_array)) {
-				array_push($checkout_options['tax_tables']['alternate'],
-					array(  'name'  => $tax_table_selector,
-							'rules' => array(array(
-							'rate'  => $tax_percentage))));
-				array_push($tax_array, $tax_table_selector);
-			}
-		}
+            if (!in_array($tax_table_selector, $tax_array)) {
+                $checkout_options['tax_tables']['alternate'][] =
+                    array(
+                        'name' => $tax_table_selector,
+                        'rules' => array(
+                            array(
+                                'rate' => $tax_percentage
+                            )
+                        )
+                    );
+                $tax_array[] = $tax_table_selector;
+            }
+        }
 
-        return ( array($shopping_cart, $checkout_options) );
+        return array($shopping_cart, $checkout_options);
     }
 
+    /**
+     * @param $order_id
+     * @return array
+     */
     public function getGatewayInfo($order_id)
     {
         $order = wc_get_order($order_id);
 
-        switch ($this->getGatewayCode()){
-
-            case 'KLARNA':
-                $gender = $_POST['klarna_gender'];
-                $gebdat = $_POST['klarna_birthday'];
-
-                // Swap format to YYYY-MM-DD and replace delimiter to - so YYYY/MM/DD will become YYYY-MM-DD
-                $gebdat = preg_replace("/(^(\d{2}).(\d{2}).(\d{4}))/", "$4-$3-$2", $gebdat);
-                $gebdat = preg_replace("/[^0-9]/", "-", $gebdat);
-                break;
+        switch ($this->getGatewayCode()) {
             case 'PAYAFTER':
                 $gebdat = $_POST['pad_birthday'];
                 $account = $_POST['pad_account'];
@@ -528,16 +512,17 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         }
 
         // Compatiblity Woocommerce 2.x and 3.x
-        $billingPhone  = (method_exists($order,'get_billing_phone'))     ? $order->get_billing_phone()      : $order->billing_phone;
-        $billingEmail  = (method_exists($order,'get_billing_email'))     ? $order->get_billing_email()      : $order->billing_email;
+        $billingPhone  = (method_exists($order, 'get_billing_phone'))     ? $order->get_billing_phone()      : $order->billing_phone;
+        $billingEmail  = (method_exists($order, 'get_billing_email'))     ? $order->get_billing_email()      : $order->billing_email;
 
-        return (array(  'referrer'      => $_SERVER['HTTP_REFERER'],
-                        'user_agent'    => $_SERVER['HTTP_USER_AGENT'],
-                        'birthday'      => isset ($gebdat)  ? $gebdat  : '',
-                        'bankaccount'   => isset ($account) ? $account : '',
-                        'phone'         => $billingPhone,
-                        'email'         => $billingEmail,
-                        'gender'        => isset ($gender)  ? $gender  : '') );
+        return [
+            'referrer' => $_SERVER['HTTP_REFERER'],
+            'user_agent' => $_SERVER['HTTP_USER_AGENT'],
+            'birthday' => isset($gebdat) ? $gebdat : '',
+            'bankaccount' => isset($account) ? $account : '',
+            'phone' => $billingPhone,
+            'email' => $billingEmail
+        ];
     }
 
     public function setItemList($items)
@@ -554,23 +539,19 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     {
 
         // Compatiblity Woocommerce 2.x and 3.x
-        $shipping_address_1     = (method_exists($order,'get_shipping_address_1'))  ? $order->get_shipping_address_1()  : $order->shipping_address_1;
-        $shipping_first_name    = (method_exists($order,'get_shipping_first_name')) ? $order->get_shipping_first_name() : $order->shipping_first_name;
-        $shipping_last_name     = (method_exists($order,'get_shipping_last_name'))  ? $order->get_shipping_last_name()  : $order->shipping_last_name;
-        $shipping_address_2     = (method_exists($order,'get_shipping_address_2'))  ? $order->get_shipping_address_2()  : $order->shipping_address_2;
-        $shipping_postcode      = (method_exists($order,'get_shipping_postcode'))   ? $order->get_shipping_postcode()   : $order->shipping_postcode;
-        $shipping_city          = (method_exists($order,'get_shipping_city'))       ? $order->get_shipping_city()       : $order->shipping_city;
-        $shipping_state         = (method_exists($order,'get_shipping_state'))      ? $order->get_shipping_state()      : $order->shipping_state;
-        $shipping_country       = (method_exists($order,'get_shipping_country'))    ? $order->get_shipping_country()    : $order->shipping_country;
+        $shipping_address_1     = method_exists($order, 'get_shipping_address_1')  ? $order->get_shipping_address_1()  : $order->shipping_address_1;
+        $shipping_first_name    = method_exists($order, 'get_shipping_first_name') ? $order->get_shipping_first_name() : $order->shipping_first_name;
+        $shipping_last_name     = method_exists($order, 'get_shipping_last_name')  ? $order->get_shipping_last_name()  : $order->shipping_last_name;
+        $shipping_address_2     = method_exists($order, 'get_shipping_address_2')  ? $order->get_shipping_address_2()  : $order->shipping_address_2;
+        $shipping_postcode      = method_exists($order, 'get_shipping_postcode')   ? $order->get_shipping_postcode()   : $order->shipping_postcode;
+        $shipping_city          = method_exists($order, 'get_shipping_city')       ? $order->get_shipping_city()       : $order->shipping_city;
+        $shipping_state         = method_exists($order, 'get_shipping_state')      ? $order->get_shipping_state()      : $order->shipping_state;
+        $shipping_country       = method_exists($order, 'get_shipping_country')    ? $order->get_shipping_country()    : $order->shipping_country;
 
         $address = $shipping_address_1;
         list ($street, $houseNumber) = $msp->parseCustomerAddress($address);
 
-        return ( array( "locale"        => $this->getLocale(),
-                        "ip_address"    => $_SERVER['REMOTE_ADDR'],
-                        "referrer"      => $_SERVER['HTTP_REFERER'],
-                        "user_agent"    => $_SERVER['HTTP_USER_AGENT'],
-                        "first_name"    => $shipping_first_name,
+        return array(   "first_name"    => $shipping_first_name,
                         "last_name"     => $shipping_last_name,
                         "address1"      => $street,
                         "address2"      => $shipping_address_2,
@@ -578,27 +559,28 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
                         "zip_code"      => $shipping_postcode,
                         "city"          => $shipping_city,
                         "state"         => $shipping_state,
-                        "country"       => $shipping_country ));
+                        "country"       => $shipping_country );
     }
 
     public function setCustomer($msp, $order)
     {
-        $billing_address_1     = (method_exists($order,'get_billing_address_1'))  ? $order->get_billing_address_1()  : $order->billing_address_1;
-        $billing_first_name    = (method_exists($order,'get_billing_first_name')) ? $order->get_billing_first_name() : $order->billing_first_name;
-        $billing_last_name     = (method_exists($order,'get_billing_last_name'))  ? $order->get_billing_last_name()  : $order->billing_last_name;
-        $billing_address_2     = (method_exists($order,'get_billing_address_2'))  ? $order->get_billing_address_2()  : $order->billing_address_2;
-        $billing_postcode      = (method_exists($order,'get_billing_postcode'))   ? $order->get_billing_postcode()   : $order->billing_postcode;
-        $billing_city          = (method_exists($order,'get_billing_city'))       ? $order->get_billing_city()       : $order->billing_city;
-        $billing_state         = (method_exists($order,'get_billing_state'))      ? $order->get_billing_state()      : $order->billing_state;
-        $billing_country       = (method_exists($order,'get_billing_country'))    ? $order->get_billing_country()    : $order->billing_country;
-        $billing_phone         = (method_exists($order,'get_billing_phone'))      ? $order->get_billing_phone()      : $order->billing_phone;
-        $billing_email         = (method_exists($order,'get_billing_email'))      ? $order->get_billing_email()      : $order->billing_email;
+        $billing_address_1     = method_exists($order, 'get_billing_address_1')  ? $order->get_billing_address_1()  : $order->billing_address_1;
+        $billing_first_name    = method_exists($order, 'get_billing_first_name') ? $order->get_billing_first_name() : $order->billing_first_name;
+        $billing_last_name     = method_exists($order, 'get_billing_last_name')  ? $order->get_billing_last_name()  : $order->billing_last_name;
+        $billing_address_2     = method_exists($order, 'get_billing_address_2')  ? $order->get_billing_address_2()  : $order->billing_address_2;
+        $billing_postcode      = method_exists($order, 'get_billing_postcode')   ? $order->get_billing_postcode()   : $order->billing_postcode;
+        $billing_city          = method_exists($order, 'get_billing_city')       ? $order->get_billing_city()       : $order->billing_city;
+        $billing_state         = method_exists($order, 'get_billing_state')      ? $order->get_billing_state()      : $order->billing_state;
+        $billing_country       = method_exists($order, 'get_billing_country')    ? $order->get_billing_country()    : $order->billing_country;
+        $billing_phone         = method_exists($order, 'get_billing_phone')      ? $order->get_billing_phone()      : $order->billing_phone;
+        $billing_email         = method_exists($order, 'get_billing_email')      ? $order->get_billing_email()      : $order->billing_email;
+        $ip_address            = class_exists('WC_Geolocation', false)    ? WC_Geolocation::get_ip_address() : $_SERVER['REMOTE_ADDR'];
 
         $address = $billing_address_1;
         list ($street, $houseNumber) = $msp->parseCustomerAddress($address);
 
-        return ( array( "locale"        => $this->getLocale(),
-                        "ip_address"    => $_SERVER['REMOTE_ADDR'],
+        return array(   "locale"        => $this->getLocale(),
+                        "ip_address"    => $this->parseIpAddress($ip_address),
                         "referrer"      => $_SERVER['HTTP_REFERER'],
                         "user_agent"    => $_SERVER['HTTP_USER_AGENT'],
                         "first_name"    => $billing_first_name,
@@ -611,7 +593,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
                         "state"         => $billing_state,
                         "country"       => $billing_country,
                         "phone"         => $billing_phone,
-                        "email"         => $billing_email));
+                        "email"         => $billing_email);
     }
 
     public function setGoogleAnalytics()
@@ -623,11 +605,13 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     {
         global $woocommerce;
 
-        return ( array( "shop"          => "WooCommerce",
-                        "shop_version"  => 'WooCommerce '.$woocommerce->version,
-                        "plugin_version"=> '('.get_option('multisafepay_version').')',
-                        "partner"       => '',
-                        "shop_root_url" => ''));
+        return ([
+            'shop' => 'WooCommerce',
+            'shop_version' => 'WooCommerce ' . $woocommerce->version,
+            'plugin_version' => '(' . self::MULTISAFEPAY_PLUGIN_VERSION . ')',
+            'partner' => '',
+            'shop_root_url' => ''
+        ]);
     }
 
     public function getLocale()
@@ -638,8 +622,21 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     public function write_log($log)
     {
         if (get_option('multisafepay_debugmode') == 'yes') {
-            if (is_array($log) || is_object($log)) error_log(print_r($log, true));
-            else error_log($log);
+            if (is_array($log) || is_object($log)) {
+                error_log(print_r($log, true));
+            } else {
+                error_log($log);
+            }
         }
+    }
+
+    /**
+     * @param $ipAddress
+     * @return string
+     */
+    public function parseIpAddress($ipAddress)
+    {
+        $ipAddresses = explode(',', $ipAddress);
+        return trim(reset($ipAddresses));
     }
 }

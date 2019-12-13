@@ -47,12 +47,10 @@ class MultiSafepay_Autoload
         if (file_exists($file_name)) {
             require_once $file_name;
             return;
-        }else{
-
+        } else {
             $log = "FATAL!!  $class_name from $file_name.\n";
-            $string = sprintf ("%s\n%s\n%s\n%s: %s\n\n",  date ('Y-m-d H:i:s'), __FILE__ , __METHOD__ , 'DEBUG:',  $log);
+            $string = sprintf("%s\n%s\n%s\n%s: %s\n\n", date('Y-m-d H:i:s'), __FILE__, __METHOD__, 'DEBUG:', $log);
             error_log($string, 3, "MultiSafepay.log");
-
         }
     }
 }

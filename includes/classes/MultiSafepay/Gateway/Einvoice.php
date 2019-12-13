@@ -41,8 +41,9 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
     public static function getTitle()
     {
         $settings = self::getSettings();
-        if (!isset ($settings['title']))
+        if (!isset($settings['title'])) {
             $settings['title'] = '';
+        }
 
         return ($settings['title']);
     }
@@ -56,34 +57,29 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
     {
         $settings = get_option('woocommerce_multisafepay_einvoice_settings');
 
-        if ($settings['direct'] == 'yes')
+        if ($settings['direct'] == 'yes') {
             return "direct";
-        else
+        } else {
             return "redirect";
+        }
     }
 
-    public function init_settings($form_fields = array())
+    public function init_form_fields($form_fields = array())
     {
         $this->form_fields = array();
 
         $warning = $this->getWarning();
 
-        if (is_array($warning))
+        if (is_array($warning)) {
             $this->form_fields['warning'] = $warning;
+        }
 
         $this->form_fields['direct'] = array(
-            'title' => __('Direct', 'multisafepay'),
-            'type' => 'checkbox',
-            'label' => sprintf(__('Direct %s', 'multisafepay'), $this->getName()),
-            'default' => 'no');
-
-
-        $this->form_fields['direct'] = array('title' => __('Enable', 'multisafepay'),
+            'title' => __('Enable', 'multisafepay'),
             'type' => 'checkbox',
             'label' => sprintf(__('Direct %s', 'multisafepay'), $this->getName()),
             'description' => __('If enable extra credentials can be filled in checkout form, otherwise an extra form will be used.', 'multisafepay'),
             'default' => 'yes');
-
 
         $this->form_fields['minamount'] = array(
             'title' => __('Minimal order amount', 'multisafepay'),
@@ -97,7 +93,7 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
             'description' => __('The maximal order amount in euro\'s  for an order to use this payment method', 'multisafepay'),
             'css' => 'width: 100px;');
 
-        parent::init_settings($this->form_fields);
+        parent::init_form_fields($this->form_fields);
     }
 
     public function payment_fields()
@@ -106,7 +102,6 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
         $settings = (array) get_option("woocommerce_multisafepay_einvoice_settings");
 
         if ($settings['direct'] == 'yes') {
-
             $description = '<p class="form-row form-row-wide  validate-required">
                                 <label for="msp_birthday" class="">' . __('Birthday', 'multisafepay') . '<abbr class="required" title="required">*</abbr>
                                 </label>
@@ -119,9 +114,10 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
                                 <input type="text" class="input-text" name="einvoice_account" id="einvoice_account" placeholder=""/>
                             </p>';
         }
-        $description_text = $this->get_option('description');
-        if (!empty($description_text))
-            $description .= '<p>' . $description_text . '</p>';
+
+        if (!empty($this->description)) {
+            $description .= '<p>' . $this->description . '</p>';
+        }
 
         echo $description;
     }
@@ -137,21 +133,24 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
 
         $settings = (array) get_option("woocommerce_multisafepay_einvoice_settings");
 
-        if (!empty($settings['minamount']) && $woocommerce->cart->total < $settings['minamount'])
+        if (!empty($settings['minamount']) && $woocommerce->cart->total < $settings['minamount']) {
             unset($gateways['multisafepay_einvoice']);
+        }
 
-        if (!empty($settings['maxamount']) && $woocommerce->cart->total > $settings['maxamount'])
+        if (!empty($settings['maxamount']) && $woocommerce->cart->total > $settings['maxamount']) {
             unset($gateways['multisafepay_einvoice']);
+        }
 
         // Compatiblity Woocommerce 2.x and 3.x
-        if (method_exists($woocommerce->customer,'get_billing_country')){
+        if (method_exists($woocommerce->customer, 'get_billing_country')) {
             $billingCountry = $woocommerce->customer->get_billing_country();
-        }elseif (method_exists($woocommerce->customer,'get_country')){
+        } elseif (method_exists($woocommerce->customer, 'get_country')) {
             $billingCountry = $woocommerce->customer->get_country();
         }
 
-        if (isset ($woocommerce->customer) && $billingCountry != 'NL')
+        if (isset($woocommerce->customer) && $billingCountry != 'NL') {
             unset($gateways['multisafepay_einvoice']);
+        }
 
         return $gateways;
     }
@@ -163,5 +162,4 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
 
         return parent::process_payment($order_id);
     }
-
 }

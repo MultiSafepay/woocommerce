@@ -41,8 +41,9 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
     public static function getTitle()
     {
         $settings = self::getSettings();
-        if (!isset ($settings['title']))
+        if (!isset($settings['title'])) {
             $settings['title'] = '';
+        }
 
         return ($settings['title']);
     }
@@ -56,35 +57,38 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
     {
         $settings = get_option('woocommerce_multisafepay_ideal_settings');
 
-        if ($settings['direct'] == 'yes' && isset($_POST['ideal_issuer']))
+        if ($settings['direct'] == 'yes' && isset($_POST['ideal_issuer'])) {
             return "direct";
-        else
+        } else {
             return "redirect";
+        }
     }
 
     public function getGatewayInfo($order_id)
     {
-        if (isset($_POST['ideal_issuer']))
+        if (isset($_POST['ideal_issuer'])) {
             return (array("issuer_id" => $_POST['ideal_issuer']));
-        else
+        } else {
             return ('');
+        }
     }
 
-    public function init_settings($form_fields = array())
+    public function init_form_fields($form_fields = array())
     {
         $this->form_fields = array();
 
         $warning = $this->getWarning();
 
-        if (is_array($warning))
+        if (is_array($warning)) {
             $this->form_fields['warning'] = $warning;
+        }
 
         $this->form_fields['direct'] = array('title' => __('Enable', 'multisafepay'),
             'type'          => 'checkbox',
             'label'         => sprintf(__('Direct %s', 'multisafepay'), $this->getName()),
             'description'   => __('Enable of disable the selection of the preferred bank within the website.', 'multisafepay'),
             'default'       => 'yes');
-        parent::init_settings($this->form_fields);
+        parent::init_form_fields($this->form_fields);
     }
 
     public function payment_fields()
@@ -92,7 +96,6 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
         $description = '';
         $settings = (array) get_option('woocommerce_multisafepay_ideal_settings');
         if ($settings['direct'] == 'yes') {
-
             $description = '';
 
             $msp = new MultiSafepay_Client();
@@ -104,7 +107,6 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
                 $msg = null;
                 $issuers = $msp->issuers->get();
             } catch (Exception $e) {
-
                 $msg = htmlspecialchars($e->getMessage());
                 $this->write_log($msg);
                 wc_add_notice($msg, 'error');
@@ -120,9 +122,9 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
             $description .= '</p>';
         }
 
-        $description_text = $this->get_option('description');
-        if (!empty($description_text))
-            $description .= '<p>' . $description_text . '</p>';
+        if (!empty($this->description)) {
+            $description .= '<p>' . $this->description . '</p>';
+        }
 
         echo $description;
     }
@@ -145,5 +147,4 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
 
         return parent::process_payment($order_id);
     }
-
 }
