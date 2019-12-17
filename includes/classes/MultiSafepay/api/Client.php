@@ -143,48 +143,51 @@ class MultiSafepay_Client
         return $size - $pos - strlen($needle);
     }
 
-    public function processAPIRequest($http_method, $api_method, $http_body = null)
+
+    /**
+     * @param $http_method
+     * @param $endpoint
+     * @param $http_body
+     *
+     * @return mixed
+     * @throws Exception Error on request.
+     */
+    public function processAPIRequest($http_method, $endpoint, $http_body = null)
     {
         if (empty($this->api_key)) {
             throw new Exception(__('Please configure your MultiSafepay API key.', 'multisafepay'));
         }
 
-        $url = $this->api_url . $api_method;
-        $ch = curl_init($url);
-
-        $request_headers = array(
-            'Accept: application/json',
-            'api_key:' . $this->api_key,
-        );
+        $args = [
+            'headers' => [
+                'Accept'   => 'application/json',
+                'api_key'  => $this->api_key
+            ],
+            'method'  => $http_method,
+            'body'    => $http_body,
+            'sslverify' => true,
+            'timeout'   => 120,
+        ];
 
         if ($http_body !== null) {
-            $request_headers[] = 'Content-Type: application/json';
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $http_body);
+            $args['headers']['Content-Type'] = 'application/json';
         }
 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLINFO_HEADER_OUT, true);
-        curl_setopt($ch, CURLOPT_ENCODING, '');
-        curl_setopt($ch, CURLOPT_TIMEOUT, 120);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
-
-        $body = curl_exec($ch);
+        $url = $this->api_url . $endpoint;
+        $response = wp_remote_request($url, $args);
 
         if ($this->debug) {
             $this->request = $http_body;
-            $this->response = $body;
+            $this->response = $response;
         }
 
-        if (curl_errno($ch)) {
-            $str = __('Unable to communicate with the MultiSafepay payment server', 'multisafepay') . '('
-                    . curl_errno($ch) . '): ' . curl_error($ch) . '.';
+        if (is_wp_error($response)) {
+            $str = __('Unable to communicate with the MultiSafepay payment server', 'multisafepay') .
+                   $response->get_error_message();
             throw new Exception($str);
         }
-        curl_close($ch);
-        return $body;
+        $result = wp_remote_retrieve_body($response);
+
+        return $result;
     }
 }
