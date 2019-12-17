@@ -26,7 +26,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     /**
      * @var string
      */
-    const MULTISAFEPAY_PLUGIN_VERSION = '3.2.0';
+    const MULTISAFEPAY_PLUGIN_VERSION = '3.3.0';
 
     public static function getVersion()
     {
@@ -87,33 +87,37 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         return true;
     }
 
-    function setToShipped($order_id)
+    /**
+     * @param $order_id
+     *
+     * @return bool|WP_Error
+     */
+    public function setToShipped($order_id)
     {
+        $order = wc_get_order($order_id);
+
         $msp = new MultiSafepay_Client();
         $helper = new MultiSafepay_Helper_Helper();
 
         $msp->setApiKey($helper->getApiKey());
         $msp->setApiUrl($helper->getTestMode());
 
-        $endpoint = 'orders/' . $order_id;
-        $setShipping = array('tracktrace_code' => null,
-            'carrier' => null,
-            'ship_date' => date('Y-m-d H:i:s'),
-            'reason' => 'Shipped');
+        $endpoint = 'orders/' . $order->get_order_number();
+        $setShipping = array(
+            'tracktrace_code' => null,
+            'carrier'         => null,
+            'ship_date'       => date('Y-m-d H:i:s'),
+            'reason'          => 'Shipped');
 
         try {
-            $msg = null;
-            $response = $msp->orders->patch($setShipping, $endpoint);
+            $msp->orders->patch($setShipping, $endpoint);
         } catch (Exception $e) {
             $msg = htmlspecialchars($e->getMessage());
             $helper->write_log($msg);
+            return new WP_Error('multisafepay', 'Transaction status can\'t be updated:' . $msg);
         }
 
-        if ($msp->error) {
-            return new WP_Error('multisafepay', 'Transaction status can\'t be updated:' . $msp->error_code . ' - ' . $msp->error);
-        } else {
-            return true;
-        }
+        return true;
     }
 
     public function getIcon()
@@ -501,7 +505,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
                 $gebdat = sanitize_text_field($_POST['einvoice_birthday']);
                 break;
         }
-        
+
         // Compatiblity Woocommerce 2.x and 3.x
         $billingPhone  = (method_exists($order, 'get_billing_phone'))     ? $order->get_billing_phone()      : $order->billing_phone;
         $billingEmail  = (method_exists($order, 'get_billing_email'))     ? $order->get_billing_email()      : $order->billing_email;
@@ -617,7 +621,8 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
      */
     public function parseIpAddress($ipAddress)
     {
-        return trim(reset(explode(',', $ipAddress)));
+        $ipAddresses = explode(',', $ipAddress);
+        return trim(reset($ipAddresses));
     }
 
     /**

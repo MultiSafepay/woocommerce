@@ -1,3 +1,25 @@
+# Release Notes - WooCommerce 3.3.0 (Dec 13th, 2019) #
+
+### Added
++ PLGWOOS-291: Add IP validation when WooCommerce returns multiple IP addresses
++ PLGWOOS-203: Add compatibility with WPML
+
+### Changed
++ PLGWOOS-245: Change Klarna from direct to redirect
++ PLGWOOS-275: Improve Dutch translation for 'Activate'
++ PLGWOOS-263: Correct ING Home'Pay spelling
+
+### Removed
++ PLGWOOS-208: Remove the send invoice option from the backend
+
+### Fixed
++ PLGWOOS-285: Fix the fatal error "Cannot redeclare error_curl_not_installed"
++ PLGWOOS-102: Prevent the Notification URL from executing when not initialized by MultiSafepay
++ PLGWOOS-266: Prevent errors from appearing in logs for notifications of pre-transactions
++ PLGWOOS-290: Resolve DivisionByZeroError bug occurring with fees 
++ Fix PHP notice incorrect use of reset in function parseIpAddress
++ Fix PHP notice undefined property when order set to shipped
+
 # Release Notes - Woo-Commerce 3.2.0 (Jul 6th, 2018) #
 
 ## Improvements ##
