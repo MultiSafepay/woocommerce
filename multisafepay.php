@@ -42,7 +42,7 @@ require_once ABSPATH . '/wp-admin/includes/plugin.php';
 // Load textdomain
 load_plugin_textdomain('multisafepay', false, plugin_basename(dirname(__FILE__)) . '/languages');
 
-function error_woocommerce_not_active()
+function msp_error_woocommerce_not_active()
 {
     echo '<div class="error"><p>' . __('Activate WooCommerce to use the MultiSafepay plugin', 'multisafepay') . '</p></div>';
 }
@@ -66,5 +66,5 @@ if (is_plugin_active('woocommerce/woocommerce.php') || is_plugin_active_for_netw
     MultiSafepay_Autoload::register();
     MultiSafepay_Gateways::register();
 } else {
-    add_action('admin_notices', 'error_woocommerce_not_active');
+    add_action('admin_notices', 'msp_error_woocommerce_not_active');
 }
