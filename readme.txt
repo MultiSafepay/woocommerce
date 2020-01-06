@@ -20,12 +20,12 @@ from one place.
 
 **Supported Payment Methods**
 
-[WordPress](https://docs.multisafepay.com/integrations/woocommerce/faq/ \"The supported Payment Methods & Gift cards for this plugin\")
+[The supported Payment Methods & Gift cards for this plugin](https://docs.multisafepay.com/integrations/woocommerce/faq)
 
 
 **Requirements**
 Wordpress & WooCommerce installed
-To use the plugin you need a MultiSafepay account, [WordPress](https://testmerchant.multisafepay.com/signup \"Create a test account\")
+To use the plugin you need a MultiSafepay account, [Create a test account](https://testmerchant.multisafepay.com/signup)
 
 
 == Installation ==
@@ -37,7 +37,7 @@ To use the plugin you need a MultiSafepay account, [WordPress](https://testmerch
 - Navigate to WooCommerce -> Settings -> Checkout -> Payments. Enable the payment methods you would like to offer.
 
 == Frequently Asked Questions ==
-[WordPress](https://docs.multisafepay.com/integrations/woocommerce/faq/ \"Frequently Asked Questions\")
+[Frequently Asked Questions](https://docs.multisafepay.com/integrations/woocommerce/faq)
 
 == Changelog ==
-[WordPress](https://docs.multisafepay.com/integrations/woocommerce/changelog/ \"View the Changelog\")
+[View the Changelog](https://docs.multisafepay.com/integrations/woocommerce/changelog)
