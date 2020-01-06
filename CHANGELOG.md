@@ -1,3 +1,16 @@
+# Release Notes - WooCommerce 3.4.0 (Jan 6th, 2020) #
+
+### Added
++ PLGWOOS-287: Add maximum amount restriction for credit cards
++ PLGWOOS-321: Add Ohmygood Cadeaukaart
+
+### Changed
++ PLGWOOS-115: Make suitable for WordPress.org Plugin Directory
++ PLGWOOS-260: Change VVV Bon to VVV Cadeaukaart
+
+### Fixed
++ PLGWOOS-319: Disable payment fields when payment description is empty
+
 # Release Notes - WooCommerce 3.3.0 (Dec 13th, 2019) #
 
 ### Added
