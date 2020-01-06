@@ -25,12 +25,12 @@ class MultiSafepay_Gateway_Sofort extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_sofort";
+        return 'multisafepay_sofort';
     }
 
     public static function getName()
     {
-        return __('Sofort', 'multisafepay');
+        return __('SOFORT Banking ', 'multisafepay');
     }
 
     public static function getSettings()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Sofort extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "DIRECTBANK";
+        return 'DIRECTBANK';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

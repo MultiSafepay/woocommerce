@@ -22,10 +22,15 @@
  */
 class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->has_fields = self::isDirect(self::getSettings());
+    }
 
     public static function getCode()
     {
-        return "multisafepay_ideal";
+        return 'multisafepay_ideal';
     }
 
     public static function getName()
@@ -50,24 +55,31 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "IDEAL";
+        return 'IDEAL';
     }
 
+    /**
+     * @return string
+     */
     public function getType()
     {
         $settings = get_option('woocommerce_multisafepay_ideal_settings');
 
         if ($settings['direct'] == 'yes' && isset($_POST['ideal_issuer'])) {
-            return "direct";
+            return 'direct';
         } else {
-            return "redirect";
+            return 'redirect';
         }
     }
 
+    /**
+     * @param $order_id
+     * @return array|string
+     */
     public function getGatewayInfo($order_id)
     {
         if (isset($_POST['ideal_issuer'])) {
-            return (array("issuer_id" => $_POST['ideal_issuer']));
+            return (array('issuer_id' => sanitize_text_field($_POST['ideal_issuer'])));
         } else {
             return ('');
         }
@@ -83,11 +95,13 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
             $this->form_fields['warning'] = $warning;
         }
 
-        $this->form_fields['direct'] = array('title' => __('Enable', 'multisafepay'),
-            'type'          => 'checkbox',
-            'label'         => sprintf(__('Direct %s', 'multisafepay'), $this->getName()),
-            'description'   => __('Enable of disable the selection of the preferred bank within the website.', 'multisafepay'),
-            'default'       => 'yes');
+        $this->form_fields['direct'] = array(
+            'title' => __('Enable', 'multisafepay'),
+            'type' => 'checkbox',
+            'label' => sprintf(__('Direct %s', 'multisafepay'), $this->getName()),
+            'description' => __('Enable or disable the selection of the preferred bank within the website.', 'multisafepay'),
+            'default' => 'yes'
+        );
         parent::init_form_fields($this->form_fields);
     }
 
@@ -99,20 +113,21 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
             $description = '';
 
             $msp = new MultiSafepay_Client();
+            $helper = new MultiSafepay_Helper_Helper();
 
-            $msp->setApiKey($this->getApiKey());
-            $msp->setApiUrl($this->getTestMode());
+            $msp->setApiKey($helper->getApiKey());
+            $msp->setApiUrl($helper->getTestMode());
 
             try {
                 $msg = null;
                 $issuers = $msp->issuers->get();
             } catch (Exception $e) {
                 $msg = htmlspecialchars($e->getMessage());
-                $this->write_log($msg);
+                $helper->write_log($msg);
                 wc_add_notice($msg, 'error');
             }
 
-            $description .= __('Choose your bank', 'multisafepay') . '<br/>';
+            $description .= __('Please select an issuer', 'multisafepay') . '<br/>';
             $description .= '<select id="ideal_issuer" name="ideal_issuer" class="required-entry">';
             $description .= '<option value="">' . __('Please choose...', 'multisafepay') . '</option>';
             foreach ($issuers as $issuer) {
@@ -129,6 +144,9 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
         echo $description;
     }
 
+    /**
+     * @return bool
+     */
     public function validate_fields()
     {
         $settings = get_option('woocommerce_multisafepay_ideal_settings');

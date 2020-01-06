@@ -25,7 +25,7 @@ class MultiSafepay_Gateway_Ferbuy extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_ferbuy";
+        return 'multisafepay_ferbuy';
     }
 
     public static function getName()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Ferbuy extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "FERBUY";
+        return 'FERBUY';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

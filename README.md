@@ -2,7 +2,7 @@
   <img src="https://www.multisafepay.com/img/multisafepaylogo.svg" width="400px" position="center">
 </p>
 
-# MultiSafepay plug-in for WooCommerce
+# MultiSafepay plugin for WooCommerce
 
 Easily integrate MultiSafepay payment solutions into your WooCommerce webshop with the free and completely new MultiSafepay WooCommerce plugin.
 

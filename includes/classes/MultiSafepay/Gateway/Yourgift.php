@@ -25,12 +25,12 @@ class MultiSafepay_Gateway_Yourgift extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_yourgift";
+        return 'multisafepay_yourgift';
     }
 
     public static function getName()
     {
-        return __('Yourgift', 'multisafepay');
+        return __('YourGift', 'multisafepay');
     }
 
     public static function getSettings()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Yourgift extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "YOURGIFT";
+        return 'YOURGIFT';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

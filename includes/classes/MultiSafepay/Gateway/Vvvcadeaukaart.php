@@ -20,22 +20,22 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class MultiSafepay_Gateway_Vvvbon extends MultiSafepay_Gateway_Abstract
+class MultiSafepay_Gateway_Vvvcadeaukaart extends MultiSafepay_Gateway_Abstract
 {
 
     public static function getCode()
     {
-        return "multisafepay_vvvbon";
+        return 'multisafepay_vvvcadeaukaart';
     }
 
     public static function getName()
     {
-        return __('VVV-Bon', 'multisafepay');
+        return __('VVV Cadeaukaart', 'multisafepay');
     }
 
     public static function getSettings()
     {
-        return get_option('woocommerce_multisafepay_vvvbon_settings');
+        return get_option('woocommerce_multisafepay_vvvcadeaukaart_settings');
     }
 
     public static function getTitle()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Vvvbon extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "VVVBON";
+        return 'VVVGIFTCRD';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

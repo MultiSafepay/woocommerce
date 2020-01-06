@@ -25,7 +25,7 @@ class MultiSafepay_Gateway_Boekenbon extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_boekenbon";
+        return 'multisafepay_boekenbon';
     }
 
     public static function getName()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Boekenbon extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "BOEKENBON";
+        return 'BOEKENBON';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

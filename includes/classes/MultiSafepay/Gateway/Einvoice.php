@@ -22,10 +22,15 @@
  */
 class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->has_fields = self::isDirect(self::getSettings());
+    }
 
     public static function getCode()
     {
-        return "multisafepay_einvoice";
+        return 'multisafepay_einvoice';
     }
 
     public static function getName()
@@ -50,7 +55,7 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "EINVOICE";
+        return 'EINVOICE';
     }
 
     public function getType()
@@ -58,9 +63,9 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
         $settings = get_option('woocommerce_multisafepay_einvoice_settings');
 
         if ($settings['direct'] == 'yes') {
-            return "direct";
+            return 'direct';
         } else {
-            return "redirect";
+            return 'redirect';
         }
     }
 
@@ -78,19 +83,19 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
             'title' => __('Enable', 'multisafepay'),
             'type' => 'checkbox',
             'label' => sprintf(__('Direct %s', 'multisafepay'), $this->getName()),
-            'description' => __('If enable extra credentials can be filled in checkout form, otherwise an extra form will be used.', 'multisafepay'),
+            'description' => __('If enabled, additional credentials can be entered during checkout, otherwise an extra form will be displayed.', 'multisafepay'),
             'default' => 'yes');
 
         $this->form_fields['minamount'] = array(
-            'title' => __('Minimal order amount', 'multisafepay'),
+            'title' => __('Minimum order amount', 'multisafepay'),
             'type' => 'text',
-            'description' => __('The minimal order amount in euro\'s  for an order to use this payment method', 'multisafepay'),
+            'description' => __('The minimum order amount in euro\'s  for an order to use this payment method', 'multisafepay'),
             'css' => 'width: 100px;');
 
         $this->form_fields['maxamount'] = array(
-            'title' => __('Maximal order amount', 'multisafepay'),
+            'title' => __('Maximum order amount', 'multisafepay'),
             'type' => 'text',
-            'description' => __('The maximal order amount in euro\'s  for an order to use this payment method', 'multisafepay'),
+            'description' => __('The maximum order amount in euro\'s  for an order to use this payment method', 'multisafepay'),
             'css' => 'width: 100px;');
 
         parent::init_form_fields($this->form_fields);
@@ -99,11 +104,11 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
     public function payment_fields()
     {
         $description = '';
-        $settings = (array) get_option("woocommerce_multisafepay_einvoice_settings");
+        $settings = (array) get_option('woocommerce_multisafepay_einvoice_settings');
 
         if ($settings['direct'] == 'yes') {
             $description = '<p class="form-row form-row-wide  validate-required">
-                                <label for="msp_birthday" class="">' . __('Birthday', 'multisafepay') . '<abbr class="required" title="required">*</abbr>
+                                <label for="msp_birthday" class="">' . __('Date of birth', 'multisafepay') . '<abbr class="required" title="required">*</abbr>
                                 </label>
                                 <input type="text" class="input-text" name="einvoice_birthday" id="einvoice_birthday" placeholder="dd-mm-yyyy"/>
                             </p>
@@ -131,7 +136,7 @@ class MultiSafepay_Gateway_Einvoice extends MultiSafepay_Gateway_Abstract
     {
         global $woocommerce;
 
-        $settings = (array) get_option("woocommerce_multisafepay_einvoice_settings");
+        $settings = (array) get_option('woocommerce_multisafepay_einvoice_settings');
 
         if (!empty($settings['minamount']) && $woocommerce->cart->total < $settings['minamount']) {
             unset($gateways['multisafepay_einvoice']);

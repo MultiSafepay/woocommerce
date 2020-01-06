@@ -25,7 +25,7 @@ class MultiSafepay_Gateway_Trustly extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_trustly";
+        return 'multisafepay_trustly';
     }
 
     public static function getName()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Trustly extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "TRUSTLY";
+        return 'TRUSTLY';
     }
 
     public function getType()
     {
-        return "direct";
+        return 'direct';
     }
 }

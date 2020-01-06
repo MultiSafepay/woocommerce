@@ -25,12 +25,12 @@ class MultiSafepay_Gateway_Fashioncheque extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_fashioncheque";
+        return 'multisafepay_fashioncheque';
     }
 
     public static function getName()
     {
-        return __('Fashion-Cheque', 'multisafepay');
+        return __('Fashioncheque', 'multisafepay');
     }
 
     public static function getSettings()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Fashioncheque extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "FASHIONCHEQUE";
+        return 'FASHIONCHEQUE';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

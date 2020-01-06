@@ -25,12 +25,12 @@ class MultiSafepay_Gateway_Wellnessgiftcard extends MultiSafepay_Gateway_Abstrac
 
     public static function getCode()
     {
-        return "multisafepay_wellnessgiftcard";
+        return 'multisafepay_wellnessgiftcard';
     }
 
     public static function getName()
     {
-        return __('Wellness-giftcard', 'multisafepay');
+        return __('Wellness Giftcard', 'multisafepay');
     }
 
     public static function getSettings()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Wellnessgiftcard extends MultiSafepay_Gateway_Abstrac
 
     public static function getGatewayCode()
     {
-        return "WELLNESS-GIFTCARD";
+        return 'WELLNESS-GIFTCARD';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

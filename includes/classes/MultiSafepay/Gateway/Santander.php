@@ -25,12 +25,12 @@ class MultiSafepay_Gateway_Santander extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_santander";
+        return 'multisafepay_santander';
     }
 
     public static function getName()
     {
-        return __('Santander Betaalplan', 'multisafepay');
+        return __('Betaalplan', 'multisafepay');
     }
 
     public static function getSettings()
@@ -50,12 +50,12 @@ class MultiSafepay_Gateway_Santander extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "SANTANDER";
+        return 'SANTANDER';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 
     public function init_form_fields($form_fields = array())
@@ -68,15 +68,15 @@ class MultiSafepay_Gateway_Santander extends MultiSafepay_Gateway_Abstract
             $this->form_fields['warning'] = $warning;
         }
 
-        $this->form_fields['minamount'] = array('title' => __('Minimal order amount', 'multisafepay'),
+        $this->form_fields['minamount'] = array('title' => __('Minimum order amount', 'multisafepay'),
             'type' => 'text',
-            'description' => __('The minimal order amount in euro\'s  for an order to use this payment method', 'multisafepay'),
+            'description' => __('The minimum order amount in euro\'s  for an order to use this payment method', 'multisafepay'),
             'default' => '250',
             'css' => 'width: 100px;');
 
-        $this->form_fields['maxamount'] = array('title' => __('Maximal order amount', 'multisafepay'),
+        $this->form_fields['maxamount'] = array('title' => __('Maximum order amount', 'multisafepay'),
             'type' => 'text',
-            'description' => __('The maximal order amount in euro\'s  for an order to use this payment method', 'multisafepay'),
+            'description' => __('The maximum order amount in euro\'s  for an order to use this payment method', 'multisafepay'),
             'default' => '1000',
             'css' => 'width: 100px;');
 
@@ -89,7 +89,7 @@ class MultiSafepay_Gateway_Santander extends MultiSafepay_Gateway_Abstract
 
         global $woocommerce;
 
-        $settings = (array) get_option("woocommerce_multisafepay_santander_settings");
+        $settings = (array) get_option('woocommerce_multisafepay_santander_settings');
 
         if (!empty($settings['minamount']) && $woocommerce->cart->total < $settings['minamount']) {
             unset($gateways['multisafepay_santander']);

@@ -25,7 +25,7 @@ class MultiSafepay_Gateway_Afterpay extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_afterpay";
+        return 'multisafepay_afterpay';
     }
 
     public static function getName()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Afterpay extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "AFTERPAY";
+        return 'AFTERPAY';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

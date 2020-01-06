@@ -25,7 +25,7 @@ class MultiSafepay_Gateway_Nationalebioscoopbon extends MultiSafepay_Gateway_Abs
 
     public static function getCode()
     {
-        return "multisafepay_nationalebioscoopbon";
+        return 'multisafepay_nationalebioscoopbon';
     }
 
     public static function getName()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Nationalebioscoopbon extends MultiSafepay_Gateway_Abs
 
     public static function getGatewayCode()
     {
-        return "NATIONALEBIOSCOOPBON";
+        return 'NATIONALEBIOSCOOPBON';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }

@@ -25,7 +25,7 @@ class MultiSafepay_Gateway_Paysafecard extends MultiSafepay_Gateway_Abstract
 
     public static function getCode()
     {
-        return "multisafepay_paysafecard";
+        return 'multisafepay_paysafecard';
     }
 
     public static function getName()
@@ -50,11 +50,11 @@ class MultiSafepay_Gateway_Paysafecard extends MultiSafepay_Gateway_Abstract
 
     public static function getGatewayCode()
     {
-        return "PSAFECARD";
+        return 'PSAFECARD';
     }
 
     public function getType()
     {
-        return "redirect";
+        return 'redirect';
     }
 }
