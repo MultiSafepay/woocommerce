@@ -132,6 +132,7 @@ class MultiSafepay_Gateways
               'MultiSafepay_Gateway_Afterpay'
             , 'MultiSafepay_Gateway_Alipay'
             , 'MultiSafepay_Gateway_Amex'
+            , 'MultiSafepay_Gateway_Applepay'
             , 'MultiSafepay_Gateway_Bancontact'
             , 'MultiSafepay_Gateway_Banktrans'
             , 'MultiSafepay_Gateway_Belfius'

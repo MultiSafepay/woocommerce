@@ -25,6 +25,7 @@ Payment methods:
 * AfterPay
 * Alipay
 * American Express
+* Apple Pay
 * Bank transfer
 * Bancontact
 * Belfius

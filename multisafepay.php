@@ -35,6 +35,7 @@
  */
 
 
+define('MULTISAFEPAY_PLUGIN_FILE', plugins_url('/' . plugin_basename(__DIR__)));
 
 // Load plugin functions
 require_once ABSPATH . '/wp-admin/includes/plugin.php';

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MultiSafepay\n"
-"POT-Creation-Date: 2019-12-12 08:59+0100\n"
-"PO-Revision-Date: 2019-12-12 09:02+0100\n"
+"POT-Creation-Date: 2020-01-13 11:38+0100\n"
+"PO-Revision-Date: 2020-01-13 11:39+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -15,13 +15,13 @@ msgstr ""
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: includes/classes/MultiSafepay/Gateway/Abstract.php:146
+#: includes/classes/MultiSafepay/Gateway/Abstract.php:150
 #, fuzzy, php-format
 #| msgid "Activate this module to accept %s transactions by MultiSafepay"
 msgid "Enable this module to accept %s transactions via MultiSafepay"
 msgstr "Activeer deze module om %s betalingen te accepteren door MultiSafepay"
 
-#: includes/classes/MultiSafepay/Gateway/Abstract.php:187
+#: includes/classes/MultiSafepay/Gateway/Abstract.php:193
 #: includes/classes/MultiSafepay/Gateway/Banktrans.php:77
 #: includes/classes/MultiSafepay/Gateway/Einvoice.php:83
 #: includes/classes/MultiSafepay/Gateway/Ideal.php:99
@@ -29,26 +29,26 @@ msgstr "Activeer deze module om %s betalingen te accepteren door MultiSafepay"
 msgid "Enable"
 msgstr "Activeer"
 
-#: includes/classes/MultiSafepay/Gateway/Abstract.php:189
+#: includes/classes/MultiSafepay/Gateway/Abstract.php:195
 #, php-format
 msgid "%s"
 msgstr ""
 
-#: includes/classes/MultiSafepay/Gateway/Abstract.php:194
+#: includes/classes/MultiSafepay/Gateway/Abstract.php:200
 msgid "Title"
 msgstr "Titel"
 
-#: includes/classes/MultiSafepay/Gateway/Abstract.php:196
+#: includes/classes/MultiSafepay/Gateway/Abstract.php:202
 msgid "The title shown during checkout"
 msgstr "De titel tijdens het afrekenen"
 
-#: includes/classes/MultiSafepay/Gateway/Abstract.php:202
+#: includes/classes/MultiSafepay/Gateway/Abstract.php:208
 #, fuzzy
 #| msgid "Customer Message"
 msgid "Customer message"
 msgstr "Omschrijving voor gebruiker"
 
-#: includes/classes/MultiSafepay/Gateway/Abstract.php:204
+#: includes/classes/MultiSafepay/Gateway/Abstract.php:210
 #, php-format
 msgid "Pay with %s"
 msgstr "Betaal met %s"
@@ -95,6 +95,10 @@ msgid ""
 msgstr ""
 "Het maximale orderbedrag in euro's om met deze betaalmethode te kunnen "
 "afrekenen"
+
+#: includes/classes/MultiSafepay/Gateway/Applepay.php:47
+msgid "Apple Pay"
+msgstr ""
 
 #: includes/classes/MultiSafepay/Gateway/Bancontact.php:33
 msgid "Bancontact"
@@ -426,120 +430,120 @@ msgstr ""
 msgid "Payment started with %s, but paid with %s"
 msgstr "Betaling gestart met %s, maar betaald met %s"
 
-#: includes/classes/MultiSafepay/Gateways.php:202
+#: includes/classes/MultiSafepay/Gateways.php:203
 msgid "MultiSafepay settings"
 msgstr "MultiSafepay instellingen"
 
-#: includes/classes/MultiSafepay/Gateways.php:204
+#: includes/classes/MultiSafepay/Gateways.php:205
 msgid "The following options are needed to make use of the MultiSafepay plugin"
 msgstr ""
 "De volgende opties zijn verplicht om gebruik te kunnen maken van de "
 "MultiSafepay plugin"
 
-#: includes/classes/MultiSafepay/Gateways.php:208
+#: includes/classes/MultiSafepay/Gateways.php:209
 msgid "API key"
 msgstr "API sleutel"
 
-#: includes/classes/MultiSafepay/Gateways.php:210
+#: includes/classes/MultiSafepay/Gateways.php:211
 msgid "Copy the API key from your MultiSafepay Control"
 msgstr "Kopieer de API sleutel vanuit uw MultiSafepay Control"
 
-#: includes/classes/MultiSafepay/Gateways.php:215
 #: includes/classes/MultiSafepay/Gateways.php:216
+#: includes/classes/MultiSafepay/Gateways.php:217
 msgid "Test Mode"
 msgstr "Test modus"
 
-#: includes/classes/MultiSafepay/Gateways.php:216
-#: includes/classes/MultiSafepay/Gateways.php:225
-#: includes/classes/MultiSafepay/Gateways.php:234
+#: includes/classes/MultiSafepay/Gateways.php:217
+#: includes/classes/MultiSafepay/Gateways.php:226
+#: includes/classes/MultiSafepay/Gateways.php:235
 #, php-format
 msgid "Activate %s"
 msgstr "Activeer %s"
 
-#: includes/classes/MultiSafepay/Gateways.php:219
+#: includes/classes/MultiSafepay/Gateways.php:220
 #, fuzzy
 #| msgid "Only enable if the API Key belongs to a MultiSafepay test account."
 msgid "Enable if the API key belongs to a MultiSafepay test account."
 msgstr ""
 "Enkel activeren indien de API Sleutel van een MultiSafepay Test-account is."
 
-#: includes/classes/MultiSafepay/Gateways.php:224
 #: includes/classes/MultiSafepay/Gateways.php:225
-#: includes/classes/MultiSafepay/Gateways.php:228
+#: includes/classes/MultiSafepay/Gateways.php:226
+#: includes/classes/MultiSafepay/Gateways.php:229
 msgid "Fastcheckout"
 msgstr "Betaal via Fastcheckout"
 
-#: includes/classes/MultiSafepay/Gateways.php:228
-#: includes/classes/MultiSafepay/Gateways.php:237
+#: includes/classes/MultiSafepay/Gateways.php:229
+#: includes/classes/MultiSafepay/Gateways.php:238
 #, php-format
 msgid "When enabled %s will be available during checkout."
 msgstr "Indien geactiveerd is %s beschikbaar tijdens het afrekenen."
 
-#: includes/classes/MultiSafepay/Gateways.php:233
 #: includes/classes/MultiSafepay/Gateways.php:234
-#: includes/classes/MultiSafepay/Gateways.php:237
+#: includes/classes/MultiSafepay/Gateways.php:235
+#: includes/classes/MultiSafepay/Gateways.php:238
 #, fuzzy
 #| msgid "GiftCards"
 msgid "Gift cards"
 msgstr "Kadokaarten"
 
-#: includes/classes/MultiSafepay/Gateways.php:242
+#: includes/classes/MultiSafepay/Gateways.php:243
 msgid "Expire order"
 msgstr "Verlopen order"
 
-#: includes/classes/MultiSafepay/Gateways.php:245
+#: includes/classes/MultiSafepay/Gateways.php:246
 #, fuzzy
 #| msgid "Time before unfinished order is set to expired"
 msgid "The time before an unfinished order is set to expire"
 msgstr "Tijd voordat een afgebroken order de status expired krijgt"
 
-#: includes/classes/MultiSafepay/Gateways.php:251
+#: includes/classes/MultiSafepay/Gateways.php:252
 msgid "days"
 msgstr "dagen"
 
-#: includes/classes/MultiSafepay/Gateways.php:252
+#: includes/classes/MultiSafepay/Gateways.php:253
 msgid "hours"
 msgstr "uren"
 
-#: includes/classes/MultiSafepay/Gateways.php:253
+#: includes/classes/MultiSafepay/Gateways.php:254
 msgid "seconds"
 msgstr "seconden"
 
-#: includes/classes/MultiSafepay/Gateways.php:257
+#: includes/classes/MultiSafepay/Gateways.php:258
 msgid "Images"
 msgstr "Afbeeldingen"
 
-#: includes/classes/MultiSafepay/Gateways.php:258
-#: includes/classes/MultiSafepay/Gateways.php:262
+#: includes/classes/MultiSafepay/Gateways.php:259
+#: includes/classes/MultiSafepay/Gateways.php:263
 msgid "Show gateway images"
 msgstr "Toon afbeeldingen van betaalmethodes"
 
-#: includes/classes/MultiSafepay/Gateways.php:262
+#: includes/classes/MultiSafepay/Gateways.php:263
 #, php-format
 msgid "%s during checkout."
 msgstr "%s tijdens het afrekenen"
 
-#: includes/classes/MultiSafepay/Gateways.php:266
+#: includes/classes/MultiSafepay/Gateways.php:267
 msgid "Analytics"
 msgstr ""
 
-#: includes/classes/MultiSafepay/Gateways.php:267
+#: includes/classes/MultiSafepay/Gateways.php:268
 msgid "Google Analytics"
 msgstr ""
 
-#: includes/classes/MultiSafepay/Gateways.php:269
+#: includes/classes/MultiSafepay/Gateways.php:270
 msgid "Your Google Analytics Tracking Code"
 msgstr "Uw Google Analytics Tracking Code"
 
-#: includes/classes/MultiSafepay/Gateways.php:274
+#: includes/classes/MultiSafepay/Gateways.php:275
 msgid "Debug"
 msgstr "Debug"
 
-#: includes/classes/MultiSafepay/Gateways.php:275
+#: includes/classes/MultiSafepay/Gateways.php:276
 msgid "Activate debug mode"
 msgstr "Activeer debug modus"
 
-#: includes/classes/MultiSafepay/Gateways.php:278
+#: includes/classes/MultiSafepay/Gateways.php:279
 msgid ""
 "Enable to log transactions to a logfile (enabling WordPress debug mode is "
 "required)"
@@ -547,11 +551,11 @@ msgstr ""
 "Activeer om transacties naar een logbestand te schrijven (het inschakelen "
 "van WordPress debug modus is vereist)"
 
-#: includes/classes/MultiSafepay/Gateways.php:282
+#: includes/classes/MultiSafepay/Gateways.php:283
 msgid "Notification URL"
 msgstr "Notificatie URL"
 
-#: includes/classes/MultiSafepay/Gateways.php:285
+#: includes/classes/MultiSafepay/Gateways.php:286
 #, fuzzy
 #| msgid ""
 #| "Copy&Paste this URL to your website configuration Notification-URL at "
@@ -563,47 +567,47 @@ msgstr ""
 "Kopieer & plak deze URL in de website configuratie binnen het MultiSafepay "
 "dashboard"
 
-#: includes/classes/MultiSafepay/Gateways.php:539
-#: includes/classes/MultiSafepay/Gateways.php:553
-#: includes/classes/MultiSafepay/Gateways.php:585
-#: includes/classes/MultiSafepay/Gateways.php:595
-#: includes/classes/MultiSafepay/Gateways.php:607
-#: includes/classes/MultiSafepay/Gateways.php:613
+#: includes/classes/MultiSafepay/Gateways.php:540
+#: includes/classes/MultiSafepay/Gateways.php:554
+#: includes/classes/MultiSafepay/Gateways.php:586
+#: includes/classes/MultiSafepay/Gateways.php:596
+#: includes/classes/MultiSafepay/Gateways.php:608
+#: includes/classes/MultiSafepay/Gateways.php:614
 #, fuzzy, php-format
 #| msgid "Multisafepay payment status %s"
 msgid "MultiSafepay payment status %s"
 msgstr "MultiSafepay betaalstatus %s"
 
-#: includes/classes/MultiSafepay/Gateways.php:546
+#: includes/classes/MultiSafepay/Gateways.php:547
 #, fuzzy
 #| msgid "Bank transfer: Awaiting payment"
 msgid "Bank transfer: awaiting payment"
 msgstr "Bankoverboeking: wacht op betaling"
 
-#: includes/classes/MultiSafepay/Gateways.php:562
+#: includes/classes/MultiSafepay/Gateways.php:563
 #, fuzzy, php-format
 #| msgid "Validation error: Multisafepay amounts do not match (gross %s)."
 msgid "Validation error: MultiSafepay amounts do not match (gross %s)."
 msgstr "Validatie fout: Het orderbedrag komt niet overeen. %s"
 
-#: includes/classes/MultiSafepay/Gateways.php:575
+#: includes/classes/MultiSafepay/Gateways.php:576
 #, fuzzy
 #| msgid "Klarna Reservation number: "
 msgid "Klarna reservation number: "
 msgstr "Klarna reserverings nummer"
 
-#: includes/classes/MultiSafepay/Gateways.php:583
-#: includes/classes/MultiSafepay/Gateways.php:605
+#: includes/classes/MultiSafepay/Gateways.php:584
+#: includes/classes/MultiSafepay/Gateways.php:606
 #, fuzzy, php-format
 #| msgid "Payment %s via Multisafepay."
 msgid "Payment %s via MultiSafepay."
 msgstr "Betaling %s door MultiSafepay"
 
-#: includes/classes/MultiSafepay/Gateways.php:685
+#: includes/classes/MultiSafepay/Gateways.php:686
 msgid "Pay with Fastcheckout"
 msgstr "Betaal via Fastcheckout"
 
-#: includes/classes/MultiSafepay/Gateways.php:741
+#: includes/classes/MultiSafepay/Gateways.php:742
 msgid ""
 "There are no shipping methods available. Please double check your address, "
 "or contact us if you need any help."
@@ -611,11 +615,11 @@ msgstr ""
 "Er zijn geen verzendmethoden beschikbaar. Controleer uw adres nogmaals of "
 "neem contact met ons op voor hulp."
 
-#: includes/classes/MultiSafepay/api/Client.php:149
+#: includes/classes/MultiSafepay/api/Client.php:158
 msgid "Please configure your MultiSafepay API key."
 msgstr "Configureer uw MultiSafepay API sleutel"
 
-#: includes/classes/MultiSafepay/api/Client.php:183
+#: includes/classes/MultiSafepay/api/Client.php:185
 msgid "Unable to communicate with the MultiSafepay payment server"
 msgstr "Er kan geen verbinding gemaakt worden met de server van MultiSafepay"
 
