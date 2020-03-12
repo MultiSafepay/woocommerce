@@ -10,8 +10,8 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      TechSupport <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2017 MultiSafepay, Inc. (http://www.multisafepay.com)
+ * @author      MultiSafepay <integration@multisafepay.com>
+ * @copyright   Copyright (c) 2020 MultiSafepay, Inc. (http://www.multisafepay.com)
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
  * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -138,6 +138,7 @@ class MultiSafepay_Gateways
             , 'MultiSafepay_Gateway_Belfius'
             , 'MultiSafepay_Gateway_Creditcard'
             , 'MultiSafepay_Gateway_Dirdeb'
+            , 'MultiSafepay_Gateway_Directbanktransfer'
             , 'MultiSafepay_Gateway_Dotpay'
             , 'MultiSafepay_Gateway_Einvoice'
             , 'MultiSafepay_Gateway_Eps'
