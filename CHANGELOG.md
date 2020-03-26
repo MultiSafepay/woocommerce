@@ -1,4 +1,14 @@
-# Release Notes - WooCommerce 3.4.0 (Jan 6th, 2020) #
+## 3.5.0-RC1
+Release date: Mar 26th, 2020
+
+### Added
++ PLGWOOS-363: Add Apple Pay
++ PLGWOOS-384: Add Direct Bank Transfer
+
+***
+
+## 3.4.0
+Release date: Jan 6th, 2020
 
 ### Added
 + PLGWOOS-287: Add maximum amount restriction for credit cards
@@ -11,7 +21,10 @@
 ### Fixed
 + PLGWOOS-319: Disable payment fields when payment description is empty
 
-# Release Notes - WooCommerce 3.3.0 (Dec 13th, 2019) #
+***
+
+## 3.3.0
+Release date: Dec 13th, 2019
 
 ### Added
 + PLGWOOS-291: Add IP validation when WooCommerce returns multiple IP addresses
@@ -33,46 +46,55 @@
 + Fix PHP notice incorrect use of reset in function parseIpAddress
 + Fix PHP notice undefined property when order set to shipped
 
-# Release Notes - Woo-Commerce 3.2.0 (Jul 6th, 2018) #
+***
+
+## 3.2.0
+Release date: Jul 6th, 2018
 
 ## Improvements ##
 
-PLGWOOS-232: Add TrustPay payment method
-PLGWOOS-213: Add support for external fee plugin(s)
++ PLGWOOS-232: Add TrustPay payment method
++ PLGWOOS-213: Add support for external fee plugin(s)
 
 ## Fixes ##
 
-PLGWOOS-176: Restrict autoload to load only MultiSafepay classes
-PLGWOOS-191: Refactor the way an order and transaction are retrieved
-PLGWOOS-241: Remove status request on setting to shipped
-PLGWOOS-195: Update Klarna Invoice link
-PLGWOOS-231: Update Klarna payment method logo
-PLGWOOS-197: Correct MultiFactor Terms and Condition link
-PLGWOOS-242: Remove terms and conditions for Einvoicing
-PLGWOOS-244: Shipment name now used on payment page instead of type
-PLGWOOS-243: Payment page shopping cart reorganized
-PLGWOOS-253: FastCheckout load correct first and last name
-PLGWOOS-235: Rename KBC/CBC to KBC
-PLGWOOS-236: Rename ING-Homepay to ING HomePay
-PLGWOOS-247: Notice message 'Undefined variable' for E-Invoice, Pay After Delivery and Klarna
-PLGWOOS-249: Remove whitespace at file headers
-PLGWOOS-259: Direct E-Invoice returns unnecessary message 'Missing gender'
++ PLGWOOS-176: Restrict autoload to load only MultiSafepay classes
++ PLGWOOS-191: Refactor the way an order and transaction are retrieved
++ PLGWOOS-241: Remove status request on setting to shipped
++ PLGWOOS-195: Update Klarna Invoice link
++ PLGWOOS-231: Update Klarna payment method logo
++ PLGWOOS-197: Correct MultiFactor Terms and Condition link
++ PLGWOOS-242: Remove terms and conditions for Einvoicing
++ PLGWOOS-244: Shipment name now used on payment page instead of type
++ PLGWOOS-243: Payment page shopping cart reorganized
++ PLGWOOS-253: FastCheckout load correct first and last name
++ PLGWOOS-235: Rename KBC/CBC to KBC
++ PLGWOOS-236: Rename ING-Homepay to ING HomePay
++ PLGWOOS-247: Notice message 'Undefined variable' for E-Invoice, Pay After Delivery and Klarna
++ PLGWOOS-249: Remove whitespace at file headers
++ PLGWOOS-259: Direct E-Invoice returns unnecessary message 'Missing gender'
 
-# Release Notes - Woo-Commerce 3.1.0 (Jun 15th, 2018) #
+***
+
+## 3.1.0
+Release date: Jun 15th, 2018
 
 ## Improvements ##
 
-PLGWOOS-215 Add support for Santander Betaalplan
-PLGWOOS-214 Add support for Afterpay
-PLGWOOS-216 Add support for Trustly
++ PLGWOOS-215 Add support for Santander Betaalplan
++ PLGWOOS-214 Add support for Afterpay
++ PLGWOOS-216 Add support for Trustly
 
 ## Fixes ##
 
-PLGWOOS-221: Do not add Klarna invoice link when setting to Completed
-PLGWOOS-218: Undefined property in error logs when cancelling order
-PLGWOOS-226: getTimeActive didn't respect seconds
++ PLGWOOS-221: Do not add Klarna invoice link when setting to Completed
++ PLGWOOS-218: Undefined property in error logs when cancelling order
++ PLGWOOS-226: getTimeActive didn't respect seconds
 
-# Release Notes - Woo-Commerce 3.0.4 (Feb 2nd, 2018) #
+***
+
+## 3.0.4
+Release date: Feb 2nd, 2018
 
 ## Improvements ##
 
@@ -102,14 +124,20 @@ PLGWOOS-226: getTimeActive didn't respect seconds
 + PLGWOOS-189 Update version number to 3.0.4
 + PLGWOOS-198 Update ING gateway to INGHOME
 
-# Release Notes - Woo-Commerce 3.0.3 (Okt 10nd, 2017) #
+***
+
+## 3.0.3
+Release date: Okt 10th, 2017
 
 ## Fixes ##
 
 + Menu's are able to edit again.
 + In some cases the customer was redirected to the cancel-url after a succesful iDEAL transaction.
 
-# Release Notes - Woo-Commerce 3.0.2 (Okt 10nd, 2017) #
+***
+
+## 3.0.2
+Release date: Okt 10th, 2017
 
 ## Improvements ##
 
@@ -133,7 +161,10 @@ PLGWOOS-226: getTimeActive didn't respect seconds
 + Remove (beta)functionality to determine if there is a new version available.
 + Restrict use of the plug-in to WooCommerce 2.2 and above.
 
-# Release Notes - Woo-Commerce 3.0.0 (April 5nd, 2017) #
+***
+
+## 3.0.0
+Release date: April 5th, 2017
 
 ## Improvements ##
 
@@ -155,7 +186,10 @@ PLGWOOS-226: getTimeActive didn't respect seconds
 + General plugin settings moved to the general checkout-options
 + Remove BabyGiftcard as payment method
 
-# Release Notes - Woo-Commerce 2.2.7 (November 2nd, 2016) #
+***
+
+## 2.2.7
+Release date: November 2nd, 2016
 
 ## Improvements ##
 
@@ -170,7 +204,10 @@ PLGWOOS-226: getTimeActive didn't respect seconds
 ##Changes ##
 + Changed banktransfer to direct banktransfer
 
-# Release Notes - Woo-Commerce 2.2.6 (July 14th, 2016) #
+***
+
+## 2.2.6
+Release date: July 14th, 2016
 
 ## Improvements ##
 
@@ -179,7 +216,10 @@ PLGWOOS-226: getTimeActive didn't respect seconds
 ## Fixes ##
 + Resolved an issue resulting in not being able to pay using Direct iDEAL.
 
-# Release Notes - Woo-Commerce 2.2.5 (June 24th, 2016) #
+***
+
+## 2.2.5
+Release date: June 24th, 2016
 
 ## Improvements ##
 
@@ -194,7 +234,10 @@ PLGWOOS-226: getTimeActive didn't respect seconds
 + Resolved issues occuring with Pay After Delivery and Klarna when using discounts.
 + Made compatible with WooCommerce version 2.6.
 
-# Release Notes - Woo-Commerce 2.2.4 (March 8th, 2016) #
+***
+
+## 2.2.4
+Release date: March 8th, 2016
 
 ## Improvements ##
 
@@ -208,7 +251,10 @@ PLGWOOS-226: getTimeActive didn't respect seconds
 + Resolved a bug causing Error 1035 when refunding.
 + Changed the way coupons are applied, which previously resulted in a paid totals mismatch.
 
-# Release Notes - Woo-Commerce 2.2.3 (Feb 18, 2016) #
+***
+
+## 2.2.3
+Release date: Feb 18, 2016
 
 ## Improvements ##
 
@@ -224,7 +270,10 @@ PLGWOOS-226: getTimeActive didn't respect seconds
 + Fixed a bug causing the postalcode not to be added to the order when using Fast Checkout.
 + Removed WooCommerce mailer functions in the plug-in, which was added to avoid mailing issues.
 
-# Release Notes - Woo-Commerce 2.2.2 (Dec 14, 2015) #
+***
+
+## 2.2.2
+Release date: Dec 14, 2015
 
 ## Improvements ##
 
@@ -238,7 +287,10 @@ PLGWOOS-226: getTimeActive didn't respect seconds
 + Fixed issue with wrong processing of some orderstatusses.
 + Fixed The FastCheckout button was not completly visable with latest updates of woocommerce default template.
 
-# Release Notes - Woo-Commerce 2.2.1 (Sep 30, 2015) #
+***
+
+## 2.2.1
+Release date: Sep 30, 2015
 
 ## Improvements ##
 
@@ -247,7 +299,10 @@ PLGWOOS-226: getTimeActive didn't respect seconds
 ## Fixes ##
 + Fixed issue that prevents MultiSafepay to add the orderstatus in the order comment.
 
-# Release Notes - Woo-Commerce 2.2.0 (May 21, 2015) #
+***
+
+## 2.2.0
+Release date: May 21, 2015
 
 ## Improvements ##
 
@@ -265,7 +320,10 @@ PLGWOOS-226: getTimeActive didn't respect seconds
 + Fixed some undefined notices and improved checks for page_id and the loading of the plugins.
 + Resolved the 'Cannot redeclare class' error.
 
-# Release Notes - Woo-Commerce 2.1.0 (Oct 15, 2014) #
+***
+
+## 2.1.0
+Release date: Oct 15, 2014
 
 ## Improvements ##
 
@@ -302,13 +360,19 @@ PLGWOOS-226: getTimeActive didn't respect seconds
 + Fixed new bug with coupons not beeing processed because of extra check on cart or order discount
 + Small fixes (o.a. reported by Mark Roeling)
 
-# Release Notes - Woo-Commerce 1.0.6 (Apr 15, 2014) #
+***
+
+## 1.0.6
+Release date: Apr 15, 2014
 
 ## Improvements ##
 
 + Added support for direct Pay After Delivery
 
-# Release Notes - Woo-Commerce 1.0.5 (Mar 21, 2014) #
+***
+
+## 1.0.5
+Release date: Mar 21, 2014
 
 ## Improvements ##
 
@@ -320,7 +384,10 @@ PLGWOOS-226: getTimeActive didn't respect seconds
 + Fixed bug that causes a empty status
 + Fixed bug in refund check
 
-# Release Notes - Woo-Commerce 1.0.4 (Mar 06, 2014) #
+***
+
+## 1.0.4
+Release date: Mar 06, 2014
 
 ## Improvements ##
 
@@ -331,7 +398,11 @@ PLGWOOS-226: getTimeActive didn't respect seconds
 + Fixed bug that causes a empty status
 + Fixed bug in refund check
 
-# Release Notes - Woo-Commerce 1.0.3 (Feb 19, 2014) #
+***
+
+## 1.0.3
+Release date: Feb 19, 2014
+
 ## Improvements ##
 
 + Added support for WooCommerce 2.1.x
@@ -345,7 +416,11 @@ PLGWOOS-226: getTimeActive didn't respect seconds
 ## Fixes ##
 + Fixed bug that caused no order data to show on thankyou page
 
-# Release Notes - Woo-Commerce 1.0.2 (Aug 21, 2013) #
+***
+
+## 1.0.2
+Release date: Aug 21, 2013
+
 ## Improvements ##
 
 + Optional send an invoice e-mail
