@@ -26,7 +26,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     /**
      * @var string
      */
-    const MULTISAFEPAY_PLUGIN_VERSION = '3.5.0-RC1';
+    const MULTISAFEPAY_PLUGIN_VERSION = '3.5.0';
 
     public static function getVersion()
     {

@@ -1,5 +1,5 @@
-## 3.5.0-RC1
-Release date: Mar 26th, 2020
+## 3.5.0
+Release date: Mar 30th, 2020
 
 ### Added
 + PLGWOOS-363: Add Apple Pay
