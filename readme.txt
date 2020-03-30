@@ -4,7 +4,7 @@ Tags: multisafepay, woocommerce, plug-in, plugin, payment, gateway, ideal, visa
 Requires at least: 4.9
 Tested up to: 5.3
 Requires PHP: 5.6
-Stable tag: 3.4.0
+Stable tag: 3.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,7 @@ Payment methods:
 * Bancontact
 * Belfius
 * Betaalplan
+* Direct Bank Transfer
 * Direct Debit
 * Dotpay
 * E-Invoicing
@@ -108,6 +109,12 @@ If you are using 2.2.x of our plugin, please contact integration@multisafepay.co
 
 
 == Changelog ==
+
+= Release Notes - WooCommerce 3.5.0 (Mar 30th, 2020) =
+
+### Added ##
+* PLGWOOS-363: Add Apple Pay
+* PLGWOOS-384: Add Direct Bank Transfer
 
 = Release Notes - WooCommerce 3.4.0 (Jan 6th, 2020) =
 
