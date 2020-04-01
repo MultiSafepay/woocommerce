@@ -91,39 +91,34 @@ class MultiSafepay_Client
         $this->delivery['housenumber'] = $apartment;
     }
 
-    /*
+    /**
      * Parses and splits up an address in street and housenumber
      */
-
-    private function parseAddress($adress, $seperaatAddition = false)
+    public function parseAddress($address)
     {
-        $street = '';
-        $number = '';
-        $numberAddition = '';
+        // Trim the addres
+        $address = trim($address);
+        $address = preg_replace('/[[:blank:]]+/', ' ', $address);
 
-        $results = array();
-        $pattern_adress = '/^(.*)\s(\d+)(.*)/';
+        // Make array of all regex matches
+        $matches = array();
 
-        preg_match($pattern_adress, trim($adress), $results);
-        if (count($results) == 0) {
-            $street = trim($adress);
-        } else {
-            $street = trim((isset($results[1])) ? $results[1] : '');
-            $number = trim((isset($results[2])) ? $results[2] : '');
-            $numberAddition = trim((isset($results[3])) ? $results[3] : '');
-        }
+        /**
+         * Regex part one: Add all before number.
+         * If number contains whitespace, Add it also to street.
+         * All after that will be added to apartment
+         */
+        $pattern = '/(.+?)\s?([\d]+[\S]*)(\s?[A-z]*?)$/';
+        preg_match($pattern, $address, $matches);
 
-        if ($seperaatAddition === true) {
-            $pattern_addition = '/^([\s|-]*)(.*)/';
-            $replacement_addition = '$2';
-            $numberAddition = trim(preg_replace($pattern_addition, $replacement_addition, $numberAddition));
-        } else {
-            $number .= $numberAddition;
-            $numberAddition = '';
-        }
+        // Save the street and apartment and trim the result
+        $street = isset($matches[1]) ? $matches[1] : '';
+        $apartment = isset($matches[2]) ? $matches[2] : '';
+        $extension = isset($matches[3]) ? $matches[3] : '';
+        $street = trim($street);
+        $apartment = trim($apartment . $extension);
 
-        return array($street, $number, $numberAddition);
-        // return array('street' => $street, 'number' => $number, 'numberAddition' => $numberAddition);
+        return array($street, $apartment);
     }
 
     private function rstrpos($haystack, $needle, $offset = null)
