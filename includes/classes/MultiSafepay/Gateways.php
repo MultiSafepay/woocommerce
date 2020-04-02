@@ -167,7 +167,6 @@ class MultiSafepay_Gateways
             , 'MultiSafepay_Gateway_Fashioncheque'
             , 'MultiSafepay_Gateway_Fashiongiftcard'
             , 'MultiSafepay_Gateway_Fietsbon'
-            , 'MultiSafepay_Gateway_Fijncadeau'
             , 'MultiSafepay_Gateway_Gezondheidsbon'
             , 'MultiSafepay_Gateway_Givacard'
             , 'MultiSafepay_Gateway_Goodcard'

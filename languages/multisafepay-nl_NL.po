@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MultiSafepay\n"
 "POT-Creation-Date: 2020-01-13 11:38+0100\n"
-"PO-Revision-Date: 2020-01-13 11:39+0100\n"
+"PO-Revision-Date: 2020-04-02 11:05+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.3\n"
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: __\n"
@@ -252,10 +252,6 @@ msgstr ""
 
 #: includes/classes/MultiSafepay/Gateway/Fietsbon.php:33
 msgid "Fietsenbon"
-msgstr ""
-
-#: includes/classes/MultiSafepay/Gateway/Fijncadeau.php:33
-msgid "Fijncadeau"
 msgstr ""
 
 #: includes/classes/MultiSafepay/Gateway/Gezondheidsbon.php:33
