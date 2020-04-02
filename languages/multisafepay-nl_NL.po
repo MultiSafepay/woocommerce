@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MultiSafepay\n"
 "POT-Creation-Date: 2020-01-13 11:38+0100\n"
-"PO-Revision-Date: 2020-04-02 16:16+0200\n"
+"PO-Revision-Date: 2020-04-02 19:39+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -240,10 +240,6 @@ msgstr ""
 
 #: includes/classes/MultiSafepay/Gateway/Fashiongiftcard.php:33
 msgid "Fashion Giftcard"
-msgstr ""
-
-#: includes/classes/MultiSafepay/Gateway/Ferbuy.php:33
-msgid "FerBuy"
 msgstr ""
 
 #: includes/classes/MultiSafepay/Gateway/Fietsbon.php:33

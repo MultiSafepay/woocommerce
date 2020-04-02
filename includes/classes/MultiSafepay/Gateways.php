@@ -142,7 +142,6 @@ class MultiSafepay_Gateways
             , 'MultiSafepay_Gateway_Dotpay'
             , 'MultiSafepay_Gateway_Einvoice'
             , 'MultiSafepay_Gateway_Eps'
-            , 'MultiSafepay_Gateway_Ferbuy'
             , 'MultiSafepay_Gateway_Giropay'
             , 'MultiSafepay_Gateway_Ideal'
             , 'MultiSafepay_Gateway_Ing'
