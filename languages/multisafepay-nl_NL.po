@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MultiSafepay\n"
 "POT-Creation-Date: 2020-01-13 11:38+0100\n"
-"PO-Revision-Date: 2020-04-02 11:05+0200\n"
+"PO-Revision-Date: 2020-04-02 14:56+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -314,10 +314,6 @@ msgid ""
 msgstr ""
 "Het minimale orderbedrag in euro's om met deze betaalmethode te kunnen "
 "afrekenen"
-
-#: includes/classes/MultiSafepay/Gateway/Liefcadeaukaart.php:33
-msgid "Lief Cadeaukaart"
-msgstr ""
 
 #: includes/classes/MultiSafepay/Gateway/Maestro.php:38
 msgid "Maestro"
