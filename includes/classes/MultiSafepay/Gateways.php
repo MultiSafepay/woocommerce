@@ -163,7 +163,6 @@ class MultiSafepay_Gateways
             'MultiSafepay_Gateway_Beautyandwellness'
             , 'MultiSafepay_Gateway_Nationalebioscoopbon'
             , 'MultiSafepay_Gateway_Boekenbon'
-            , 'MultiSafepay_Gateway_Erotiekbon'
             , 'MultiSafepay_Gateway_Fashioncheque'
             , 'MultiSafepay_Gateway_Fashiongiftcard'
             , 'MultiSafepay_Gateway_Fietsbon'
