@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MultiSafepay\n"
 "POT-Creation-Date: 2020-01-13 11:38+0100\n"
-"PO-Revision-Date: 2020-04-02 19:39+0200\n"
+"PO-Revision-Date: 2020-04-03 10:01+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -375,10 +375,6 @@ msgstr ""
 
 #: includes/classes/MultiSafepay/Gateway/Trustly.php:33
 msgid "Trustly"
-msgstr ""
-
-#: includes/classes/MultiSafepay/Gateway/Trustpay.php:33
-msgid "TrustPay"
 msgstr ""
 
 #: includes/classes/MultiSafepay/Gateway/Visa.php:38
