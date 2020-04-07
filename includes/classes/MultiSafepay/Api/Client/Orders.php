@@ -20,7 +20,10 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class MultiSafepay_ObjectOrders extends MultiSafepay_ObjectCore
+
+namespace MultiSafepay\WooCommerce\Api\Client;
+
+class Orders extends Core
 {
 
     public $success;

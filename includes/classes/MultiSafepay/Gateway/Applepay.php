@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 /**
  *
  * DISCLAIMER
@@ -20,7 +19,9 @@ declare(strict_types=1);
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class MultiSafepay_Gateway_Applepay extends MultiSafepay_Gateway_Abstract
+namespace MultiSafepay\WooCommerce\Gateway;
+
+class Applepay extends Core
 {
     public function __construct()
     {

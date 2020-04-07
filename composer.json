@@ -3,11 +3,23 @@
   "description": "MultiSafepay module for WooCommerce",
   "type": "wordpress-plugin",
   "license": "MIT",
-  "require": {},
+  "require": {
+    "php": "^7.0"
+  },
   "require-dev": {
     "woocommerce/woocommerce": "^3.8",
     "phpunit/phpunit": "~6.5",
     "woocommerce/woocommerce-sniffs": "^0.0.9"
+  },
+  "autoload": {
+    "psr-4": {
+      "MultiSafepay\\WooCommerce\\": "includes/classes/MultiSafepay/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "MultiSafepay\\WooCommerce\\Test\\": "tests/includes/classes/MultiSafepay/"
+    }
   },
   "extra": {
     "installer-paths": {

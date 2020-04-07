@@ -20,7 +20,12 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-class Multisafepay_Test_Gateway_Abstract extends WC_Unit_Test_Case
+namespace MultiSafepay\WooCommerce\Tests\Gateway;
+
+use MultiSafepay\WooCommerce\Gateway\Amex;
+use MultiSafepay\WooCommerce\Gateway\Core;
+
+class CoreTest extends \WC_Unit_Test_Case
 {
     public function setUp()
     {
@@ -45,13 +50,13 @@ class Multisafepay_Test_Gateway_Abstract extends WC_Unit_Test_Case
     public function testIsDirectYes()
     {
         $settings = $this->updateIdealDirectSettings('yes');
-        $this->assertTrue(MultiSafepay_Gateway_Abstract::isDirect($settings));
+        $this->assertTrue(Core::isDirect($settings));
     }
 
     public function testIsDirectNo()
     {
         $settings = $this->updateIdealDirectSettings('no');
-        $this->assertFalse(MultiSafepay_Gateway_Abstract::isDirect($settings));
+        $this->assertFalse(Core::isDirect($settings));
     }
 
     /**
@@ -63,7 +68,7 @@ class Multisafepay_Test_Gateway_Abstract extends WC_Unit_Test_Case
             add_option('woocommerce_multisafepay_amex_settings');
         }
         update_option('woocommerce_multisafepay_amex_settings', ['max_amount' => 13]);
-        $gateway = new MultiSafepay_Gateway_Amex();
+        $gateway = new Amex();
         $this->assertSame($gateway->getMaxAmount(), 13.00);
     }
 
@@ -72,7 +77,7 @@ class Multisafepay_Test_Gateway_Abstract extends WC_Unit_Test_Case
      */
     public function testgetMaxAmountReturnsZeroWhenNotSet()
     {
-        $gateway = new MultiSafepay_Gateway_Amex();
+        $gateway = new Amex();
         $this->assertSame($gateway->getMaxAmount(), 0.00);
     }
 }

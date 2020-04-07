@@ -20,8 +20,12 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+namespace MultiSafepay\WooCommerce\Gateway;
 
-class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
+use MultiSafepay\WooCommerce\Api\Client;
+use MultiSafepay\WooCommerce\Helper\Helper;
+
+class Core extends \WC_Payment_Gateway
 {
     /**
      * @var string
@@ -35,12 +39,12 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
     public static function getCode()
     {
-        throw new Exception('Please implement the getCode method');
+        throw new \Exception('Please implement the getCode method');
     }
 
     public static function getName()
     {
-        throw new Exception('Please implement the getName method');
+        throw new \Exception('Please implement the getName method');
     }
 
     public static function getTitle()
@@ -90,14 +94,14 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     /**
      * @param $order_id
      *
-     * @return bool|WP_Error
+     * @return bool|\WP_Error
      */
     public function setToShipped($order_id)
     {
         $order = wc_get_order($order_id);
 
-        $msp = new MultiSafepay_Client();
-        $helper = new MultiSafepay_Helper_Helper();
+        $msp = new Client();
+        $helper = new Helper();
 
         $msp->setApiKey($helper->getApiKey());
         $msp->setApiUrl($helper->getTestMode());
@@ -111,10 +115,10 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
 
         try {
             $msp->orders->patch($setShipping, $endpoint);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $msg = htmlspecialchars($e->getMessage());
             $helper->write_log($msg);
-            return new WP_Error('multisafepay', 'Transaction status can\'t be updated:' . $msg);
+            return new \WP_Error('multisafepay', 'Transaction status can\'t be updated:' . $msg);
         }
 
         return true;
@@ -167,10 +171,10 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
             $this->icon = $this->getIcon();
         }
 
-        add_filter('woocommerce_available_payment_gateways', array ('MultiSafepay_Gateway_Payafter', 'payafter_filter_gateways'));
-        add_filter('woocommerce_available_payment_gateways', array ('MultiSafepay_Gateway_Klarna', 'klarna_filter_gateways'));
-        add_filter('woocommerce_available_payment_gateways', array ('MultiSafepay_Gateway_Einvoice', 'einvoice_filter_gateways'));
-        add_filter('woocommerce_available_payment_gateways', array ('MultiSafepay_Gateway_Santander', 'santander_filter_gateways'));
+        add_filter('woocommerce_available_payment_gateways', array (Payafter::class, 'payafter_filter_gateways'));
+        add_filter('woocommerce_available_payment_gateways', array (Klarna::class, 'klarna_filter_gateways'));
+        add_filter('woocommerce_available_payment_gateways', array (Einvoice::class, 'einvoice_filter_gateways'));
+        add_filter('woocommerce_available_payment_gateways', array (Santander::class, 'santander_filter_gateways'));
 
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
         add_action('woocommerce_order_status_completed', array($this, 'setToShipped'), 13);
@@ -221,8 +225,8 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     public function process_payment($order_id)
     {
         global $wpdb, $woocommerce;
-        $msp   = new MultiSafepay_Client();
-        $helper = new MultiSafepay_Helper_Helper();
+        $msp   = new Client();
+        $helper = new Helper();
 
         $msp->setApiKey($helper->getApiKey());
         $msp->setApiUrl($helper->getTestMode());
@@ -261,7 +265,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         try {
             $msg = null;
             $msp->orders->post($my_order);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $msg = htmlspecialchars($e->getMessage());
             $helper->write_log($msg);
             wc_add_notice($msg, 'error');
@@ -285,11 +289,11 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
     public function process_refund($order_id, $amount = null, $reason = '')
     {
         if ($amount <= 0) {
-            return new WP_Error('multisafepay', 'Refund amount must be greater than 0.00 ');
+            return new \WP_Error('multisafepay', 'Refund amount must be greater than 0.00 ');
         }
 
-        $msp = new MultiSafepay_Client();
-        $helper = new MultiSafepay_Helper_Helper();
+        $msp = new Client();
+        $helper = new Helper();
 
         $msp->setApiKey($helper->getApiKey());
         $msp->setApiUrl($helper->getTestMode());
@@ -306,14 +310,14 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         try {
             $msg = null;
             $msp->orders->post($refund, $endpoint);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $msg = 'Error: ' . htmlspecialchars($e->getMessage());
             $helper->write_log($msg);
             wc_add_notice($msg, 'error');
         }
 
         if ($msg) {
-            return new WP_Error('multisafepay', 'Order can\'t be refunded: ' . $msg);
+            return new \WP_Error('multisafepay', 'Order can\'t be refunded: ' . $msg);
         } else {
             return true;
         }
@@ -569,7 +573,7 @@ class Multisafepay_Gateway_Abstract extends WC_Payment_Gateway
         $billing_country       = method_exists($order, 'get_billing_country')    ? $order->get_billing_country()    : $order->billing_country;
         $billing_phone         = method_exists($order, 'get_billing_phone')      ? $order->get_billing_phone()      : $order->billing_phone;
         $billing_email         = method_exists($order, 'get_billing_email')      ? $order->get_billing_email()      : $order->billing_email;
-        $ip_address            = class_exists('WC_Geolocation', false)    ? WC_Geolocation::get_ip_address() : $_SERVER['REMOTE_ADDR'];
+        $ip_address            = class_exists('WC_Geolocation', false)    ? \WC_Geolocation::get_ip_address() : $_SERVER['REMOTE_ADDR'];
 
         $address = $billing_address_1;
         list ($street, $houseNumber) = $msp->parseCustomerAddress($address);

@@ -20,7 +20,10 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class MultiSafepay_Gateway_Podiumcadeaukaart extends MultiSafepay_Gateway_Abstract
+
+namespace MultiSafepay\WooCommerce\Gateway;
+
+class Podiumcadeaukaart extends Core
 {
 
     public static function getCode()

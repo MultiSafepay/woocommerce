@@ -20,7 +20,14 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class MultiSafepay_Client
+
+namespace MultiSafepay\WooCommerce\Api;
+
+use MultiSafepay\WooCommerce\Api\Client\Gateways;
+use MultiSafepay\WooCommerce\Api\Client\Issuers;
+use MultiSafepay\WooCommerce\Api\Client\Orders;
+
+class Client
 {
 
     public $orders;
@@ -36,9 +43,9 @@ class MultiSafepay_Client
 
     public function __construct()
     {
-        $this->orders = new MultiSafepay_ObjectOrders($this);
-        $this->issuers = new MultiSafepay_ObjectIssuers($this);
-        $this->gateways = new MultiSafepay_ObjectGateways($this);
+        $this->orders = new Orders($this);
+        $this->issuers = new Issuers($this);
+        $this->gateways = new Gateways($this);
     }
 
     public function getRequest()
@@ -145,12 +152,12 @@ class MultiSafepay_Client
      * @param $http_body
      *
      * @return mixed
-     * @throws Exception Error on request.
+     * @throws \Exception Error on request.
      */
     public function processAPIRequest($http_method, $endpoint, $http_body = null)
     {
         if (empty($this->api_key)) {
-            throw new Exception(__('Please configure your MultiSafepay API key.', 'multisafepay'));
+            throw new \Exception(__('Please configure your MultiSafepay API key.', 'multisafepay'));
         }
 
         $args = [
@@ -179,7 +186,7 @@ class MultiSafepay_Client
         if (is_wp_error($response)) {
             $str = __('Unable to communicate with the MultiSafepay payment server', 'multisafepay') .
                    $response->get_error_message();
-            throw new Exception($str);
+            throw new \Exception($str);
         }
         $result = wp_remote_retrieve_body($response);
 

@@ -12,7 +12,7 @@
          stopOnRisky="false">
     <testsuites>
         <testsuite name="multisafepay">
-            <directory prefix="test-" suffix=".php">./tests/</directory>
+            <directory suffix=".php">./tests/</directory>
         </testsuite>
     </testsuites>
     <filter>

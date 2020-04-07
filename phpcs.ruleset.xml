@@ -7,11 +7,6 @@
         <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
         <exclude name="Squiz.Scope.MethodScope.Missing"/>
         <exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps"/>
-        <!-- namespace exclude -->
-        <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace"/>
-        <exclude name="Squiz.Classes.ValidClassName.NotCamelCaps"/>
-        <exclude name="Squiz.Commenting.ClassComment.SpacingAfter"/>
-        <!-- /namespace exclude -->
     </rule>
     <rule ref="WooCommerce-Core">
         <exclude name="Core.Commenting.CommentTags.AuthorTag"/>

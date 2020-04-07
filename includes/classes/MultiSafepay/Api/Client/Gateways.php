@@ -20,13 +20,16 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class MultiSafepay_ObjectIssuers extends MultiSafepay_ObjectCore
+
+namespace MultiSafepay\WooCommerce\Api\Client;
+
+class Gateways extends Core
 {
 
     public $success;
     public $data;
 
-    public function get($endpoint = 'issuers', $type = 'ideal', $body = array(), $query_string = false)
+    public function get($endpoint = 'gateways', $type = '', $body = array(), $query_string = false)
     {
         $result = parent::get($endpoint, $type, $body, $query_string);
         $this->success = $result->success;
