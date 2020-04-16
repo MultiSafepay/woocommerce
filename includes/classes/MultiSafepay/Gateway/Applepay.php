@@ -26,7 +26,9 @@ class Applepay extends Core
     public function __construct()
     {
         parent::__construct();
-        add_action('woocommerce_before_checkout_form', array($this, 'checkApplePay'));
+        if ($this->enabled === 'yes') {
+            add_action('woocommerce_before_checkout_form', array($this, 'checkApplePay'));
+        }
     }
 
 
