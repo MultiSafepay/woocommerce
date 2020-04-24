@@ -20,7 +20,14 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class MultiSafepay_Client
+
+namespace MultiSafepay\WooCommerce\Api;
+
+use MultiSafepay\WooCommerce\Api\Client\Gateways;
+use MultiSafepay\WooCommerce\Api\Client\Issuers;
+use MultiSafepay\WooCommerce\Api\Client\Orders;
+
+class Client
 {
 
     public $orders;
@@ -36,9 +43,9 @@ class MultiSafepay_Client
 
     public function __construct()
     {
-        $this->orders = new MultiSafepay_ObjectOrders($this);
-        $this->issuers = new MultiSafepay_ObjectIssuers($this);
-        $this->gateways = new MultiSafepay_ObjectGateways($this);
+        $this->orders = new Orders($this);
+        $this->issuers = new Issuers($this);
+        $this->gateways = new Gateways($this);
     }
 
     public function getRequest()
@@ -91,39 +98,34 @@ class MultiSafepay_Client
         $this->delivery['housenumber'] = $apartment;
     }
 
-    /*
+    /**
      * Parses and splits up an address in street and housenumber
      */
-
-    private function parseAddress($adress, $seperaatAddition = false)
+    public function parseAddress($address)
     {
-        $street = '';
-        $number = '';
-        $numberAddition = '';
+        // Trim the addres
+        $address = trim($address);
+        $address = preg_replace('/[[:blank:]]+/', ' ', $address);
 
-        $results = array();
-        $pattern_adress = '/^(.*)\s(\d+)(.*)/';
+        // Make array of all regex matches
+        $matches = array();
 
-        preg_match($pattern_adress, trim($adress), $results);
-        if (count($results) == 0) {
-            $street = trim($adress);
-        } else {
-            $street = trim((isset($results[1])) ? $results[1] : '');
-            $number = trim((isset($results[2])) ? $results[2] : '');
-            $numberAddition = trim((isset($results[3])) ? $results[3] : '');
-        }
+        /**
+         * Regex part one: Add all before number.
+         * If number contains whitespace, Add it also to street.
+         * All after that will be added to apartment
+         */
+        $pattern = '/(.+?)\s?([\d]+[\S]*)(\s?[A-z]*?)$/';
+        preg_match($pattern, $address, $matches);
 
-        if ($seperaatAddition === true) {
-            $pattern_addition = '/^([\s|-]*)(.*)/';
-            $replacement_addition = '$2';
-            $numberAddition = trim(preg_replace($pattern_addition, $replacement_addition, $numberAddition));
-        } else {
-            $number .= $numberAddition;
-            $numberAddition = '';
-        }
+        // Save the street and apartment and trim the result
+        $street = isset($matches[1]) ? $matches[1] : '';
+        $apartment = isset($matches[2]) ? $matches[2] : '';
+        $extension = isset($matches[3]) ? $matches[3] : '';
+        $street = trim($street);
+        $apartment = trim($apartment . $extension);
 
-        return array($street, $number, $numberAddition);
-        // return array('street' => $street, 'number' => $number, 'numberAddition' => $numberAddition);
+        return array($street, $apartment);
     }
 
     private function rstrpos($haystack, $needle, $offset = null)
@@ -150,12 +152,12 @@ class MultiSafepay_Client
      * @param $http_body
      *
      * @return mixed
-     * @throws Exception Error on request.
+     * @throws \Exception Error on request.
      */
     public function processAPIRequest($http_method, $endpoint, $http_body = null)
     {
         if (empty($this->api_key)) {
-            throw new Exception(__('Please configure your MultiSafepay API key.', 'multisafepay'));
+            throw new \Exception(__('Please configure your MultiSafepay API key.', 'multisafepay'));
         }
 
         $args = [
@@ -184,7 +186,7 @@ class MultiSafepay_Client
         if (is_wp_error($response)) {
             $str = __('Unable to communicate with the MultiSafepay payment server', 'multisafepay') .
                    $response->get_error_message();
-            throw new Exception($str);
+            throw new \Exception($str);
         }
         $result = wp_remote_retrieve_body($response);
 

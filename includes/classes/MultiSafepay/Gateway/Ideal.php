@@ -20,7 +20,13 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
+
+namespace MultiSafepay\WooCommerce\Gateway;
+
+use MultiSafepay\WooCommerce\Api\Client;
+use MultiSafepay\WooCommerce\Helper\Helper;
+
+class Ideal extends Core
 {
     public function __construct()
     {
@@ -112,8 +118,8 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
         if ($settings['direct'] == 'yes') {
             $description = '';
 
-            $msp = new MultiSafepay_Client();
-            $helper = new MultiSafepay_Helper_Helper();
+            $msp = new Client();
+            $helper = new Helper();
 
             $msp->setApiKey($helper->getApiKey());
             $msp->setApiUrl($helper->getTestMode());
@@ -121,7 +127,7 @@ class MultiSafepay_Gateway_Ideal extends MultiSafepay_Gateway_Abstract
             try {
                 $msg = null;
                 $issuers = $msp->issuers->get();
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $msg = htmlspecialchars($e->getMessage());
                 $helper->write_log($msg);
                 wc_add_notice($msg, 'error');

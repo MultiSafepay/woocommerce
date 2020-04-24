@@ -20,13 +20,18 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class MultiSafepay_ObjectCore
+
+namespace MultiSafepay\WooCommerce\Api\Client;
+
+use MultiSafepay\WooCommerce\Api\Client;
+
+class Core
 {
 
     protected $mspapi;
     public $result;
 
-    public function __construct(MultiSafepay_Client $mspapi)
+    public function __construct(Client $mspapi)
     {
         $this->mspapi = $mspapi;
     }
@@ -66,11 +71,11 @@ class MultiSafepay_ObjectCore
         $body = $this->mspapi->processAPIRequest($http_method, $api_method, $http_body);
 
         if (!($object = json_decode($body))) {
-            throw new Exception("'{$body}'.");
+            throw new \Exception("'{$body}'.");
         }
 
         if (!empty($object->error_code)) {
-            $exception = new Exception("{$object->error_code}: {$object->error_info}.");
+            $exception = new \Exception("{$object->error_code}: {$object->error_info}.");
             throw $exception;
         }
 

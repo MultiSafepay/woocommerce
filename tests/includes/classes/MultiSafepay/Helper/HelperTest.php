@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  * DISCLAIMER
@@ -10,8 +9,8 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      TechSupport <techsupport@multisafepay.com>
- * @copyright   Copyright (c) 2017 MultiSafepay, Inc. (http://www.multisafepay.com)
+ * @author      MultiSafepay <integration@multisafepay.com>
+ * @copyright   Copyright (c) 2019 MultiSafepay, Inc. (https://www.multisafepay.com)
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
  * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -20,18 +19,21 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class MultiSafepay_ObjectIssuers extends MultiSafepay_ObjectCore
+
+namespace MultiSafepay\WooCommerce\Tests\Helper;
+
+use MultiSafepay\WooCommerce\Helper\Helper;
+
+class HelperTest extends \WC_Unit_Test_Case
 {
-
-    public $success;
-    public $data;
-
-    public function get($endpoint = 'issuers', $type = 'ideal', $body = array(), $query_string = false)
+    public function testGetApiKey()
     {
-        $result = parent::get($endpoint, $type, $body, $query_string);
-        $this->success = $result->success;
-        $this->data = $result->data;
+        if (!get_option('multisafepay_api_key')) {
+            add_option('multisafepay_api_key');
+        }
 
-        return $this->data;
+        update_option('multisafepay_api_key', '12345');
+
+        $this->assertEquals('12345', Helper::getApiKey());
     }
 }

@@ -20,41 +20,21 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class MultiSafepay_Gateway_Liefcadeaukaart extends MultiSafepay_Gateway_Abstract
+
+namespace MultiSafepay\WooCommerce\Api\Client;
+
+class Gateways extends Core
 {
 
-    public static function getCode()
-    {
-        return 'multisafepay_liefcadeaukaart';
-    }
+    public $success;
+    public $data;
 
-    public static function getName()
+    public function get($endpoint = 'gateways', $type = '', $body = array(), $query_string = false)
     {
-        return __('Lief Cadeaukaart', 'multisafepay');
-    }
+        $result = parent::get($endpoint, $type, $body, $query_string);
+        $this->success = $result->success;
+        $this->data = $result->data;
 
-    public static function getSettings()
-    {
-        return get_option('woocommerce_multisafepay_liefcadeaukaart_settings');
-    }
-
-    public static function getTitle()
-    {
-        $settings = self::getSettings();
-        if (!isset($settings['title'])) {
-            $settings['title'] = '';
-        }
-
-        return ($settings['title']);
-    }
-
-    public static function getGatewayCode()
-    {
-        return 'LIEF';
-    }
-
-    public function getType()
-    {
-        return 'redirect';
+        return $this->data;
     }
 }

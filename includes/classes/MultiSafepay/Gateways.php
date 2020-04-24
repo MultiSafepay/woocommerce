@@ -20,7 +20,61 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class MultiSafepay_Gateways
+
+namespace MultiSafepay\WooCommerce;
+
+use MultiSafepay\WooCommerce\Api\Client;
+use MultiSafepay\WooCommerce\Gateway\Afterpay;
+use MultiSafepay\WooCommerce\Gateway\Alipay;
+use MultiSafepay\WooCommerce\Gateway\Amex;
+use MultiSafepay\WooCommerce\Gateway\Applepay;
+use MultiSafepay\WooCommerce\Gateway\Bancontact;
+use MultiSafepay\WooCommerce\Gateway\Banktrans;
+use MultiSafepay\WooCommerce\Gateway\Beautyandwellness;
+use MultiSafepay\WooCommerce\Gateway\Belfius;
+use MultiSafepay\WooCommerce\Gateway\Boekenbon;
+use MultiSafepay\WooCommerce\Gateway\Creditcard;
+use MultiSafepay\WooCommerce\Gateway\Dirdeb;
+use MultiSafepay\WooCommerce\Gateway\Directbanktransfer;
+use MultiSafepay\WooCommerce\Gateway\Dotpay;
+use MultiSafepay\WooCommerce\Gateway\Einvoice;
+use MultiSafepay\WooCommerce\Gateway\Eps;
+use MultiSafepay\WooCommerce\Gateway\Fashioncheque;
+use MultiSafepay\WooCommerce\Gateway\Fashiongiftcard;
+use MultiSafepay\WooCommerce\Gateway\Fastcheckout;
+use MultiSafepay\WooCommerce\Gateway\Fietsbon;
+use MultiSafepay\WooCommerce\Gateway\Gezondheidsbon;
+use MultiSafepay\WooCommerce\Gateway\Giropay;
+use MultiSafepay\WooCommerce\Gateway\Givacard;
+use MultiSafepay\WooCommerce\Gateway\Goodcard;
+use MultiSafepay\WooCommerce\Gateway\Ideal;
+use MultiSafepay\WooCommerce\Gateway\Ing;
+use MultiSafepay\WooCommerce\Gateway\Kbc;
+use MultiSafepay\WooCommerce\Gateway\Klarna;
+use MultiSafepay\WooCommerce\Gateway\Maestro;
+use MultiSafepay\WooCommerce\Gateway\Mastercard;
+use MultiSafepay\WooCommerce\Gateway\Nationalebioscoopbon;
+use MultiSafepay\WooCommerce\Gateway\Nationaletuinbon;
+use MultiSafepay\WooCommerce\Gateway\Ohmygood;
+use MultiSafepay\WooCommerce\Gateway\Parfumcadeaukaart;
+use MultiSafepay\WooCommerce\Gateway\Payafter;
+use MultiSafepay\WooCommerce\Gateway\Paypal;
+use MultiSafepay\WooCommerce\Gateway\Paysafecard;
+use MultiSafepay\WooCommerce\Gateway\Podiumcadeaukaart;
+use MultiSafepay\WooCommerce\Gateway\Santander;
+use MultiSafepay\WooCommerce\Gateway\Sofort;
+use MultiSafepay\WooCommerce\Gateway\Sportenfit;
+use MultiSafepay\WooCommerce\Gateway\Trustly;
+use MultiSafepay\WooCommerce\Gateway\Visa;
+use MultiSafepay\WooCommerce\Gateway\Vvvcadeaukaart;
+use MultiSafepay\WooCommerce\Gateway\Webshopgiftcard;
+use MultiSafepay\WooCommerce\Gateway\Wellnessgiftcard;
+use MultiSafepay\WooCommerce\Gateway\Wijncadeau;
+use MultiSafepay\WooCommerce\Gateway\Winkelcheque;
+use MultiSafepay\WooCommerce\Gateway\Yourgift;
+use MultiSafepay\WooCommerce\Helper\Helper;
+
+class Gateways
 {
 
     public static function register()
@@ -72,8 +126,8 @@ class MultiSafepay_Gateways
 
         // Get real payment method
         //
-        $msp    = new MultiSafepay_Client();
-        $helper = new MultiSafepay_Helper_Helper();
+        $msp    = new Client();
+        $helper = new Helper();
 
         $msp->setApiKey($helper->getApiKey());
         $msp->setApiUrl($helper->getTestMode());
@@ -81,7 +135,7 @@ class MultiSafepay_Gateways
         try {
             $msg = null;
             $transactie = $msp->orders->get($trns_id, 'orders', array(), false);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $msg = htmlspecialchars($e->getMessage());
             $helper->write_log($msg);
             return;
@@ -129,60 +183,58 @@ class MultiSafepay_Gateways
     public static function _getGateways($arrDefault)
     {
         $paymentOptions = array(
-              'MultiSafepay_Gateway_Afterpay'
-            , 'MultiSafepay_Gateway_Alipay'
-            , 'MultiSafepay_Gateway_Amex'
-            , 'MultiSafepay_Gateway_Applepay'
-            , 'MultiSafepay_Gateway_Bancontact'
-            , 'MultiSafepay_Gateway_Banktrans'
-            , 'MultiSafepay_Gateway_Belfius'
-            , 'MultiSafepay_Gateway_Creditcard'
-            , 'MultiSafepay_Gateway_Dirdeb'
-            , 'MultiSafepay_Gateway_Directbanktransfer'
-            , 'MultiSafepay_Gateway_Dotpay'
-            , 'MultiSafepay_Gateway_Einvoice'
-            , 'MultiSafepay_Gateway_Eps'
-            , 'MultiSafepay_Gateway_Ferbuy'
-            , 'MultiSafepay_Gateway_Giropay'
-            , 'MultiSafepay_Gateway_Ideal'
-            , 'MultiSafepay_Gateway_Ing'
-            , 'MultiSafepay_Gateway_Kbc'
-            , 'MultiSafepay_Gateway_Klarna'
-            , 'MultiSafepay_Gateway_Maestro'
-            , 'MultiSafepay_Gateway_Mastercard'
-            , 'MultiSafepay_Gateway_Payafter'
-            , 'MultiSafepay_Gateway_Paypal'
-            , 'MultiSafepay_Gateway_Paysafecard'
-            , 'MultiSafepay_Gateway_Santander'
-            , 'MultiSafepay_Gateway_Sofort'
-            , 'MultiSafepay_Gateway_Trustly'
-            , 'MultiSafepay_Gateway_Trustpay'
-            , 'MultiSafepay_Gateway_Visa');
+            Afterpay::class,
+            Alipay::class,
+            Amex::class,
+            Applepay::class,
+            Bancontact::class,
+            Banktrans::class,
+            Belfius::class,
+            Creditcard::class,
+            Dirdeb::class,
+            Belfius::class,
+            Directbanktransfer::class,
+            Dotpay::class,
+            Einvoice::class,
+            Eps::class,
+            Giropay::class,
+            Ideal::class,
+            Ing::class,
+            Kbc::class,
+            Klarna::class,
+            Maestro::class,
+            Mastercard::class,
+            Payafter::class,
+            Paypal::class,
+            Paysafecard::class,
+            Santander::class,
+            Sofort::class,
+            Trustly::class,
+            Visa::class
+        );
 
         $giftCards = array(
-            'MultiSafepay_Gateway_Beautyandwellness'
-            , 'MultiSafepay_Gateway_Nationalebioscoopbon'
-            , 'MultiSafepay_Gateway_Boekenbon'
-            , 'MultiSafepay_Gateway_Erotiekbon'
-            , 'MultiSafepay_Gateway_Fashioncheque'
-            , 'MultiSafepay_Gateway_Fashiongiftcard'
-            , 'MultiSafepay_Gateway_Fietsbon'
-            , 'MultiSafepay_Gateway_Fijncadeau'
-            , 'MultiSafepay_Gateway_Gezondheidsbon'
-            , 'MultiSafepay_Gateway_Givacard'
-            , 'MultiSafepay_Gateway_Goodcard'
-            , 'MultiSafepay_Gateway_Liefcadeaukaart'
-            , 'MultiSafepay_Gateway_Nationaletuinbon'
-            , 'MultiSafepay_Gateway_Ohmygood'
-            , 'MultiSafepay_Gateway_Parfumcadeaukaart'
-            , 'MultiSafepay_Gateway_Podiumcadeaukaart'
-            , 'MultiSafepay_Gateway_Sportenfit'
-            , 'MultiSafepay_Gateway_Vvvcadeaukaart'
-            , 'MultiSafepay_Gateway_Webshopgiftcard'
-            , 'MultiSafepay_Gateway_Wellnessgiftcard'
-            , 'MultiSafepay_Gateway_Wijncadeau'
-            , 'MultiSafepay_Gateway_Winkelcheque'
-            , 'MultiSafepay_Gateway_Yourgift');
+            Beautyandwellness::class,
+            Nationalebioscoopbon::class,
+            Boekenbon::class,
+            Fashioncheque::class,
+            Fashiongiftcard::class,
+            Fietsbon::class,
+            Gezondheidsbon::class,
+            Givacard::class,
+            Goodcard::class,
+            Nationaletuinbon::class,
+            Ohmygood::class,
+            Parfumcadeaukaart::class,
+            Podiumcadeaukaart::class,
+            Sportenfit::class,
+            Vvvcadeaukaart::class,
+            Webshopgiftcard::class,
+            Wellnessgiftcard::class,
+            Wijncadeau::class,
+            Winkelcheque::class,
+            Yourgift::class
+        );
 
 
         $giftcards_enabled = get_option('multisafepay_giftcards_enabled') == 'yes' ? true : false;
@@ -339,7 +391,7 @@ class MultiSafepay_Gateways
             case 'cancel':
                 return true;
             case 'shipping':
-                $fco = new MultiSafepay_Gateway_Fastcheckout();
+                $fco = new Fastcheckout();
                 print_r($fco->get_shipping_methods_xml());
                 exit;
             default:
@@ -351,8 +403,8 @@ class MultiSafepay_Gateways
             return;
         }
 
-        $msp = new MultiSafepay_Client();
-        $helper = new MultiSafepay_Helper_Helper();
+        $msp = new Client();
+        $helper = new Helper();
 
         $msp->setApiKey($helper->getApiKey());
         $msp->setApiUrl($helper->getTestMode());
@@ -360,7 +412,7 @@ class MultiSafepay_Gateways
         try {
             $msg = null;
             $transactie = $msp->orders->get($trns_id, 'orders', array(), false);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $msg = htmlspecialchars($e->getMessage());
             $helper->write_log($msg);
             return;
@@ -432,7 +484,7 @@ class MultiSafepay_Gateways
                 // Add shipping method
                 foreach ($woocommerce->shipping->load_shipping_methods() as $shipping_method) {
                     if ($shipping_method->method_title == $transactie->order_adjustment->shipping->flat_rate_shipping->name) {
-                        $item = new WC_Order_Item_Shipping();
+                        $item = new \WC_Order_Item_Shipping();
                         $item->set_props(
                             array(
                             'method_title' => $transactie->order_adjustment->shipping->flat_rate_shipping->name,
@@ -450,7 +502,7 @@ class MultiSafepay_Gateways
                 $order->add_order_note($transactie->transaction_id);
 
                 // Add payment method
-                $gateways = new WC_Payment_Gateways();
+                $gateways = new \WC_Payment_Gateways();
                 $all_gateways = $gateways->get_available_payment_gateways();
 
                 // Set default
@@ -492,7 +544,7 @@ class MultiSafepay_Gateways
                     }
 
                     if ($product_id) {
-                        $product_item = new WC_Product($product_id);
+                        $product_item = new \WC_Product($product_id);
                         $product_item->qty = $product->quantity;
                         $order->add_product($product_item, $product->quantity);
                     }
@@ -694,9 +746,9 @@ class MultiSafepay_Gateways
 
 
         global $woocommerce;
-        $msp = new MultiSafepay_Client();
-        $helper = new MultiSafepay_Helper_Helper();
-        $fco = new MultiSafepay_Gateway_Fastcheckout();
+        $msp = new Client();
+        $helper = new Helper();
+        $fco = new Fastcheckout();
 
         $msp->setApiKey($helper->getApiKey());
         $msp->setApiUrl($helper->getTestMode());
@@ -729,7 +781,7 @@ class MultiSafepay_Gateways
             $msg = null;
             $msp->orders->post($my_order);
             $url = $msp->orders->getPaymentLink();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $msg = htmlspecialchars($e->getMessage());
             $helper->write_log('error: ' . $msg);
         }

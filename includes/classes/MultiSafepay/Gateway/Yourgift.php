@@ -20,7 +20,10 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class MultiSafepay_Gateway_Yourgift extends MultiSafepay_Gateway_Abstract
+
+namespace MultiSafepay\WooCommerce\Gateway;
+
+class Yourgift extends Core
 {
 
     public static function getCode()

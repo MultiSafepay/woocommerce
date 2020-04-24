@@ -10,7 +10,7 @@
  * @category    MultiSafepay
  * @package     Connect
  * @author      MultiSafepay <integration@multisafepay.com>
- * @copyright   Copyright (c) 2019 MultiSafepay, Inc. (https://www.multisafepay.com)
+ * @copyright   Copyright (c) 2020 MultiSafepay, Inc. (https://www.multisafepay.com)
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
  * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -20,35 +20,40 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-class MultiSafepay_Test_Gateway_ApplePay extends WC_Unit_Test_Case
+namespace MultiSafepay\WooCommerce\Tests\Gateway;
+
+use MultiSafepay\WooCommerce\Gateway\Directbanktransfer;
+
+class DirectBankTransferTest extends \WC_Unit_Test_Case
 {
+
     public function testGetGatewayCode()
     {
-        $this->assertEquals('APPLEPAY', MultiSafepay_Gateway_Applepay::getGatewayCode());
+        $this->assertEquals('DBRTP', Directbanktransfer::getGatewayCode());
     }
 
     public function testGetCode()
     {
-        $this->assertEquals('multisafepay_applepay', MultiSafepay_Gateway_Applepay::getCode());
+        $this->assertEquals('multisafepay_directbanktransfer', Directbanktransfer::getCode());
     }
 
     public function testGetSettings()
     {
-        if (!get_option('woocommerce_multisafepay_applepay_settings')) {
-            add_option('woocommerce_multisafepay_applepay_settings');
+        if (!get_option('woocommerce_multisafepay_directbanktransfer_settings')) {
+            add_option('woocommerce_multisafepay_directbanktransfer_settings');
         }
 
         $settingsData = [
             'enabled' => 'yes',
-            'title' => 'ApplePay',
-            'description' => 'Pay by ApplePay',
-            'gateway' => 'APPLEPAY',
+            'title' => 'Direct Bank Transfer',
+            'description' => 'Pay by Direct Bank Transfer',
+            'gateway' => 'DBRTP',
             'instructions' => 'This is how to pay'
         ];
 
-        update_option('woocommerce_multisafepay_applepay_settings', $settingsData);
+        update_option('woocommerce_multisafepay_directbanktransfer_settings', $settingsData);
 
-        $settings = MultiSafepay_Gateway_Applepay::getSettings();
+        $settings = Directbanktransfer::getSettings();
 
         $this->assertEquals($settingsData['enabled'], $settings['enabled']);
         $this->assertEquals($settingsData['title'], $settings['title']);

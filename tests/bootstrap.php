@@ -36,10 +36,8 @@ function _manually_load_plugin() {
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
 // Start up the WP testing environment.
-require_once dirname( __DIR__ ) . '/vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once $_bootstrap;
-// Register autoloader
-require_once dirname(__FILE__) . '/../includes/classes/Autoload.php';
 
-MultiSafepay_Autoload::register();
-MultiSafepay_Gateways::register();
+
+\MultiSafepay\WooCommerce\Gateways::register();

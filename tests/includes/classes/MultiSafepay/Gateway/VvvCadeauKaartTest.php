@@ -20,43 +20,47 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-class MultiSafepay_Test_Gateway_Ohmygood extends WC_Unit_Test_Case
+namespace MultiSafepay\WooCommerce\Tests\Gateway;
+
+use MultiSafepay\WooCommerce\Gateway\Vvvcadeaukaart;
+
+class VvvCadeauKaartTest extends \WC_Unit_Test_Case
 {
     public function testGetGatewayCode()
     {
-        $this->assertEquals('OHMYGOOD', MultiSafepay_Gateway_Ohmygood::getGatewayCode());
+        $this->assertEquals('VVVGIFTCRD', Vvvcadeaukaart::getGatewayCode());
     }
 
     public function testGetName()
     {
-        $this->assertEquals('Ohmygood', MultiSafepay_Gateway_Ohmygood::getName());
+        $this->assertEquals('VVV Cadeaukaart', Vvvcadeaukaart::getName());
     }
 
     public function testGetCode()
     {
-        $this->assertEquals('multisafepay_ohmygood', MultiSafepay_Gateway_Ohmygood::getCode());
+        $this->assertEquals('multisafepay_vvvcadeaukaart', Vvvcadeaukaart::getCode());
     }
 
     public function testGetSettings()
     {
-        if (!get_option('woocommerce_multisafepay_ohmygood_settings')) {
-            add_option('woocommerce_multisafepay_ohmygood_settings');
+        if (!get_option('woocommerce_multisafepay_vvvcadeaukaart_settings')) {
+            add_option('woocommerce_multisafepay_vvvcadeaukaart_settings');
         }
 
         $settingsData = [
             'enabled' => 'yes',
-            'title' => 'Ohmygood',
-            'description' => 'Betaal met Ohmygood',
-            'gateway' => 'OHMYGOOD',
+            'title' => 'VVV Cadeaukaart',
+            'description' => 'Betaal met VVV Cadeaukaart',
+            'gateway' => 'VVVGIFTCRD',
             'instructions' => ''
         ];
 
-        update_option('woocommerce_multisafepay_ohmygood_settings', $settingsData);
+        update_option('woocommerce_multisafepay_vvvcadeaukaart_settings', $settingsData);
 
-        $this->assertArrayHasKey('enabled', MultiSafepay_Gateway_Ohmygood::getSettings());
-        $this->assertArrayHasKey('title', MultiSafepay_Gateway_Ohmygood::getSettings());
-        $this->assertArrayHasKey('description', MultiSafepay_Gateway_Ohmygood::getSettings());
-        $this->assertArrayHasKey('gateway', MultiSafepay_Gateway_Ohmygood::getSettings());
-        $this->assertArrayHasKey('instructions', MultiSafepay_Gateway_Ohmygood::getSettings());
+        $this->assertArrayHasKey('enabled', Vvvcadeaukaart::getSettings());
+        $this->assertArrayHasKey('title', Vvvcadeaukaart::getSettings());
+        $this->assertArrayHasKey('description', Vvvcadeaukaart::getSettings());
+        $this->assertArrayHasKey('gateway', Vvvcadeaukaart::getSettings());
+        $this->assertArrayHasKey('instructions', Vvvcadeaukaart::getSettings());
     }
 }

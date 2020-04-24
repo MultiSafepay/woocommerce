@@ -20,41 +20,21 @@
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-class MultiSafepay_Gateway_Ferbuy extends MultiSafepay_Gateway_Abstract
+
+namespace MultiSafepay\WooCommerce\Api\Client;
+
+class Issuers extends Core
 {
 
-    public static function getCode()
-    {
-        return 'multisafepay_ferbuy';
-    }
+    public $success;
+    public $data;
 
-    public static function getName()
+    public function get($endpoint = 'issuers', $type = 'ideal', $body = array(), $query_string = false)
     {
-        return __('FerBuy', 'multisafepay');
-    }
+        $result = parent::get($endpoint, $type, $body, $query_string);
+        $this->success = $result->success;
+        $this->data = $result->data;
 
-    public static function getSettings()
-    {
-        return get_option('woocommerce_multisafepay_ferbuy_settings');
-    }
-
-    public static function getTitle()
-    {
-        $settings = self::getSettings();
-        if (!isset($settings['title'])) {
-            $settings['title'] = '';
-        }
-
-        return ($settings['title']);
-    }
-
-    public static function getGatewayCode()
-    {
-        return 'FERBUY';
-    }
-
-    public function getType()
-    {
-        return 'redirect';
+        return $this->data;
     }
 }

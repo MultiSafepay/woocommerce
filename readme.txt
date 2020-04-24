@@ -2,9 +2,9 @@
 Contributors: multisafepayplugin
 Tags: multisafepay, woocommerce, plug-in, plugin, payment, gateway, ideal, visa
 Requires at least: 4.9
-Tested up to: 5.3
-Requires PHP: 5.6
-Stable tag: 3.5.0
+Tested up to: 5.4
+Requires PHP: 7.0
+Stable tag: 3.5.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,7 +35,6 @@ Payment methods:
 * Dotpay
 * E-Invoicing
 * EPS
-* FerBuy
 * Giropay
 * iDEAL
 * ING Home'Pay
@@ -48,20 +47,16 @@ Payment methods:
 * Paysafecard
 * SOFORT Banking
 * Trustly
-* TrustPay
 * Visa (including CartaSi, Cartes Bancaires & Dankort).
 
 Giftcards:
 
 * Fashioncheque
 * Fashion Giftcard‎
-* Fijncadeau
 * Gezondheidsbon
 * GivaCard
 * Goodcard
-* Lief! Kadokaart
 * Nationale Bioscoopbon‎
-* Nationale Erotiekbon
 * Nationale Fietsbon
 * Nationale Tuinbon
 * Ohmygood
@@ -109,6 +104,20 @@ If you are using 2.2.x of our plugin, please contact integration@multisafepay.co
 
 
 == Changelog ==
+
+= Release Notes - WooCommerce 3.5.1 (Apr 16th, 2020) =
+
+### Changed ##
+* PLGWOOS-240: Improve loading the plugin
+* PLGWOOS-326: Remove giftcard Fijncadeau
+* PLGWOOS-327: Remove giftcard Lief Cadeaukaart
+* PLGWOOS-380: Remove giftcard Erotiekbon
+* PLGWOOS-390: Remove payment method FerBuy
+* PLGWOOS-391: Remove payment method TrustPay
+
+### Fixed ##
+* PLGWOOS-389: Fix parsing address into street and house number
+* PLGWOOS-395: Fix Javascript error when Apple Pay is disabled
 
 = Release Notes - WooCommerce 3.5.0 (Mar 30th, 2020) =
 
