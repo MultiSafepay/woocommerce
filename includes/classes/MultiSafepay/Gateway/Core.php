@@ -30,7 +30,7 @@ class Core extends \WC_Payment_Gateway
     /**
      * @var string
      */
-    const MULTISAFEPAY_PLUGIN_VERSION = '3.5.1-RC1';
+    const MULTISAFEPAY_PLUGIN_VERSION = '3.5.1';
 
     public static function getVersion()
     {

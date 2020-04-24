@@ -1,5 +1,5 @@
 ## 3.5.1
-Release date: Apr 16th, 2020
+Release date: Apr 24th, 2020
 
 ### Fixed
 + PLGWOOS-395: Javascript error when Apple Pay is disabled
