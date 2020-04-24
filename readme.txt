@@ -105,7 +105,7 @@ If you are using 2.2.x of our plugin, please contact integration@multisafepay.co
 
 == Changelog ==
 
-= Release Notes - WooCommerce 3.5.1 (Apr 16th, 2020) =
+= Release Notes - WooCommerce 3.5.1 (Apr 24th, 2020) =
 
 ### Changed ##
 * PLGWOOS-240: Improve loading the plugin
