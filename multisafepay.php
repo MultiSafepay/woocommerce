@@ -61,6 +61,7 @@ if (!function_exists('curl_version')) {
 
 if (is_plugin_active('woocommerce/woocommerce.php') || is_plugin_active_for_network('woocommerce/woocommerce.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
+    register_activation_hook(__FILE__, array(\MultiSafepay\WooCommerce\Gateways::class, 'installDatabase'));
     \MultiSafepay\WooCommerce\Gateways::register();
 } else {
     add_action('admin_notices', 'msp_error_woocommerce_not_active');
