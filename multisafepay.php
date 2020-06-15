@@ -40,7 +40,12 @@ define('MULTISAFEPAY_PLUGIN_FILE', plugins_url('/' . plugin_basename(__DIR__)));
 require_once ABSPATH . '/wp-admin/includes/plugin.php';
 
 // Load textdomain
-load_plugin_textdomain('multisafepay', false, plugin_basename(dirname(__FILE__)) . '/languages');
+add_action('plugins_loaded', 'multisafepay_load_plugin_textdomain');
+
+function multisafepay_load_plugin_textdomain()
+{
+    load_plugin_textdomain('multisafepay', false, plugin_basename(__DIR__) . '/languages');
+}
 
 function msp_error_woocommerce_not_active()
 {
