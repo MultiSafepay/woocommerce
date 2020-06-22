@@ -350,7 +350,7 @@ class Core extends \WC_Payment_Gateway
                 $tax_percentage = 0;
             }
 
-            $product_price = round($item['line_subtotal'] / $item['qty'], 5);
+            $product_price = round($item['line_subtotal'] / $item['qty'], 6);
 
             if ($item['line_subtotal_tax'] > 0) {
                 $tax_table_selector = 'BTW-' . $tax_percentage * 100;
@@ -391,10 +391,12 @@ class Core extends \WC_Payment_Gateway
                 $tax_percentage = 0;
             }
 
+            $couponAmount = round((($coupon['discount_amount_tax'] + $coupon['discount_amount']) / (1 + $tax_percentage)), 10);
+
             $shopping_cart['items'][] = array(
                 'name' => $coupon['type'],
                 'description' => $coupon['name'],
-                'unit_price' => -$coupon['discount_amount'],
+                'unit_price' => -$couponAmount,
                 'quantity' => 1,
                 'merchant_item_id' => $coupon['type'],
                 'tax_table_selector' => $tax_table_selector,
@@ -417,23 +419,21 @@ class Core extends \WC_Payment_Gateway
 
         // Add shipping
         foreach ($order->get_items('shipping') as $shipping) {
+            $tax_table_selector = $shipping['type'];
             $taxes = $shipping['taxes']['total'];
-            $taxes = array_shift($taxes);
+            $tax = reset($taxes);
 
-            $cost = $shipping['cost'];
-
-            $tax_table_selector = 'shipping';
-
-            if ($cost > 0) {
-                $tax_percentage = round($taxes / $cost, 2);
+            if ($shipping['cost'] > 0) {
+                $tax_percentage = round($tax/ $shipping['cost'], 2);
             } else {
                 $tax_percentage = 0;
             }
+            $shippingCost = round((($shipping['cost'] + $tax) / (1 + $tax_percentage)), 10);
 
             $shopping_cart['items'][] = array(
-                'name' => $shipping['name'],
+                'name' => $tax_table_selector,
                 'description' => $shipping['type'],
-                'unit_price' => $shipping['cost'],
+                'unit_price' => $shippingCost,
                 'quantity' => 1,
                 'merchant_item_id' => 'msp-shipping',
                 'tax_table_selector' => $tax_table_selector,
@@ -456,18 +456,19 @@ class Core extends \WC_Payment_Gateway
 
         // Add fee
         foreach ($order->get_items('fee') as $fee) {
-            $tax_table_selector = 'fee';
+            $tax_table_selector = $fee['type'];
 
             if ($fee['total'] > 0) {
                 $tax_percentage = round($fee['total_tax'] / $fee['total'], 2);
             } else {
                 $tax_percentage = 0;
             }
+            $feeAmount = round((($fee['total_tax'] + $fee['total']) / (1 + $tax_percentage)), 10);
 
             $shopping_cart['items'][] = array(
                 'name' => $fee['name'],
                 'description' => $fee['name'],
-                'unit_price' => $fee['total'],
+                'unit_price' => $feeAmount,
                 'quantity' => 1,
                 'merchant_item_id' => 'fee',
                 'tax_table_selector' => $tax_table_selector,
