@@ -105,6 +105,13 @@ If you are using 2.2.x of our plugin, please contact integration@multisafepay.co
 
 == Changelog ==
 
+= Release Notes - WooCommerce 3.5.2 (Jun 25th, 2020) =
+
+### Fixed ##
+* PLGWOOS-401: Fix rounding issues in shopping cart
+* PLGWOOS-394: Fix issue with translations not correctly loaded
+* PLGWOOS-397: Fix database already exists error
+
 = Release Notes - WooCommerce 3.5.1 (Apr 24th, 2020) =
 
 ### Changed ##
@@ -185,6 +192,3 @@ If you are using 2.2.x of our plugin, please contact integration@multisafepay.co
 
 
 The complete changelog for all releases can be found here [Complete changelog](https://docs.multisafepay.com/integrations/woocommerce/changelog/)
-
-
-
