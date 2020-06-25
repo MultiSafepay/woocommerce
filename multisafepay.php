@@ -27,7 +27,7 @@
   Description: MultiSafepay Payment Plugin
   Author: MultiSafepay
   Author URI: https://www.multisafepay.com
-  Version: 3.5.1
+  Version: 3.5.2
 
   Copyright: ? 2012 MultiSafepay (email : integration@multisafepay.com)
   License: GNU General Public License v3.0
@@ -40,7 +40,12 @@ define('MULTISAFEPAY_PLUGIN_FILE', plugins_url('/' . plugin_basename(__DIR__)));
 require_once ABSPATH . '/wp-admin/includes/plugin.php';
 
 // Load textdomain
-load_plugin_textdomain('multisafepay', false, plugin_basename(dirname(__FILE__)) . '/languages');
+add_action('plugins_loaded', 'multisafepay_load_plugin_textdomain');
+
+function multisafepay_load_plugin_textdomain()
+{
+    load_plugin_textdomain('multisafepay', false, plugin_basename(__DIR__) . '/languages');
+}
 
 function msp_error_woocommerce_not_active()
 {
@@ -61,6 +66,7 @@ if (!function_exists('curl_version')) {
 
 if (is_plugin_active('woocommerce/woocommerce.php') || is_plugin_active_for_network('woocommerce/woocommerce.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
+    register_activation_hook(__FILE__, array(\MultiSafepay\WooCommerce\Gateways::class, 'installDatabase'));
     \MultiSafepay\WooCommerce\Gateways::register();
 } else {
     add_action('admin_notices', 'msp_error_woocommerce_not_active');

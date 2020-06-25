@@ -87,30 +87,6 @@ class Gateways
         add_action('woocommerce_api_' . strtolower(get_class()), array(__CLASS__, 'doFastCheckout'));
 
         add_action('woocommerce_payment_complete', array(__CLASS__, 'getRealPaymentMethod'), 10, 1);
-
-        global $wpdb;
-        $wpdb->hide_errors();
-
-        $collate = '';
-        if ($wpdb->has_cap('collation')) {
-            if (!empty($wpdb->charset)) {
-                $collate .= "DEFAULT CHARACTER SET $wpdb->charset";
-            }
-            if (!empty($wpdb->collate)) {
-                $collate .= " COLLATE $wpdb->collate";
-            }
-        }
-
-        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-
-        $woocommerce_tables = "CREATE TABLE {$wpdb->prefix}woocommerce_multisafepay
-                                (   id bigint(20) NOT NULL auto_increment,
-                                    trixid varchar(200) NOT NULL,
-                                    orderid varchar(200) NOT NULL,
-                                    status varchar(200) NOT NULL,
-                                    PRIMARY KEY  (id)
-                                ) $collate;";
-        dbDelta($woocommerce_tables);
     }
 
 
@@ -799,5 +775,32 @@ class Gateways
         } else {
             wp_redirect($url);
         }
+    }
+
+    public static function installDatabase()
+    {
+        global $wpdb;
+        $wpdb->hide_errors();
+
+        $collate = '';
+        if ($wpdb->has_cap('collation')) {
+            if (!empty($wpdb->charset)) {
+                $collate .= "DEFAULT CHARACTER SET $wpdb->charset";
+            }
+            if (!empty($wpdb->collate)) {
+                $collate .= " COLLATE $wpdb->collate";
+            }
+        }
+
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
+        $woocommerce_tables = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}woocommerce_multisafepay
+                                (   id bigint(20) NOT NULL auto_increment,
+                                    trixid varchar(200) NOT NULL,
+                                    orderid varchar(200) NOT NULL,
+                                    status varchar(200) NOT NULL,
+                                    PRIMARY KEY  (id)
+                                ) $collate;";
+        dbDelta($woocommerce_tables);
     }
 }

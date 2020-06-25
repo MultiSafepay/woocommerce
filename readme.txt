@@ -4,7 +4,7 @@ Tags: multisafepay, woocommerce, plug-in, plugin, payment, gateway, ideal, visa
 Requires at least: 4.9
 Tested up to: 5.4
 Requires PHP: 7.0
-Stable tag: 3.5.1
+Stable tag: 3.5.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -105,7 +105,14 @@ If you are using 2.2.x of our plugin, please contact integration@multisafepay.co
 
 == Changelog ==
 
-= Release Notes - WooCommerce 3.5.1 (Apr 16th, 2020) =
+= Release Notes - WooCommerce 3.5.2 (Jun 25th, 2020) =
+
+### Fixed ##
+* PLGWOOS-401: Fix rounding issues in shopping cart
+* PLGWOOS-394: Fix issue with translations not correctly loaded
+* PLGWOOS-397: Fix database already exists error
+
+= Release Notes - WooCommerce 3.5.1 (Apr 24th, 2020) =
 
 ### Changed ##
 * PLGWOOS-240: Improve loading the plugin
@@ -185,6 +192,3 @@ If you are using 2.2.x of our plugin, please contact integration@multisafepay.co
 
 
 The complete changelog for all releases can be found here [Complete changelog](https://docs.multisafepay.com/integrations/woocommerce/changelog/)
-
-
-
