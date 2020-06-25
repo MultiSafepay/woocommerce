@@ -1,3 +1,13 @@
+## 3.5.2
+Release date: Jun 25th, 2020
+
+### Fixed
++ PLGWOOS-401: Fix rounding issues in shopping cart
++ PLGWOOS-394: Fix issue with translations not correctly loaded
++ PLGWOOS-397: Fix database already exists error
+
+***
+
 ## 3.5.1
 Release date: Apr 24th, 2020
 
