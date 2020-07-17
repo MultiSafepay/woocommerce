@@ -33,6 +33,7 @@ use MultiSafepay\WooCommerce\Gateway\Banktrans;
 use MultiSafepay\WooCommerce\Gateway\Beautyandwellness;
 use MultiSafepay\WooCommerce\Gateway\Belfius;
 use MultiSafepay\WooCommerce\Gateway\Boekenbon;
+use MultiSafepay\WooCommerce\Gateway\Cbc;
 use MultiSafepay\WooCommerce\Gateway\Creditcard;
 use MultiSafepay\WooCommerce\Gateway\Dirdeb;
 use MultiSafepay\WooCommerce\Gateway\Directbanktransfer;
@@ -166,6 +167,7 @@ class Gateways
             Bancontact::class,
             Banktrans::class,
             Belfius::class,
+            Cbc::class,
             Creditcard::class,
             Dirdeb::class,
             Belfius::class,
