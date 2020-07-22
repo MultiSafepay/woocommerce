@@ -30,7 +30,7 @@ class Core extends \WC_Payment_Gateway
     /**
      * @var string
      */
-    const MULTISAFEPAY_PLUGIN_VERSION = '3.5.2';
+    const MULTISAFEPAY_PLUGIN_VERSION = '3.6.0';
 
     public static function getVersion()
     {
@@ -92,14 +92,38 @@ class Core extends \WC_Payment_Gateway
     }
 
     /**
-     * @param $order_id
-     *
-     * @return bool|\WP_Error
+     * @param $orderId
+     * @return bool
      */
-    public function setToShipped($order_id)
+    public function setToShipped($orderId)
     {
-        $order = wc_get_order($order_id);
+        $order = wc_get_order($orderId);
+        if ($this->isOrderPaidByMultisafepay($order)) {
+            $this->setTransactionToShipped($order);
+        }
+        return true;
+    }
 
+    /**
+     * $this->id contains current ID of the class eq 'multisafepay_ideal'
+     * get_payment_method contains payment_method of order eq 'multisafepay_ideal',
+     * which is ID of the class when order is created
+     *
+     * @see \WC_Order::set_payment_method()
+     * @param $order
+     * @return bool
+     */
+    private function isOrderPaidByMultisafepay($order)
+    {
+        return $this->id === $order->get_payment_method();
+    }
+
+    /**
+     * @param $order
+     * @return \WP_Error
+     */
+    private function setTransactionToShipped($order)
+    {
         $msp = new Client();
         $helper = new Helper();
 
@@ -109,9 +133,9 @@ class Core extends \WC_Payment_Gateway
         $endpoint = 'orders/' . $order->get_order_number();
         $setShipping = array(
             'tracktrace_code' => null,
-            'carrier'         => null,
-            'ship_date'       => date('Y-m-d H:i:s'),
-            'reason'          => 'Shipped');
+            'carrier' => null,
+            'ship_date' => date('Y-m-d H:i:s'),
+            'reason' => 'Shipped');
 
         try {
             $msp->orders->patch($setShipping, $endpoint);
@@ -120,8 +144,6 @@ class Core extends \WC_Payment_Gateway
             $helper->write_log($msg);
             return new \WP_Error('multisafepay', 'Transaction status can\'t be updated:' . $msg);
         }
-
-        return true;
     }
 
     public function getIcon()

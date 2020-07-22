@@ -33,6 +33,7 @@ use MultiSafepay\WooCommerce\Gateway\Banktrans;
 use MultiSafepay\WooCommerce\Gateway\Beautyandwellness;
 use MultiSafepay\WooCommerce\Gateway\Belfius;
 use MultiSafepay\WooCommerce\Gateway\Boekenbon;
+use MultiSafepay\WooCommerce\Gateway\Cbc;
 use MultiSafepay\WooCommerce\Gateway\Creditcard;
 use MultiSafepay\WooCommerce\Gateway\Dirdeb;
 use MultiSafepay\WooCommerce\Gateway\Directbanktransfer;
@@ -84,7 +85,7 @@ class Gateways
 
         add_action('wp_loaded', array(__CLASS__, 'MultiSafepay_Response'));
         add_action('init', array(__CLASS__, 'addFCO'));
-        add_action('woocommerce_api_' . strtolower(get_class()), array(__CLASS__, 'doFastCheckout'));
+        add_action('woocommerce_api_multisafepay_fastcheckout', array(__CLASS__, 'doFastCheckout'));
 
         add_action('woocommerce_payment_complete', array(__CLASS__, 'getRealPaymentMethod'), 10, 1);
     }
@@ -166,6 +167,7 @@ class Gateways
             Bancontact::class,
             Banktrans::class,
             Belfius::class,
+            Cbc::class,
             Creditcard::class,
             Dirdeb::class,
             Belfius::class,
@@ -711,7 +713,7 @@ class Gateways
         $image = plugins_url('/Images/button.png', __FILE__);
 
         echo '<div id="msp_fastcheckout" >';
-        echo '<a class="checkout-button"  style="width:219px;border:none;margin-bottom:15px;" href="' . add_query_arg('action', 'doFastCheckout', add_query_arg('wc-api', 'MultiSafepay_Gateways', home_url('/'))) . '">';
+        echo '<a class="checkout-button"  style="width:219px;border:none;margin-bottom:15px;" href="' . add_query_arg('action', 'doFastCheckout', add_query_arg('wc-api', 'multisafepay_fastcheckout', home_url('/'))) . '">';
         echo "<img src='" . $image . "' style='border:none;vertical-align: center;width: 219px;border-radius: 0px;box-shadow: none;padding: 0px;' border='0' alt='" . __('Pay with Fastcheckout', 'multisafepay') . "'/>";
         echo '</a>';
         echo '</div>';
