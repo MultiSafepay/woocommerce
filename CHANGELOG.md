@@ -1,3 +1,15 @@
+## 3.6.0
+Release date: Jul 22nd, 2020
+
+### Added
++ DAVAMS-266: Add CBC payment method
+
+### Fixed
++ PLGWOOS-403: Fix FastCheckout not working
++ PLGWOOS-400: Apply set to shipped status only for MultiSafepay orders
+
+***
+
 ## 3.5.2
 Release date: Jun 25th, 2020
 

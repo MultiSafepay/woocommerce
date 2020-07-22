@@ -4,7 +4,7 @@ Tags: multisafepay, woocommerce, plug-in, plugin, payment, gateway, ideal, visa
 Requires at least: 4.9
 Tested up to: 5.4
 Requires PHP: 7.0
-Stable tag: 3.5.2
+Stable tag: 3.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,6 +104,15 @@ If you are using 2.2.x of our plugin, please contact integration@multisafepay.co
 
 
 == Changelog ==
+
+= Release Notes - WooCommerce 3.6.0 (Jul 22nd, 2020) =
+
+### Added ##
+* DAVAMS-266: Add CBC payment method
+
+### Fixed ##
+* PLGWOOS-403: Fix FastCheckout not working
+* PLGWOOS-400: Apply set to shipped status only for MultiSafepay orders
 
 = Release Notes - WooCommerce 3.5.2 (Jun 25th, 2020) =
 
