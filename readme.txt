@@ -105,6 +105,15 @@ If you are using 2.2.x of our plugin, please contact integration@multisafepay.co
 
 == Changelog ==
 
+= Release Notes - WooCommerce 3.6.0 (Jul 22nd, 2020) =
+
+### Added ##
+* DAVAMS-266: Add CBC payment method
+
+### Fixed ##
+* PLGWOOS-403: Fix FastCheckout not working
+* PLGWOOS-400: Apply set to shipped status only for MultiSafepay orders
+
 = Release Notes - WooCommerce 3.5.2 (Jun 25th, 2020) =
 
 ### Fixed ##
