@@ -27,7 +27,7 @@
   Description: MultiSafepay Payment Plugin
   Author: MultiSafepay
   Author URI: https://www.multisafepay.com
-  Version: 3.5.2
+  Version: 3.6.0
 
   Copyright: ? 2012 MultiSafepay (email : integration@multisafepay.com)
   License: GNU General Public License v3.0
