@@ -30,7 +30,7 @@ class Core extends \WC_Payment_Gateway
     /**
      * @var string
      */
-    const MULTISAFEPAY_PLUGIN_VERSION = '3.6.0';
+    const MULTISAFEPAY_PLUGIN_VERSION = '3.6.1';
 
     public static function getVersion()
     {
@@ -91,61 +91,6 @@ class Core extends \WC_Payment_Gateway
         return true;
     }
 
-    /**
-     * @param $orderId
-     * @return bool
-     */
-    public function setToShipped($orderId)
-    {
-        $order = wc_get_order($orderId);
-        if ($this->isOrderPaidByMultisafepay($order)) {
-            $this->setTransactionToShipped($order);
-        }
-        return true;
-    }
-
-    /**
-     * $this->id contains current ID of the class eq 'multisafepay_ideal'
-     * get_payment_method contains payment_method of order eq 'multisafepay_ideal',
-     * which is ID of the class when order is created
-     *
-     * @see \WC_Order::set_payment_method()
-     * @param $order
-     * @return bool
-     */
-    private function isOrderPaidByMultisafepay($order)
-    {
-        return $this->id === $order->get_payment_method();
-    }
-
-    /**
-     * @param $order
-     * @return \WP_Error
-     */
-    private function setTransactionToShipped($order)
-    {
-        $msp = new Client();
-        $helper = new Helper();
-
-        $msp->setApiKey($helper->getApiKey());
-        $msp->setApiUrl($helper->getTestMode());
-
-        $endpoint = 'orders/' . $order->get_order_number();
-        $setShipping = array(
-            'tracktrace_code' => null,
-            'carrier' => null,
-            'ship_date' => date('Y-m-d H:i:s'),
-            'reason' => 'Shipped');
-
-        try {
-            $msp->orders->patch($setShipping, $endpoint);
-        } catch (\Exception $e) {
-            $msg = htmlspecialchars($e->getMessage());
-            $helper->write_log($msg);
-            return new \WP_Error('multisafepay', 'Transaction status can\'t be updated:' . $msg);
-        }
-    }
-
     public function getIcon()
     {
         // $button_locale_code = get_locale();
@@ -199,7 +144,6 @@ class Core extends \WC_Payment_Gateway
         add_filter('woocommerce_available_payment_gateways', array (Santander::class, 'santander_filter_gateways'));
 
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
-        add_action('woocommerce_order_status_completed', array($this, 'setToShipped'), 13);
     }
 
     public function init_form_fields($form_fields = array())

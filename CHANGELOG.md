@@ -1,3 +1,11 @@
+## 3.6.1
+Release date: Aug 5th, 2020
+
+### Fixed
++ PLGWOOS-404: Fix setting order to shipped when DHL is used
+
+***
+
 ## 3.6.0
 Release date: Jul 22nd, 2020
 

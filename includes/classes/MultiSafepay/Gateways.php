@@ -88,6 +88,7 @@ class Gateways
         add_action('woocommerce_api_multisafepay_fastcheckout', array(__CLASS__, 'doFastCheckout'));
 
         add_action('woocommerce_payment_complete', array(__CLASS__, 'getRealPaymentMethod'), 10, 1);
+        add_action('woocommerce_order_status_completed', array(__CLASS__, 'setToShipped'), 13);
     }
 
 
@@ -804,5 +805,59 @@ class Gateways
                                     PRIMARY KEY  (id)
                                 ) $collate;";
         dbDelta($woocommerce_tables);
+    }
+
+    /**
+     * @param $orderId
+     * @return bool
+     */
+    public function setToShipped($orderId)
+    {
+        $order = wc_get_order($orderId);
+        if (self::isOrderPaidByMultisafepay($order)) {
+            self::setTransactionToShipped($order);
+        }
+        return true;
+    }
+
+    /**
+     * Get_payment_method contains payment_method of order eq 'multisafepay_ideal',
+     * which is ID of the class when order is created
+     *
+     * @see \WC_Order::set_payment_method()
+     * @param $order
+     * @return bool
+     */
+    private static function isOrderPaidByMultisafepay($order)
+    {
+        return strncmp($order->get_payment_method(), 'multisafepay', 12) === 0;
+    }
+
+    /**
+     * @param $order
+     * @return \WP_Error
+     */
+    private static function setTransactionToShipped($order)
+    {
+        $msp = new Client();
+        $helper = new Helper();
+
+        $msp->setApiKey($helper->getApiKey());
+        $msp->setApiUrl($helper->getTestMode());
+
+        $endpoint = 'orders/' . $order->get_order_number();
+        $setShipping = array(
+            'tracktrace_code' => null,
+            'carrier' => null,
+            'ship_date' => date('Y-m-d H:i:s'),
+            'reason' => 'Shipped');
+
+        try {
+            $msp->orders->patch($setShipping, $endpoint);
+        } catch (\Exception $e) {
+            $msg = htmlspecialchars($e->getMessage());
+            $helper->write_log($msg);
+            return new \WP_Error('multisafepay', 'Transaction status can\'t be updated:' . $msg);
+        }
     }
 }
