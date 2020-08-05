@@ -4,7 +4,7 @@ Tags: multisafepay, woocommerce, plug-in, plugin, payment, gateway, ideal, visa
 Requires at least: 4.9
 Tested up to: 5.4
 Requires PHP: 7.0
-Stable tag: 3.6.0
+Stable tag: 3.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,7 +38,7 @@ Payment methods:
 * Giropay
 * iDEAL
 * ING Home'Pay
-* KBC
+* KBC/CBC
 * Klarna
 * Maestro
 * Mastercard
@@ -104,6 +104,11 @@ If you are using 2.2.x of our plugin, please contact integration@multisafepay.co
 
 
 == Changelog ==
+
+= Release Notes - WooCommerce 3.6.1 (Aug 5th, 2020) =
+
+### Fixed ##
+* PLGWOOS-404: Fix setting order to shipped when DHL is used
 
 = Release Notes - WooCommerce 3.6.0 (Jul 22nd, 2020) =
 
