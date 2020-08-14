@@ -30,7 +30,7 @@ class Core extends \WC_Payment_Gateway
     /**
      * @var string
      */
-    const MULTISAFEPAY_PLUGIN_VERSION = '3.6.1';
+    const MULTISAFEPAY_PLUGIN_VERSION = '3.7.0';
 
     public static function getVersion()
     {
@@ -138,6 +138,7 @@ class Core extends \WC_Payment_Gateway
             $this->icon = $this->getIcon();
         }
 
+        add_filter('woocommerce_available_payment_gateways', array (In3::class, 'in3FilterGateways'));
         add_filter('woocommerce_available_payment_gateways', array (Payafter::class, 'payafter_filter_gateways'));
         add_filter('woocommerce_available_payment_gateways', array (Klarna::class, 'klarna_filter_gateways'));
         add_filter('woocommerce_available_payment_gateways', array (Einvoice::class, 'einvoice_filter_gateways'));
@@ -467,6 +468,10 @@ class Core extends \WC_Payment_Gateway
         $order = wc_get_order($order_id);
 
         switch ($this->getGatewayCode()) {
+            case 'IN3':
+                $gebdat = sanitize_text_field($_POST['birthday']);
+                $gender = sanitize_text_field($_POST['gender']);
+                break;
             case 'PAYAFTER':
                 $gebdat = sanitize_text_field($_POST['pad_birthday']);
                 $account = sanitize_text_field($_POST['pad_account']);
@@ -485,6 +490,7 @@ class Core extends \WC_Payment_Gateway
             'referrer' => $_SERVER['HTTP_REFERER'],
             'user_agent' => $_SERVER['HTTP_USER_AGENT'],
             'birthday' => isset($gebdat) ? $gebdat : '',
+            'gender' => isset($gender) ? $gender : '',
             'bankaccount' => isset($account) ? $account : '',
             'phone' => $billingPhone,
             'email' => $billingEmail

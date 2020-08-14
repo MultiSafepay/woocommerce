@@ -4,7 +4,7 @@ Tags: multisafepay, woocommerce, plug-in, plugin, payment, gateway, ideal, visa
 Requires at least: 4.9
 Tested up to: 5.4
 Requires PHP: 7.0
-Stable tag: 3.6.1
+Stable tag: 3.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,6 +37,7 @@ Payment methods:
 * EPS
 * Giropay
 * iDEAL
+* in3
 * ING Home'Pay
 * KBC/CBC
 * Klarna
@@ -104,6 +105,11 @@ If you are using 2.2.x of our plugin, please contact integration@multisafepay.co
 
 
 == Changelog ==
+
+= Release Notes - WooCommerce 3.7.0 (Aug 14th, 2020) =
+
+### Added ##
+* DAVAMS-237: Add in3 payment method
 
 = Release Notes - WooCommerce 3.6.1 (Aug 5th, 2020) =
 

@@ -49,6 +49,7 @@ use MultiSafepay\WooCommerce\Gateway\Giropay;
 use MultiSafepay\WooCommerce\Gateway\Givacard;
 use MultiSafepay\WooCommerce\Gateway\Goodcard;
 use MultiSafepay\WooCommerce\Gateway\Ideal;
+use MultiSafepay\WooCommerce\Gateway\In3;
 use MultiSafepay\WooCommerce\Gateway\Ing;
 use MultiSafepay\WooCommerce\Gateway\Kbc;
 use MultiSafepay\WooCommerce\Gateway\Klarna;
@@ -178,6 +179,7 @@ class Gateways
             Eps::class,
             Giropay::class,
             Ideal::class,
+            In3::class,
             Ing::class,
             Kbc::class,
             Klarna::class,
