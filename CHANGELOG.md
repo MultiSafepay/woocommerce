@@ -1,3 +1,11 @@
+## 3.7.0
+Release date: Aug 14th, 2020
+
+### Added
++ DAVAMS-237: Add in3 payment method
+
+***
+
 ## 3.6.1
 Release date: Aug 5th, 2020
 
