@@ -33,7 +33,7 @@ class Santander extends Core
 
     public static function getName()
     {
-        return __('Betaalplan', 'multisafepay');
+        return __('Pay per Month', 'multisafepay');
     }
 
     public static function getSettings()
