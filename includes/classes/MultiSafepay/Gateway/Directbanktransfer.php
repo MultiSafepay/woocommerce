@@ -33,7 +33,7 @@ class Directbanktransfer extends Core
 
     public static function getName()
     {
-        return __('Direct Bank Transfer', 'multisafepay');
+        return __('Request to Pay', 'multisafepay');
     }
 
     public static function getSettings()
