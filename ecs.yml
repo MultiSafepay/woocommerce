@@ -1,0 +1,2 @@
+imports:
+  - { resource: './vendor/multisafepay/coding-standards/php71.yml', ignore_errors: not_found }
