@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace MultiSafepay\WooCommerce\Tabs;
@@ -6,13 +6,21 @@ namespace MultiSafepay\WooCommerce\Tabs;
 
 class SupportTab
 {
+    /**
+     * SupportTab constructor.
+     */
     public function __construct()
     {
         add_action('woocommerce_settings_tabs_multisafepay_support', [self::class, 'fillSupportTab']);
     }
 
 
-    public static function fillSupportTab()
+    /**
+     * Fill the support tab page
+     *
+     * @return void
+     */
+    public static function fillSupportTab(): void
     {
         echo
         '

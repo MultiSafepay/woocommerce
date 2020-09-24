@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace MultiSafepay\WooCommerce\Exceptions;
 
@@ -7,13 +7,22 @@ class MissingDependencyException extends \Exception
 {
     private $missingPluginNames;
 
-    public function __construct($missingPlugins)
+    /**
+     * MissingDependencyException constructor.
+     * @param array $missingPlugins
+     */
+    public function __construct(array $missingPlugins)
     {
         parent::__construct();
         $this->missingPluginNames = $missingPlugins;
     }
 
-    public function getMissingPluginNames()
+    /**
+     * Get the list of all missing plugins
+     *
+     * @return array
+     */
+    public function getMissingPluginNames(): array
     {
         return $this->missingPluginNames;
     }

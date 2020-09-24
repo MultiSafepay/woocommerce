@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace MultiSafepay\WooCommerce\Tabs;
@@ -6,6 +6,9 @@ namespace MultiSafepay\WooCommerce\Tabs;
 
 class SettingsTab
 {
+    /**
+     * SettingsTab constructor.
+     */
     public function __construct()
     {
         add_action('woocommerce_settings_tabs_multisafepay_settings', [self::class, 'fillTab']);
@@ -13,17 +16,32 @@ class SettingsTab
     }
 
 
-    public static function fillTab()
+    /**
+     * Add content to settings page
+     *
+     * @return void
+     */
+    public static function fillTab(): void
     {
         woocommerce_admin_fields(self::getSettings());
     }
 
-    public static function updateSettings()
+    /**
+     * Update the values of the settings page
+     *
+     * @return void
+     */
+    public static function updateSettings(): void
     {
         woocommerce_update_options(self::getSettings());
     }
 
-    public static function getSettings()
+    /**
+     * List of all setting
+     *
+     * @return array
+     */
+    public static function getSettings(): array
     {
         return apply_filters('wc_multisafepay_settings', [
             'section_title' => [

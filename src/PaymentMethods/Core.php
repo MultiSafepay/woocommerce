@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
@@ -9,31 +9,35 @@ use WC_Payment_Gateway;
 abstract class Core extends WC_Payment_Gateway implements PaymentMethodInterface
 {
     /**
-     * Class constructor, more about it in Step 3
+     * Core constructor.
      */
     public function __construct()
     {
         $this->supports = ['products'];
 
         // Method with all the options fields
-        $this->init_form_fields();
+        $this->addFormFields();
 
         // Load the settings.
         $this->init_settings();
         $this->enabled = $this->get_option('enabled');
         $this->title = $this->get_option('title');
-        add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, [$this, 'process_admin_options']);
+        add_action('woocommerce_update_options_payment_gateways_' . $this->id, [$this, 'process_admin_options']);
     }
 
+    /**
+     * @param string $value
+     * @return mixed|void
+     */
     public function setMethodDescription(string $value = '')
     {
         $this->method_description = $value;
     }
 
     /**
-     * Plugin options, we deal with it in Step 3 too
+     * @return mixed|void
      */
-    public function init_form_fields()
+    public function addFormFields()
     {
         $this->form_fields = [
             'enabled' => [
@@ -51,18 +55,30 @@ abstract class Core extends WC_Payment_Gateway implements PaymentMethodInterface
         ];
     }
 
+    /**
+     * @param string $value
+     * @return $this|mixed
+     */
     public function setId(string $value)
     {
         $this->id = $value;
         return $this;
     }
 
+    /**
+     * @param string $value
+     * @return $this|mixed
+     */
     public function setMethodTitle(string $value)
     {
         $this->method_title = $value;
         return $this;
     }
 
+    /**
+     * @param $order_id
+     * @return array|mixed|void
+     */
     public function process_payment($order_id)
     {
 
