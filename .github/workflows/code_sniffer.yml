@@ -1,0 +1,18 @@
+name: Code sniffer
+on:
+  pull_request:
+    branches:
+      - master
+      - develop
+      - 4.0.0
+jobs:
+  code_sniffer:
+    name: Code sniffer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Download dependencies
+        run: composer install --prefer-dist
+      - name: Run code sniffer
+        run: composer code-sniffer
