@@ -15,7 +15,6 @@ class Tabs
     public function __construct()
     {
         add_filter('woocommerce_settings_tabs_array', [self::class , 'addSettingsTab'], 50);
-        new SupportTab();
         new SettingsTab();
     }
 
@@ -28,7 +27,6 @@ class Tabs
     public static function addSettingsTab(array $tabs): array
     {
         $tabs['multisafepay_settings'] = 'MultiSafepay settings';
-        $tabs['multisafepay_support'] = 'MultiSafepay Support';
         return $tabs;
     }
 }
