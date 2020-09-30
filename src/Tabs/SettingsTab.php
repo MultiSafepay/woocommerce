@@ -70,6 +70,11 @@ class SettingsTab
         ]);
     }
 
+    /**
+     * Get the URL of this tab
+     *
+     * @return string
+     */
     public static function getTabUrl(): string
     {
         return admin_url('admin.php?page=wc-settings&tab=multisafepay_settings');

@@ -5,7 +5,6 @@ namespace MultiSafepay\WooCommerce;
 
 
 use MultiSafepay\WooCommerce\Tabs\SettingsTab;
-use MultiSafepay\WooCommerce\Tabs\SupportTab;
 
 class Tabs
 {

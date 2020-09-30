@@ -47,7 +47,13 @@ class Installer
         }
     }
 
-    public static function addPluginLinks($links)
+    /**
+     * Add links to plugin page
+     *
+     * @param array $links
+     * @return array
+     */
+    public static function addPluginLinks(array $links): array
     {
         return array_merge([
             '<a href="' . SettingsTab::getTabUrl() . '">' . __('Settings', 'multisafepay') . '</a>',

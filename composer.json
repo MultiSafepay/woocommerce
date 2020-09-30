@@ -19,7 +19,7 @@
         }
     },
     "scripts": {
-        "code-sniffer": "@php vendor/bin/ecs check src --clear-cache --fix",
+        "code-sniffer": "@php vendor/bin/ecs check src --clear-cache",
         "fix-cs": "@code-sniffer --fix"
     }
 }
