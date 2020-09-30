@@ -69,4 +69,9 @@ class SettingsTab
             ]
         ]);
     }
+
+    public static function getTabUrl(): string
+    {
+        return admin_url('admin.php?page=wc-settings&tab=multisafepay_settings');
+    }
 }
