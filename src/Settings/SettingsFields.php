@@ -32,7 +32,6 @@ namespace MultiSafepay\WooCommerce\Settings;
  * @since   4.0.0
  * @todo Validate sections id
  * @todo Add validations tasks
- * @todo tooltips on fields
  */
 class SettingsFields {
 
@@ -145,7 +144,52 @@ class SettingsFields {
         return array(
             'title'					=> '',
             'intro'			        => '',
-            'fields'		        => array()
+            'fields'		        => array(
+                array(
+                    'id' 			=> $this->plugin_name . '_google_analytics',
+                    'label'			=> __( 'Google Analytics' , $this->plugin_name ),
+                    'description'	=> __( 'Google Analytics Universal Account ID. Format: UA-XXXXXXXXX' , $this->plugin_name ),
+                    'type'			=> 'text',
+                    'default'		=> '',
+                    'placeholder'	=> __( 'Google Analytics', $this->plugin_name ),
+                    'tooltip'       => '',
+                    'callback'      => '',
+                    'setting_type'  => 'string',
+                    'sort_order'    => 1,
+                ),
+                array(
+                    'id' 			=> $this->plugin_name . '_second_chance',
+                    'label'			=> __( 'Second Chance' , $this->plugin_name ),
+                    'description'	=> __( 'More information about Second Chance in our <a href="https://docs.multisafepay.com/tools/second-chance/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms" target="_blank">documentation</a>' , $this->plugin_name ),
+                    'type'			=> 'select',
+                    'options'		=> array(
+                        '0' => __('Disable', $this->plugin_name),
+                        '1' => __('Enable', $this->plugin_name),
+                    ),
+                    'default'		=> '0',
+                    'placeholder'	=> __( 'Second Chance', $this->plugin_name ),
+                    'tooltip'       => __( 'MultiSafepay will send two Second Chance reminder emails. In the emails, MultiSafepay will include a link to allow the consumer to finalize the payment. The first Second Chance email is sent 1 hour after the transaction was initiated and the second after 24 hours. To receive second chance emails, this option must also be activated within your MultiSafepay account, otherwise it will not work.' , $this->plugin_name ),
+                    'callback'      => '',
+                    'setting_type'  => 'string',
+                    'sort_order'    => 1,
+                ),
+                array(
+                    'id' 			=> $this->plugin_name . '_remove_all_settings',
+                    'label'			=> __( 'Delete settings if uninstall' , $this->plugin_name ),
+                    'description'	=> __( 'Delete all settings of this plugin if you uninstall' , $this->plugin_name ),
+                    'type'			=> 'select',
+                    'options'		=> array(
+                        '0' => __('Disable', $this->plugin_name),
+                        '1' => __('Enable', $this->plugin_name),
+                    ),
+                    'default'		=> '0',
+                    'placeholder'	=> __( 'Delete settings if uninstall', $this->plugin_name ),
+                    'tooltip'       => '',
+                    'callback'      => '',
+                    'setting_type'  => 'string',
+                    'sort_order'    => 1,
+                ),
+            )
         );
     }
 
@@ -176,7 +220,7 @@ class SettingsFields {
 
         return array(
             'title'					=> '',
-            'intro'			        => 'Lorem ipsum dolor sit amet',
+            'intro'			        => '',
             'fields'		        => $order_status_fields
         );
     }
@@ -191,19 +235,31 @@ class SettingsFields {
             add_settings_error(
                 '',
                 '',
-                __('You need to fill the API KEY', 'wpse'),
+                __('You need to fill the API KEY', $this->plugin_name),
                 'error',
             );
         }
         return $input;
     }
 
-    private function get_wc_order_statuses() {
+    /**
+     * Returns the WooCommerce registered order statuses
+     * @see
+     *
+     * @return  array
+     */
+    private function get_wc_order_statuses(): array {
         $order_statuses = wc_get_order_statuses();
         return $order_statuses;
     }
 
-    private function get_msp_order_statused() {
+    /**
+     * Returns the MultiSafepay order statused to create settings fields
+     * and match them with WooCommerce order statuses
+     *
+     * @return  array
+     */
+    private function get_msp_order_statused(): array {
         return array (
             'initialized_status'        => __('Initialized', $this->plugin_name),
             'completed_status'          => __('Completed', $this->plugin_name),
