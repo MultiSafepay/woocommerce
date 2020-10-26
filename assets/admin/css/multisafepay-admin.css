@@ -40,9 +40,22 @@
     padding-left: 10px;
     margin-left: 10px;
 }
+#multisafepay-support .docs-list li {
+    list-style-type: circle;
+}
 #multisafepay-support .support-list {
     padding-left: 10px;
     margin-left: 10px;
+}
+#multisafepay-support .support-list li {
+    list-style-type: circle;
+}
+#multisafepay-support .account-list {
+    padding-left: 10px;
+    margin-left: 10px;
+}
+#multisafepay-support .account-list li {
+    list-style-type: circle;
 }
 #multisafepay-support .multisafepay-sales-contact-list {
     padding-left: 10px;

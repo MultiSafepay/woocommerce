@@ -25,7 +25,7 @@
     <p>
         <?php echo __('To use this plugin you need a MultiSafepay account.', 'multisafepay'); ?>
     </p>
-    <ul>
+    <ul class="account-list">
         <li><?php echo __('If you would like to have a clear overview of what MultiSafepay has to offer, feel free to create a <a href="https://testmerchant.multisafepay.com/signup" target="_blank">test account</a>.', 'multisafepay'); ?></li>
         <li><?php echo __('If you would like to set up a live account, please contact the MultiSafepay sales department:', 'multisafepay'); ?>
             <ul  class="multisafepay-sales-contact-list">
