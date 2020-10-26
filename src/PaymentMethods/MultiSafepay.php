@@ -4,13 +4,11 @@
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
 
-class MultiSafepay extends Core
-{
+class MultiSafepay extends Core {
     /**
      * MultiSafepay constructor.
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->setId('multisafepay')
             ->setMethodTitle('MultiSafepay')
             ->setMethodDescription('Placeholder');

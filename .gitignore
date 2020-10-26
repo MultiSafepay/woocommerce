@@ -1,1 +1,6 @@
+*.DS_Store
+/.idea
+/.dist
 /vendor
+/coverage.xml
+/phpunit.xml
