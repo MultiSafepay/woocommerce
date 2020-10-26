@@ -112,7 +112,7 @@ class SettingsController {
 	public function register_common_settings_page(): void {
         add_submenu_page(
             'woocommerce',
-            __('MultiSafepay Settings', $this->plugin_name),
+            __('MultiSafepay Settings v.' . $this->version, $this->plugin_name),
             __('MultiSafepay Settings', $this->plugin_name),
             'manage_options',
             'multisafepay-settings',
@@ -159,13 +159,13 @@ class SettingsController {
      * @return void
      */
     public function register_common_settings(): void {
-        $settings_fields = new SettingsFields($this->plugin_name);
+        $settings_fields = new SettingsFields( $this->plugin_name );
         $settings = $settings_fields->get_settings();
-        foreach ($settings as $tab_key => $section) {
-            $this->add_settings_section($tab_key, $section['title']);
-            foreach ($section['fields'] as $field) {
-                $this->register_setting($field);
-                $this->add_settings_field($field, $tab_key);
+        foreach ( $settings as $tab_key => $section ) {
+            $this->add_settings_section( $tab_key, $section['title'] );
+            foreach ( $section['fields'] as $field ) {
+                $this->register_setting( $field, $tab_key );
+                $this->add_settings_field( $field, $tab_key );
             }
         }
     }
@@ -222,9 +222,9 @@ class SettingsController {
      * @param   array    $field
      * @return  void
      */
-    private function register_setting( array $field ): void {
+    private function register_setting( array $field, string $tab_key): void {
         register_setting(
-            'multisafepay-settings',
+            'multisafepay-settings-' . $tab_key,
             $field['id'],
             array(
                 'type'                  => $field['setting_type'],

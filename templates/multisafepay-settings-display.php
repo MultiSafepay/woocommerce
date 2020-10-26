@@ -36,12 +36,12 @@
         <?php
             switch ($tab_active) {
                 case 'order_status':
-                    settings_fields( 'multisafepay-settings' );
+                    settings_fields( 'multisafepay-settings-order_status' );
                     do_settings_sections( 'multisafepay-settings-order_status' );
                     submit_button();
                     break;
                 case 'options':
-                    settings_fields( 'multisafepay-settings' );
+                    settings_fields( 'multisafepay-settings-options' );
                     do_settings_sections( 'multisafepay-settings-options' );
                     submit_button();
                     break;
@@ -50,7 +50,7 @@
                     break;
                 case 'general':
                 default:
-                    settings_fields( 'multisafepay-settings' );
+                    settings_fields( 'multisafepay-settings-general' );
                     do_settings_sections( 'multisafepay-settings-general' );
                     submit_button();
                     break;
