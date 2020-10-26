@@ -155,10 +155,29 @@ class SettingsFields {
      * @return  array  $settings
      */
     private function get_settings_order_status(): array {
+        $wc_order_statuses = $this->get_wc_order_statuses();
+        $msp_order_statused = $this->get_msp_order_statused();
+        $order_status_fields = array();
+        foreach ($msp_order_statused as $key => $msp_order_status) {
+            $order_status_fields[] = array(
+                'id' 			=> $this->plugin_name . '_' . $key,
+                'label'			=> __( $msp_order_status , $this->plugin_name ),
+                'description'	=> '',
+                'type'			=> 'select',
+                'options'		=> $wc_order_statuses,
+                'default'		=> '0',
+                'placeholder'	=> __( 'Debug Mode', $this->plugin_name ),
+                'tooltip'       => '',
+                'callback'      => '',
+                'setting_type'  => 'string',
+                'sort_order'    => 1,
+            );
+        }
+
         return array(
             'title'					=> '',
-            'intro'			        => '',
-            'fields'		        => array()
+            'intro'			        => 'Lorem ipsum dolor sit amet',
+            'fields'		        => $order_status_fields
         );
     }
 
@@ -167,7 +186,7 @@ class SettingsFields {
      *
      * @param   string   $input The input field to be validate or sanitize
      */
-    public function required_setting_field(string $input) {
+    public function required_setting_field( $input ) {
         if(empty($input)) {
             add_settings_error(
                 '',
@@ -177,6 +196,27 @@ class SettingsFields {
             );
         }
         return $input;
+    }
+
+    private function get_wc_order_statuses() {
+        $order_statuses = wc_get_order_statuses();
+        return $order_statuses;
+    }
+
+    private function get_msp_order_statused() {
+        return array (
+            'initialized_status'        => __('Initialized', $this->plugin_name),
+            'completed_status'          => __('Completed', $this->plugin_name),
+            'uncleared_status'          => __('Uncleared', $this->plugin_name),
+            'reserved_status'           => __('Reserved', $this->plugin_name),
+            'void_status'               => __('Void', $this->plugin_name),
+            'declined_status'           => __('Declined', $this->plugin_name),
+            'expired_status'            => __('Expired', $this->plugin_name),
+            'shipped_status'            => __('Shipped', $this->plugin_name),
+            'refunded_status'           => __('Refunded', $this->plugin_name),
+            'partial_refunded_status'   => __('Partial refunded', $this->plugin_name),
+            'cancelled_status'          => __('Cancelled', $this->plugin_name),
+        );
     }
 
 }
