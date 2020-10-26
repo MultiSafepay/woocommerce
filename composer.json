@@ -1,0 +1,26 @@
+{
+	"name": "multisafepay/woocommerce",
+	"description": "A new WooCommerce plugin",
+	"type": "wordpress-plugin",
+	"license": "MIT",
+	"minimum-stability": "RC",
+	"keywords" : [ "wordpress", "multisafepay" ],
+	"require": {
+		"multisafepay/php-sdk": "^4.0",
+		"guzzlehttp/guzzle": "^7.0",
+		"http-interop/http-factory-guzzle": "^1.0"
+	},
+	"require-dev": {
+		"multisafepay/coding-standards": "dev-master",
+		"woocommerce/woocommerce-sniffs": "^0.1"
+	},
+	"autoload": {
+		"psr-4": {
+			"MultiSafepay\\WooCommerce\\": "src/"
+		}
+	},
+	"scripts": {
+		"code-sniffer": "@php vendor/bin/ecs check src --clear-cache",
+		"fix-cs": "@code-sniffer --fix"
+	}
+}

@@ -1,0 +1,84 @@
+#multisafepay-settings table.form-table th label {
+    position: relative;
+    display: block;
+}
+
+#multisafepay-settings table.form-table input[type=date],
+#multisafepay-settings table.form-table input[type=datetime-local],
+#multisafepay-settings table.form-table input[type=datetime],
+#multisafepay-settings table.form-table input[type=email],
+#multisafepay-settings table.form-table input[type=number],
+#multisafepay-settings table.form-table input[type=password],
+#multisafepay-settings table.form-table input[type=tel],
+#multisafepay-settings table.form-table input[type=text],
+#multisafepay-settings table.form-table input[type=time],
+#multisafepay-settings table.form-table input[type=url],
+#multisafepay-settings table.form-table input[type=week],
+#multisafepay-settings table.form-table textarea,
+#multisafepay-settings table.form-table select {
+    width: 400px;
+    margin: 0;
+    padding: 0 8px;
+    box-sizing: border-box;
+    vertical-align: top;
+}
+
+
+#multisafepay-support td.version-table-row {
+    padding: 5px 10px 5px 0;
+}
+#multisafepay-support td.multisafepay-bold {
+    font-weight: 700;
+    padding-left: 15px;
+}
+#multisafepay-support h2 {
+    font-size: 19px;
+    font-weight: bold;
+    margin-top: 35px;
+}
+#multisafepay-support .docs-list {
+    padding-left: 10px;
+    margin-left: 10px;
+}
+#multisafepay-support .docs-list li {
+    list-style-type: circle;
+}
+#multisafepay-support .support-list {
+    padding-left: 10px;
+    margin-left: 10px;
+}
+#multisafepay-support .support-list li {
+    list-style-type: circle;
+}
+#multisafepay-support .account-list {
+    padding-left: 10px;
+    margin-left: 10px;
+}
+#multisafepay-support .account-list li {
+    list-style-type: circle;
+}
+#multisafepay-support .multisafepay-sales-contact-list {
+    padding-left: 10px;
+    padding-top: 10px;
+}
+#multisafepay-support .multisafepay-sales-contact-list li strong {
+    display: block;
+    padding-bottom: 5px;
+}
+#multisafepay-support .multisafepay-sales-contact-list li:first-child {
+    padding-top: 8px;
+}
+#multisafepay-support .multisafepay-sales-contact-list li {
+    padding-top: 22px;
+    list-style-type: none;
+}
+#multisafepay-support .multisafepay-sales-contact-list li ul {
+    padding-left: 25px;
+
+}
+#multisafepay-support .multisafepay-sales-contact-list li ul li {
+    padding-top: 0px;
+    list-style-type: square;
+}
+#multisafepay-support .multisafepay-sales-contact-list li ul li:first-child {
+    padding-top: 0px;

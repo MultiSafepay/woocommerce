@@ -1,0 +1,13 @@
+imports:
+  - { resource: './vendor/multisafepay/coding-standards/php71.yml', ignore_errors: not_found }
+parameters:
+  skip:
+    PHP_CodeSniffer\Standards\Squiz\Sniffs\Commenting\FunctionCommentSniff.TypeHintMissing:
+      - 'src/PaymentMethods/PaymentMethodInterface.php'
+      - 'src/PaymentMethods/Core.php'
+    PHP_CodeSniffer\Standards\Squiz\Sniffs\Commenting\FunctionCommentSniff.MissingParamName:
+      - 'src/PaymentMethods/PaymentMethodInterface.php'
+      - 'src/PaymentMethods/Core.php'
+    PHP_CodeSniffer\Standards\Squiz\Sniffs\Commenting\FunctionCommentSniff.MissingParamTag:
+      - 'src/PaymentMethods/PaymentMethodInterface.php'
+      - 'src/PaymentMethods/Core.php'
