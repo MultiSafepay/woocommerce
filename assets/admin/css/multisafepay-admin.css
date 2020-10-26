@@ -24,3 +24,48 @@
 }
 
 
+#multisafepay-support td.version-table-row {
+    padding: 5px 10px 5px 0;
+}
+#multisafepay-support td.multisafepay-bold {
+    font-weight: 700;
+    padding-left: 15px;
+}
+#multisafepay-support h2 {
+    font-size: 19px;
+    font-weight: bold;
+    margin-top: 35px;
+}
+#multisafepay-support .docs-list {
+    padding-left: 10px;
+    margin-left: 10px;
+}
+#multisafepay-support .support-list {
+    padding-left: 10px;
+    margin-left: 10px;
+}
+#multisafepay-support .multisafepay-sales-contact-list {
+    padding-left: 10px;
+    padding-top: 10px;
+}
+#multisafepay-support .multisafepay-sales-contact-list li strong {
+    display: block;
+    padding-bottom: 5px;
+}
+#multisafepay-support .multisafepay-sales-contact-list li:first-child {
+    padding-top: 8px;
+}
+#multisafepay-support .multisafepay-sales-contact-list li {
+    padding-top: 22px;
+    list-style-type: none;
+}
+#multisafepay-support .multisafepay-sales-contact-list li ul {
+    padding-left: 25px;
+
+}
+#multisafepay-support .multisafepay-sales-contact-list li ul li {
+    padding-top: 0px;
+    list-style-type: square;
+}
+#multisafepay-support .multisafepay-sales-contact-list li ul li:first-child {
+    padding-top: 0px;

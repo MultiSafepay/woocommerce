@@ -1,106 +1,87 @@
 <div id="multisafepay-support" class="multisafepay-support-information">
-    <table id="version-table">
-        <tr class="no-padding-top">
-            <td class="version-table-row">
-                <?php echo __('text_row_title_multisafepay_version', 'multisafepay'); ?>
-            </td>
-            <td class="version-table-row multisafepay-bold">
-                <?php echo __('text_row_value_multisafepay_version', 'multisafepay'); ?>
-            </td>
-        </tr>
-        <tr>
-            <td class="version-table-row">
-                <?php echo __('text_row_title_multisafepay_version_oc_supported', 'multisafepay'); ?>
-            </td>
-            <td class="version-table-row multisafepay-bold">
-                <?php echo __('text_row_value_multisafepay_version_oc_supported', 'multisafepay'); ?>
-            </td>
-        </tr>
-    </table>
-    <br />
-    <h2 id="multisafepay-title"><?php echo __('text_title_documentation', 'multisafepay'); ?></h2>
-    <p><?php echo __('text_read_more_documentation', 'multisafepay'); ?></p>
-    <ul>
+    <h2 id="multisafepay-title"><?php echo __('Documentation', 'multisafepay'); ?></h2>
+    <p><?php echo __('Read our documentation for more information about MultiSafepay and how to get started:', 'multisafepay'); ?></p>
+    <ul class="docs-list">
         <li>
-            <?php echo __('text_manual_link', 'multisafepay'); ?>
+            <?php echo __('<a target="_blank" href="https://docs.multisafepay.com/integrations/plugins/woocommerce/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms" target="_blank">Manual</a>', 'multisafepay'); ?>
         </li>
         <li>
-            <?php echo __('text_changelog_link', 'multisafepay'); ?>
+            <?php echo __('<a target="_blank" href="https://github.com/MultiSafepay/WooCommerce/blob/master/CHANGELOG.md" target="_blank">Changelog</a>', 'multisafepay'); ?>
         </li>
         <li>
-            <?php echo __('text_faq_link', 'multisafepay'); ?>
+            <?php echo __('<a target="_blank" href="https://docs.multisafepay.com/integrations/plugins/woocommerce/faq/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms" target="_blank">FAQ</a>', 'multisafepay'); ?>
         </li>
     </ul>
-    <p><?php echo __('text_read_more_documentation_developers', 'multisafepay'); ?></p>
-    <ul>
+    <p><?php echo __('For developers:', 'multisafepay'); ?></p>
+    <ul class="docs-list">
         <li>
-            <?php echo __('text_api_documentation_link', 'multisafepay'); ?>
+            <?php echo __('<a target="_blank" href="https://docs.multisafepay.com/api/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms" target="_blank">API Documentation</a>', 'multisafepay'); ?>
         </li>
         <li>
-            <?php echo __('text_multisafepay_github_link', 'multisafepay'); ?>
+            <?php echo __('<a target="_blank" href="https://github.com/MultiSafepay/WooCommerce" target="_blank">MultiSafepay Github</a>', 'multisafepay'); ?>
         </li>
     </ul>
-    <h2 id="multisafepay-title"><?php echo __('text_title_account', 'multisafepay'); ?></h2>
+    <h2 id="multisafepay-title"><?php echo __('Account', 'multisafepay'); ?></h2>
     <p>
-        <?php echo __('text_need_account', 'multisafepay'); ?>
+        <?php echo __('To use this plugin you need a MultiSafepay account.', 'multisafepay'); ?>
     </p>
     <ul>
-        <li><?php echo __('text_create_test_account', 'multisafepay'); ?></li>
-        <li><?php echo __('text_create_live_account', 'multisafepay'); ?>
+        <li><?php echo __('If you would like to have a clear overview of what MultiSafepay has to offer, feel free to create a <a href="https://testmerchant.multisafepay.com/signup" target="_blank">test account</a>.', 'multisafepay'); ?></li>
+        <li><?php echo __('If you would like to set up a live account, please contact the MultiSafepay sales department:', 'multisafepay'); ?>
             <ul  class="multisafepay-sales-contact-list">
-                <li><strong><?php echo __('text_country_netherlands', 'multisafepay'); ?></strong>
+                <li><strong><?php echo __('Netherlands:', 'multisafepay'); ?></strong>
                     <ul>
                         <li>
-                            <?php echo __('text_sales_telephone_netherlands', 'multisafepay'); ?>
+                            <?php echo __('Telephone: <a href="tel:+31208500501">+31 (0)20 - 8500501</a>', 'multisafepay'); ?>
                         </li>
                         <li>
-                            <?php echo __('text_sales_email_netherlands', 'multisafepay'); ?>
+                            <?php echo __('E-mail: <a href="mailto:sales@multisafepay.com">sales@multisafepay.com</a>', 'multisafepay'); ?>
                         </li>
                     </ul>
                 </li>
-                <li><strong><?php echo __('text_country_belgium', 'multisafepay'); ?></strong>
+                <li><strong><?php echo __('Belgium:', 'multisafepay'); ?></strong>
                     <ul>
                         <li>
-                            <?php echo __('text_sales_telephone_belgium', 'multisafepay'); ?>
+                            <?php echo __('Telephone: <a href="tel:+3238081241">+32 3 808 12 41</a>', 'multisafepay'); ?>
                         </li>
                         <li>
-                            <?php echo __('text_sales_email_belgium', 'multisafepay'); ?>
+                            <?php echo __('E-mail: <a href="mailto:sales.belgium@multisafepay.com">sales.belgium@multisafepay.com</a>', 'multisafepay'); ?>
                         </li>
                     </ul>
                 </li>
-                <li><strong><?php echo __('text_country_spain', 'multisafepay'); ?></strong>
+                <li><strong><?php echo __('Spain:', 'multisafepay'); ?></strong>
                     <ul>
                         <li>
-                            <?php echo __('text_sales_telephone_spain', 'multisafepay'); ?>
+                            <?php echo __('Telephone: <a href="tel:+34911230486">+34 911 230 486</a>', 'multisafepay'); ?>
                         </li>
                         <li>
-                            <?php echo __('text_sales_email_spain', 'multisafepay'); ?>
+                            <?php echo __('E-mail: <a href="mailto:comercial@multisafepay.es">comercial@multisafepay.es</a>', 'multisafepay'); ?>
                         </li>
                     </ul>
                 </li>
-                <li><strong><?php echo __('text_country_italy', 'multisafepay'); ?></strong>
+                <li><strong><?php echo __('Italy', 'multisafepay'); ?></strong>
                     <ul>
                         <li>
-                            <?php echo __('text_sales_telephone_italy', 'multisafepay'); ?>
+                            <?php echo __('Telephone: <a href="tel:+390294750118">+39 02 947 50 118</a>', 'multisafepay'); ?>
                         </li>
                         <li>
-                            <?php echo __('text_sales_email_italy', 'multisafepay'); ?>
+                            <?php echo __('E-mail: <a href="mailto:sales@multisafepay.it">sales@multisafepay.it</a>', 'multisafepay'); ?>
                         </li>
                     </ul>
                 </li>
             </ul>
         </li>
     </ul>
-    <h2 id="multisafepay-title"><?php echo __('text_title_contact', 'multisafepay'); ?></h2>
+    <h2 id="multisafepay-title"><?php echo __('Contact', 'multisafepay'); ?></h2>
     <p>
-        <?php echo __('text_contact_assistance_text', 'multisafepay'); ?>
+        <?php echo __('Need assistance? Feel free to contact our Integration Team:', 'multisafepay'); ?>
     </p>
-    <ul>
+    <ul class="support-list">
         <li>
-            <?php echo __('text_assistance_telephone', 'multisafepay'); ?>
+            <?php echo __('Telephone: <a href="tel:+31208500500">+31 (0)20 - 8500500</a>', 'multisafepay'); ?>
         </li>
         <li>
-            <?php echo __('text_assistance_email', 'multisafepay'); ?>
+            <?php echo __('E-mail: <a href="mailto:integration@multisafepay.com">integration@multisafepay.com</a>', 'multisafepay'); ?>
         </li>
     </ul>
 </div>
