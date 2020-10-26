@@ -34,8 +34,7 @@ use MultiSafepay\WooCommerce\Settings\SettingsFieldsDisplay;
  *
  * @since   4.0.0
  * @todo Validate sections id
- * @todo Check if is possible to use the filter 'multisafepay_common_settings_fields' to add validations callbacks and to return fields ordered
- * @todo tooltips on fields
+ * @todo Check if is possible to use the filter 'multisafepay_common_settings_fields' to return fields ordered
  */
 class SettingsController {
 
@@ -101,7 +100,6 @@ class SettingsController {
 	public function enqueue_scripts():void {
 		wp_enqueue_script( $this->plugin_name, $this->plugin_dir_url . 'assets/admin/js/multisafepay-admin.js', array( 'jquery' ), $this->version, false );
 	}
-
 
     /**
      * Register the common settings page in WooCommerce menu section.
