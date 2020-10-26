@@ -1,0 +1,1 @@
+<?php // MultiSafepay`s silence is golden
