@@ -4,7 +4,6 @@ on:
     branches:
       - master
       - develop
-      - 4.0.0
 jobs:
   code_sniffer:
     name: Code sniffer
