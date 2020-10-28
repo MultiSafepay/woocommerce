@@ -47,6 +47,7 @@ use MultiSafepay\WooCommerce\Gateway\Fietsbon;
 use MultiSafepay\WooCommerce\Gateway\Gezondheidsbon;
 use MultiSafepay\WooCommerce\Gateway\Giropay;
 use MultiSafepay\WooCommerce\Gateway\Givacard;
+use MultiSafepay\WooCommerce\Gateway\Good4fun;
 use MultiSafepay\WooCommerce\Gateway\Goodcard;
 use MultiSafepay\WooCommerce\Gateway\Ideal;
 use MultiSafepay\WooCommerce\Gateway\In3;
@@ -203,6 +204,7 @@ class Gateways
             Fietsbon::class,
             Gezondheidsbon::class,
             Givacard::class,
+            Good4fun::class,
             Goodcard::class,
             Nationaletuinbon::class,
             Ohmygood::class,
