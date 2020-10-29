@@ -107,7 +107,7 @@ If you are using 2.2.x of our plugin, please contact integration@multisafepay.co
 
 == Changelog ==
 
-= Release Notes - WooCommerce 3.7.0 (Aug 14th, 2020) =
+= Release Notes - WooCommerce 3.8.0 (Oct 29th, 2020) =
 
 ### Added ##
 * PLGWOOS-421: Add Good4fun Giftcard
