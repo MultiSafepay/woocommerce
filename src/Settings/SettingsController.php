@@ -174,7 +174,7 @@ class SettingsController {
 	    if(!isset($_GET['tab']) || $_GET['tab'] === '') {
 	        $tab_active = 'general';
         }
-        if(isset($_GET['tab']) || $_GET['tab'] === '') {
+        if(isset($_GET['tab']) && $_GET['tab'] !== '') {
             $tab_active = $_GET['tab'];
         }
         return $tab_active;
