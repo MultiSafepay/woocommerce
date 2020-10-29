@@ -33,7 +33,7 @@ class Klarna extends Core
 
     public static function getName()
     {
-        return __('Klarna', 'multisafepay');
+        return __('Klarna - buy now, pay later', 'multisafepay');
     }
 
     public static function getSettings()

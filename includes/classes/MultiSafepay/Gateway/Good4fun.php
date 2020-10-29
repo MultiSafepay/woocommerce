@@ -10,8 +10,8 @@
  *
  * @category    MultiSafepay
  * @package     Connect
- * @author      MultiSafepay <integration@multisafepay.com>
- * @copyright   Copyright (c) 2020 MultiSafepay, Inc. (http://www.multisafepay.com)
+ * @author      TechSupport <techsupport@multisafepay.com>
+ * @copyright   Copyright (c) 2017 MultiSafepay, Inc. (http://www.multisafepay.com)
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
  * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
@@ -23,22 +23,22 @@
 
 namespace MultiSafepay\WooCommerce\Gateway;
 
-class Directbanktransfer extends Core
+class Good4fun extends Core
 {
 
     public static function getCode()
     {
-        return 'multisafepay_directbanktransfer';
+        return 'multisafepay_good4fun';
     }
 
     public static function getName()
     {
-        return __('Request to Pay', 'multisafepay');
+        return __('Good4fun Giftcard', 'multisafepay');
     }
 
     public static function getSettings()
     {
-        return get_option('woocommerce_multisafepay_directbanktransfer_settings');
+        return get_option('woocommerce_multisafepay_good4fun_settings');
     }
 
     public static function getTitle()
@@ -53,7 +53,7 @@ class Directbanktransfer extends Core
 
     public static function getGatewayCode()
     {
-        return 'DBRTP';
+        return 'GOOD4FUN';
     }
 
     public function getType()

@@ -1,3 +1,16 @@
+## 3.8.0
+Release date: Oct 28th, 2020
+
+### Added
++ PLGWOOS-421: Add Good4fun Giftcard
+
+### Changed
++ DAVAMS-313: Rebrand Klarna to Klarna - buy now, pay later
++ DAVAMS-296: Rebrand Direct Bank Transfer to Request to Pay
++ DAVAMS-282: Update name and logo for Santander
+
+***
+
 ## 3.7.0
 Release date: Aug 14th, 2020
 

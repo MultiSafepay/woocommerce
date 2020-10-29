@@ -1,19 +1,16 @@
 name: Build
 on:
   push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
   schedule:
     - cron: '0 2 * * 0' # Weekly on Sundays at 02:00
 jobs:
-  code_sniffer:
-    name: Code sniffer
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - name: Install system dependencies
-        run: composer install
-      - name: Run code sniffer
-        run: |
-          vendor/bin/phpcs --standard=phpcs.ruleset.xml -v .
   phpunit:
     name: Php Unit
     runs-on: ubuntu-latest
@@ -25,7 +22,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: password
         ports:
           - 3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: --tmpfs /tmp:rw --tmpfs /var/lib/mysql:rw --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - uses: actions/checkout@v1
       - name: Install composer packages
