@@ -1,5 +1,5 @@
 ## 3.8.0
-Release date: Oct 28th, 2020
+Release date: Oct 29th, 2020
 
 ### Added
 + PLGWOOS-421: Add Good4fun Giftcard
