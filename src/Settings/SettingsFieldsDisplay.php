@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  *
@@ -37,22 +37,22 @@ class SettingsFieldsDisplay {
     /**
      * The ID of this plugin.
      *
-     * @var      string    $plugin_name
+     * @var      string
      */
     private $plugin_name;
 
     /**
      * The field
      *
-     * @var      array    $field
+     * @var      array
      */
     private $field;
 
     /**
      * Constructor the the class
      *
-     * @var      string    $plugin_name
-     * @var      array     $field
+     * @param      string    $plugin_name
+     * @param      array     $field
      */
     public function __construct(string $plugin_name, array $field) {
         $this->plugin_name = $plugin_name;
@@ -63,14 +63,15 @@ class SettingsFieldsDisplay {
      * Get the value by setting field
      *
      * @see https://developer.wordpress.org/reference/functions/get_option/
-     * @param array $field
+     * @param   array   $field
+     * @return  mixed
      */
     private function get_option_by_field( array $field ) {
         $value = get_option( $field['id'] );
-        if($value) {
-            return $value;
+        if(!$value) {
+            return $field['default'];
         }
-        return $field['default'];
+        return $value;
     }
 
     /**
@@ -81,7 +82,9 @@ class SettingsFieldsDisplay {
      */
     private function render_text_field( array $field ): string {
         $value = $this->get_option_by_field($field);
-        $html = '<input id="' . esc_attr( $field['id'] ) . '" type="' . $field['type'] . '" name="' . esc_attr( $field['id'] ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" value="' . $value . '"/>';
+        $field_id = esc_attr( $field['id'] );
+        $placeholder = esc_attr( $field['placeholder'] );
+        $html = '<input id="' . $field_id . '" type="' . $field['type'] . '" name="' . $field_id . '" placeholder="' . $placeholder . '" value="' . $value . '"/>';
         if(!empty($field['description'])) {
             $html .= '<p class="description">' . $field['description'] . '</p>';
         }
@@ -96,12 +99,13 @@ class SettingsFieldsDisplay {
      */
     private function render_select_field( array $field ): string {
         $value = $this->get_option_by_field($field);
-        $html = '<select name="' . esc_attr( $field['id'] ) . '" id="' . esc_attr( $field['id'] ) . '">';
+        $field_id = esc_attr( $field['id'] );
+        $html = '<select name="' . $field_id . '" id="' . $field_id . '">';
         foreach( $field['options'] as $option_value => $option_name ) {
-            if( $option_value == $value ) {
+            if( $option_value === $value ) {
                 $html .= '<option value="' . esc_attr( $option_value ) . '" selected>' . $option_name . '</option>';
             }
-            if( $option_value != $value ) {
+            if( $option_value !== $value ) {
                 $html .= '<option value="' . esc_attr( $option_value ) . '">' . $option_name . '</option>';
             }
         }
@@ -115,10 +119,9 @@ class SettingsFieldsDisplay {
     /**
      * Render the html for each type of the registered setting field
      *
-     * @param array $field
-     * @return string
+     * @return void
      */
-    public function display() {
+    public function display(): void {
         $html           = '';
         switch( $this->field['type'] ) {
             case 'text':

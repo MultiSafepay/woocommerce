@@ -57,14 +57,14 @@ class DependencyChecker {
      * @return  array
      */
     private function get_missing_plugins_list(): array {
-        return array_keys(array_filter(self::REQUIRED_PLUGINS, [$this, 'is_plugin_inactive']));
+        return array_keys( array_filter( self::REQUIRED_PLUGINS, array($this, 'is_plugin_inactive') ) );
     }
 
     /**
      * Check if a certain plugin is inactive
      *
      * @param   string  $plugin_path
-     * @return  bool
+     * @return  boolean
      */
     private function is_plugin_inactive( string $plugin_path ): bool {
         if( !is_plugin_active( $plugin_path ) ) {

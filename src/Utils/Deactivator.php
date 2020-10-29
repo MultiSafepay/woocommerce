@@ -39,6 +39,7 @@ class Deactivator {
     /**
      * Fired during plugin deactivation according if is multisite or not.
      *
+     * @param  bool $network_wide
      * @return void
      */
 	public function deactivate( bool $network_wide): void {
