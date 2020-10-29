@@ -24,7 +24,6 @@
 
 namespace MultiSafepay\WooCommerce\Utils;
 
-use MultiSafepay\WooCommerce\Utils\DependencyChecker;
 use MultiSafepay\WooCommerce\Exceptions\MissingDependencyException;
 
 
@@ -45,6 +44,7 @@ class Activator {
     /**
      * Fired during plugin activation according if is multisite or not.
      *
+     * @param  bool $network_wide
      * @return  void
      */
 	public function activate( bool $network_wide ): void {
@@ -66,8 +66,11 @@ class Activator {
         try {
             $dependencyChecker = new DependencyChecker();
             $dependencyChecker->check();
-        } catch (MissingDependencyException $e) {
-            $message = sprintf(__('Missing dependencies: %s <br>Please install these extensions to use the Multisafepay WooCommerce plugin', 'multisafepay'), implode(', ', $e->get_missing_plugin_names()) );
+        } catch (MissingDependencyException $exception) {
+            $message = sprintf(
+                __('Missing dependencies: %s <br>Please install these extensions to use the Multisafepay WooCommerce plugin', 'multisafepay'),
+                implode(', ', $exception->get_missing_plugin_names())
+            );
             die($message);
         }
     }

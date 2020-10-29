@@ -36,7 +36,7 @@ class CustomLinks {
     /**
      * The ID of this plugin.
      *
-     * @var      string    $plugin_name    The ID of this plugin.
+     * @var      string     The ID of this plugin.
      */
     private $plugin_name;
 
@@ -44,9 +44,8 @@ class CustomLinks {
      * Initialize the class and set its properties.
      *
      * @param      string    $plugin_name       The name of this plugin.
-     * @param      string    $version    The version of this plugin.
      */
-    public function __construct( $plugin_name) {
+    public function __construct( string $plugin_name ) {
         $this->plugin_name = $plugin_name;
     }
 
@@ -59,11 +58,12 @@ class CustomLinks {
      * @return array
      */
     public function get_links( array $links ): array {
-        return array_merge([
+        $custom_links = array(
             '<a href="' . admin_url('multisafepay-settings') . '">' . __('Settings', $this->plugin_name) . '</a>',
             '<a target="_blank" href="https://docs.multisafepay.com/integrations/plugins/woocommerce/">' . __('Docs', $this->plugin_name) . '</a>',
             '<a target="_blank" href="https://docs.multisafepay.com/integrations/plugins/woocommerce/#introduction">' . __('Support', $this->plugin_name) . '</a>',
-        ], $links);
+        );
+        return array_merge($custom_links, $links);
     }
 
 
