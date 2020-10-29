@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  *
@@ -38,14 +38,14 @@ class SettingsFields {
     /**
      * The ID of this plugin.
      *
-     * @var      string    $plugin_name
+     * @var      string
      */
     private $plugin_name;
 
     /**
      * Constructor the the class
      *
-     * @var      string    $plugin_name
+     * @param   string    $plugin_name
      */
     public function __construct(string $plugin_name) {
         $this->plugin_name = $plugin_name;
@@ -54,7 +54,7 @@ class SettingsFields {
     /**
      * Return the settings fields
      *
-     * @return  array  $settings
+     * @return  array
      */
     public function get_settings(): array {
         $settings = array();
@@ -68,7 +68,7 @@ class SettingsFields {
     /**
      * Return the settings fields for general section
      *
-     * @return  array  $settings
+     * @return  array
      */
     private function get_settings_general(): array {
         return array(
@@ -88,7 +88,7 @@ class SettingsFields {
                     'placeholder'	=> __( 'Environment', $this->plugin_name ),
                     'tooltip'       => '',
                     'callback'      => '',
-                    'setting_type'  => 'bool',
+                    'setting_type'  => 'string',
                     'sort_order'    => 1,
                 ),
                 array(
@@ -99,7 +99,7 @@ class SettingsFields {
                     'default'		=> '',
                     'placeholder'	=> __( 'Sandbox API Key', $this->plugin_name ),
                     'tooltip'       => '',
-                    'callback'      => array($this, 'required_setting_field'),
+                    'callback'      => array($this, 'validate_sandbox_api_key'),
                     'setting_type'  => 'string',
                     'sort_order'    => 2,
                 ),
@@ -111,7 +111,7 @@ class SettingsFields {
                     'default'		=> '',
                     'placeholder'	=> __( 'API Key', $this->plugin_name ),
                     'tooltip'       => '',
-                    'callback'      => '',
+                    'callback'      => array($this, 'validate_api_key'),
                     'setting_type'  => 'string',
                     'sort_order'    => 3,
                 ),
@@ -138,7 +138,7 @@ class SettingsFields {
     /**
      * Return the settings fields for options section
      *
-     * @return  array  $settings
+     * @return  array
      */
     private function get_settings_options(): array {
         return array(
@@ -170,8 +170,8 @@ class SettingsFields {
                     'placeholder'	=> __( 'Second Chance', $this->plugin_name ),
                     'tooltip'       => __( 'MultiSafepay will send two Second Chance reminder emails. In the emails, MultiSafepay will include a link to allow the consumer to finalize the payment. The first Second Chance email is sent 1 hour after the transaction was initiated and the second after 24 hours. To receive second chance emails, this option must also be activated within your MultiSafepay account, otherwise it will not work.' , $this->plugin_name ),
                     'callback'      => '',
-                    'setting_type'  => 'string',
-                    'sort_order'    => 1,
+                    'setting_type'  => 'bool',
+                    'sort_order'    => 2,
                 ),
                 array(
                     'id' 			=> $this->plugin_name . '_remove_all_settings',
@@ -186,8 +186,8 @@ class SettingsFields {
                     'placeholder'	=> __( 'Delete settings if uninstall', $this->plugin_name ),
                     'tooltip'       => '',
                     'callback'      => '',
-                    'setting_type'  => 'string',
-                    'sort_order'    => 1,
+                    'setting_type'  => 'bool',
+                    'sort_order'    => 3,
                 ),
             )
         );
@@ -196,13 +196,14 @@ class SettingsFields {
     /**
      * Return the settings fields for order status section
      *
-     * @return  array  $settings
+     * @return  array
      */
     private function get_settings_order_status(): array {
-        $wc_order_statuses = $this->get_wc_order_statuses();
-        $msp_order_statused = $this->get_msp_order_statused();
+        $wc_order_statuses = $this->get_wc_get_order_statuses();
+        $msp_order_statuses = $this->get_msp_order_statuses();
         $order_status_fields = array();
-        foreach ($msp_order_statused as $key => $msp_order_status) {
+        $x = 1;
+        foreach ($msp_order_statuses as $key => $msp_order_status) {
             $order_status_fields[] = array(
                 'id' 			=> $this->plugin_name . '_' . $key,
                 'label'			=> __( $msp_order_status , $this->plugin_name ),
@@ -210,12 +211,13 @@ class SettingsFields {
                 'type'			=> 'select',
                 'options'		=> $wc_order_statuses,
                 'default'		=> '0',
-                'placeholder'	=> __( 'Debug Mode', $this->plugin_name ),
+                'placeholder'	=> __( 'Select order status', $this->plugin_name ),
                 'tooltip'       => '',
                 'callback'      => '',
                 'setting_type'  => 'string',
-                'sort_order'    => 1,
+                'sort_order'    => $x,
             );
+            $x++;
         }
 
         return array(
@@ -226,29 +228,56 @@ class SettingsFields {
     }
 
     /**
-     * Validates the input field on submit
+     * Validates the api key field on submit
      *
-     * @param   string   $input The input field to be validate or sanitize
+     * @todo    Validate the api key in the SDK.
+     *
+     * @param   string   $api_key   The api key
+     * @return  mixed
      */
-    public function required_setting_field( $input ) {
-        if(empty($input)) {
+    public function validate_api_key( string $api_key ) {
+        $sandbox       = ( get_option( $this->plugin_name . '_environment' ) ) ? true : false;
+        if( ( !$sandbox &&  empty($api_key) ) ) {
             add_settings_error(
                 '',
                 '',
-                __('You need to fill the API KEY', $this->plugin_name),
+                __('You need to fill the API Key', $this->plugin_name),
                 'error',
             );
+            return false;
         }
-        return $input;
+        return $api_key;
+    }
+
+    /**
+     * Validates the sandbox api key field on submit
+     *
+     * @todo    Validate the api key in the SDK.
+     *
+     * @param   string   $api_key   The sandbox api key
+     * @return  mixed
+     */
+    public function validate_sandbox_api_key( string $api_key ) {
+        $sandbox       = ( get_option( $this->plugin_name . '_environment' ) ) ? true : false;
+        if( ( $sandbox ) && ( empty($api_key) ) ) {
+            add_settings_error(
+                '',
+                '',
+                __('You need to fill the sandbox API Key', $this->plugin_name),
+                'error',
+            );
+            return false;
+        }
+        return $api_key;
     }
 
     /**
      * Returns the WooCommerce registered order statuses
-     * @see
+     * @see     http://hookr.io/functions/wc_get_order_statuses/
      *
      * @return  array
      */
-    private function get_wc_order_statuses(): array {
+    private function get_wc_get_order_statuses(): array {
         $order_statuses = wc_get_order_statuses();
         return $order_statuses;
     }
@@ -259,7 +288,7 @@ class SettingsFields {
      *
      * @return  array
      */
-    private function get_msp_order_statused(): array {
+    private function get_msp_order_statuses(): array {
         return array (
             'initialized_status'        => __('Initialized', $this->plugin_name),
             'completed_status'          => __('Completed', $this->plugin_name),

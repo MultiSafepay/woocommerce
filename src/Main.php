@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  *
@@ -24,11 +24,11 @@
 
 namespace MultiSafepay\WooCommerce;
 
-use MultiSafepay\WooCommerce\Utils\CustomLinks;
-use MultiSafepay\WooCommerce\Utils\Loader;
-use MultiSafepay\WooCommerce\Utils\Internationalization;
-use MultiSafepay\WooCommerce\Settings\SettingsController;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodsController;
+use MultiSafepay\WooCommerce\Settings\SettingsController;
+use MultiSafepay\WooCommerce\Utils\CustomLinks;
+use MultiSafepay\WooCommerce\Utils\Internationalization;
+use MultiSafepay\WooCommerce\Utils\Loader;
 
 /**
  * This class is the core of the plugin.
@@ -45,35 +45,35 @@ class Main {
 	 * The loader that's responsible for maintaining and registering all hooks that power
 	 * the plugin.
 	 *
-	 * @var      Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var      Loader     Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
 	/**
 	 * The unique identifier of this plugin.
 	 *
-	 * @var      string    $plugin_name    The string used to uniquely identify this plugin.
+	 * @var      string     The string used to uniquely identify this plugin.
 	 */
 	protected $plugin_name;
 
 	/**
 	 * The current version of the plugin.
 	 *
-	 * @var      string    $version    The current version of the plugin.
+	 * @var      string     The current version of the plugin.
 	 */
 	protected $version;
 
     /**
      * The plugin dir url
      *
-     * @var      string    $plugin_dir_url    The plugin directory url
+     * @var      string     The plugin directory url
      */
     protected $plugin_dir_url;
 
     /**
      * The plugin dir path
      *
-     * @var      string    $plugin_dir_url    The plugin directory path
+     * @var      string     The plugin directory path
      */
     protected $plugin_dir_path;
 
@@ -101,6 +101,8 @@ class Main {
 	 *
 	 * Uses the Internationalization class in order to set the domain and register the hook
 	 * with WordPress.
+     *
+     * @return void
 	 */
 	private function set_locale() {
 		$plugin_i18n = new Internationalization();
@@ -114,9 +116,9 @@ class Main {
      *
      * @see https://developer.wordpress.org/reference/hooks/plugin_action_links_plugin_file/
      *
-     * @return  array   $links  The custom links
+     * @return  void
      */
-    private function add_custom_links_in_plugin_list() {
+    private function add_custom_links_in_plugin_list(): void {
         $custom_links = new CustomLinks( $this->get_plugin_name(), $this->get_version(), $this->plugin_dir_url );
         $this->loader->add_filter( 'plugin_action_links_multisafepay/multisafepay.php', $custom_links, 'get_links');
     }
@@ -125,13 +127,15 @@ class Main {
 	/**
 	 * Register all of the hooks related to the common settings
 	 * of the plugin.
+     *
+     * @return void
 	 */
-	private function define_settings_hooks() {
+	private function define_settings_hooks(): void {
 	    if( is_admin() ) {
             // Controller settings page
-            $plugin_settings = new SettingsController( $this->get_plugin_name(), $this->get_version(), $this->plugin_dir_url,  $this->plugin_dir_path);
+            $plugin_settings = new SettingsController( $this->get_plugin_name(), $this->get_version(), $this->plugin_dir_url,  $this->plugin_dir_path );
             // Enqueue styles in controller settings page
-            $this->loader->add_action( 'admin_enqueue_scripts', $plugin_settings, 'enqueue_styles' );
+            $this->loader->add_action( 'admin_enqueue_scripts', $plugin_settings, 'enqueue_styles', 1 );
             // Enqueue scripts in controller settings page
             $this->loader->add_action( 'admin_enqueue_scripts', $plugin_settings, 'enqueue_scripts' );
             // Add menu page for common settings page
@@ -140,6 +144,11 @@ class Main {
             $this->loader->add_filter( 'woocommerce_screen_ids', $plugin_settings, 'set_wc_screen_options_in_common_settings_page' );
             // Register settings
             $this->loader->add_action( 'admin_init', $plugin_settings, 'register_common_settings' );
+            // Intervene woocommerce_toggle_gateway_enabled admin_ajax call and validate if required settings has been setup
+            $this->loader->add_action( 'wp_ajax_woocommerce_multisafepay_toggle_gateway_enabled', $plugin_settings, 'multisafepay_ajax_toggle_gateway_enabled' );
+            $this->loader->add_action( 'wp_ajax_woocommerce_toggle_gateway_enabled', $plugin_settings, 'before_ajax_toggle_gateway_enabled' );
+            // Filter and return ordered the results of the fields
+            $this->loader->add_filter( 'multisafepay_common_settings_fields', $plugin_settings, 'filter_multisafepay_common_settings_fields', 10, 1 );
 
         }
 	}
@@ -148,9 +157,10 @@ class Main {
 	 * Register all of the hooks related to the payment methods
 	 * of the plugin.
      *
-     * @todo Probably css and js is just necessary in checkout page
+     * @return  void
+     * @todo    Probably css and js is just necessary in checkout page
 	 */
-	private function define_payment_methods_hooks() {
+	private function define_payment_methods_hooks(): void {
         // Payment controller
 		$payment_methods = new PaymentMethodsController( $this->get_plugin_name(), $this->get_version(), $this->plugin_dir_url );
         // Init MultiSafepay payment methods
@@ -161,11 +171,12 @@ class Main {
 		$this->loader->add_action( 'wp_enqueue_scripts', $payment_methods, 'enqueue_scripts' );
         // Register the MultiSafepay payment gateways in WooCommerce.
         $this->loader->add_filter( 'woocommerce_payment_gateways', $payment_methods, 'get_gateways' );
-
-	}
+    }
 
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
+     *
+     * @return  void
 	 */
 	public function init() {
 		$this->loader->init();
