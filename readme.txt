@@ -4,7 +4,7 @@ Tags: multisafepay, woocommerce, plug-in, plugin, payment, gateway, ideal, visa
 Requires at least: 4.9
 Tested up to: 5.4
 Requires PHP: 7.0
-Stable tag: 3.7.0
+Stable tag: 3.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,7 @@ Giftcards:
 * Fashion Giftcard‎
 * Gezondheidsbon
 * GivaCard
+* Good4fun Giftcard
 * Goodcard
 * Nationale Bioscoopbon‎
 * Nationale Fietsbon
@@ -105,6 +106,16 @@ If you are using 2.2.x of our plugin, please contact integration@multisafepay.co
 
 
 == Changelog ==
+
+= Release Notes - WooCommerce 3.7.0 (Aug 14th, 2020) =
+
+### Added ##
+* PLGWOOS-421: Add Good4fun Giftcard
+
+### Changed ##
+* DAVAMS-313: Rebrand Klarna to Klarna - buy now, pay later
+* DAVAMS-296: Rebrand Direct Bank Transfer to Request to Pay
+* DAVAMS-282: Update name and logo for Santander
 
 = Release Notes - WooCommerce 3.7.0 (Aug 14th, 2020) =
 
