@@ -35,7 +35,15 @@ interface PaymentMethodInterface {
      * @param string $value
      * @return mixed
      */
-    public function setId(string $value);
+    public function set_id( string $value );
+
+    /**
+     * Set the icon of the payment method
+     *
+     * @param string $value
+     * @return mixed
+     */
+    public function set_icon( string $value );
 
     /**
      * Set the title that is shown in the backend
@@ -43,22 +51,22 @@ interface PaymentMethodInterface {
      * @param string $value
      * @return mixed
      */
-    public function setMethodTitle(string $value);
+    public function set_method_title( string $value );
 
     /**
      * How the payment should be handled by MultiSafepay
      *
-     * @param $orderId
-     * @return mixed
+     * @param   int     $order_id
+     * @return  mixed
      */
-    public function process_payment($orderId);
+    public function process_payment( int $order_id );
 
     /**
      * Add extra settings to a gateway
      *
      * @return mixed
      */
-    public function addFormFields();
+    public function add_form_fields();
 
     /**
      * Set the method description in the backend
@@ -66,5 +74,5 @@ interface PaymentMethodInterface {
      * @param string $value
      * @return mixed
      */
-    public function setMethodDescription(string $value = '');
+    public function set_method_description( string $value = '' );
 }

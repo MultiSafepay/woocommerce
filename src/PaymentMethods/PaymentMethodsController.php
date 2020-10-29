@@ -24,8 +24,6 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
-use MultiSafepay\WooCommerce\PaymentMethods\MultiSafepay;
-
 /**
  * The payment methods controller.
  *
@@ -35,26 +33,24 @@ use MultiSafepay\WooCommerce\PaymentMethods\MultiSafepay;
  */
 class PaymentMethodsController {
 
-    const GATEWAYS = [MultiSafepay::class, Ideal::class];
-
     /**
      * The ID of this plugin.
      *
-     * @var      string    $plugin_name    The ID of this plugin.
+     * @var      string    The ID of this plugin.
      */
 	private $plugin_name;
 
     /**
      * The version of this plugin.
      *
-     * @var      string    $version    The current version of this plugin.
+     * @var      string    The current version of this plugin.
      */
 	private $version;
 
     /**
      * The plugin dir url
      *
-     * @var      string    $plugin_dir_url    The plugin directory url
+     * @var      string    The plugin directory url
      */
     private $plugin_dir_url;
 
@@ -62,9 +58,10 @@ class PaymentMethodsController {
      * Initialize the class and set its properties.
      *
      * @param      string    $plugin_name       The name of this plugin.
-     * @param      string    $version    The version of this plugin.
+     * @param      string    $version           The version of this plugin.
+     * @param      string    $plugin_dir_url    The plugin dir url of this plugin.
      */
-	public function __construct( $plugin_name, $version, $plugin_dir_url ) {
+	public function __construct( string $plugin_name, string $version, string $plugin_dir_url ) {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 		$this->plugin_dir_url = $plugin_dir_url;
@@ -75,8 +72,10 @@ class PaymentMethodsController {
 	 *
      * @see https://developer.wordpress.org/reference/functions/wp_enqueue_style/
      * @todo restrict this to checkout page. Probably won`` be needed in any other place.
+     *
+     * @return void
 	 */
-	public function enqueue_styles() {
+	public function enqueue_styles(): void {
 		wp_enqueue_style( $this->plugin_name, $this->plugin_dir_url . 'assets/public/css/multisafepay-public.css', array(), $this->version, 'all' );
 	}
 
@@ -85,8 +84,10 @@ class PaymentMethodsController {
      *
      * @see https://developer.wordpress.org/reference/functions/wp_enqueue_script/
      * @todo restrict this to checkout page. Probably won`` be needed in any other place.
+     *
+     * @return void
      */
-	public function enqueue_scripts() {
+	public function enqueue_scripts(): void {
 		wp_enqueue_script( $this->plugin_name, $this->plugin_dir_url . 'assets/public/js/multisafepay-public.js', array( 'jquery' ), $this->version, false );
 	}
 
@@ -97,7 +98,7 @@ class PaymentMethodsController {
      * @return array
      */
     public static function get_gateways( array $gateways ): array {
-        return array_merge($gateways, self::GATEWAYS);
+        return array_merge($gateways, Gateways::GATEWAYS);
     }
 
     /**
@@ -106,9 +107,28 @@ class PaymentMethodsController {
      * @return void
      */
     public function init_multisafepay_payment_methods(): void {
-        foreach (self::GATEWAYS as $gateway) {
+        foreach ( Gateways::GATEWAYS as $gateway ) {
             new $gateway();
         }
+    }
+
+    /**
+     * Filter the payment methods by the countries defined in their settings
+     *
+     * @param   array   $payment_gateways
+     * @return  array
+     */
+    function filter_gateway_per_country( array $payment_gateways ): array {
+        $customer_country = (WC()->customer) ? WC()->customer->get_billing_country() : false;
+        foreach ( $payment_gateways as $gateway_id => $gateway ) {
+            if (
+                empty( $gateway->countries ) && $customer_country ||
+                !empty( $gateway->countries ) && $customer_country && ! in_array( $customer_country, $gateway->countries, true )
+            ) {
+                unset( $payment_gateways[ $gateway_id ] );
+            }
+        }
+        return $payment_gateways;
     }
 
 }

@@ -25,21 +25,28 @@
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
 /**
- * MultiSafepay Payment Method.
+ * Define the Gateways.
  *
  * @since   4.0.0
  */
-class MultiSafepay extends Core {
+class Gateways {
+
+    const GATEWAYS = array(
+        'multisafepay'  => MultiSafepay::class,
+        'ideal'         => Ideal::class
+    );
 
     /**
-     * Construct for MultiSafepay Payment Method.
+     * Return an array with all MultiSafepay gateways ids
+     *
+     * @return array
      */
-    public function __construct() {
-        $this->set_id('multisafepay')
-            ->set_icon('multisafepay.png')
-            ->set_method_title('MultiSafepay')
-            ->set_method_description('');
-        parent::__construct();
+    public function get_gateways_ids(): array {
+        $gateways_ids = array();
+        foreach (self::GATEWAYS as $gateway_id => $gateway) {
+            $gateways_ids[] = $gateway_id;
+        }
+        return $gateways_ids;
     }
 
 }
