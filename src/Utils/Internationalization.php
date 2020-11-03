@@ -33,7 +33,7 @@ class Internationalization {
 	/**
 	 * The domain specified for this plugin.
      *
-     * @var     string      $domain     The plugin text domains
+     * @var     string      The plugin text domains
 	 */
 	private $domain;
 
@@ -43,17 +43,14 @@ class Internationalization {
      * @return void
 	 */
 	public function load_plugin_textdomain(): void {
-		load_plugin_textdomain(
-			$this->domain,
-			false,
-			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
-		);
+		load_plugin_textdomain( $this->domain, false, dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/');
 	}
 
 	/**
 	 * Set the domain equal to that of the specified domain.
 	 *
 	 * @param   string    $domain    The domain that represents the locale of this plugin.
+     * @return  void
 	 */
 	public function set_domain( string $domain ) {
 		$this->domain = $domain;

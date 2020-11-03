@@ -12,7 +12,8 @@
 	},
 	"require-dev": {
 		"multisafepay/coding-standards": "dev-master",
-		"woocommerce/woocommerce-sniffs": "^0.1"
+		"woocommerce/woocommerce-sniffs": "^0.1",
+		"phpro/grumphp": "^1.0"
 	},
 	"autoload": {
 		"psr-4": {
@@ -21,6 +22,6 @@
 	},
 	"scripts": {
 		"code-sniffer": "@php vendor/bin/ecs check src --clear-cache",
-		"fix-cs": "@code-sniffer --fix"
+		"run-grumphp": "@php vendor/bin/grumphp run --tasks=ecs"
 	}
 }

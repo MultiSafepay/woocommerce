@@ -29,7 +29,7 @@ class MissingDependencyException extends \Exception {
     /**
      * The missing required plugins names
      *
-     * @var array $missing_plugin_names
+     * @var array
      */
     private $missing_plugin_names;
 

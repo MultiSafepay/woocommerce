@@ -1,0 +1,20 @@
+grumphp:
+  hooks_dir: ~
+  hooks_preset: local
+  process_timeout: 500
+  additional_info: "\nTo get full grumphp documentation at: https://github.com/phpro/grumphp/\n"
+  fixer:
+    enabled: false
+    fix_by_default: false
+  tasks:
+    ecs:
+      config: ~
+      level: ~
+      paths: []
+      files_on_pre_commit: false
+      triggered_by: ['php']
+      clear-cache: true
+      no-progress-bar: false
+  testsuites:
+    git_pre_commit:
+      tasks: ['ecs']
