@@ -4,5 +4,4 @@
 /vendor
 /coverage.xml
 /phpunit.xml
-/.travis.yml
 /coverage-report/*
