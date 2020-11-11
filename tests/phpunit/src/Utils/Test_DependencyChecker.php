@@ -31,13 +31,11 @@ class Test_DependencyChecker extends WP_UnitTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->dependency_checker = new DependencyChecker();
     }
 
     public function test_dependency_checker_missing_dependency_exception() {
         $this->expectNotToPerformAssertions();
-        $dependency_checker = $this->dependency_checker;
-        $check = $dependency_checker->check();
+        $dependency_checker = (new DependencyChecker())->check();;
     }
 
 }
