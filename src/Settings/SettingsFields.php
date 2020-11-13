@@ -158,6 +158,36 @@ class SettingsFields {
                     'sort_order'    => 1,
                 ),
                 array(
+                    'id' 			=> $this->plugin_name . '_value_lifetime_payment_link',
+                    'label'			=> __( 'Value lifetime of payment link' , $this->plugin_name ),
+                    'description'	=> '',
+                    'type'			=> 'text',
+                    'default'		=> '30',
+                    'placeholder'	=> __( 'Value lifetime of payment link', $this->plugin_name ),
+                    'tooltip'       => '',
+                    'callback'      => '',
+                    'setting_type'  => 'string',
+                    'sort_order'    => 2,
+                ),
+                array(
+                    'id' 			=> $this->plugin_name . '_unit_lifetime_payment_link',
+                    'label'			=> __( 'Unit lifetime of payment link' , $this->plugin_name ),
+                    'description'	=> __( 'The lifetime of a payment link by default is 30 days. This means that the customer has 30 days to complete the transaction using the payment link' , $this->plugin_name ),
+                    'type'			=> 'select',
+                    'options'		=> array(
+                        'days'    => __('Days', $this->plugin_name),
+                        'hours'   => __('Hours', $this->plugin_name),
+                        'seconds' => __('Seconds', $this->plugin_name),
+
+                    ),
+                    'default'		=> 'days',
+                    'placeholder'	=> __( 'Unit lifetime of payment link', $this->plugin_name ),
+                    'tooltip'       => '',
+                    'callback'      => '',
+                    'setting_type'  => 'string',
+                    'sort_order'    => 3,
+                ),
+                array(
                     'id' 			=> $this->plugin_name . '_second_chance',
                     'label'			=> __( 'Second Chance' , $this->plugin_name ),
                     'description'	=> __( 'More information about Second Chance in our <a href="https://docs.multisafepay.com/tools/second-chance/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms" target="_blank">documentation</a>' , $this->plugin_name ),
@@ -171,7 +201,7 @@ class SettingsFields {
                     'tooltip'       => __( 'MultiSafepay will send two Second Chance reminder emails. In the emails, MultiSafepay will include a link to allow the consumer to finalize the payment. The first Second Chance email is sent 1 hour after the transaction was initiated and the second after 24 hours. To receive second chance emails, this option must also be activated within your MultiSafepay account, otherwise it will not work.' , $this->plugin_name ),
                     'callback'      => '',
                     'setting_type'  => 'bool',
-                    'sort_order'    => 2,
+                    'sort_order'    => 4,
                 ),
                 array(
                     'id' 			=> $this->plugin_name . '_remove_all_settings',
@@ -187,7 +217,7 @@ class SettingsFields {
                     'tooltip'       => '',
                     'callback'      => '',
                     'setting_type'  => 'bool',
-                    'sort_order'    => 3,
+                    'sort_order'    => 5,
                 ),
             )
         );
