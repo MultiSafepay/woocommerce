@@ -4,3 +4,4 @@
 /vendor
 /coverage.xml
 /phpunit.xml
+/coverage-report/*

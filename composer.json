@@ -24,7 +24,6 @@
 	"scripts": {
 		"code-sniffer": "@php vendor/bin/ecs check src --clear-cache",
 		"run-grumphp": "@php vendor/bin/grumphp run --tasks=ecs,phpunit",
-		"phpunit": "@php vendor/bin/phpunit",
-		"phpunit-multisite": "@php vendor/bin/phpunit -c tests/phpunit/multisite.xml"
+		"phpunit": "@php vendor/bin/phpunit"
 	}
 }
