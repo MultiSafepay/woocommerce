@@ -121,10 +121,7 @@ class PaymentMethodsController {
     function filter_gateway_per_country( array $payment_gateways ): array {
         $customer_country = (WC()->customer) ? WC()->customer->get_billing_country() : false;
         foreach ( $payment_gateways as $gateway_id => $gateway ) {
-            if (
-                empty( $gateway->countries ) && $customer_country ||
-                !empty( $gateway->countries ) && $customer_country && ! in_array( $customer_country, $gateway->countries, true )
-            ) {
+            if (!empty( $gateway->countries ) && $customer_country && ! in_array( $customer_country, $gateway->countries, true ) ) {
                 unset( $payment_gateways[ $gateway_id ] );
             }
         }
