@@ -64,20 +64,6 @@ class MultiSafepay extends BasePaymentMethod
     }
 
     /**
-     * @return boolean
-     */
-    public function get_has_fields(): bool {
-        return false;
-    }
-
-    /**
-     * @return array
-     */
-    public function get_checkout_fields_ids(): array {
-        return array( );
-    }
-
-    /**
      * @return string
      */
     public function get_payment_method_description(): string
@@ -91,13 +77,5 @@ class MultiSafepay extends BasePaymentMethod
     public function get_payment_method_icon(): string {
         return 'multisafepay.png';
     }
-
-    /**
-     * @return string
-     */
-    public function get_gateway_info(): string {
-        return '';
-    }
-
 
 }

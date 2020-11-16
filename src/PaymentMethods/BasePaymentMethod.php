@@ -70,8 +70,8 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $this->has_fields = $this->get_has_fields();
         $this->checkout_fields_ids = $this->get_checkout_fields_ids();
         $this->gateway_info = $this->get_gateway_info();
-
         $this->icon = esc_url( plugins_url( '/assets/public/img/' .  $this->get_payment_method_icon(), dirname(__DIR__ ) ) );
+
         // Method with all the options fields
         $this->add_form_fields();
 
@@ -87,11 +87,6 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
 
         $this->errors = array();
 
-//        $sdk = new Sdk(get_option('multisafepay_api_key'), get_option('multisafepay_testmode') === 'no');
-
-//        $this->transaction_manager = $sdk->getTransactionManager();
-//        $this->order_service = new OrderService();
-
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
     }
 
@@ -105,6 +100,33 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $countries = new WC_Countries();
         $allowed_countries = $countries->get_allowed_countries();
         return $allowed_countries;
+    }
+
+    /**
+     * Return if payment methods requires custom checkout fields
+     *
+     * @return boolean
+     */
+    public function get_has_fields(): bool {
+        return false;
+    }
+
+    /**
+     * Return the custom checkout fields id`s
+     *
+     * @return array
+     */
+    public function get_checkout_fields_ids(): array {
+        return array( );
+    }
+
+    /**
+     * Return the gateway info
+     *
+     * @return string
+     */
+    public function get_gateway_info(): string {
+        return '';
     }
 
     /**
@@ -158,9 +180,11 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      */
     public function process_payment($order_id): array
     {
-        $order_request = $this->order_service->create_order_request($order_id, $this->gateway_code, $this->type);
-
-        $transaction = $this->transaction_manager->create($order_request);
+        $sdk = new Sdk(get_option('multisafepay_api_key'), get_option('multisafepay_testmode') === 'no');
+        $transaction_manager = $sdk->getTransactionManager();
+        $order_service = new OrderService();
+        $order_request = $order_service->create_order_request($order_id, $this->gateway_code, $this->type);
+        $transaction = $transaction_manager->create($order_request);
 
         return array(
             'result' => 'success',
