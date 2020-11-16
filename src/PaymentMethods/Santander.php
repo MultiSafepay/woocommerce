@@ -69,7 +69,7 @@ class Santander extends BasePaymentMethod
     /**
      * @return boolean
      */
-    public function get_has_fields(): bool {
+    public function has_fields(): bool {
         return true;
     }
 

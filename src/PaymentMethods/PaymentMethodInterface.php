@@ -76,7 +76,7 @@ interface PaymentMethodInterface {
      *
      * @return boolean
      */
-    public function get_has_fields(): bool;
+    public function has_fields(): bool;
 
     /**
      * Add custom checkout fields by id

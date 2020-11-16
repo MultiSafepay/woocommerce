@@ -67,7 +67,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $this->method_description = $this->get_payment_method_description();
         $this->type = $this->get_payment_method_type();
         $this->gateway_code = $this->get_payment_method_code();
-        $this->has_fields = $this->get_has_fields();
+        $this->has_fields = $this->has_fields();
         $this->checkout_fields_ids = $this->get_checkout_fields_ids();
         $this->gateway_info = $this->get_gateway_info();
         $this->icon = esc_url( plugins_url( '/assets/public/img/' .  $this->get_payment_method_icon(), dirname(__DIR__ ) ) );
@@ -107,7 +107,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      *
      * @return boolean
      */
-    public function get_has_fields(): bool {
+    public function has_fields(): bool {
         return false;
     }
 
