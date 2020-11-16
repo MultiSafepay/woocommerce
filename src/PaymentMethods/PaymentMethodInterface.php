@@ -30,36 +30,39 @@ namespace MultiSafepay\WooCommerce\PaymentMethods;
 interface PaymentMethodInterface {
 
     /**
-     * Set the ID of the payment method
+     * Get the ID of the payment method
      *
-     * @param string $value
-     * @return mixed
+     * @return string
      */
-    public function set_id( string $value );
+    public function get_payment_method_id(): string;
 
     /**
-     * Set the icon of the payment method
+     * Get the code of the payment method
      *
-     * @param string $value
-     * @return mixed
+     * @return string
      */
-    public function set_icon( string $value );
+    public function get_payment_method_code(): string;
 
     /**
-     * Set the title that is shown in the backend
+     * Get the method type, should be 'direct' or 'redirect'
      *
-     * @param string $value
-     * @return mixed
+     * @return string
      */
-    public function set_method_title( string $value );
+    public function get_payment_method_type(): string;
 
     /**
-     * How the payment should be handled by MultiSafepay
+     * Get the title that is shown in the backend
      *
-     * @param   int     $order_id
-     * @return  mixed
+     * @return string
      */
-    public function process_payment( int $order_id );
+    public function get_payment_method_title(): string;
+
+    /**
+     * Get the method description in the backend
+     *
+     * @return string
+     */
+    public function get_payment_method_description(): string;
 
     /**
      * Add extra settings to a gateway
@@ -68,11 +71,4 @@ interface PaymentMethodInterface {
      */
     public function add_form_fields();
 
-    /**
-     * Set the method description in the backend
-     *
-     * @param string $value
-     * @return mixed
-     */
-    public function set_method_description( string $value = '' );
 }
