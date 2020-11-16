@@ -14,4 +14,4 @@ parameters:
     PHP_CodeSniffer\Standards\Squiz\Sniffs\Commenting\FunctionCommentSniff.SpacingAfterParamType: ~
     PHP_CodeSniffer\Standards\Squiz\Sniffs\Commenting\FunctionCommentSniff.IncorrectParamVarName: ~
     PHP_CodeSniffer\Standards\Squiz\Sniffs\Commenting\FunctionCommentSniff.ScalarTypeHintMissing:
-      - 'src/PaymentMethods/Core.php'
+      - 'src/PaymentMethods/BasePaymentMethod.php'

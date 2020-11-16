@@ -24,22 +24,46 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
-/**
- * Ideal Payment Method.
- *
- * @since   4.0.0
- */
-class Ideal extends Core {
+class Ideal extends BasePaymentMethod
+{
+    /**
+     * @return string
+     */
+    public function get_payment_method_id(): string
+    {
+        return 'ideal';
+    }
 
     /**
-     * Construct for Ideal Payment Method.
+     * @return string
      */
-    public function __construct() {
-        $this->set_id('ideal')
-            ->set_icon('ideal.png')
-            ->set_method_title('Ideal')
-            ->set_method_description('');
-        parent::__construct();
+    public function get_payment_method_code(): string
+    {
+        return 'IDEAL';
+    }
+
+    /**
+     * @return string
+     */
+    public function get_payment_method_type(): string
+    {
+        return 'redirect';
+    }
+
+    /**
+     * @return string
+     */
+    public function get_payment_method_title(): string
+    {
+        return 'iDEAL';
+    }
+
+    /**
+     * @return string
+     */
+    public function get_payment_method_description(): string
+    {
+        return 'Online payments with iDEAL';
     }
 
 }
