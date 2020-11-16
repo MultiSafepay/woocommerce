@@ -24,6 +24,8 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
+use Wirecard\PaymentSdk\Transaction\MasterpassTransaction;
+
 /**
  * Define the Gateways.
  *
@@ -33,12 +35,36 @@ class Gateways {
 
     const GATEWAYS = array(
         'multisafepay'  => MultiSafepay::class,
-        'ideal'         => Ideal::class,
-        'einvocing'     => Einvocing::class,
         'afterpay'      => Afterpay::class,
+        'alipay'        => Alipay::class,
+        'amex'          => Amex::class,
+        'applepay'      => ApplePay::class,
+        'bancontact'    => Bancontact::class,
+        'banktrans'     => BankTrans::class,
+        'belfius'       => Belfius::class,
+        'cbc'           => Cbc::class,
+        'creditcard'    => CreditCard::class,
+        'dbrtp'         => Dbrtp::class,
         'dirdeb'        => Dirdeb::class,
         'dotpay'        => Dotpay::class,
-        'santander'     => Santander::class
+        'einvocing'     => Einvocing::class,
+        'eps'           => Eps::class,
+        'giropay'       => Giropay::class,
+        'ideal'         => Ideal::class,
+        'idealqr'       => IdealQr::class,
+        'in3'           => In3::class,
+        'inghome'       => IngHomePay::class,
+        'kbc'           => Kbc::class,
+        'klarna'        => Klarna::class,
+        'maestro'       => Maestro::class,
+        'mastercard'    => MasterCard::class,
+        'payafter'      => PayAfterDelivery::class,
+        'paypal'        => PayPal::class,
+        'paysafecard'   => Paysafecard::class,
+        'santander'     => Santander::class,
+        'directbank'    => Sofort::class,
+        'trustly'       => Trustly::class,
+        'visa'          => Visa::class
     );
 
     /**

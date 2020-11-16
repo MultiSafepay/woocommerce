@@ -34,40 +34,35 @@ class MultiSafepay extends BasePaymentMethod
     /**
      * @return string
      */
-    public function get_payment_method_id(): string
-    {
+    public function get_payment_method_id(): string {
         return 'multisafepay';
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_code(): string
-    {
+    public function get_payment_method_code(): string {
         return 'MULTISAFEPAY';
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_type(): string
-    {
+    public function get_payment_method_type(): string {
         return 'redirect';
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_title(): string
-    {
-        return 'MultiSafepay';
+    public function get_payment_method_title(): string {
+        return __('MultiSafepay', 'multisafepay');
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_description(): string
-    {
+    public function get_payment_method_description(): string {
         return 'Access all the different payment methods that MultiSafepay has to offer';
     }
 

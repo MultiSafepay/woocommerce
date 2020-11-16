@@ -72,13 +72,14 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $this->gateway_info = $this->get_gateway_info();
         $this->icon = esc_url( plugins_url( '/assets/public/img/' .  $this->get_payment_method_icon(), dirname(__DIR__ ) ) );
 
+
         // Method with all the options fields
         $this->add_form_fields();
 
         // Load the settings.
         $this->init_settings();
         $this->enabled = $this->get_option('enabled');
-        $this->title = $this->get_option('title');
+        $this->title = $this->get_option('title', $this->get_method_title());
         $this->description = $this->get_option('description');
         $this->max_amount = $this->get_option('max_amount');
         $this->countries    = $this->get_option('countries');
