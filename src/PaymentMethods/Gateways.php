@@ -84,6 +84,7 @@ class Gateways {
         'winkelcheque'      => Winkelcheque::class,
         'yourgift'          => Yourgift::class,
         'givacard'          => Givacard::class,
+        'good4fun'          => Good4fun::class,
     );
 
 
