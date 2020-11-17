@@ -77,6 +77,7 @@ class Gateways {
         'parfumcadeaukaart' => Parfumcadeaukaart::class,
         'podium'            => Podium::class,
         'sportenfit'        => Sportenfit::class,
+        'vvvcadeaukaart'    => Vvvcadeaukaart::class,
     );
 
 
