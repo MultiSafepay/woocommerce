@@ -62,11 +62,9 @@ class Gateways {
         'santander'     => Santander::class,
         'directbank'    => Sofort::class,
         'trustly'       => Trustly::class,
-        'visa'          => Visa::class
-        'santander'     => Santander::class,
+        'visa'          => Visa::class,
 
         'babycadeaubon'  => Babycadeaubon::class,
-
     );
 
     /**
