@@ -68,6 +68,7 @@ class Gateways {
     const GIFTCARDS = array(
         'babycadeaubon'  => Babycadeaubon::class,
         'beautywellness' => Beautywellness::class,
+        'boekenbon'      => Boekenbon::class,
     );
 
 
@@ -79,7 +80,6 @@ class Gateways {
         if (get_option('multisafepay_giftcards_enabled') === 'no') {
             return self::GATEWAYS;
         }
-
         return array_merge(self::GATEWAYS, self::GIFTCARDS);
     }
 
