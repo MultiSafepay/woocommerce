@@ -24,20 +24,20 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
-class Afterpay extends BasePaymentMethod {
+class PayAfterDelivery extends BasePaymentMethod {
 
     /**
      * @return string
      */
     public function get_payment_method_id(): string {
-        return 'afterpay';
+        return 'payafter';
     }
 
     /**
      * @return string
      */
     public function get_payment_method_code(): string {
-        return 'AFTERPAY';
+        return 'PAYAFTER';
     }
 
     /**
@@ -51,7 +51,7 @@ class Afterpay extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_title(): string {
-        return __('Afterpay', 'multisafepay');
+        return __('Pay After Delivery', 'multisafepay');
     }
 
     /**
@@ -72,14 +72,14 @@ class Afterpay extends BasePaymentMethod {
      * @return array
      */
     public function get_checkout_fields_ids(): array {
-        return array( 'gender', 'birthday' );
+        return array( 'birthday', 'bankaccount' );
     }
 
     /**
      * @return string
      */
     public function get_payment_method_icon(): string {
-        return 'afterpay.png';
+        return 'payafter.png';
     }
 
     /**

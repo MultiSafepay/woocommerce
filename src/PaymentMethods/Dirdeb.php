@@ -24,45 +24,40 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
-class Dirdeb extends BasePaymentMethod
-{
+class Dirdeb extends BasePaymentMethod {
+    
     /**
      * @return string
      */
-    public function get_payment_method_id(): string
-    {
+    public function get_payment_method_id(): string {
         return 'dirdeb';
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_code(): string
-    {
+    public function get_payment_method_code(): string {
         return 'DIRDEB';
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_type(): string
-    {
+    public function get_payment_method_type(): string {
         return 'direct';
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_title(): string
-    {
-        return 'SEPA Direct Debit';
+    public function get_payment_method_title(): string {
+        return __('SEPA Direct Debit', 'multisafepay');
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_description(): string
-    {
+    public function get_payment_method_description(): string {
         return '';
     }
 
@@ -93,6 +88,5 @@ class Dirdeb extends BasePaymentMethod
     public function get_gateway_info(): string {
         return 'Account';
     }
-
 
 }

@@ -24,34 +24,34 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
-class Afterpay extends BasePaymentMethod {
+class Trustly extends BasePaymentMethod {
 
     /**
      * @return string
      */
     public function get_payment_method_id(): string {
-        return 'afterpay';
+        return 'trustly';
     }
 
     /**
      * @return string
      */
     public function get_payment_method_code(): string {
-        return 'AFTERPAY';
+        return 'TRUSTLY';
     }
 
     /**
      * @return string
      */
     public function get_payment_method_type(): string {
-        return 'direct';
+        return 'redirect';
     }
 
     /**
      * @return string
      */
     public function get_payment_method_title(): string {
-        return __('Afterpay', 'multisafepay');
+        return __('Trustly', 'multisafepay');
     }
 
     /**
@@ -62,31 +62,10 @@ class Afterpay extends BasePaymentMethod {
     }
 
     /**
-     * @return boolean
-     */
-    public function has_fields(): bool {
-        return true;
-    }
-
-    /**
-     * @return array
-     */
-    public function get_checkout_fields_ids(): array {
-        return array( 'gender', 'birthday' );
-    }
-
-    /**
      * @return string
      */
     public function get_payment_method_icon(): string {
-        return 'afterpay.png';
-    }
-
-    /**
-     * @return string
-     */
-    public function get_gateway_info(): string {
-        return 'Meta';
+        return 'trustly.png';
     }
 
 }

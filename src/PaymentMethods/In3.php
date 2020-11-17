@@ -24,20 +24,20 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
-class Afterpay extends BasePaymentMethod {
+class In3 extends BasePaymentMethod {
 
     /**
      * @return string
      */
     public function get_payment_method_id(): string {
-        return 'afterpay';
+        return 'in3';
     }
 
     /**
      * @return string
      */
     public function get_payment_method_code(): string {
-        return 'AFTERPAY';
+        return 'IN3';
     }
 
     /**
@@ -51,7 +51,7 @@ class Afterpay extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_title(): string {
-        return __('Afterpay', 'multisafepay');
+        return __('in3', 'multisafepay');
     }
 
     /**
@@ -79,7 +79,7 @@ class Afterpay extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_icon(): string {
-        return 'afterpay.png';
+        return 'in3.png';
     }
 
     /**

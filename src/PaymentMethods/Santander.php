@@ -29,40 +29,35 @@ class Santander extends BasePaymentMethod
     /**
      * @return string
      */
-    public function get_payment_method_id(): string
-    {
+    public function get_payment_method_id(): string {
         return 'santander';
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_code(): string
-    {
+    public function get_payment_method_code(): string {
         return 'SANTANDER';
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_type(): string
-    {
+    public function get_payment_method_type(): string {
         return 'direct';
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_title(): string
-    {
-        return 'Santander';
+    public function get_payment_method_title(): string {
+        return __('Santander Consumer Finance | Pay per month', 'multisafepay');
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_description(): string
-    {
+    public function get_payment_method_description(): string {
         return '';
     }
 
