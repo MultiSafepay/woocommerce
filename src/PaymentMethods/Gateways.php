@@ -73,6 +73,7 @@ class Gateways {
         'fashiongiftcard'=> Fashiongiftcard::class,
         'fietsenbon'     => Fietsenbon::class,
         'gezondheidsbon' => Gezondheidsbon::class,
+        'nationaletuinbon' => Nationaletuinbon::class,
     );
 
 
