@@ -66,14 +66,17 @@ class Gateways {
     );
 
     const GIFTCARDS = array(
-        'babycadeaubon'  => Babycadeaubon::class,
-        'beautywellness' => Beautywellness::class,
-        'boekenbon'      => Boekenbon::class,
-        'fashioncheque'  => Fashioncheque::class,
-        'fashiongiftcard'=> Fashiongiftcard::class,
-        'fietsenbon'     => Fietsenbon::class,
-        'gezondheidsbon' => Gezondheidsbon::class,
-        'nationaletuinbon' => Nationaletuinbon::class,
+        'babycadeaubon'     => Babycadeaubon::class,
+        'beautywellness'    => Beautywellness::class,
+        'boekenbon'         => Boekenbon::class,
+        'fashioncheque'     => Fashioncheque::class,
+        'fashiongiftcard'   => Fashiongiftcard::class,
+        'fietsenbon'        => Fietsenbon::class,
+        'gezondheidsbon'    => Gezondheidsbon::class,
+        'nationaletuinbon'  => Nationaletuinbon::class,
+        'parfumcadeaukaart' => Parfumcadeaukaart::class,
+        'podium'            => Podium::class,
+        'sportenfit'        => Sportenfit::class,
     );
 
 
