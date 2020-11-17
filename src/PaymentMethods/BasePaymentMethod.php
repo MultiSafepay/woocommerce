@@ -67,6 +67,10 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $this->method_description = $this->get_payment_method_description();
         $this->type = $this->get_payment_method_type();
         $this->gateway_code = $this->get_payment_method_code();
+        $this->has_fields = $this->has_fields();
+        $this->checkout_fields_ids = $this->get_checkout_fields_ids();
+        $this->gateway_info = $this->get_gateway_info();
+        $this->icon = esc_url( plugins_url( '/assets/public/img/' .  $this->get_payment_method_icon(), dirname(__DIR__ ) ) );
 
         // Method with all the options fields
         $this->add_form_fields();
@@ -77,13 +81,11 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $this->title = $this->get_option('title');
         $this->description = $this->get_option('description');
         $this->max_amount = $this->get_option('max_amount');
-        $this->countries = $this->get_option('countries', array());
+        $this->countries    = $this->get_option('countries');
+
+        $this->plugin_dir_path = plugin_dir_path( dirname(__DIR__) );
+
         $this->errors = array();
-
-        $sdk = new Sdk(get_option('multisafepay_api_key'), get_option('multisafepay_testmode') === 'no');
-
-        $this->transaction_manager = $sdk->getTransactionManager();
-        $this->order_service = new OrderService();
 
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
     }
@@ -101,6 +103,33 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
     }
 
     /**
+     * Return if payment methods requires custom checkout fields
+     *
+     * @return boolean
+     */
+    public function has_fields(): bool {
+        return false;
+    }
+
+    /**
+     * Return the custom checkout fields id`s
+     *
+     * @return array
+     */
+    public function get_checkout_fields_ids(): array {
+        return array( );
+    }
+
+    /**
+     * Return the gateway info
+     *
+     * @return string
+     */
+    public function get_gateway_info(): string {
+        return '';
+    }
+
+    /**
      * Define the form option - settings fields.
      *
      * @return  void
@@ -112,12 +141,12 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
                 'title' => 'Enable/Disable',
                 'label' => 'Enable ' . $this->get_method_title() . ' Gateway',
                 'type' => 'checkbox',
-                'description' => __('This controls the title which the user sees during checkout.', 'multisafepay'),
                 'default' => 'no'
             ),
             'title' => array(
                 'title' => 'Title',
                 'type' => 'text',
+                'description' => __('This controls the title which the user sees during checkout.', 'multisafepay'),
                 'default' => $this->get_method_title(),
             ),
             'description' => array(
@@ -151,9 +180,11 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      */
     public function process_payment($order_id): array
     {
-        $order_request = $this->order_service->create_order_request($order_id, $this->gateway_code, $this->type);
-
-        $transaction = $this->transaction_manager->create($order_request);
+        $sdk = new Sdk(get_option('multisafepay_api_key'), get_option('multisafepay_testmode') === 'no');
+        $transaction_manager = $sdk->getTransactionManager();
+        $order_service = new OrderService();
+        $order_request = $order_service->create_order_request($order_id, $this->gateway_code, $this->type);
+        $transaction = $transaction_manager->create($order_request);
 
         return array(
             'result' => 'success',
@@ -189,6 +220,81 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
     public function validate_enabled_field(string $key, string $value): string
     {
         return $value !== null ? 'yes' : 'no';
+    }
+
+
+    /**
+     * Prints checkout custom fields
+     *
+     * @return  void
+     */
+    public function payment_fields(): void
+    {
+        $issuers        = array();
+        require($this->plugin_dir_path . 'templates/multisafepay-checkout-fields-display.php');
+    }
+
+    /**
+     * Validate_fields
+     *
+     * @return  boolean
+     */
+    public function validate_fields(): bool {
+
+        if ( (isset($_POST['multisafepay_' . $this->id . '_gender'])) && $_POST['multisafepay_' . $this->id . '_gender'] === '') {
+            wc_add_notice(  __('Gender is a required field', 'multisafepay'), 'error' );
+        }
+
+        if (isset($_POST['multisafepay_' . $this->id . '_birthday']) && $_POST['multisafepay_' . $this->id . '_birthday'] === '' ) {
+            wc_add_notice(  __('Date of birth is a required field', 'multisafepay'), 'error' );
+        }
+
+        if (isset($_POST['multisafepay_' . $this->id . '_bank_account']) && $_POST['multisafepay_' . $this->id . '_bank_account'] === '' ) {
+            wc_add_notice(  __('Bank Account is a required field', 'multisafepay'), 'error' );
+        }
+
+        if (isset($_POST['multisafepay_' . $this->id . '_bank_account']) && $_POST['multisafepay_' . $this->id . '_bank_account'] !== '' ) {
+            if (!$this->validate_iban($_POST['multisafepay_' . $this->id . '_bank_account'])) {
+                wc_add_notice(  __('IBAN does not seems valid', 'multisafepay'), 'error' );
+            }
+        }
+
+        if (isset($_POST['multisafepay_' . $this->id . '_account_holder_name']) && $_POST['multisafepay_' . $this->id . '_account_holder_name'] === '' ) {
+            wc_add_notice(  __('Account holder is a required field', 'multisafepay'), 'error' );
+        }
+
+        if (isset($_POST['multisafepay_' . $this->id . '_account_holder_iban']) && $_POST['multisafepay_' . $this->id . '_account_holder_iban'] === '' ) {
+            wc_add_notice(  __('IBAN is a required field', 'multisafepay'), 'error' );
+        }
+
+        if (isset($_POST['multisafepay_' . $this->id . '_account_holder_iban']) && $_POST['multisafepay_' . $this->id . '_account_holder_iban'] !== '' ) {
+            if (!$this->validate_iban($_POST['multisafeay_' . $this->id . '_account_holder_iban'])) {
+                wc_add_notice(  __('IBAN does not seems valid', 'multisafepay'), 'error' );
+            }
+        }
+
+        if( wc_get_notices( 'error' ) ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns bool after validates IBAN format
+     *
+     * @param   string  $iban
+     * @return  boolean
+     *
+     */
+    public function validate_iban($iban): bool {
+        try {
+            $iban = new IbanNumber($iban);
+            return true;
+        }
+        catch (\MultiSafepay\Exception\InvalidArgumentException $invalidArgumentException ) {
+            return false;
+        }
     }
 
 }

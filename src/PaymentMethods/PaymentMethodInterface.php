@@ -71,4 +71,32 @@ interface PaymentMethodInterface {
      */
     public function add_form_fields();
 
+    /**
+     * Get has fields
+     *
+     * @return boolean
+     */
+    public function has_fields(): bool;
+
+    /**
+     * Add custom checkout fields by id
+     *
+     * @return array
+     */
+    public function get_checkout_fields_ids(): array;
+
+    /**
+     * Add icon to a gateway
+     *
+     * @return string
+     */
+    public function get_payment_method_icon(): string;
+
+    /**
+     * Add icon to a gateway
+     *
+     * @return string
+     */
+    public function get_gateway_info(): string;
+
 }

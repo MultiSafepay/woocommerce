@@ -24,19 +24,14 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
-/**
- * MultiSafepay Payment Method.
- *
- * @since   4.0.0
- */
-class MultiSafepay extends BasePaymentMethod
+class Dotpay extends BasePaymentMethod
 {
     /**
      * @return string
      */
     public function get_payment_method_id(): string
     {
-        return 'multisafepay';
+        return 'dotpay';
     }
 
     /**
@@ -44,7 +39,7 @@ class MultiSafepay extends BasePaymentMethod
      */
     public function get_payment_method_code(): string
     {
-        return 'MULTISAFEPAY';
+        return 'DOTPAY';
     }
 
     /**
@@ -52,7 +47,7 @@ class MultiSafepay extends BasePaymentMethod
      */
     public function get_payment_method_type(): string
     {
-        return 'redirect';
+        return 'direct';
     }
 
     /**
@@ -60,7 +55,7 @@ class MultiSafepay extends BasePaymentMethod
      */
     public function get_payment_method_title(): string
     {
-        return 'MultiSafepay';
+        return 'Dotpay';
     }
 
     /**
@@ -68,14 +63,36 @@ class MultiSafepay extends BasePaymentMethod
      */
     public function get_payment_method_description(): string
     {
-        return 'Access all the different payment methods that MultiSafepay has to offer';
+        return '';
+    }
+
+    /**
+     * @return boolean
+     */
+    public function has_fields(): bool {
+        return false;
+    }
+
+    /**
+     * @return array
+     */
+    public function get_checkout_fields_ids(): array {
+        return array( );
     }
 
     /**
      * @return string
      */
     public function get_payment_method_icon(): string {
-        return 'multisafepay.png';
+        return 'dotpay.png';
     }
+
+    /**
+     * @return string
+     */
+    public function get_gateway_info(): string {
+        return 'Meta';
+    }
+
 
 }

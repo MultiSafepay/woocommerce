@@ -33,7 +33,12 @@ class Gateways {
 
     const GATEWAYS = array(
         'multisafepay'  => MultiSafepay::class,
-        'ideal'         => Ideal::class
+        'ideal'         => Ideal::class,
+        'einvocing'     => Einvocing::class,
+        'afterpay'      => Afterpay::class,
+        'dirdeb'        => Dirdeb::class,
+        'dotpay'        => Dotpay::class,
+        'santander'     => Santander::class
     );
 
     /**

@@ -66,4 +66,32 @@ class Ideal extends BasePaymentMethod
         return 'Online payments with iDEAL';
     }
 
+    /**
+     * @return boolean
+     */
+    public function has_fields(): bool {
+        return true;
+    }
+
+    /**
+     * @return array
+     */
+    public function get_checkout_fields_ids(): array {
+        return array( 'ideal_issuers' );
+    }
+
+    /**
+     * @return string
+     */
+    public function get_payment_method_icon(): string {
+        return 'ideal.png';
+    }
+
+    /**
+     * @return string
+     */
+    public function get_gateway_info(): string {
+        return 'Ideal';
+    }
+
 }
