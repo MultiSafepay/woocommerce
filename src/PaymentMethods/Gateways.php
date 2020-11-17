@@ -24,8 +24,6 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
-use Wirecard\PaymentSdk\Transaction\MasterpassTransaction;
-
 /**
  * Define the Gateways.
  *
