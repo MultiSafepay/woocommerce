@@ -67,6 +67,7 @@ class Gateways {
 
     const GIFTCARDS = array(
         'babycadeaubon'  => Babycadeaubon::class,
+        'beautywellness' => Beautywellness::class,
     );
 
 
