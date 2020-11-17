@@ -73,6 +73,9 @@ class Gateways {
         'fashiongiftcard'   => Fashiongiftcard::class,
         'fietsenbon'        => Fietsenbon::class,
         'gezondheidsbon'    => Gezondheidsbon::class,
+        'givacard'          => Givacard::class,
+        'good4fun'          => Good4fun::class,
+        'good4card'         => Goodcard::class,
         'nationaletuinbon'  => Nationaletuinbon::class,
         'parfumcadeaukaart' => Parfumcadeaukaart::class,
         'podium'            => Podium::class,
@@ -83,9 +86,6 @@ class Gateways {
         'wijncadeau'        => Wijncadeau::class,
         'winkelcheque'      => Winkelcheque::class,
         'yourgift'          => Yourgift::class,
-        'givacard'          => Givacard::class,
-        'good4fun'          => Good4fun::class,
-        'good4card'         => Goodcard::class,
     );
 
 
@@ -97,7 +97,7 @@ class Gateways {
         if (get_option('multisafepay_giftcards_enabled') === 'no') {
             return self::GATEWAYS;
         }
-        return array_merge(self::GIFTCARDS, self::GIFTCARDS);
+        return array_merge(self::GATEWAYS, self::GIFTCARDS);
     }
 
     /**
