@@ -71,6 +71,7 @@ class Gateways {
         'boekenbon'      => Boekenbon::class,
         'fashioncheque'  => Fashioncheque::class,
         'fashiongiftcard'=> Fashiongiftcard::class,
+        'fietsenbon'     => Fietsenbon::class,
     );
 
 
@@ -82,7 +83,7 @@ class Gateways {
         if (get_option('multisafepay_giftcards_enabled') === 'no') {
             return self::GATEWAYS;
         }
-        return array_merge(self::GATEWAYS, self::GIFTCARDS);
+        return array_merge(self::GIFTCARDS, self::GIFTCARDS);
     }
 
     /**
