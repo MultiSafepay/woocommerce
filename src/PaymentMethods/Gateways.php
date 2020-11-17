@@ -78,6 +78,7 @@ class Gateways {
         'podium'            => Podium::class,
         'sportenfit'        => Sportenfit::class,
         'vvvcadeaukaart'    => Vvvcadeaukaart::class,
+        'webshopgiftcard'    => Webshopgiftcard::class,
     );
 
 
