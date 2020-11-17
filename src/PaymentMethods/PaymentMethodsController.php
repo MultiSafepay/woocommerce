@@ -98,7 +98,7 @@ class PaymentMethodsController {
      * @return array
      */
     public static function get_gateways( array $gateways ): array {
-        return array_merge($gateways, Gateways::GATEWAYS);
+        return array_merge($gateways, Gateways::get_payment_methods());
     }
 
     /**
@@ -107,7 +107,7 @@ class PaymentMethodsController {
      * @return void
      */
     public function init_multisafepay_payment_methods(): void {
-        foreach ( Gateways::GATEWAYS as $gateway ) {
+        foreach ( Gateways::get_payment_methods() as $gateway ) {
             new $gateway();
         }
     }

@@ -63,9 +63,24 @@ class Gateways {
         'directbank'    => Sofort::class,
         'trustly'       => Trustly::class,
         'visa'          => Visa::class,
+    );
 
+    const GIFTCARDS = array(
         'babycadeaubon'  => Babycadeaubon::class,
     );
+
+
+    /**
+     * Return an array with all Payment methods
+     * @return array|string[]
+     */
+    public static function get_payment_methods (): array {
+        if (get_option('multisafepay_giftcards_enabled') === 'no') {
+            return self::GATEWAYS;
+        }
+
+        return array_merge(self::GATEWAYS, self::GIFTCARDS);
+    }
 
     /**
      * Return an array with all MultiSafepay gateways ids
@@ -74,7 +89,7 @@ class Gateways {
      */
     public function get_gateways_ids(): array {
         $gateways_ids = array();
-        foreach (self::GATEWAYS as $gateway_id => $gateway) {
+        foreach ($this->get_payment_methods() as $gateway_id => $gateway) {
             $gateways_ids[] = $gateway_id;
         }
         return $gateways_ids;
