@@ -55,7 +55,7 @@ class Babycadeaubon extends BasePaymentMethod
      */
     public function get_payment_method_title(): string
     {
-        return 'Baby Cadeaubon';
+        return __('Baby Cadeaubon', 'multisafepay');
     }
 
     /**

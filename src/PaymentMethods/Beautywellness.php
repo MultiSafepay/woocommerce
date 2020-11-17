@@ -55,7 +55,7 @@ class Beautywellness extends BasePaymentMethod
      */
     public function get_payment_method_title(): string
     {
-        return 'Beauty & Wellness';
+        return __('Beauty & Wellness', 'multisafepay');
     }
 
     /**
