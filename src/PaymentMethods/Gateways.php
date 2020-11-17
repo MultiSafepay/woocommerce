@@ -79,7 +79,8 @@ class Gateways {
         'sportenfit'        => Sportenfit::class,
         'vvvcadeaukaart'    => Vvvcadeaukaart::class,
         'webshopgiftcard'    => Webshopgiftcard::class,
-        'wellnessgiftcard'    => Wellnessgiftcard::class,
+        'wellnessgiftcard'   => Wellnessgiftcard::class,
+        'wijncadeau'         => Wijncadeau::class,
     );
 
 
