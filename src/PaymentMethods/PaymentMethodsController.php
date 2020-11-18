@@ -118,10 +118,26 @@ class PaymentMethodsController {
      * @param   array   $payment_gateways
      * @return  array
      */
-    function filter_gateway_per_country( array $payment_gateways ): array {
+    public function filter_gateway_per_country( array $payment_gateways ): array {
         $customer_country = (WC()->customer) ? WC()->customer->get_billing_country() : false;
         foreach ( $payment_gateways as $gateway_id => $gateway ) {
             if (!empty( $gateway->countries ) && $customer_country && ! in_array( $customer_country, $gateway->countries, true ) ) {
+                unset( $payment_gateways[ $gateway_id ] );
+            }
+        }
+        return $payment_gateways;
+    }
+
+    /**
+     * Filter the payment methods by min amount defined in their settings
+     *
+     * @param   array   $payment_gateways
+     * @return  array
+     */
+    public function filter_gateway_per_min_amount( array $payment_gateways ): array {
+        $total_amount = (WC()->cart->total) ? WC()->cart->total : false;
+        foreach ( $payment_gateways as $gateway_id => $gateway ) {
+            if (!empty( $gateway->min_amount ) && $total_amount < $gateway->min_amount ) {
                 unset( $payment_gateways[ $gateway_id ] );
             }
         }

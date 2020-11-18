@@ -72,16 +72,14 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $this->gateway_info = $this->get_gateway_info();
         $this->icon = esc_url( plugins_url( '/assets/public/img/' .  $this->get_payment_method_icon(), dirname(__DIR__ ) ) );
 
-
-        // Method with all the options fields
         $this->add_form_fields();
 
-        // Load the settings.
         $this->init_settings();
         $this->enabled = $this->get_option('enabled');
         $this->title = $this->get_option('title', $this->get_method_title());
         $this->description = $this->get_option('description');
         $this->max_amount = $this->get_option('max_amount');
+        $this->min_amount = $this->get_option('min_amount');
         $this->countries    = $this->get_option('countries');
 
         $this->plugin_dir_path = plugin_dir_path( dirname(__DIR__) );
@@ -156,11 +154,17 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
                 'description' => __('This controls the description which the user sees during checkout.', 'multisafepay'),
                 'default' => ''
             ),
+            'min_amount' => array(
+                'title' => __('Min Amount', 'multisafepay'),
+                'type' => 'decimal',
+                'description' => __('This payment method is not shown in the checkout if the order total is lower than the defined amount. Leave black for no restrictions.', 'multisafepay'),
+                'default' => $this->get_option('min_amount', ''),
+            ),
             'max_amount' => array(
                 'title' => __('Max Amount', 'multisafepay'),
-                'type' => 'text',
+                'type' => 'decimal',
                 'description' => __('This payment method is not shown in the checkout if the order total exceeds a certain amount. Leave black for no restrictions.', 'multisafepay'),
-                'default' => $this->get_option('max_amount', 0),
+                'default' => $this->get_option('max_amount', ''),
             ),
             'countries' => array(
                 'title' => __('Country', 'multisafepay'),
