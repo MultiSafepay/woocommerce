@@ -309,8 +309,13 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         }
     }
 
-
-    private function get_order_statuses() {
+    /**
+     * Returns the WooCommerce registered order statuses
+     * @see     http://hookr.io/functions/wc_get_order_statuses/
+     *
+     * @return  array
+     */
+    private function get_order_statuses(): array {
         $order_statuses = wc_get_order_statuses();
         $order_statuses['wc-default'] = __( 'Default value set in common settings', 'multisafepay');
         return $order_statuses;

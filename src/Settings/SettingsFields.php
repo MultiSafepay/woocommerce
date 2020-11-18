@@ -271,7 +271,7 @@ class SettingsFields {
                 '',
                 '',
                 __('You need to fill the API Key', $this->plugin_name),
-                'error',
+                'error'
             );
             return false;
         }
@@ -293,7 +293,7 @@ class SettingsFields {
                 '',
                 '',
                 __('You need to fill the sandbox API Key', $this->plugin_name),
-                'error',
+                'error'
             );
             return false;
         }
