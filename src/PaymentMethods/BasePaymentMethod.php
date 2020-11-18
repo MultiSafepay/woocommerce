@@ -137,13 +137,13 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
     {
         $this->form_fields = array(
             'enabled' => array(
-                'title' => 'Enable/Disable',
+                'title' => __('Enable/Disable', 'multisafepay'),
                 'label' => 'Enable ' . $this->get_method_title() . ' Gateway',
                 'type' => 'checkbox',
                 'default' => 'no'
             ),
             'title' => array(
-                'title' => 'Title',
+                'title' => __('Title', 'multisafepay'),
                 'type' => 'text',
                 'description' => __('This controls the title which the user sees during checkout.', 'multisafepay'),
                 'default' => $this->get_method_title(),
@@ -153,6 +153,13 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
                 'type' => 'textarea',
                 'description' => __('This controls the description which the user sees during checkout.', 'multisafepay'),
                 'default' => ''
+            ),
+            'initial_order_status' => array(
+                'title' => __('Initial Order Status', 'multisafepay'),
+                'type' => 'select',
+                'options'     => $this->get_order_statuses(),
+                'description' => __('Initial order status for this payment method.', 'multisafepay'),
+                'default' => 'wc-default'
             ),
             'min_amount' => array(
                 'title' => __('Min Amount', 'multisafepay'),
@@ -300,6 +307,13 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         catch (\MultiSafepay\Exception\InvalidArgumentException $invalidArgumentException ) {
             return false;
         }
+    }
+
+
+    private function get_order_statuses() {
+        $order_statuses = wc_get_order_statuses();
+        $order_statuses['wc-default'] = __( 'Default value set in common settings', 'multisafepay');
+        return $order_statuses;
     }
 
 }
