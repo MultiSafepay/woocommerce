@@ -67,31 +67,10 @@ class Babycadeaubon extends BasePaymentMethod
     }
 
     /**
-     * @return boolean
-     */
-    public function has_fields(): bool {
-        return false;
-    }
-
-    /**
-     * @return array
-     */
-    public function get_checkout_fields_ids(): array {
-        return array( );
-    }
-
-    /**
      * @return string
      */
     public function get_payment_method_icon(): string {
         return 'babycad.png';
-    }
-
-    /**
-     * @return string
-     */
-    public function get_gateway_info(): string {
-        return 'Meta';
     }
 
 }
