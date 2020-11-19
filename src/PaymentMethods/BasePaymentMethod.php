@@ -145,38 +145,38 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
             'title' => array(
                 'title' => __('Title', 'multisafepay'),
                 'type' => 'text',
-                'description' => __('This controls the title which the user sees during checkout.', 'multisafepay'),
+                'desc_tip' => __('This controls the title which the user sees during checkout.', 'multisafepay'),
                 'default' => $this->get_method_title(),
             ),
             'description' => array(
                 'title' => __('Description', 'multisafepay'),
                 'type' => 'textarea',
-                'description' => __('This controls the description which the user sees during checkout.', 'multisafepay'),
+                'desc_tip' => __('This controls the description which the user sees during checkout.', 'multisafepay'),
                 'default' => ''
             ),
             'initial_order_status' => array(
                 'title' => __('Initial Order Status', 'multisafepay'),
                 'type' => 'select',
                 'options'     => $this->get_order_statuses(),
-                'description' => __('Initial order status for this payment method.', 'multisafepay'),
+                'desc_tip' => __('Initial order status for this payment method.', 'multisafepay'),
                 'default' => 'wc-default'
             ),
             'min_amount' => array(
                 'title' => __('Min Amount', 'multisafepay'),
                 'type' => 'decimal',
-                'description' => __('This payment method is not shown in the checkout if the order total is lower than the defined amount. Leave black for no restrictions.', 'multisafepay'),
+                'desc_tip' => __('This payment method is not shown in the checkout if the order total is lower than the defined amount. Leave blank for no restrictions.', 'multisafepay'),
                 'default' => $this->get_option('min_amount', ''),
             ),
             'max_amount' => array(
                 'title' => __('Max Amount', 'multisafepay'),
                 'type' => 'decimal',
-                'description' => __('This payment method is not shown in the checkout if the order total exceeds a certain amount. Leave black for no restrictions.', 'multisafepay'),
+                'desc_tip' => __('This payment method is not shown in the checkout if the order total exceeds a certain amount. Leave blank for no restrictions.', 'multisafepay'),
                 'default' => $this->get_option('max_amount', ''),
             ),
             'countries' => array(
                 'title' => __('Country', 'multisafepay'),
                 'type' => 'multiselect',
-                'description' => __('If you select one or more countries, this payment method won\'t show in the checkout page, if the payment address`s country of the customer match with the selected values. Leave black for no restrictions.', 'multisafepay'),
+                'description' => __('If you select one or more countries, this payment method won\'t show in the checkout page, if the payment address`s country of the customer match with the selected values. Leave blank for no restrictions.', 'multisafepay'),
                 'desc_tip' => __('For most operating system and configurations, you must hold Ctrl + D or Cmd + D on your keyboard, to select more than one value.', 'multisafepay'),
                 'options' => $this->get_countries(),
                 'default' => $this->get_option('countries', array()),
