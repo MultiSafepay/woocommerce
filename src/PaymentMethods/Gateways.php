@@ -62,7 +62,25 @@ class Gateways {
         'santander'     => Santander::class,
         'directbank'    => Sofort::class,
         'trustly'       => Trustly::class,
-        'visa'          => Visa::class
+        'visa'          => Visa::class,
+
+        'babycadeaubon'     => Babycadeaubon::class,
+        'beautywellness'    => Beautywellness::class,
+        'boekenbon'         => Boekenbon::class,
+        'fashioncheque'     => Fashioncheque::class,
+        'fashiongiftcard'   => Fashiongiftcard::class,
+        'fietsenbon'        => Fietsenbon::class,
+        'gezondheidsbon'    => Gezondheidsbon::class,
+        'good4fun'          => Good4fun::class,
+        'good4card'         => Goodcard::class,
+        'nationaletuinbon'  => Nationaletuinbon::class,
+        'parfumcadeaukaart' => Parfumcadeaukaart::class,
+        'podium'            => Podium::class,
+        'sportenfit'        => Sportenfit::class,
+        'vvvcadeaukaart'    => Vvvcadeaukaart::class,
+        'webshopgiftcard'   => Webshopgiftcard::class,
+        'wijncadeau'        => Wijncadeau::class,
+        'yourgift'          => Yourgift::class,
     );
 
     /**
