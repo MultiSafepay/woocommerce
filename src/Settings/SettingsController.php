@@ -160,7 +160,7 @@ class SettingsController {
                 '',
                 '',
                 __('You need to fill these settings, to be able to enable a MultiSafepay payment method', $this->plugin_name),
-                'error',
+                'error'
             );
         }
     }

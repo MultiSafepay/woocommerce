@@ -172,7 +172,9 @@ class Main {
         // Register the MultiSafepay payment gateways in WooCommerce.
         $this->loader->add_filter( 'woocommerce_payment_gateways', $payment_methods, 'get_gateways' );
         // Filter per country
-        $this->loader->add_filter( 'woocommerce_available_payment_gateways', $payment_methods, 'filter_gateway_per_country', 1000 );
+        $this->loader->add_filter( 'woocommerce_available_payment_gateways', $payment_methods, 'filter_gateway_per_country', 11 );
+        // Filter per min amount
+        $this->loader->add_filter( 'woocommerce_available_payment_gateways', $payment_methods, 'filter_gateway_per_min_amount', 12 );
 
     }
 
