@@ -205,6 +205,7 @@ class SettingsFields {
                 array(
                     'id' 			=> $this->plugin_name . '_remove_all_settings',
                     'label'			=> __( 'Delete settings if uninstall' , $this->plugin_name ),
+                    'description'      => '',
                     'type'			=> 'checkbox',
                     'default'		=> '0',
                     'placeholder'	=> __( 'Delete settings if uninstall', $this->plugin_name ),
