@@ -205,18 +205,13 @@ class SettingsFields {
                 array(
                     'id' 			=> $this->plugin_name . '_remove_all_settings',
                     'label'			=> __( 'Delete settings if uninstall' , $this->plugin_name ),
-                    'description'	=> __( 'Delete all settings of this plugin if you uninstall' , $this->plugin_name ),
-                    'type'			=> 'select',
-                    'options'		=> array(
-                        '0' => __('Disable', $this->plugin_name),
-                        '1' => __('Enable', $this->plugin_name),
-                    ),
+                    'type'			=> 'checkbox',
                     'default'		=> '0',
                     'placeholder'	=> __( 'Delete settings if uninstall', $this->plugin_name ),
-                    'tooltip'       => '',
+                    'tooltip'	    => __( 'Delete all settings of this plugin if you uninstall' , $this->plugin_name ),
                     'callback'      => '',
-                    'setting_type'  => 'bool',
-                    'sort_order'    => 7,
+                    'setting_type'  => 'boolean',
+                    'sort_order'    => 5,
                 ),
             )
         );

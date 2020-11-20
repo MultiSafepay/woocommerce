@@ -67,7 +67,7 @@ class SettingsFieldsDisplay {
      * @return  mixed
      */
     private function get_option_by_field( array $field ) {
-        $value = get_option( $field['id'] );
+        $value = get_option( $field['id'], false );
         if(!$value) {
             return $field['default'];
         }
@@ -117,6 +117,23 @@ class SettingsFieldsDisplay {
     }
 
     /**
+     * Render the html for a checkbox type input
+     *
+     * @param array $field
+     * @return string
+     */
+    private function render_checkbox_field(array $field ): string {
+        $checked = ($this->get_option_by_field($field)) ? 'checked="checked"' : '';
+        $field_id = esc_attr( $field['id'] );
+        $placeholder = esc_attr( $field['placeholder'] );
+        $html = '<input id="' . $field_id . '" type="' . $field['type'] . '" name="' . $field_id . '" placeholder="' . $placeholder . '" value="1" ' . $checked . ' />';
+        if(!empty($field['description'])) {
+            $html .= '<p class="description">' . $field['description'] . '</p>';
+        }
+        return $html;
+    }
+
+    /**
      * Render the html for each type of the registered setting field
      *
      * @return void
@@ -129,6 +146,9 @@ class SettingsFieldsDisplay {
                 break;
             case 'select':
                 $html .= $this->render_select_field($this->field);
+                break;
+            case 'checkbox':
+                $html .= $this->render_checkbox_field($this->field);
                 break;
         }
         echo $html;
