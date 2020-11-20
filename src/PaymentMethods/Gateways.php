@@ -71,6 +71,7 @@ class Gateways {
         'fashiongiftcard'   => Fashiongiftcard::class,
         'fietsenbon'        => Fietsenbon::class,
         'gezondheidsbon'    => Gezondheidsbon::class,
+        'givacard'          => Givacard::class,
         'good4fun'          => Good4fun::class,
         'good4card'         => Goodcard::class,
         'nationaletuinbon'  => Nationaletuinbon::class,
@@ -79,7 +80,9 @@ class Gateways {
         'sportenfit'        => Sportenfit::class,
         'vvvcadeaukaart'    => Vvvcadeaukaart::class,
         'webshopgiftcard'   => Webshopgiftcard::class,
+        'wellnessgiftcard'  => Wellnessgiftcard::class,
         'wijncadeau'        => Wijncadeau::class,
+        'winkelcheque'      => Winkelcheque::class,
         'yourgift'          => Yourgift::class,
     );
 
