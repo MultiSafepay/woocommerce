@@ -59,7 +59,7 @@ class CustomLinks {
      */
     public function get_links( array $links ): array {
         $custom_links = array(
-            '<a href="' . admin_url('multisafepay-settings') . '">' . __('Settings', $this->plugin_name) . '</a>',
+            '<a href="' . admin_url('admin.php?page=multisafepay-settings') . '">' . __('Settings', $this->plugin_name) . '</a>',
             '<a target="_blank" href="https://docs.multisafepay.com/integrations/plugins/woocommerce/">' . __('Docs', $this->plugin_name) . '</a>',
             '<a target="_blank" href="https://docs.multisafepay.com/integrations/plugins/woocommerce/#introduction">' . __('Support', $this->plugin_name) . '</a>',
         );
