@@ -26,16 +26,18 @@ namespace MultiSafepay\WooCommerce\Services;
 
 
 use MultiSafepay\Api\Transactions\OrderRequest;
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GoogleAnalytics;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\PaymentOptions;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\PluginDetails;
-use MultiSafepay\ValueObject\Money;
+use MultiSafepay\WooCommerce\Utils\MoneyUtil;
 use WC_Order;
 
 /**
  * Class OrderService
  * @package MultiSafepay\WooCommerce\Services
  */
-class OrderService {
+class OrderService
+{
 
     /**
      * @var CustomerService
@@ -43,36 +45,61 @@ class OrderService {
     protected $customer_service;
 
     /**
+     * @var ShoppingCartService
+     */
+    protected $shopping_cart_service;
+
+    /**
      * OrderService constructor.
      */
     public function __construct()
     {
         $this->customer_service = new CustomerService();
+        $this->shopping_cart_service = new ShoppingCartService();
     }
 
     /**
      * @param int $order_id
      * @param string $gateway_code
      * @param string $type
+     * @param string $gateway_info
      * @return OrderRequest
      */
-    public function create_order_request(int $order_id, string $gateway_code, string $type): OrderRequest
+    public function create_order_request(int $order_id, string $gateway_code, string $type, string $gateway_info = null): OrderRequest
     {
         $order = wc_get_order($order_id);
+        $time_active = get_option('multisafepay_time_active');
+        $time_active_unit = get_option('multisafepay_time_unit');
 
-        $payment_options = $this->create_payment_options($order);
-        $plugin_details = $this->create_plugin_details();
-        $customer_details = $this->customer_service->create_customer_details($order->get_customer_id());
+        if ($time_active_unit === 'days') {
+            $time_active = $time_active * 24 * 60 * 60;
+        } elseif ($time_active_unit === 'hours') {
+            $time_active = $time_active * 60 * 60;
+        }
 
         $order_request = new OrderRequest();
-        return $order_request->addOrderId($order->get_order_number())
-            ->addMoney(new Money((float)($order->get_total() * 100)))
+        $order_request
+            ->addOrderId($order->get_order_number())
+            ->addMoney(MoneyUtil::createMoney((float)($order->get_total()), $order->get_currency()))
             ->addGatewayCode($gateway_code)
             ->addType($type)
-            ->addPluginDetails($plugin_details)
+            ->addPluginDetails($this->create_plugin_details())
             ->addDescriptionText('Payment for order: ' . $order->get_id())
-            ->addCustomer($customer_details)
-            ->addPaymentOptions($payment_options);
+            ->addCustomer($this->customer_service->create_customer_details($order))
+            ->addPaymentOptions($this->create_payment_options($order))
+            ->addShoppingCart($this->shopping_cart_service->create_shopping_cart($order, $order->get_currency()))
+            ->addSecondsActive($time_active);
+
+        if ($order->get_shipping_total() > 0) {
+            $order_request->addDelivery($this->customer_service->create_delivery_details($order));
+        }
+
+        $ga_code = get_option('multisafepay_ga', false);
+        if ($ga_code) {
+            $order_request->addGoogleAnalytics((new GoogleAnalytics())->addAccountId($ga_code));
+        }
+
+        return $order_request;
     }
 
     /**
@@ -81,10 +108,12 @@ class OrderService {
     protected function create_plugin_details()
     {
         $plugin_details = new PluginDetails();
+
+        global $wp_version;
         return $plugin_details
             ->addApplicationName(plugin_basename(__FILE__))
-            ->addApplicationVersion('1.0.0')
-            ->addPluginVersion('1.0.0');
+            ->addApplicationVersion('Wordpress version: ' . $wp_version . '. WooCommerce version: ' . WC_VERSION)
+            ->addPluginVersion('4.0.0');
     }
 
     /**

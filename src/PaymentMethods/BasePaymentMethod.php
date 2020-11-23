@@ -195,7 +195,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $sdk = new Sdk(get_option('multisafepay_api_key'), get_option('multisafepay_testmode') === 'no');
         $transaction_manager = $sdk->getTransactionManager();
         $order_service = new OrderService();
-        $order_request = $order_service->create_order_request($order_id, $this->gateway_code, $this->type);
+        $order_request = $order_service->create_order_request($order_id, $this->gateway_code, $this->type, $this->get_gateway_info());
         $transaction = $transaction_manager->create($order_request);
 
         return array(

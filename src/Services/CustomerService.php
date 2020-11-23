@@ -32,6 +32,7 @@ use MultiSafepay\ValueObject\Customer\Country;
 use MultiSafepay\ValueObject\Customer\EmailAddress;
 use MultiSafepay\ValueObject\Customer\PhoneNumber;
 use MultiSafepay\ValueObject\IpAddress;
+use WC_Order;
 
 /**
  * Class CustomerService
@@ -41,40 +42,52 @@ class CustomerService
 {
 
     /**
-     * @param int $customer_id
+     * @param WC_Order $order
      * @return CustomerDetails
      */
-    public function create_customer_details(int $customer_id): CustomerDetails
+    public function create_customer_details(WC_Order $order): CustomerDetails
     {
-        $customer = get_user_by('id', $customer_id);
-
-        $customer_first_name = get_user_meta($customer->get('id'), 'billing_first_name', true);
-        $customer_last_name = get_user_meta($customer->get('id'), 'billing_last_name', true);
-        $customer_email = get_user_meta($customer->get('id'), 'billing_email', true);
-        $customer_country = get_user_meta($customer->get('id'), 'billing_country', true);
-        $customer_city = get_user_meta($customer->get('id'), 'billing_city', true);
-        $customer_state = get_user_meta($customer->get('id'), 'billing_state', true);
-        $customer_zip_code = get_user_meta($customer->get('id'), 'billing_postcode', true);
-        $customer_address_line_1 = get_user_meta($customer->get('id'), 'billing_address_1', true);
-        $customer_address_line_2 = get_user_meta($customer->get('id'), 'billing_address_2', true);
-        $customer_phone_number = get_user_meta($customer->get('id'), 'billing_phone', true);
-
         $customer_address = $this->create_address(
-            $customer_address_line_1,
-            $customer_address_line_2,
-            $customer_country,
-            $customer_state,
-            $customer_city,
-            $customer_zip_code);
+            $order->get_billing_address_1(),
+            $order->get_billing_address_2(),
+            $order->get_billing_country(),
+            $order->get_billing_state(),
+            $order->get_billing_city(),
+            $order->get_billing_postcode());
 
         return $this->create_customer(
             $customer_address,
-            $customer_email,
-            $customer_phone_number,
-            $customer_first_name,
-            $customer_last_name,
-            $_SERVER['REMOTE_ADDR'],
-            $_SERVER['HTTP_USER_AGENT']
+            $order->get_billing_email(),
+            $order->get_billing_phone(),
+            $order->get_billing_first_name(),
+            $order->get_billing_last_name(),
+            $order->get_customer_ip_address(),
+            $order->get_customer_user_agent()
+        );
+    }
+
+    /**
+     * @param WC_Order $order
+     * @return CustomerDetails
+     */
+    public function create_delivery_details(WC_Order $order): CustomerDetails
+    {
+        $delivery_address = $this->create_address(
+            $order->get_shipping_address_1(),
+            $order->get_shipping_address_2(),
+            $order->get_shipping_country(),
+            $order->get_shipping_state(),
+            $order->get_shipping_city(),
+            $order->get_shipping_postcode());
+
+        return $this->create_customer(
+            $delivery_address,
+            $order->get_billing_email(),
+            $order->get_billing_phone(),
+            $order->get_shipping_first_name(),
+            $order->get_shipping_last_name(),
+            $order->get_customer_ip_address(),
+            $order->get_customer_user_agent()
         );
     }
 
