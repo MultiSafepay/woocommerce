@@ -231,11 +231,11 @@ class SettingsFields {
         foreach ($msp_order_statuses as $key => $msp_order_status) {
             $order_status_fields[] = array(
                 'id' 			=> $this->plugin_name . '_' . $key,
-                'label'			=> __( $msp_order_status , $this->plugin_name ),
+                'label'			=> __( $msp_order_status['label'], $this->plugin_name ),
                 'description'	=> '',
                 'type'			=> 'select',
                 'options'		=> $wc_order_statuses,
-                'default'		=> '0',
+                'default'		=> $msp_order_status['default'],
                 'placeholder'	=> __( 'Select order status', $this->plugin_name ),
                 'tooltip'       => '',
                 'callback'      => '',
@@ -315,17 +315,17 @@ class SettingsFields {
      */
     private function get_msp_order_statuses(): array {
         return array (
-            'initialized_status'        => __('Initialized', $this->plugin_name),
-            'completed_status'          => __('Completed', $this->plugin_name),
-            'uncleared_status'          => __('Uncleared', $this->plugin_name),
-            'reserved_status'           => __('Reserved', $this->plugin_name),
-            'void_status'               => __('Void', $this->plugin_name),
-            'declined_status'           => __('Declined', $this->plugin_name),
-            'expired_status'            => __('Expired', $this->plugin_name),
-            'shipped_status'            => __('Shipped', $this->plugin_name),
-            'refunded_status'           => __('Refunded', $this->plugin_name),
-            'partial_refunded_status'   => __('Partial refunded', $this->plugin_name),
-            'cancelled_status'          => __('Cancelled', $this->plugin_name),
+            'initialized_status'        => array('label' => __('Initialized', $this->plugin_name),       'default' => 'wc-pending'),
+            'completed_status'          => array('label' => __('Completed', $this->plugin_name),         'default' => 'wc-processing'),
+            'uncleared_status'          => array('label' => __('Uncleared', $this->plugin_name),         'default' => 'wc-on-hold'),
+            'reserved_status'           => array('label' => __('Reserved', $this->plugin_name),          'default' => 'wc-on-hold'),
+            'void_status'               => array('label' => __('Void', $this->plugin_name),              'default' => 'wc-cancelled'),
+            'declined_status'           => array('label' => __('Declined', $this->plugin_name),          'default' => 'wc-cancelled'),
+            'expired_status'            => array('label' => __('Expired', $this->plugin_name),           'default' => 'wc-cancelled'),
+            'shipped_status'            => array('label' => __('Shipped', $this->plugin_name),           'default' => 'wc-completed'),
+            'refunded_status'           => array('label' => __('Refunded', $this->plugin_name),          'default' => 'wc-refunded'),
+            'partial_refunded_status'   => array('label' => __('Partial refunded', $this->plugin_name),  'default' => 'wc-refunded'),
+            'cancelled_status'          => array('label' => __('Cancelled', $this->plugin_name),         'default' => 'wc-cancelled'),
         );
     }
 
