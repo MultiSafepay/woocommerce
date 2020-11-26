@@ -29,7 +29,7 @@ class IdealQr extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_id(): string {
-        return 'idealqr';
+        return 'multisafepay_idealqr';
     }
 
     /**
@@ -57,7 +57,12 @@ class IdealQr extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_description(): string {
-        return 'Online payments with iDEAL';
+        $method_description = sprintf(
+            __('Easily receive payments with a simple scan of an iDEAL QR code. <br />Read more about <a href="%s" target="_blank">%s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay'),
+            'https://docs.multisafepay.com/payment-methods/banks/idealqr/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
+            $this->get_payment_method_title()
+        );
+        return $method_description;
     }
 
     /**

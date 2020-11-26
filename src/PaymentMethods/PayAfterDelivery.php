@@ -30,7 +30,7 @@ class PayAfterDelivery extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_id(): string {
-        return 'payafter';
+        return 'multisafepay_payafter';
     }
 
     /**
@@ -58,7 +58,12 @@ class PayAfterDelivery extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_description(): string {
-        return '';
+        $method_description = sprintf(
+            __('Suitable for Dutch merchants allowing consumers to pay after they have received their order. <br />Read more about <a href="%s" target="_blank">%s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay'),
+            'https://docs.multisafepay.com/payment-methods/billing-suite/pay-after-delivery/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
+            $this->get_payment_method_title()
+        );
+        return $method_description;
     }
 
     /**

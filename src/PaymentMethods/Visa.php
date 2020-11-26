@@ -30,7 +30,7 @@ class Visa extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_id(): string {
-        return 'visa';
+        return 'multisafepay_visa';
     }
 
     /**
@@ -58,7 +58,12 @@ class Visa extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_description(): string {
-        return '';
+        $method_description = sprintf(
+            __('Increase conversions by accepting Visa payments with a worldwide reach. <br />Read more about <a href="%s" target="_blank">%s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay'),
+            'https://docs.multisafepay.com/payment-methods/credit-and-debit-cards/visa/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
+            $this->get_payment_method_title()
+        );
+        return $method_description;
     }
 
     /**

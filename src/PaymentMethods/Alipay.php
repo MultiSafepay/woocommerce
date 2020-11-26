@@ -30,7 +30,7 @@ class Alipay extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_id(): string {
-        return 'alipay';
+        return 'multisafepay_alipay';
     }
 
     /**
@@ -58,7 +58,12 @@ class Alipay extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_description(): string {
-        return '';
+        $method_description = sprintf(
+            __('Alipay is a payment platform allowing you to make safe payments online. Only suitable for Chinese residents. <br />Read more about <a href="%s" target="_blank">%s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay'),
+            'https://docs.multisafepay.com/payment-methods/wallet/alipay/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
+            $this->get_payment_method_title()
+        );
+        return $method_description;
     }
 
     /**

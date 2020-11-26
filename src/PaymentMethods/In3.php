@@ -30,7 +30,7 @@ class In3 extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_id(): string {
-        return 'in3';
+        return 'multisafepay_in3';
     }
 
     /**
@@ -58,7 +58,12 @@ class In3 extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_description(): string {
-        return '';
+        $method_description = sprintf(
+            __('Conveniently allows customers to make three seperate payments for a single purchase. <br />Read more about <a href="%s" target="_blank">%s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay'),
+            'https://docs.multisafepay.com/payment-methods/billing-suite/in3/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
+            $this->get_payment_method_title()
+        );
+        return $method_description;
     }
 
     /**

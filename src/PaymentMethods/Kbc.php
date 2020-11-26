@@ -30,7 +30,7 @@ class Kbc extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_id(): string {
-        return 'kbc';
+        return 'multisafepay_kbc';
     }
 
     /**
@@ -58,7 +58,12 @@ class Kbc extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_description(): string {
-        return '';
+        $method_description = sprintf(
+            __('Accept payments from KBC customers allowing them to pay using their KBC bank account. <br />Read more about <a href="%s" target="_blank">%s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay'),
+            'https://docs.multisafepay.com/payment-methods/banks/kbc/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
+            $this->get_payment_method_title()
+        );
+        return $method_description;
     }
 
     /**

@@ -30,7 +30,7 @@ class Einvocing extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_id(): string {
-        return 'einvocing';
+        return 'multisafepay_einvoice';
     }
 
     /**
@@ -58,7 +58,12 @@ class Einvocing extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_description(): string {
-        return '';
+        $method_description = sprintf(
+            __('A flexible payment solution allowing businesses to take control and personalize consumer payments. <br />Read more about <a href="%s" target="_blank">%s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay'),
+            'https://docs.multisafepay.com/payment-methods/billing-suite/e-invoicing/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
+            $this->get_payment_method_title()
+        );
+        return $method_description;
     }
 
     /**

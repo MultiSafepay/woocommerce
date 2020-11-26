@@ -24,46 +24,46 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
-class Babycadeaubon extends BasePaymentMethod
-{
+class Babycadeaubon extends BasePaymentMethod {
+
     /**
      * @return string
      */
-    public function get_payment_method_id(): string
-    {
-        return 'babycadeaubon';
+    public function get_payment_method_id(): string {
+        return 'multisafepay_babycadeaubon';
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_code(): string
-    {
+    public function get_payment_method_code(): string {
         return 'BABYCAD';
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_type(): string
-    {
+    public function get_payment_method_type(): string {
         return 'redirect';
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_title(): string
-    {
+    public function get_payment_method_title(): string {
         return __('Baby Cadeaubon', 'multisafepay');
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_description(): string
-    {
-        return '';
+    public function get_payment_method_description(): string {
+        $method_description = sprintf(
+            __('Read more about <a href="%s" target="_blank">%s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay'),
+            'https://docs.multisafepay.com/payment-methods/prepaid-cards/gift-cards/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
+            $this->get_payment_method_title()
+        );
+        return $method_description;
     }
 
     /**
