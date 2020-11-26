@@ -51,10 +51,10 @@ class ShoppingCartService
 
         foreach ($order->get_items() as $item) {
             $cart_items[] = $this->create_cart_item($item, $currency);
+        }
 
-            if ($order->get_shipping_total() > 0) {
-                $cart_items[] = $this->create_shipping_cart_item($order, $currency);
-            }
+        if ($order->get_shipping_total() > 0) {
+            $cart_items[] = $this->create_shipping_cart_item($order, $currency);
         }
 
         return new ShoppingCart($cart_items);
