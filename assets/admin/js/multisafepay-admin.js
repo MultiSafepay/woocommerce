@@ -23,11 +23,9 @@
 				dataType : 'json',
 				type     : 'POST',
 				success:  function( response ) {
-					console.log('hey');
 					if ( 'is_setup' === response.data ) {
 						return false;
 					} else if ( 'needs_setup' === response.data ) {
-						console.log(multisafepay.multisafepay_settings_url);
 						window.location.href = multisafepay.multisafepay_settings_url;
 					}
 				}

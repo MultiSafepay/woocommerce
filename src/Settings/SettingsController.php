@@ -323,8 +323,8 @@ class SettingsController {
             isset( $_POST['action'] ) && $_POST['action'] === 'woocommerce_toggle_gateway_enabled'
         ) {
             check_ajax_referer( 'woocommerce-toggle-payment-gateway-enabled', 'security' );
-            $is_there_api_key = $this->is_there_api_key();
-            if(!$is_there_api_key) {
+            $has_api_key = $this->has_api_key();
+            if(!$has_api_key) {
                 wp_die();
             }
         }
@@ -344,8 +344,8 @@ class SettingsController {
             isset( $_POST['action'] ) && $_POST['action'] === 'woocommerce_multisafepay_toggle_gateway_enabled'
         ) {
             check_ajax_referer( 'multisafepay-toggle-payment-gateway-enabled', 'security' );
-            $is_there_api_key = $this->is_there_api_key();
-            if (!$is_there_api_key) {
+            $has_api_key = $this->has_api_key();
+            if (!$has_api_key) {
                 wp_send_json_error('needs_setup');
                 wp_die();
             }
@@ -371,10 +371,10 @@ class SettingsController {
      *
      * @return  boolean
      */
-    private function is_there_api_key(): bool {
+    private function has_api_key(): bool {
         $test_environment = get_option( 'multisafepay_environment' );
         if( $test_environment ) {
-            $api_key = get_option( 'multisafepay_sandbox_api_key' );
+            $api_key = get_option( 'multisafepay_test_api_key' );
         }
         if( !$test_environment ) {
             $api_key = get_option( 'multisafepay_api_key' );

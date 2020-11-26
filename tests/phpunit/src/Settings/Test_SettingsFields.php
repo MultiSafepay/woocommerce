@@ -81,7 +81,6 @@ class Test_SettingsFields extends WP_UnitTestCase {
                 $this->assertIsString( $field['label'] );
                 $this->assertIsString( $field['description'] );
                 $this->assertIsString( $field['type'] );
-                $this->assertIsString( $field['default'] );
                 $this->assertIsString( $field['placeholder'] );
                 $this->assertIsString( $field['tooltip'] );
                 if(!empty( $field['callback'] )) {

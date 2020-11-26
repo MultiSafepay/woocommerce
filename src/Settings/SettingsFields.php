@@ -24,6 +24,8 @@
 
 namespace MultiSafepay\WooCommerce\Settings;
 
+use MultiSafepay\WooCommerce\Services\SdkService;
+
 /**
  * The settings fields.
  *
@@ -77,29 +79,25 @@ class SettingsFields {
             'fields'				=> array(
                 array(
                     'id' 			=> $this->plugin_name . '_testmode',
-                    'label'			=> __( 'Environment' , $this->plugin_name ),
-                    'description'	=> __( 'Environment', $this->plugin_name ),
-                    'type'	        => 'select',
-                    'options'		=> array(
-                        'no' =>  __('Production Mode', $this->plugin_name),
-                        'yes' => __('Test Mode', $this->plugin_name),
-                    ),
-                    'default'		=> 'yes',
-                    'placeholder'	=> __( 'Environment', $this->plugin_name ),
-                    'tooltip'       => '',
+                    'label'			=> __( 'Test Mode' , $this->plugin_name ),
+                    'description'      => '',
+                    'type'			=> 'checkbox',
+                    'default'		=> false,
+                    'placeholder'	=> __( 'Test Mode', $this->plugin_name ),
+                    'tooltip'	    => __( 'Check this option if you want to enable MultiSafepay in test mode.' , $this->plugin_name ),
                     'callback'      => '',
-                    'setting_type'  => 'string',
+                    'setting_type'  => 'boolean',
                     'sort_order'    => 1,
                 ),
                 array(
-                    'id' 			=> $this->plugin_name . '_sandbox_api_key',
-                    'label'			=> __( 'Sandbox API Key' , $this->plugin_name ),
-                    'description'	=> __( 'Sandbox API Key ', $this->plugin_name ),
+                    'id' 			=> $this->plugin_name . '_test_api_key',
+                    'label'			=> __( 'Test API Key' , $this->plugin_name ),
+                    'description'	=> __( 'Test API Key ', $this->plugin_name ),
                     'type'			=> 'text',
                     'default'		=> '',
-                    'placeholder'	=> __( 'Sandbox API Key', $this->plugin_name ),
+                    'placeholder'	=> __( 'Test API Key', $this->plugin_name ),
                     'tooltip'       => '',
-                    'callback'      => array($this, 'validate_sandbox_api_key'),
+                    'callback'      => array($this, 'validate_test_api_key'),
                     'setting_type'  => 'string',
                     'sort_order'    => 2,
                 ),
@@ -261,8 +259,9 @@ class SettingsFields {
      * @return  mixed
      */
     public function validate_api_key( string $api_key ) {
-        $sandbox       = ( get_option( $this->plugin_name . '_environment' ) ) ? true : false;
-        if( ( !$sandbox &&  empty($api_key) ) ) {
+        $testmode = ( get_option( $this->plugin_name . '_testmode', false ) ) ? true : false;
+
+        if( !$testmode && empty($api_key) ) {
             add_settings_error(
                 '',
                 '',
@@ -271,28 +270,58 @@ class SettingsFields {
             );
             return false;
         }
+
+        if( !$testmode &&  !empty($api_key) ) {
+            $sdk = new SdkService($api_key, $testmode);
+            if( ( strlen( $api_key ) < 5) || ( $sdk && is_wp_error( $sdk->get_gateways() ) ) ) {
+                add_settings_error(
+                    '',
+                    '',
+                    __('It seems the API Key is not valid on the live environment', $this->plugin_name),
+                    'error'
+                );
+
+                return $api_key;
+            }
+        }
+
         return $api_key;
     }
 
     /**
-     * Validates the sandbox api key field on submit
+     * Validates the test api key field on submit
      *
-     * @todo    Validate the api key in the SDK.
      *
-     * @param   string   $api_key   The sandbox api key
+     * @param   string   $api_key   The test api key
      * @return  mixed
      */
-    public function validate_sandbox_api_key( string $api_key ) {
-        $sandbox       = ( get_option( $this->plugin_name . '_environment' ) ) ? true : false;
-        if( ( $sandbox ) && ( empty($api_key) ) ) {
+    public function validate_test_api_key( string $api_key ) {
+
+        $testmode = ( get_option( $this->plugin_name . '_testmode', false ) ) ? true : false;
+
+        if( $testmode && empty($api_key) ) {
             add_settings_error(
                 '',
                 '',
-                __('You need to fill the sandbox API Key', $this->plugin_name),
+                __('You need to fill the Test API Key', $this->plugin_name),
                 'error'
             );
             return false;
         }
+
+        if( $testmode && !empty($api_key) ) {
+            $sdk = new SdkService( $api_key, $testmode );
+            if( ( strlen( $api_key ) < 5) || ( $sdk && is_wp_error( $sdk->get_gateways() ) ) ) {
+                add_settings_error(
+                    '',
+                    '',
+                    __('It seems the Test API Key is not valid on the test environment', $this->plugin_name),
+                    'error'
+                );
+                return $api_key;
+            }
+        }
+
         return $api_key;
     }
 
