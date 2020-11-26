@@ -34,7 +34,7 @@ class Test_Ideal extends WP_UnitTestCase {
     public function test_id() {
         $ideal = $this->ideal;
         $id = $ideal->id;
-        $this->assertEquals('ideal', $id);;
+        $this->assertEquals('multisafepay_ideal', $id);;
     }
 
     public function test_get_icon() {
