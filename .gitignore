@@ -4,4 +4,5 @@
 /vendor
 /coverage.xml
 /phpunit.xml
+/composer.lock
 /coverage-report/*
