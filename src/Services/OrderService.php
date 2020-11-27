@@ -108,12 +108,12 @@ class OrderService
     protected function create_plugin_details()
     {
         $plugin_details = new PluginDetails();
-
         global $wp_version;
         return $plugin_details
-            ->addApplicationName(plugin_basename(__FILE__))
+            ->addApplicationName('Wordpress-WooCommerce')
             ->addApplicationVersion('Wordpress version: ' . $wp_version . '. WooCommerce version: ' . WC_VERSION)
-            ->addPluginVersion('4.0.0');
+            ->addPluginVersion(MULTISAFEPAY_PLUGIN_VERSION)
+            ->addShopRootUrl( get_bloginfo('url') );
     }
 
     /**

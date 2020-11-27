@@ -45,6 +45,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Plugin version
+ */
+define('MULTISAFEPAY_PLUGIN_VERSION', '4.0.0');
+
+
+/**
  * Composer's autoload file.
  */
 require_once plugin_dir_path(__FILE__ ) . 'vendor/autoload.php';

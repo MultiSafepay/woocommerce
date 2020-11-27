@@ -86,7 +86,7 @@ class Main {
 	 */
 	public function __construct() {
 		$this->plugin_name = 'multisafepay';
-		$this->version = '4.0.0';
+		$this->version = MULTISAFEPAY_PLUGIN_VERSION;
 		$this->plugin_dir_url = plugin_dir_url(__DIR__);
         $this->plugin_dir_path = plugin_dir_path(__DIR__);
 		$this->loader = new Loader();
