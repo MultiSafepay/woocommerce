@@ -135,7 +135,7 @@ class PaymentMethodsController {
      * @return  array
      */
     public function filter_gateway_per_min_amount( array $payment_gateways ): array {
-        $total_amount = (WC()->cart->total) ? WC()->cart->total : false;
+        $total_amount = (WC()->cart) ? WC()->cart->total : false;
         foreach ( $payment_gateways as $gateway_id => $gateway ) {
             if (!empty( $gateway->min_amount ) && $total_amount < $gateway->min_amount ) {
                 unset( $payment_gateways[ $gateway_id ] );
