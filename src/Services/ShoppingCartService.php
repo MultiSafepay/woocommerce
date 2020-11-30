@@ -30,7 +30,7 @@ use MultiSafepay\ValueObject\CartItem;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
 use WC_Order;
 use WC_Order_Item;
-use WC_Tax;
+use WC_Order_Item_Product;
 
 /**
  * Class ShoppingCartService
@@ -100,14 +100,10 @@ class ShoppingCartService
      *
      * @param WC_Order_Item $item
      * @return float
-     *
      */
-    private function getItemTaxRate(WC_Order_Item $item) {
-        $tax_rate = 0;
-        $tax_rates = WC_Tax::get_rates($item->get_tax_class());
-        foreach ($tax_rates as $rate) {
-            $tax_rate = $tax_rate + $rate['rate'];
-        }
+    private function getItemTaxRate(WC_Order_Item $item): float {
+        $order_item_product = new WC_Order_Item_Product( $item->get_id() );
+        $tax_rate     = ( (float)$order_item_product->get_total_tax() * 100 ) / (float)$order_item_product->get_subtotal();
         return $tax_rate;
     }
 }
