@@ -24,6 +24,10 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
+use MultiSafepay\Api\Transactions\UpdateRequest;
+use MultiSafepay\WooCommerce\Services\SdkService;
+use WC_Order;
+
 /**
  * The payment methods controller.
  *
@@ -142,6 +146,41 @@ class PaymentMethodsController {
             }
         }
         return $payment_gateways;
+    }
+
+    /**
+     * Set the MultiSafepay transaction as shipped when the order
+     * status change to the one defined as shipped in the settings.
+     *
+     * @param   int         $order_id
+     * @param   WC_Order    $order
+     * @return  void
+     */
+    public function set_msp_transaction_as_shipped( int $order_id, WC_Order $order ): void {
+        $sdk = new SdkService();
+        $transaction_manager = $sdk->get_transaction_manager();
+        $update_order = new UpdateRequest();
+        $update_order->addId((string)$order_id);
+        $update_order->addStatus('shipped');
+        $transaction_manager->update((string)$order_id, $update_order);
+    }
+
+
+
+    /**
+     * Set the MultiSafepay transaction as invoiced when the order
+     * status change to the one defined as invoiced in the settings.
+     *
+     * @param   int         $order_id
+     * @param   WC_Order    $order
+     * @return  void
+     */
+    public function set_msp_transaction_as_invoiced( int $order_id, WC_Order $order ): void {
+        $sdk = new SdkService();
+        $transaction_manager = $sdk->get_transaction_manager();
+        $update_order = new UpdateRequest();
+        $update_order->addData(array('invoice_id' => $order_id));
+        $transaction_manager->update((string)$order_id, $update_order);
     }
 
 }

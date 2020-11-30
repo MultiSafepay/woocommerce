@@ -26,6 +26,8 @@ namespace MultiSafepay\WooCommerce\Services;
 
 
 use MultiSafepay\Api\GatewayManager;
+use MultiSafepay\Api\Gateways\Gateway;
+use MultiSafepay\Api\TransactionManager;
 use MultiSafepay\Exception\ApiException;
 use MultiSafepay\Exception\InvalidApiKeyException;
 use MultiSafepay\Sdk;
@@ -60,11 +62,11 @@ class SdkService {
      * @param  string   $api_key
      * @param  boolean  $test_mode
      */
-    public function __construct( string $api_key, bool $test_mode ) {
-        $this->api_key   = $api_key;
-        $this->test_mode = ($test_mode) ? false : true;
+    public function __construct( string $api_key = null, bool $test_mode = null ) {
+        $this->api_key   = $api_key ?? $this->get_api_key();
+        $this->test_mode = $test_mode ?? $this->get_test_mode();
         try {
-            $this->sdk = new Sdk( $this->api_key, $this->test_mode );
+            $this->sdk = new Sdk( $this->api_key, ($this->test_mode) ? false: true );
         }
         catch ( InvalidApiKeyException $invalidApiKeyException ) {
             if( get_option( 'multisafepay_debugmode', false ) ) {
@@ -72,6 +74,28 @@ class SdkService {
                 $logger->log( 'warning', $invalidApiKeyException->getMessage() );
             }
         }
+    }
+
+    /**
+     * Returns if test mode is enable
+     *
+     * @return  boolean
+     */
+    public function get_test_mode(): bool {
+        return (bool)get_option( 'multisafepay_testmode', false );
+    }
+
+    /**
+     * Returns api key set in settings page according with
+     * the environment selected
+     *
+     * @return  string
+     */
+    public function get_api_key(): string {
+        if( $this->get_test_mode() ) {
+            return get_option( 'multisafepay_test_api_key', false );
+        }
+        return get_option( 'multisafepay_api_key', false );
     }
 
 
@@ -98,7 +122,7 @@ class SdkService {
     /**
      * Returns an array of the gateways available on the merchant account
      *
-     * @return array
+     * @return Gateway[]
      */
     public function get_gateways() {
         try {
@@ -112,5 +136,14 @@ class SdkService {
             }
             return new WP_Error( 'multisafepay-warning', $apiException->getMessage() );
         }
+    }
+
+    /**
+     * Returns transaction manager
+     *
+     * @return  TransactionManager
+     */
+    public function get_transaction_manager(): TransactionManager {
+        return $this->sdk->getTransactionManager();
     }
 }

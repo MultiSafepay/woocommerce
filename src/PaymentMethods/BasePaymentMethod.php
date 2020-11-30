@@ -25,8 +25,8 @@
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
 use MultiSafepay\Api\TransactionManager;
-use MultiSafepay\Sdk;
 use MultiSafepay\WooCommerce\Services\OrderService;
+use MultiSafepay\WooCommerce\Services\SdkService;
 use WC_Countries;
 use WC_Payment_Gateway;
 
@@ -212,8 +212,8 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      */
     public function process_payment($order_id): array
     {
-        $sdk = new Sdk(get_option('multisafepay_api_key'), get_option('multisafepay_testmode') === 'no');
-        $transaction_manager = $sdk->getTransactionManager();
+        $sdk = new SdkService();
+        $transaction_manager = $sdk->get_transaction_manager();
         $order_service = new OrderService();
         $order_request = $order_service->create_order_request($order_id, $this->gateway_code, $this->type, $this->get_gateway_info());
         $transaction = $transaction_manager->create($order_request);

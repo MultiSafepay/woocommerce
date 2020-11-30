@@ -259,7 +259,8 @@ class SettingsFields {
      * @return  mixed
      */
     public function validate_api_key( string $api_key ) {
-        $testmode = ( get_option( $this->plugin_name . '_testmode', false ) ) ? true : false;
+
+        $testmode = get_option( $this->plugin_name . '_testmode', false );
 
         if( !$testmode && empty($api_key) ) {
             add_settings_error(
@@ -272,7 +273,7 @@ class SettingsFields {
         }
 
         if( !$testmode &&  !empty($api_key) ) {
-            $sdk = new SdkService($api_key, $testmode);
+            $sdk = new SdkService( $api_key, (bool)$testmode );
             if( ( strlen( $api_key ) < 5) || ( $sdk && is_wp_error( $sdk->get_gateways() ) ) ) {
                 add_settings_error(
                     '',
@@ -297,7 +298,7 @@ class SettingsFields {
      */
     public function validate_test_api_key( string $api_key ) {
 
-        $testmode = ( get_option( $this->plugin_name . '_testmode', false ) ) ? true : false;
+        $testmode = get_option( $this->plugin_name . '_testmode', false );
 
         if( $testmode && empty($api_key) ) {
             add_settings_error(
@@ -310,7 +311,7 @@ class SettingsFields {
         }
 
         if( $testmode && !empty($api_key) ) {
-            $sdk = new SdkService( $api_key, $testmode );
+            $sdk = new SdkService( $api_key, (bool)$testmode );
             if( ( strlen( $api_key ) < 5) || ( $sdk && is_wp_error( $sdk->get_gateways() ) ) ) {
                 add_settings_error(
                     '',

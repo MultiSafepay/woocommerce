@@ -15,3 +15,5 @@ parameters:
     PHP_CodeSniffer\Standards\Squiz\Sniffs\Commenting\FunctionCommentSniff.IncorrectParamVarName: ~
     PHP_CodeSniffer\Standards\Squiz\Sniffs\Commenting\FunctionCommentSniff.ScalarTypeHintMissing:
       - 'src/PaymentMethods/BasePaymentMethod.php'
+    Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer:
+      - 'src/Main.php'
