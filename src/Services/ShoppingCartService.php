@@ -53,6 +53,10 @@ class ShoppingCartService
             $cart_items[] = $this->create_cart_item($item, $currency);
         }
 
+        foreach ($order->get_items('coupon') as $item ) {
+            $cart_items[] = $this->create_coupon_cart_item($item, $currency);
+        }
+
         if ($order->get_shipping_total() > 0) {
             $cart_items[] = $this->create_shipping_cart_item($order, $currency);
         }
@@ -75,6 +79,22 @@ class ShoppingCartService
             ->addMerchantItemId((string)$item->get_id())
             ->addUnitPrice(MoneyUtil::createMoney((float)$product->get_price(), $currency))
             ->addTaxRate($this->getItemTaxRate($item));
+    }
+
+    /**
+     * @param WC_Order_Item $item
+     * @param string $currency
+     * @return CartItem
+     */
+    protected function create_coupon_cart_item(WC_Order_Item $item, string $currency): CartItem
+    {
+        $tax_percentage = ((float)$item->get_discount_tax() * 100) / $item->get_discount();
+        $cartItem = new CartItem();
+        return $cartItem->addName( $item->get_name() )
+            ->addQuantity( 1 )
+            ->addMerchantItemId( (string)$item->get_id() )
+            ->addUnitPrice(MoneyUtil::createMoney((float)$item->get_discount(), $currency)->negative())
+            ->addTaxRate($tax_percentage);
     }
 
     /**
