@@ -2,7 +2,6 @@
     position: relative;
     display: block;
 }
-
 #multisafepay-settings table.form-table input[type=date],
 #multisafepay-settings table.form-table input[type=datetime-local],
 #multisafepay-settings table.form-table input[type=datetime],
@@ -22,14 +21,8 @@
     box-sizing: border-box;
     vertical-align: top;
 }
-
-
 #multisafepay-support td.version-table-row {
     padding: 5px 10px 5px 0;
-}
-#multisafepay-support td.multisafepay-bold {
-    font-weight: 700;
-    padding-left: 15px;
 }
 #multisafepay-support h2 {
     font-size: 19px;
@@ -77,8 +70,9 @@
 
 }
 #multisafepay-support .multisafepay-sales-contact-list li ul li {
-    padding-top: 0px;
+    padding-top: 0;
     list-style-type: square;
 }
 #multisafepay-support .multisafepay-sales-contact-list li ul li:first-child {
-    padding-top: 0px;
+    padding-top: 0;
+}

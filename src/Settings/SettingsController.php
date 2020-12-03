@@ -78,6 +78,38 @@ class SettingsController {
         $this->plugin_dir_path = $plugin_dir_path;
 	}
 
+    /**
+     * In plugin version < 4.0.0 the options multisafepay_testmode, and multisafepay_debugmode
+     * had been stored as strings and returns yes - no.
+     *
+     * This function also works to returns booleans instead of strings for
+     * multisafepay_second_chance and multisafepay_remove_all_settings options
+     *
+     * @since 4.0.0
+     * @see https://developer.wordpress.org/reference/hooks/option_option/
+     *
+     * @param   string   $value
+     * @return  boolean
+     */
+	public function filter_multisafepay_settings_as_booleans( string $value ): bool {
+        if( 'yes' === $value || '1' === $value) {
+            return true;
+        }
+        return false;
+	}
+
+    /**
+     * This function returns int instead of strings for multisafepay_time_active
+     *
+     * @see https://developer.wordpress.org/reference/hooks/option_option/
+     *
+     * @param   string   $value
+     * @return  integer
+     */
+    public function filter_multisafepay_settings_as_int( string $value ): int {
+        return (int)$value;
+    }
+
 	/**
 	 * Register the stylesheets for the settings page.
      *

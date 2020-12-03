@@ -92,7 +92,7 @@ class Main {
 		$this->loader = new Loader();
 		$this->set_locale();
         $this->add_custom_links_in_plugin_list();
-		$this->define_settings_hooks();
+        $this->define_settings_hooks();
 		$this->define_payment_methods_hooks();
 	}
 
@@ -131,9 +131,16 @@ class Main {
      * @return void
 	 */
 	private function define_settings_hooks(): void {
-	    if( is_admin() ) {
-            // Controller settings page
-            $plugin_settings = new SettingsController( $this->get_plugin_name(), $this->get_version(), $this->plugin_dir_url,  $this->plugin_dir_path );
+
+	    $plugin_settings = new SettingsController( $this->get_plugin_name(), $this->get_version(), $this->plugin_dir_url,  $this->plugin_dir_path );
+        // Filter get_option for some option names.
+        $this->loader->add_filter( 'option_multisafepay_testmode', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
+        $this->loader->add_filter( 'option_multisafepay_debugmode', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
+        $this->loader->add_filter( 'option_multisafepay_second_chance', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
+        $this->loader->add_filter( 'option_multisafepay_remove_all_settings', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
+        $this->loader->add_filter( 'option_multisafepay_time_active', $plugin_settings, 'filter_multisafepay_settings_as_int' );
+
+        if( is_admin() ) {
             // Enqueue styles in controller settings page
             $this->loader->add_action( 'admin_enqueue_scripts', $plugin_settings, 'enqueue_styles', 1 );
             // Enqueue scripts in controller settings page
@@ -149,7 +156,6 @@ class Main {
             $this->loader->add_action( 'wp_ajax_woocommerce_toggle_gateway_enabled', $plugin_settings, 'before_ajax_toggle_gateway_enabled' );
             // Filter and return ordered the results of the fields
             $this->loader->add_filter( 'multisafepay_common_settings_fields', $plugin_settings, 'filter_multisafepay_common_settings_fields', 10, 1 );
-
         }
 	}
 
