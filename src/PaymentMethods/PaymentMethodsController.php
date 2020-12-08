@@ -84,18 +84,6 @@ class PaymentMethodsController {
 	}
 
     /**
-     * Register the scripts for the payment methods
-     *
-     * @see https://developer.wordpress.org/reference/functions/wp_enqueue_script/
-     * @todo restrict this to checkout page. Probably won`` be needed in any other place.
-     *
-     * @return void
-     */
-	public function enqueue_scripts(): void {
-		wp_enqueue_script( $this->plugin_name, $this->plugin_dir_url . 'assets/public/js/multisafepay-public.js', array( 'jquery' ), $this->version, false );
-	}
-
-    /**
      * Merge existing gateways and MultiSafepay Gateways
      *
      * @param array $gateways

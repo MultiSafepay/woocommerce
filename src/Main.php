@@ -173,8 +173,6 @@ class Main {
         $this->loader->add_action( 'plugins_loaded', $payment_methods, 'init_multisafepay_payment_methods' );
         // Enqueue styles in payment methods
 		$this->loader->add_action( 'wp_enqueue_scripts', $payment_methods, 'enqueue_styles' );
-        // Enqueue scripts in payment methods
-		$this->loader->add_action( 'wp_enqueue_scripts', $payment_methods, 'enqueue_scripts' );
         // Register the MultiSafepay payment gateways in WooCommerce.
         $this->loader->add_filter( 'woocommerce_payment_gateways', $payment_methods, 'get_gateways' );
         // Filter per country

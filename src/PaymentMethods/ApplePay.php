@@ -27,6 +27,14 @@ namespace MultiSafepay\WooCommerce\PaymentMethods;
 class ApplePay extends BasePaymentMethod {
 
     /**
+     * ApplePay constructor.
+     */
+    public function __construct() {
+        parent::__construct();
+        add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_script' ) );
+    }
+
+    /**
      * @return string
      */
     public function get_payment_method_id(): string {
@@ -71,6 +79,18 @@ class ApplePay extends BasePaymentMethod {
      */
     public function get_payment_method_icon(): string {
         return 'applepay.png';
+    }
+
+    /**
+     * Enqueue Javascript to check if Apple Pay is available on the customer device.
+     *
+     * @return void
+     */
+    public function enqueue_script(): void {
+        if( is_checkout() ) {
+            $route = get_bloginfo( 'url' ) . '/wp-content/plugins/multisafepay/assets/public/js/multisafepay-apple-pay.js';
+            wp_enqueue_script( 'multisafepay', $route, array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
+        }
     }
 
 }
