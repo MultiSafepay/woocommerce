@@ -81,7 +81,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $this->max_amount = $this->get_option('max_amount');
         $this->min_amount = $this->get_option('min_amount');
         $this->countries    = $this->get_option('countries');
-
+        $this->initial_order_status = $this->get_option( 'initial_order_status', false);
         $this->plugin_dir_path = plugin_dir_path( dirname(__DIR__) );
 
         $this->errors = array();
@@ -217,6 +217,17 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $order_service = new OrderService();
         $order_request = $order_service->create_order_request($order_id, $this->gateway_code, $this->type, $this->get_gateway_info());
         $transaction = $transaction_manager->create($order_request);
+
+        $order = wc_get_order($order_id);
+
+        if($this->initial_order_status && $this->initial_order_status !== 'wc-default' && $transaction->getPaymentUrl() ) {
+            $order->update_status( str_replace('wc-', '', $this->initial_order_status), __( 'Transaction has been initialized.', 'multisafepay' ));
+        }
+
+        if( (!$this->initial_order_status || $this->initial_order_status === 'wc-default') && $transaction->getPaymentUrl() ) {
+            $order->update_status(str_replace('wc-', '', get_option( 'multisafepay_initialized_status', 'wc-pending') ), __('Transaction has been initialized.', 'multisafepay'));
+        }
+
 
         return array(
             'result' => 'success',
