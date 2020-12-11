@@ -26,6 +26,7 @@ namespace MultiSafepay\WooCommerce\Services;
 
 
 use MultiSafepay\Api\Transactions\OrderRequest;
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GoogleAnalytics;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\PaymentOptions;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\PluginDetails;
@@ -62,10 +63,10 @@ class OrderService
      * @param int $order_id
      * @param string $gateway_code
      * @param string $type
-     * @param string $gateway_info
+     * @param GatewayInfoInterface $gateway_info
      * @return OrderRequest
      */
-    public function create_order_request(int $order_id, string $gateway_code, string $type, string $gateway_info = null): OrderRequest
+    public function create_order_request(int $order_id, string $gateway_code, string $type, GatewayInfoInterface $gateway_info = null): OrderRequest
     {
         $order = wc_get_order($order_id);
         $time_active = get_option('multisafepay_time_active');
@@ -97,6 +98,10 @@ class OrderService
         $ga_code = get_option('multisafepay_ga', false);
         if ($ga_code) {
             $order_request->addGoogleAnalytics((new GoogleAnalytics())->addAccountId($ga_code));
+        }
+
+        if ($gateway_info) {
+            $order_request->addGatewayInfo($gateway_info);
         }
 
         return $order_request;

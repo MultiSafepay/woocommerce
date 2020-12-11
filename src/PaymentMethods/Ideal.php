@@ -24,6 +24,10 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfo\Ideal as IdealGatewayInfo;
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
+use MultiSafepay\WooCommerce\Services\IssuerService;
+
 class Ideal extends BasePaymentMethod {
 
     /**
@@ -44,7 +48,7 @@ class Ideal extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_type(): string {
-        return 'redirect';
+        return 'direct';
     }
 
     /**
@@ -88,10 +92,48 @@ class Ideal extends BasePaymentMethod {
     }
 
     /**
-     * @return string
+     * Prints checkout custom fields
+     *
+     * @return  void
      */
-    public function get_gateway_info(): string {
-        return 'Ideal';
+    public function payment_fields(): void
+    {
+        $issuerService = new IssuerService();
+        $issuers = $issuerService->get_issuers($this->get_payment_method_code());
+
+        require($this->plugin_dir_path . 'templates/multisafepay-checkout-fields-display.php');
+    }
+
+    /**
+     * @param array|null $data
+     * @return IdealGatewayInfo
+     */
+    public function get_gateway_info(array $data = null): GatewayInfoInterface {
+        $gatewayInfo = new IdealGatewayInfo();
+
+        if (isset($_POST[ $this->id . '_issuer_id'])) {
+            $gatewayInfo->addIssuerId($_POST[ $this->id . '_issuer_id']);
+        }
+
+        return $gatewayInfo;
+    }
+
+    /**
+     * Check if issuer_id has been set
+     *
+     * @param GatewayInfoInterface $gatewayInfo
+     * @return boolean
+     */
+    public function validate_gateway_info(GatewayInfoInterface $gatewayInfo): bool
+    {
+        $data = $gatewayInfo->getData();
+
+        if (empty($data[ 'issuer_id' ])) {
+            $this->type = 'redirect';
+            return false;
+        }
+
+        return true;
     }
 
 }

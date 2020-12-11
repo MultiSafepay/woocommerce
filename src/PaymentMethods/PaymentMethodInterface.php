@@ -27,6 +27,8 @@
  */
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
+
 interface PaymentMethodInterface {
 
     /**
@@ -93,10 +95,19 @@ interface PaymentMethodInterface {
     public function get_payment_method_icon(): string;
 
     /**
-     * Add icon to a gateway
+     * Add gatewayinfo to request
      *
-     * @return string
+     * @param array|null $data
+     * @return GatewayInfoInterface
      */
-    public function get_gateway_info(): string;
+    public function get_gateway_info(array $data = null): GatewayInfoInterface;
+
+    /**
+     * Check if the gateway info is complete, otherwise you can perform custom actions
+     *
+     * @param GatewayInfoInterface $gatewayInfo
+     * @return boolean
+     */
+    public function validate_gateway_info(GatewayInfoInterface $gatewayInfo): bool;
 
 }

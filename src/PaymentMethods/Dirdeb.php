@@ -24,6 +24,10 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfo\Account;
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
+use MultiSafepay\ValueObject\IbanNumber;
+
 class Dirdeb extends BasePaymentMethod {
     
     /**
@@ -88,10 +92,18 @@ class Dirdeb extends BasePaymentMethod {
     }
 
     /**
-     * @return string
+     * @param array|null $data
+     * @return Account
      */
-    public function get_gateway_info(): string {
-        return 'Account';
+    public function get_gateway_info(array $data = null): GatewayInfoInterface {
+        $gatewayInfo = new Account();
+
+        $gatewayInfo->addAccountId(new IbanNumber($_POST[ $this->id . '_account_holder_iban']));
+        $gatewayInfo->addAccountHolderIban(new IbanNumber($_POST[ $this->id . '_account_holder_iban']));
+        $gatewayInfo->addEmanDate($_POST[ $this->id . '_emandate']);
+        $gatewayInfo->addAccountHolderName($_POST[ $this->id . '_account_holder_name']);
+
+        return $gatewayInfo;
     }
 
 }

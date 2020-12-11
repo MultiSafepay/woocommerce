@@ -24,39 +24,48 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
-class IdealQr extends BasePaymentMethod {
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfo\QrCode;
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
+
+class IdealQr extends BasePaymentMethod
+{
     /**
      * @return string
      */
-    public function get_payment_method_id(): string {
+    public function get_payment_method_id(): string
+    {
         return 'multisafepay_idealqr';
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_code(): string {
+    public function get_payment_method_code(): string
+    {
         return 'IDEALQR';
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_type(): string {
+    public function get_payment_method_type(): string
+    {
         return 'redirect';
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_title(): string {
+    public function get_payment_method_title(): string
+    {
         return __('iDEAL QR', 'multisafepay');
     }
 
     /**
      * @return string
      */
-    public function get_payment_method_description(): string {
+    public function get_payment_method_description(): string
+    {
         $method_description = sprintf(
             __('Easily receive payments with a simple scan of an iDEAL QR code. <br />Read more about <a href="%s" target="_blank">%s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay'),
             'https://docs.multisafepay.com/payment-methods/banks/idealqr/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
@@ -68,15 +77,22 @@ class IdealQr extends BasePaymentMethod {
     /**
      * @return string
      */
-    public function get_payment_method_icon(): string {
+    public function get_payment_method_icon(): string
+    {
         return 'ideal-qr.png';
     }
 
     /**
-     * @return string
+     * @param array|null $data
+     * @return GatewayInfoInterface
      */
-    public function get_gateway_info(): string {
-        return 'QrCode';
+    public function get_gateway_info(array $data = null): GatewayInfoInterface
+    {
+        $order = wc_get_order($data['order_id']);
+        $gateway_info = new QrCode();
+        return $gateway_info
+            ->addMaxAmount($order->get_amount())
+            ->addMinAmount($order->get_amount());
     }
 
 }

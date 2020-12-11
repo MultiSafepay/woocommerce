@@ -24,6 +24,7 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
+
 class Beautywellness extends BasePaymentMethod
 {
     /**
@@ -89,13 +90,6 @@ class Beautywellness extends BasePaymentMethod
      */
     public function get_payment_method_icon(): string {
         return 'beautywellness.png';
-    }
-
-    /**
-     * @return string
-     */
-    public function get_gateway_info(): string {
-        return 'Meta';
     }
 
 }

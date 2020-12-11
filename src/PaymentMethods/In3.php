@@ -24,7 +24,7 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
-class In3 extends BasePaymentMethod {
+class In3 extends BaseBillingSuitePaymentMethod {
 
     /**
      * @return string
@@ -85,13 +85,6 @@ class In3 extends BasePaymentMethod {
      */
     public function get_payment_method_icon(): string {
         return 'in3.png';
-    }
-
-    /**
-     * @return string
-     */
-    public function get_gateway_info(): string {
-        return 'Meta';
     }
 
 }

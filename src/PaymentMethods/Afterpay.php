@@ -24,7 +24,7 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
-class Afterpay extends BasePaymentMethod {
+class Afterpay extends BaseBillingSuitePaymentMethod {
 
     /**
      * @return string
@@ -85,13 +85,6 @@ class Afterpay extends BasePaymentMethod {
      */
     public function get_payment_method_icon(): string {
         return 'afterpay.png';
-    }
-
-    /**
-     * @return string
-     */
-    public function get_gateway_info(): string {
-        return 'Meta';
     }
 
 }

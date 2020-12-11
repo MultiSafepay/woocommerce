@@ -24,7 +24,7 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
-class PayAfterDelivery extends BasePaymentMethod {
+class PayAfterDelivery extends BaseBillingSuitePaymentMethod {
 
     /**
      * @return string
@@ -85,13 +85,6 @@ class PayAfterDelivery extends BasePaymentMethod {
      */
     public function get_payment_method_icon(): string {
         return 'payafter.png';
-    }
-
-    /**
-     * @return string
-     */
-    public function get_gateway_info(): string {
-        return 'Meta';
     }
 
 }

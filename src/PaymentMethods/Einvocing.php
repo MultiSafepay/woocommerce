@@ -24,7 +24,7 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
-class Einvocing extends BasePaymentMethod {
+class Einvocing extends BaseBillingSuitePaymentMethod {
 
     /**
      * @return string
@@ -85,13 +85,6 @@ class Einvocing extends BasePaymentMethod {
      */
     public function get_payment_method_icon(): string {
         return 'einvoice.png';
-    }
-
-    /**
-     * @return string
-     */
-    public function get_gateway_info(): string {
-        return 'Meta';
     }
 
 }
