@@ -169,8 +169,6 @@ class Main {
 	private function define_payment_methods_hooks(): void {
         // Payment controller
 		$payment_methods = new PaymentMethodsController( $this->get_plugin_name(), $this->get_version(), $this->plugin_dir_url );
-        // Init MultiSafepay payment methods
-        $this->loader->add_action( 'plugins_loaded', $payment_methods, 'init_multisafepay_payment_methods' );
         // Enqueue styles in payment methods
 		$this->loader->add_action( 'wp_enqueue_scripts', $payment_methods, 'enqueue_styles' );
         // Register the MultiSafepay payment gateways in WooCommerce.

@@ -62,7 +62,6 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
     public function __construct()
     {
         $this->supports = array('products', 'refunds');
-
         $this->id = $this->get_payment_method_id();
         $this->type = $this->get_payment_method_type();
         $this->method_title = $this->get_payment_method_title();
@@ -72,11 +71,10 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $this->has_fields = $this->has_fields();
         $this->checkout_fields_ids = $this->get_checkout_fields_ids();
         $this->icon = $this->get_logo();
-
         $this->add_form_fields();
-
+        $this->init_form_fields();
         $this->init_settings();
-        $this->enabled = $this->get_option('enabled');
+        $this->enabled = $this->get_option('enabled', 'no');
         $this->title = $this->get_option('title', $this->get_method_title());
         $this->description = $this->get_option('description');
         $this->max_amount = $this->get_option('max_amount');
@@ -84,10 +82,8 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $this->countries    = $this->get_option('countries');
         $this->initial_order_status = $this->get_option( 'initial_order_status', false);
         $this->plugin_dir_path = plugin_dir_path( dirname(__DIR__) );
-
-        $this->errors = array();
-
-        add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
+        add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options') );
+        add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'display_errors') );
     }
 
     /**
@@ -268,14 +264,27 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * @param string $key
      * @param string $value
      * @return  string
-     * @todo This function needs more work checking if API key works on the SDK.
-     *
      */
-    public function validate_enabled_field(string $key, string $value): string
-    {
-        return $value !== null ? 'yes' : 'no';
+    public function validate_enabled_field( $key, $value ) {
+        if( null === $value) {
+            return 'no';
+        }
+        $gateways = ( new SdkService() )->get_gateways();
+        $available_gateways = array();
+        foreach ( $gateways as $gateway ) {
+            $available_gateways[] = $gateway->getId();
+        }
+        if( !in_array( $this->gateway_code, $available_gateways, true ) ) {
+            $message = sprintf(
+                __('It seems %s is not available for your MultiSafepay account. <a href="%s">Contact support</a>', 'multisafepay'),
+                $this->get_payment_method_title(),
+                admin_url('admin.php?page=multisafepay-settings&tab=support')
+            );
+            $this->add_error( $message );
+            return 'no';
+        }
+        return 'yes';
     }
-
 
     /**
      * Prints checkout custom fields

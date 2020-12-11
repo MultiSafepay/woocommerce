@@ -25,6 +25,7 @@
 namespace MultiSafepay\WooCommerce\Settings;
 
 use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
+use MultiSafepay\WooCommerce\Services\SdkService;
 
 /**
  * The settings page controller.
@@ -131,6 +132,7 @@ class SettingsController {
         $multisafepay_vars = array(
             'wp_ajax_url'               => admin_url('admin-ajax.php'),
             'multisafepay_settings_url' => admin_url('admin.php?page=multisafepay-settings&needs-setup=1'),
+            'multisafepay_gateways_url' => admin_url( 'admin.php?page=wc-settings&tab=checkout&section='),
             'nonces'                    => array(
                 'multisafepay_gateway_toggle'   => wp_create_nonce('multisafepay-toggle-payment-gateway-enabled')
             )
@@ -348,7 +350,7 @@ class SettingsController {
      * @return  void
      */
     public function before_ajax_toggle_gateway_enabled(): void {
-        $multisafepay_gateways = $this->get_gateways_ids();
+        $multisafepay_gateways = Gateways::get_gateways_ids();
         if(
             defined('DOING_AJAX') && DOING_AJAX &&
             isset( $_POST['gateway_id'] ) && in_array( $_POST['gateway_id'], $multisafepay_gateways, true ) &&
@@ -359,26 +361,37 @@ class SettingsController {
             if(!$has_api_key) {
                 wp_die();
             }
+            $is_gateway_enable = $this->is_gateway_enable($_POST['gateway_id']);
+            if(!$is_gateway_enable) {
+                wp_die();
+            }
         }
     }
 
     /**
      * This function is called by an AJAX action woocommerce_multisafepay_toggle_gateway_enabled
      * Check if API key is set up for the selected environment. If is not, return error for redirect the user to settings page.
+     * Also check if gateway is enable in the merchant account. If is not, redirect the user to the settings page with a warning.
      *
      * @return  void
      */
     public function multisafepay_ajax_toggle_gateway_enabled(): void {
-        $multisafepay_gateways = $this->get_gateways_ids();
+        $multisafepay_gateways = Gateways::get_gateways_ids();
         if(
             defined('DOING_AJAX') && DOING_AJAX &&
             isset( $_POST['gateway_id'] )  && in_array( $_POST['gateway_id'], $multisafepay_gateways, true ) &&
             isset( $_POST['action'] ) && $_POST['action'] === 'woocommerce_multisafepay_toggle_gateway_enabled'
         ) {
             check_ajax_referer( 'multisafepay-toggle-payment-gateway-enabled', 'security' );
+
             $has_api_key = $this->has_api_key();
             if (!$has_api_key) {
                 wp_send_json_error('needs_setup');
+                wp_die();
+            }
+            $is_gateway_enable = $this->is_gateway_enable( $_POST['gateway_id'] );
+            if(!$is_gateway_enable) {
+                wp_send_json_error('not_available');
                 wp_die();
             }
             wp_send_json(array("success" => true));
@@ -386,16 +399,26 @@ class SettingsController {
         }
     }
 
+
     /**
-     * Get gateways ids.
+     * Return if gateway is enable in the merchant account
      *
-     * @return  array
+     * @param string $gateway_id
+     * @return boolean
      */
-    private function get_gateways_ids(): array {
-        $gateways = new Gateways();
-        $gateways_ids = $gateways->get_gateways_ids();
-        return $gateways_ids;
+    private function is_gateway_enable( string $gateway_id ): bool {
+        $gateway_code =  Gateways::get_gateway_code_by_gateway_id( $gateway_id );
+        $gateways = ( new SdkService() )->get_gateways();
+        $available_gateways = array();
+        foreach ( $gateways as $gateway ) {
+            $available_gateways[] = $gateway->getId();
+        }
+        if( !in_array( $gateway_code, $available_gateways, true ) ) {
+            return false;
+        }
+        return true;
     }
+
 
     /**
      * Check if there is an api key to check before enable the MultiSafepay
@@ -404,7 +427,7 @@ class SettingsController {
      * @return  boolean
      */
     private function has_api_key(): bool {
-        $test_environment = get_option( 'multisafepay_environment' );
+        $test_environment = get_option( 'multisafepay_testmode', false );
         if( $test_environment ) {
             $api_key = get_option( 'multisafepay_test_api_key' );
         }

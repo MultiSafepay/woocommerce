@@ -32,58 +32,58 @@ namespace MultiSafepay\WooCommerce\PaymentMethods;
 class Gateways {
 
     const GATEWAYS = array(
-        'multisafepay'  => MultiSafepay::class,
-        'afterpay'      => Afterpay::class,
-        'alipay'        => Alipay::class,
-        'amex'          => Amex::class,
-        'applepay'      => ApplePay::class,
-        'bancontact'    => Bancontact::class,
-        'banktrans'     => BankTrans::class,
-        'belfius'       => Belfius::class,
-        'cbc'           => Cbc::class,
-        'creditcard'    => CreditCard::class,
-        'dbrtp'         => Dbrtp::class,
-        'dirdeb'        => Dirdeb::class,
-        'dotpay'        => Dotpay::class,
-        'einvocing'     => Einvocing::class,
-        'eps'           => Eps::class,
-        'giropay'       => Giropay::class,
-        'ideal'         => Ideal::class,
-        'idealqr'       => IdealQr::class,
-        'in3'           => In3::class,
-        'inghome'       => IngHomePay::class,
-        'kbc'           => Kbc::class,
-        'klarna'        => Klarna::class,
-        'maestro'       => Maestro::class,
-        'mastercard'    => MasterCard::class,
-        'payafter'      => PayAfterDelivery::class,
-        'paypal'        => PayPal::class,
-        'paysafecard'   => Paysafecard::class,
-        'santander'     => Santander::class,
-        'directbank'    => Sofort::class,
-        'trustly'       => Trustly::class,
-        'visa'          => Visa::class,
+        'multisafepay_multisafepay'  => MultiSafepay::class,
+        'multisafepay_afterpay'      => Afterpay::class,
+        'multisafepay_alipay'        => Alipay::class,
+        'multisafepay_amex'          => Amex::class,
+        'multisafepay_applepay'      => ApplePay::class,
+        'multisafepay_bancontact'    => Bancontact::class,
+        'multisafepay_banktrans'     => BankTrans::class,
+        'multisafepay_belfius'       => Belfius::class,
+        'multisafepay_cbc'           => Cbc::class,
+        'multisafepay_creditcard'    => CreditCard::class,
+        'multisafepay_dbrtp'         => Dbrtp::class,
+        'multisafepay_dirdeb'        => Dirdeb::class,
+        'multisafepay_dotpay'        => Dotpay::class,
+        'multisafepay_einvocing'     => Einvocing::class,
+        'multisafepay_eps'           => Eps::class,
+        'multisafepay_giropay'       => Giropay::class,
+        'multisafepay_ideal'         => Ideal::class,
+        'multisafepay_idealqr'       => IdealQr::class,
+        'multisafepay_in3'           => In3::class,
+        'multisafepay_inghome'       => IngHomePay::class,
+        'multisafepay_kbc'           => Kbc::class,
+        'multisafepay_klarna'        => Klarna::class,
+        'multisafepay_maestro'       => Maestro::class,
+        'multisafepay_mastercard'    => MasterCard::class,
+        'multisafepay_payafter'      => PayAfterDelivery::class,
+        'multisafepay_paypal'        => PayPal::class,
+        'multisafepay_paysafecard'   => Paysafecard::class,
+        'multisafepay_santander'     => Santander::class,
+        'multisafepay_directbank'    => Sofort::class,
+        'multisafepay_trustly'       => Trustly::class,
+        'multisafepay_visa'          => Visa::class,
 
-        'babycadeaubon'     => Babycadeaubon::class,
-        'beautywellness'    => Beautywellness::class,
-        'boekenbon'         => Boekenbon::class,
-        'fashioncheque'     => Fashioncheque::class,
-        'fashiongiftcard'   => Fashiongiftcard::class,
-        'fietsenbon'        => Fietsenbon::class,
-        'gezondheidsbon'    => Gezondheidsbon::class,
-        'givacard'          => Givacard::class,
-        'good4fun'          => Good4fun::class,
-        'good4card'         => Goodcard::class,
-        'nationaletuinbon'  => Nationaletuinbon::class,
-        'parfumcadeaukaart' => Parfumcadeaukaart::class,
-        'podium'            => Podium::class,
-        'sportenfit'        => Sportenfit::class,
-        'vvvcadeaukaart'    => Vvvcadeaukaart::class,
-        'webshopgiftcard'   => Webshopgiftcard::class,
-        'wellnessgiftcard'  => Wellnessgiftcard::class,
-        'wijncadeau'        => Wijncadeau::class,
-        'winkelcheque'      => Winkelcheque::class,
-        'yourgift'          => Yourgift::class,
+        'multisafepay_babycadeaubon'     => Babycadeaubon::class,
+        'multisafepay_beautywellness'    => Beautywellness::class,
+        'multisafepay_boekenbon'         => Boekenbon::class,
+        'multisafepay_fashioncheque'     => Fashioncheque::class,
+        'multisafepay_fashiongiftcard'   => Fashiongiftcard::class,
+        'multisafepay_fietsenbon'        => Fietsenbon::class,
+        'multisafepay_gezondheidsbon'    => Gezondheidsbon::class,
+        'multisafepay_givacard'          => Givacard::class,
+        'multisafepay_good4fun'          => Good4fun::class,
+        'multisafepay_good4card'         => Goodcard::class,
+        'multisafepay_nationaletuinbon'  => Nationaletuinbon::class,
+        'multisafepay_parfumcadeaukaart' => Parfumcadeaukaart::class,
+        'multisafepay_podium'            => Podium::class,
+        'multisafepay_sportenfit'        => Sportenfit::class,
+        'multisafepay_vvvcadeaukaart'    => Vvvcadeaukaart::class,
+        'multisafepay_webshopgiftcard'   => Webshopgiftcard::class,
+        'multisafepay_wellnessgiftcard'  => Wellnessgiftcard::class,
+        'multisafepay_wijncadeau'        => Wijncadeau::class,
+        'multisafepay_winkelcheque'      => Winkelcheque::class,
+        'multisafepay_yourgift'          => Yourgift::class,
     );
 
     /**
@@ -91,12 +91,23 @@ class Gateways {
      *
      * @return array
      */
-    public function get_gateways_ids(): array {
+    public static function get_gateways_ids(): array {
         $gateways_ids = array();
         foreach (self::GATEWAYS as $gateway_id => $gateway) {
             $gateways_ids[] = $gateway_id;
         }
         return $gateways_ids;
+    }
+
+    /**
+     * Return the gateway code for the given gateway_id
+     *
+     * @param string $gateway_id
+     * @return string
+     */
+    public static function get_gateway_code_by_gateway_id( string $gateway_id ): string {
+        $gateway = self::GATEWAYS[$gateway_id];
+        return (new $gateway)->get_payment_method_code();
     }
 
 }

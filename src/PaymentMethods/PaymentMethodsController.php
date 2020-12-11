@@ -94,17 +94,6 @@ class PaymentMethodsController {
     }
 
     /**
-     * Initialize all MultiSafepay payment method instances with all specific settings for that gateway
-     *
-     * @return void
-     */
-    public function init_multisafepay_payment_methods(): void {
-        foreach ( Gateways::GATEWAYS as $gateway ) {
-            new $gateway();
-        }
-    }
-
-    /**
      * Filter the payment methods by the countries defined in their settings
      *
      * @param   array   $payment_gateways

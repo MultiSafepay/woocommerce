@@ -25,6 +25,8 @@
 				success:  function( response ) {
 					if ( 'is_setup' === response.data ) {
 						return false;
+					} else if ( 'not_available' === response.data ) {
+						window.location.href = multisafepay.multisafepay_gateways_url + data.gateway_id;
 					} else if ( 'needs_setup' === response.data ) {
 						window.location.href = multisafepay.multisafepay_settings_url;
 					}
