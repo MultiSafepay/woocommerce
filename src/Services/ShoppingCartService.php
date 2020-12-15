@@ -109,6 +109,7 @@ class ShoppingCartService
      */
     protected function create_coupon_cart_item(WC_Order_Item $item, string $currency): CartItem
     {
+        $cartItem = new CartItem();
         return $cartItem->addName( $item->get_name() )
             ->addQuantity( 1 )
             ->addMerchantItemId( (string)$item->get_id() )
