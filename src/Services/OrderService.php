@@ -63,14 +63,15 @@ class OrderService
      * @param int $order_id
      * @param string $gateway_code
      * @param string $type
+     * @param string $gateway_id
      * @param GatewayInfoInterface $gateway_info
      * @return OrderRequest
      */
-    public function create_order_request(int $order_id, string $gateway_code, string $type, GatewayInfoInterface $gateway_info = null): OrderRequest
+    public function create_order_request(int $order_id, string $gateway_code, string $type, string $gateway_id, GatewayInfoInterface $gateway_info = null): OrderRequest
     {
         $order = wc_get_order($order_id);
-        $time_active = get_option('multisafepay_time_active');
-        $time_active_unit = get_option('multisafepay_time_unit');
+        $time_active = get_option('multisafepay_time_active', '30');
+        $time_active_unit = get_option('multisafepay_time_unit', 'days');
 
         if ($time_active_unit === 'days') {
             $time_active = $time_active * 24 * 60 * 60;
@@ -87,7 +88,7 @@ class OrderService
             ->addPluginDetails($this->create_plugin_details())
             ->addDescriptionText('Payment for order: ' . $order->get_id())
             ->addCustomer($this->customer_service->create_customer_details($order))
-            ->addPaymentOptions($this->create_payment_options($order))
+            ->addPaymentOptions($this->create_payment_options($order, $gateway_id))
             ->addShoppingCart($this->shopping_cart_service->create_shopping_cart($order, $order->get_currency()))
             ->addSecondsActive($time_active);
 
@@ -122,13 +123,16 @@ class OrderService
     }
 
     /**
-     * @param WC_Order $order
-     * @return PaymentOptions
+     * @param   WC_Order  $order
+     * @param   string    $gateway_id
+     * @return  PaymentOptions
      */
-    protected function create_payment_options(WC_Order $order): PaymentOptions
+    protected function create_payment_options(WC_Order $order, string $gateway_id): PaymentOptions
     {
         $payment_options = new PaymentOptions();
         return $payment_options
+            ->addNotificationUrl( str_replace( 'https:', 'http:', add_query_arg( 'wc-api', $gateway_id, home_url( '/' ) ) ) )
+            ->addNotificationMethod('GET')
             ->addCancelUrl($order->get_cancel_order_url())
             ->addRedirectUrl($order->get_checkout_order_received_url());
     }

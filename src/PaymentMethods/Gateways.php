@@ -100,6 +100,36 @@ class Gateways {
     }
 
     /**
+     * Return the payment method code needed by WooCommerce
+     *
+     * @param string $code
+     * @return array
+     */
+    public static function get_payment_method_id_by_gateway_code( string $code ): string {
+        foreach ( self::GATEWAYS as $gateway ) {
+            $gateway = new $gateway();
+            if ($gateway->get_payment_method_code() === $code ) {
+                return $gateway->get_payment_method_id();
+            }
+        }
+    }
+
+    /**
+     * Return the payment method title needed by WooCommerce
+     *
+     * @param string $code
+     * @return string
+     */
+    public static function get_payment_method_name_by_gateway_code( string $code ): string {
+        foreach ( self::GATEWAYS as $gateway ) {
+            $gateway = new $gateway();
+            if($gateway->get_payment_method_code() === $code ) {
+                return $gateway->get_payment_method_title();
+            }
+        }
+    }
+    
+    /**
      * Return the gateway code for the given gateway_id
      *
      * @param string $gateway_id
