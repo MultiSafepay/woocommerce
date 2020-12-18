@@ -7,17 +7,11 @@ grumphp:
     enabled: false
     fix_by_default: false
   tasks:
-    ecs:
-      config: ~
-      level: ~
-      paths: []
-      files_on_pre_commit: false
-      triggered_by: ['php']
-      clear-cache: true
-      no-progress-bar: false
+    phpcs:
+      standard: phpcs.xml
     phpunit:
       config_file: 'phpunit.xml'
       testsuite: 'multisafepay'
   testsuites:
     git_pre_commit:
-      tasks: ['ecs', 'phpunit']
+      tasks: ['phpcs', 'phpunit']

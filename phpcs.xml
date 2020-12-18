@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="MultiSafepay`s Wordpress WooCommerce" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
+    <description>A custom coding standard for MultiSafepay`s Wordpress WooCommerce plugin.</description>
+
+    <!-- Exclude folders and files from being checked. -->
+    <exclude-pattern>./bin/*</exclude-pattern>
+    <exclude-pattern>./tests/*</exclude-pattern>
+    <exclude-pattern>./coverage-report/*</exclude-pattern>
+    <exclude-pattern>./languages/*</exclude-pattern>
+
+    <!-- Exclude the Composer Vendor directory. -->
+    <exclude-pattern>./vendor/*</exclude-pattern>
+
+    <!-- Exclude minified Javascript files. -->
+    <exclude-pattern>*.min.js</exclude-pattern>
+
+    <!-- Include the WordPress-Extra standard. -->
+    <rule ref="WordPress-Extra">
+        <!-- We don`t use tabs indents -->
+        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent.SpacesUsed"/>
+        <!-- This is disable and incompatible with strict_types after opening PHP tags -->
+        <exclude name="Squiz.Commenting.FileComment.Missing"/>
+        <!-- Not every @param needs to be commented  -->
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment"/>
+        <!-- Not every method functions needs to be commented  -->
+        <exclude name="Generic.Commenting.DocComment.MissingShort"/>
+        <!-- At this moment we are not using Wordpress conventions for the classes names  -->
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+        <!-- At this moment we are not using Wordpress conventions for the files names  -->
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+        <!-- We dont required and need a dot at the end of each comment -->
+        <exclude name="Squiz.Commenting.InlineComment.InvalidEndChar"/>
+    </rule>
+
+
+    <!-- Exclude all gateways and giftcards classes from this rule -->
+    <rule ref="Squiz.Commenting.ClassComment.Missing">
+        <exclude-pattern>*/src/PaymentMethods/*</exclude-pattern>
+    </rule>
+
+    <!-- Exclude all gateways and giftcards classes from this rule -->
+    <rule ref="WordPress.WP.I18n.MissingTranslatorsComment">
+        <exclude-pattern>*/src/PaymentMethods/*</exclude-pattern>
+    </rule>
+
+    <!-- Let's also check that everything is properly documented. -->
+    <rule ref="WordPress-Docs"/>
+
+    <!-- Add in some extra rules from other standards. -->
+    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+    <rule ref="Generic.Commenting.Todo"/>
+
+    <!-- Check for PHP cross-version compatibility. -->
+    <config name="testVersion" value="7.2-"/>
+    <rule ref="PHPCompatibilityWP"/>
+
+    <!-- Minimum Wordpress version supported -->
+    <config name="minimum_supported_wp_version" value="5.0"/>
+
+    <!-- Check text domain for I18n -->
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array">
+                <element value="multisafepay"/>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- No "else" -->
+    <rule ref="ObjectCalisthenics.ControlStructures.NoElse"/>
+
+    <!-- Only 2 indentation level per function/method -->
+    <rule ref="ObjectCalisthenics.Metrics.MaxNestingLevel">
+        <properties>
+            <property name="maxNestingLevel" value="2"/>
+        </properties>
+    </rule>
+
+    <!-- Minimal length for variables names -->
+    <rule ref="ObjectCalisthenics.NamingConventions.ElementNameMinimalLength">
+        <properties>
+            <property name="minLength" value="3"/>
+            <property name="allowedShortNames" type="array" value=""/>
+        </properties>
+    </rule>
+
+    <!-- The following ensure small classes -->
+    <rule ref="ObjectCalisthenics.Files.ClassTraitAndInterfaceLength">
+        <properties>
+            <property name="maxLength" value="200"/>
+        </properties>
+    </rule>
+    <rule ref="ObjectCalisthenics.Files.FunctionLength">
+        <properties>
+            <property name="maxLength" value="200"/>
+        </properties>
+    </rule>
+    <rule ref="ObjectCalisthenics.Metrics.PropertyPerClassLimit">
+        <properties>
+            <property name="maxCount" value="10"/>
+        </properties>
+    </rule>
+    <rule ref="ObjectCalisthenics.Metrics.MethodPerClassLimit">
+        <properties>
+            <property name="maxCount" value="10"/>
+        </properties>
+    </rule>
+
+    <!-- Report @todo comments  -->
+    <rule ref="Generic.Commenting.Todo.CommentFound"/>
+
+
+</ruleset>

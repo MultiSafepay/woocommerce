@@ -15,4 +15,4 @@ jobs:
       - name: Download dependencies
         run: composer install --prefer-dist
       - name: Run code sniffer
-        run: composer code-sniffer
+        run: composer phpcs
