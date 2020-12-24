@@ -19,16 +19,17 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
-/**
- * codingStandardsIgnoreFile
- */
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
 
+/**
+ * Interface PaymentMethodInterface
+ *
+ * @package MultiSafepay\WooCommerce\PaymentMethods
+ */
 interface PaymentMethodInterface {
 
     /**
@@ -100,14 +101,14 @@ interface PaymentMethodInterface {
      * @param array|null $data
      * @return GatewayInfoInterface
      */
-    public function get_gateway_info(array $data = null): GatewayInfoInterface;
+    public function get_gateway_info( array $data = null): GatewayInfoInterface;
 
     /**
      * Check if the gateway info is complete, otherwise you can perform custom actions
      *
-     * @param GatewayInfoInterface $gatewayInfo
+     * @param GatewayInfoInterface $gateway_info
      * @return boolean
      */
-    public function validate_gateway_info(GatewayInfoInterface $gatewayInfo): bool;
+    public function validate_gateway_info( GatewayInfoInterface $gateway_info): bool;
 
 }

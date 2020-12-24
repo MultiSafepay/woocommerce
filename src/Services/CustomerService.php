@@ -19,11 +19,9 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\Services;
-
 
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\CustomerDetails;
 use MultiSafepay\ValueObject\Customer\Address;
@@ -36,24 +34,25 @@ use WC_Order;
 
 /**
  * Class CustomerService
+ *
  * @package MultiSafepay\WooCommerce\Services
  */
-class CustomerService
-{
+class CustomerService {
+
 
     /**
      * @param WC_Order $order
      * @return CustomerDetails
      */
-    public function create_customer_details(WC_Order $order): CustomerDetails
-    {
+    public function create_customer_details( WC_Order $order ): CustomerDetails {
         $customer_address = $this->create_address(
             $order->get_billing_address_1(),
             $order->get_billing_address_2(),
             $order->get_billing_country(),
             $order->get_billing_state(),
             $order->get_billing_city(),
-            $order->get_billing_postcode());
+            $order->get_billing_postcode()
+        );
 
         return $this->create_customer(
             $customer_address,
@@ -70,15 +69,15 @@ class CustomerService
      * @param WC_Order $order
      * @return CustomerDetails
      */
-    public function create_delivery_details(WC_Order $order): CustomerDetails
-    {
+    public function create_delivery_details( WC_Order $order ): CustomerDetails {
         $delivery_address = $this->create_address(
             $order->get_shipping_address_1(),
             $order->get_shipping_address_2(),
             $order->get_shipping_country(),
             $order->get_shipping_state(),
             $order->get_shipping_city(),
-            $order->get_shipping_postcode());
+            $order->get_shipping_postcode()
+        );
 
         return $this->create_customer(
             $delivery_address,
@@ -93,12 +92,12 @@ class CustomerService
 
     /**
      * @param Address $address
-     * @param string $email_address
-     * @param string $phone_number
-     * @param string $first_name
-     * @param string $last_name
-     * @param string $ip_address
-     * @param string $user_agent
+     * @param string  $email_address
+     * @param string  $phone_number
+     * @param string  $first_name
+     * @param string  $last_name
+     * @param string  $ip_address
+     * @param string  $user_agent
      * @return CustomerDetails
      */
     protected function create_customer(
@@ -109,17 +108,16 @@ class CustomerService
         string $last_name,
         string $ip_address,
         string $user_agent
-    ): CustomerDetails
-    {
+    ): CustomerDetails {
         $customer_details = new CustomerDetails();
         return $customer_details
-            ->addAddress($address)
-            ->addEmailAddress(new EmailAddress($email_address))
-            ->addFirstName($first_name)
-            ->addLastName($last_name)
-            ->addIpAddress(new IpAddress($ip_address))
-            ->addUserAgent($user_agent)
-            ->addPhoneNumber(new PhoneNumber($phone_number));
+            ->addAddress( $address )
+            ->addEmailAddress( new EmailAddress( $email_address ) )
+            ->addFirstName( $first_name )
+            ->addLastName( $last_name )
+            ->addIpAddress( new IpAddress( $ip_address ) )
+            ->addUserAgent( $user_agent )
+            ->addPhoneNumber( new PhoneNumber( $phone_number ) );
     }
 
     /**
@@ -138,21 +136,20 @@ class CustomerService
         string $state,
         string $city,
         string $zip_code
-    ): Address
-    {
+    ): Address {
         $address_parser = new AddressParser();
-        $address = $address_parser->parse($address_line_1, $address_line_2);
+        $address        = $address_parser->parse( $address_line_1, $address_line_2 );
 
-        $street = $address[0];
+        $street       = $address[0];
         $house_number = $address[1];
 
         $customer_address = new Address();
         return $customer_address
-            ->addStreetName($street)
-            ->addHouseNumber($house_number)
-            ->addState($state)
-            ->addCity($city)
-            ->addCountry(new Country($country))
-            ->addZipCode($zip_code);
+            ->addStreetName( $street )
+            ->addHouseNumber( $house_number )
+            ->addState( $state )
+            ->addCity( $city )
+            ->addCountry( new Country( $country ) )
+            ->addZipCode( $zip_code );
     }
 }

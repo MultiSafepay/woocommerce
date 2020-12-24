@@ -19,13 +19,12 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
-class Santander extends BaseBillingSuitePaymentMethod
-{
+class Santander extends BaseBillingSuitePaymentMethod {
+
     /**
      * @return string
      */
@@ -51,7 +50,7 @@ class Santander extends BaseBillingSuitePaymentMethod
      * @return string
      */
     public function get_payment_method_title(): string {
-        return __('Santander Consumer Finance | Pay per month', 'multisafepay');
+        return __( 'Santander Consumer Finance | Pay per month', 'multisafepay' );
     }
 
     /**
@@ -59,7 +58,7 @@ class Santander extends BaseBillingSuitePaymentMethod
      */
     public function get_payment_method_description(): string {
         $method_description = sprintf(
-            __('Allows customers to pay for online purchases as a one-off post-payment or in monthly installments. <br />Read more about <a href="%s" target="_blank">%s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay'),
+            __( 'Allows customers to pay for online purchases as a one-off post-payment or in monthly installments. <br />Read more about <a href="%1$s" target="_blank">%2$s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay' ),
             'https://docs.multisafepay.com/payment-methods/billing-suite/betaalplan/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
             $this->get_payment_method_title()
         );

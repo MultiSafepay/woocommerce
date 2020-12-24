@@ -19,7 +19,6 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
@@ -31,9 +30,10 @@ use MultiSafepay\WooCommerce\Services\OrderService;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use WC_Countries;
 use WC_Payment_Gateway;
+use MultiSafepay\Exception\InvalidArgumentException;
 
-abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMethodInterface
-{
+abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMethodInterface {
+
     /**
      * @var TransactionManager
      */
@@ -59,34 +59,33 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
     /**
      * Construct for Core class.
      */
-    public function __construct()
-    {
-        $this->supports = array('products', 'refunds');
-        $this->id = $this->get_payment_method_id();
-        $this->type = $this->get_payment_method_type();
-        $this->method_title = $this->get_payment_method_title();
-        $this->method_description = $this->get_payment_method_description();
-        $this->type = $this->get_payment_method_type();
-        $this->gateway_code = $this->get_payment_method_code();
-        $this->has_fields = $this->has_fields();
+    public function __construct() {
+        $this->supports            = array( 'products', 'refunds' );
+        $this->id                  = $this->get_payment_method_id();
+        $this->type                = $this->get_payment_method_type();
+        $this->method_title        = $this->get_payment_method_title();
+        $this->method_description  = $this->get_payment_method_description();
+        $this->type                = $this->get_payment_method_type();
+        $this->gateway_code        = $this->get_payment_method_code();
+        $this->has_fields          = $this->has_fields();
         $this->checkout_fields_ids = $this->get_checkout_fields_ids();
-        $this->icon = $this->get_logo();
+        $this->icon                = $this->get_logo();
         $this->add_form_fields();
         $this->init_form_fields();
         $this->init_settings();
-        $this->enabled = $this->get_option('enabled', 'no');
-        $this->title = $this->get_option('title', $this->get_method_title());
-        $this->description = $this->get_option('description');
-        $this->max_amount = $this->get_option('max_amount');
-        $this->min_amount = $this->get_option('min_amount');
-        $this->countries    = $this->get_option('countries');
-        $this->initial_order_status = $this->get_option( 'initial_order_status', false);
-        $this->plugin_dir_path = plugin_dir_path( dirname(__DIR__) );
+        $this->enabled              = $this->get_option( 'enabled', 'no' );
+        $this->title                = $this->get_option( 'title', $this->get_method_title() );
+        $this->description          = $this->get_option( 'description' );
+        $this->max_amount           = $this->get_option( 'max_amount' );
+        $this->min_amount           = $this->get_option( 'min_amount' );
+        $this->countries            = $this->get_option( 'countries' );
+        $this->initial_order_status = $this->get_option( 'initial_order_status', false );
+        $this->plugin_dir_path      = plugin_dir_path( dirname( __DIR__ ) );
 
         $this->errors = array();
 
-        add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options') );
-        add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'display_errors') );
+        add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+        add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'display_errors' ) );
 
         add_action( 'woocommerce_api_' . $this->id, array( $this, 'callback' ) );
     }
@@ -96,19 +95,17 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      *
      * @return string
      */
-    private function get_logo(): string
-    {
-        $language = substr(get_locale(), 0, 2);
+    private function get_logo(): string {
+        $language = substr( get_locale(), 0, 2 );
 
-        $icon_default = $this->get_payment_method_icon();
-        $icon_locale = substr_replace($icon_default, "-$language", -4, -4);
+        $icon = $this->get_payment_method_icon();
 
-        if (file_exists(WP_PLUGIN_DIR . '/multisafepay/assets/public/img/' . $icon_locale)) {
+        $icon_locale = substr_replace( $icon, "-$language", -4, -4 );
+        if ( file_exists( WP_PLUGIN_DIR . '/multisafepay/assets/public/img/' . $icon_locale ) ) {
             $icon = $icon_locale;
-        } else {
-            $icon = $icon_default;
         }
-        return esc_url(plugins_url('/assets/public/img/' . $icon, dirname(__DIR__)));
+
+        return esc_url( plugins_url( '/assets/public/img/' . $icon, dirname( __DIR__ ) ) );
     }
 
     /**
@@ -116,9 +113,8 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      *
      * @return array
      */
-    private function get_countries(): array
-    {
-        $countries = new WC_Countries();
+    private function get_countries(): array {
+        $countries         = new WC_Countries();
         $allowed_countries = $countries->get_allowed_countries();
         return $allowed_countries;
     }
@@ -128,8 +124,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      *
      * @return boolean
      */
-    public function has_fields(): bool
-    {
+    public function has_fields(): bool {
         return false;
     }
 
@@ -138,8 +133,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      *
      * @return array
      */
-    public function get_checkout_fields_ids(): array
-    {
+    public function get_checkout_fields_ids(): array {
         return array();
     }
 
@@ -149,8 +143,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * @param array|null $data
      * @return GatewayInfoInterface
      */
-    public function get_gateway_info(array $data = null): GatewayInfoInterface
-    {
+    public function get_gateway_info( array $data = null ): GatewayInfoInterface {
         return new BaseGatewayInfo();
     }
 
@@ -159,54 +152,53 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      *
      * @return  void
      */
-    public function add_form_fields(): void
-    {
+    public function add_form_fields(): void {
         $this->form_fields = array(
-            'enabled' => array(
-                'title' => __('Enable/Disable', 'multisafepay'),
-                'label' => 'Enable ' . $this->get_method_title() . ' Gateway',
-                'type' => 'checkbox',
-                'default' => 'no'
+            'enabled'              => array(
+                'title'   => __( 'Enable/Disable', 'multisafepay' ),
+                'label'   => 'Enable ' . $this->get_method_title() . ' Gateway',
+                'type'    => 'checkbox',
+                'default' => 'no',
             ),
-            'title' => array(
-                'title' => __('Title', 'multisafepay'),
-                'type' => 'text',
-                'desc_tip' => __('This controls the title which the user sees during checkout.', 'multisafepay'),
-                'default' => $this->get_method_title(),
+            'title'                => array(
+                'title'    => __( 'Title', 'multisafepay' ),
+                'type'     => 'text',
+                'desc_tip' => __( 'This controls the title which the user sees during checkout.', 'multisafepay' ),
+                'default'  => $this->get_method_title(),
             ),
-            'description' => array(
-                'title' => __('Description', 'multisafepay'),
-                'type' => 'textarea',
-                'desc_tip' => __('This controls the description which the user sees during checkout.', 'multisafepay'),
-                'default' => ''
+            'description'          => array(
+                'title'    => __( 'Description', 'multisafepay' ),
+                'type'     => 'textarea',
+                'desc_tip' => __( 'This controls the description which the user sees during checkout.', 'multisafepay' ),
+                'default'  => '',
             ),
             'initial_order_status' => array(
-                'title' => __('Initial Order Status', 'multisafepay'),
-                'type' => 'select',
-                'options' => $this->get_order_statuses(),
-                'desc_tip' => __('Initial order status for this payment method.', 'multisafepay'),
-                'default' => 'wc-default'
+                'title'    => __( 'Initial Order Status', 'multisafepay' ),
+                'type'     => 'select',
+                'options'  => $this->get_order_statuses(),
+                'desc_tip' => __( 'Initial order status for this payment method.', 'multisafepay' ),
+                'default'  => 'wc-default',
             ),
-            'min_amount' => array(
-                'title' => __('Min Amount', 'multisafepay'),
-                'type' => 'decimal',
-                'desc_tip' => __('This payment method is not shown in the checkout if the order total is lower than the defined amount. Leave blank for no restrictions.', 'multisafepay'),
-                'default' => $this->get_option('min_amount', ''),
+            'min_amount'           => array(
+                'title'    => __( 'Min Amount', 'multisafepay' ),
+                'type'     => 'decimal',
+                'desc_tip' => __( 'This payment method is not shown in the checkout if the order total is lower than the defined amount. Leave blank for no restrictions.', 'multisafepay' ),
+                'default'  => $this->get_option( 'min_amount', '' ),
             ),
-            'max_amount' => array(
-                'title' => __('Max Amount', 'multisafepay'),
-                'type' => 'decimal',
-                'desc_tip' => __('This payment method is not shown in the checkout if the order total exceeds a certain amount. Leave blank for no restrictions.', 'multisafepay'),
-                'default' => $this->get_option('max_amount', ''),
+            'max_amount'           => array(
+                'title'    => __( 'Max Amount', 'multisafepay' ),
+                'type'     => 'decimal',
+                'desc_tip' => __( 'This payment method is not shown in the checkout if the order total exceeds a certain amount. Leave blank for no restrictions.', 'multisafepay' ),
+                'default'  => $this->get_option( 'max_amount', '' ),
             ),
-            'countries' => array(
-                'title' => __('Country', 'multisafepay'),
-                'type' => 'multiselect',
-                'description' => __('If you select one or more countries, this payment method won\'t show in the checkout page, if the payment address`s country of the customer match with the selected values. Leave blank for no restrictions.', 'multisafepay'),
-                'desc_tip' => __('For most operating system and configurations, you must hold Ctrl + D or Cmd + D on your keyboard, to select more than one value.', 'multisafepay'),
-                'options' => $this->get_countries(),
-                'default' => $this->get_option('countries', array()),
-            )
+            'countries'            => array(
+                'title'       => __( 'Country', 'multisafepay' ),
+                'type'        => 'multiselect',
+                'description' => __( 'If you select one or more countries, this payment method won\'t show in the checkout page, if the payment address`s country of the customer match with the selected values. Leave blank for no restrictions.', 'multisafepay' ),
+                'desc_tip'    => __( 'For most operating system and configurations, you must hold Ctrl + D or Cmd + D on your keyboard, to select more than one value.', 'multisafepay' ),
+                'options'     => $this->get_countries(),
+                'default'     => $this->get_option( 'countries', array() ),
+            ),
         );
     }
 
@@ -216,28 +208,26 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * @param integer $order_id Order ID.
      * @return  array|mixed|void
      */
-    public function process_payment($order_id): array
-    {
-        $sdk = new SdkService();
+    public function process_payment( $order_id ): array {
+        $sdk                 = new SdkService();
         $transaction_manager = $sdk->get_transaction_manager();
-        $order_service = new OrderService();
-        $order_request = $order_service->create_order_request($order_id, $this->gateway_code, $this->type, $this->id, $this->get_gateway_info());
-        $transaction = $transaction_manager->create($order_request);
+        $order_service       = new OrderService();
+        $order_request       = $order_service->create_order_request( $order_id, $this->gateway_code, $this->type, $this->id, $this->get_gateway_info() );
+        $transaction         = $transaction_manager->create( $order_request );
 
-        $order = wc_get_order($order_id);
+        $order = wc_get_order( $order_id );
 
-        if($this->initial_order_status && $this->initial_order_status !== 'wc-default' && $transaction->getPaymentUrl() ) {
-            $order->update_status( str_replace('wc-', '', $this->initial_order_status), __( 'Transaction has been initialized.', 'multisafepay' ));
+        if ( $this->initial_order_status && 'wc-default' !== $this->initial_order_status && $transaction->getPaymentUrl() ) {
+            $order->update_status( str_replace( 'wc-', '', $this->initial_order_status ), __( 'Transaction has been initialized.', 'multisafepay' ) );
         }
 
-        if( (!$this->initial_order_status || $this->initial_order_status === 'wc-default') && $transaction->getPaymentUrl() ) {
-            $order->update_status(str_replace('wc-', '', get_option( 'multisafepay_initialized_status', 'wc-pending') ), __('Transaction has been initialized.', 'multisafepay'));
+        if ( ( ! $this->initial_order_status || 'wc-default' === $this->initial_order_status ) && $transaction->getPaymentUrl() ) {
+            $order->update_status( str_replace( 'wc-', '', get_option( 'multisafepay_initialized_status', 'wc-pending' ) ), __( 'Transaction has been initialized.', 'multisafepay' ) );
         }
-
 
         return array(
-            'result' => 'success',
-            'redirect' => esc_url_raw($transaction->getPaymentUrl()),
+            'result'   => 'success',
+            'redirect' => esc_url_raw( $transaction->getPaymentUrl() ),
         );
     }
 
@@ -245,12 +235,11 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * Process the refund.
      *
      * @param integer $order_id Order ID.
-     * @param float $amount Amount to be refunded.
-     * @param string $reason Reason description.
+     * @param float   $amount Amount to be refunded.
+     * @param string  $reason Reason description.
      * @return  boolean
      */
-    public function process_refund($order_id, $amount = null, $reason = ''): bool
-    {
+    public function process_refund( $order_id, $amount = null, $reason = '' ): bool {
         return false;
     }
 
@@ -261,13 +250,13 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * @return  void
      */
     public function callback(): void {
-        $required_args =  array('transactionid', 'timestamp');
+        $required_args = array( 'transactionid', 'timestamp' );
         foreach ( $required_args as $arg ) {
-            if ( !isset( $_GET[$arg] ) || empty( $_GET[$arg] ) ) {
-                wp_die( __( 'Invalid request', 'multisafepay'), __( 'Invalid request', 'multisafepay'), 400 );
+            if ( ! isset( $_GET[ $arg ] ) || empty( $_GET[ $arg ] ) ) {
+                wp_die( esc_html__( 'Invalid request', 'multisafepay' ), esc_html__( 'Invalid request', 'multisafepay' ), 400 );
             }
         }
-        $payment_method_callback = (new PaymentMethodCallback( $_GET['transactionid'] ))->process_callback();
+        $payment_method_callback = ( new PaymentMethodCallback( $_GET['transactionid'] ) )->process_callback();
     }
 
     /**
@@ -279,19 +268,19 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * @return  string
      */
     public function validate_enabled_field( $key, $value ) {
-        if( null === $value) {
+        if ( null === $value ) {
             return 'no';
         }
-        $gateways = ( new SdkService() )->get_gateways();
+        $gateways           = ( new SdkService() )->get_gateways();
         $available_gateways = array();
         foreach ( $gateways as $gateway ) {
             $available_gateways[] = $gateway->getId();
         }
-        if( !in_array( $this->gateway_code, $available_gateways, true ) ) {
+        if ( ! in_array( $this->gateway_code, $available_gateways, true ) ) {
             $message = sprintf(
-                __('It seems %s is not available for your MultiSafepay account. <a href="%s">Contact support</a>', 'multisafepay'),
+                __( 'It seems %1$s is not available for your MultiSafepay account. <a href="%2$s">Contact support</a>', 'multisafepay' ),
                 $this->get_payment_method_title(),
-                admin_url('admin.php?page=multisafepay-settings&tab=support')
+                admin_url( 'admin.php?page=multisafepay-settings&tab=support' )
             );
             $this->add_error( $message );
             return 'no';
@@ -304,9 +293,8 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      *
      * @return  void
      */
-    public function payment_fields(): void
-    {
-        require($this->plugin_dir_path . 'templates/multisafepay-checkout-fields-display.php');
+    public function payment_fields(): void {
+        require $this->plugin_dir_path . 'templates/multisafepay-checkout-fields-display.php';
     }
 
     /**
@@ -316,39 +304,39 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      */
     public function validate_fields(): bool {
 
-        if ( (isset($_POST['multisafepay_' . $this->id . '_gender'])) && $_POST['multisafepay_' . $this->id . '_gender'] === '') {
-            wc_add_notice(  __('Gender is a required field', 'multisafepay'), 'error' );
+        if ( ( isset( $_POST[ $this->id . '_gender' ] ) ) && '' === $_POST[ $this->id . '_gender' ] ) {
+            wc_add_notice( __( 'Gender is a required field', 'multisafepay' ), 'error' );
         }
 
-        if (isset($_POST['multisafepay_' . $this->id . '_birthday']) && $_POST['multisafepay_' . $this->id . '_birthday'] === '' ) {
-            wc_add_notice(  __('Date of birth is a required field', 'multisafepay'), 'error' );
+        if ( isset( $_POST[ $this->id . '_birthday' ] ) && '' === $_POST[ $this->id . '_birthday' ] ) {
+            wc_add_notice( __( 'Date of birth is a required field', 'multisafepay' ), 'error' );
         }
 
-        if (isset($_POST['multisafepay_' . $this->id . '_bank_account']) && $_POST['multisafepay_' . $this->id . '_bank_account'] === '' ) {
-            wc_add_notice(  __('Bank Account is a required field', 'multisafepay'), 'error' );
+        if ( isset( $_POST[ $this->id . '_bank_account' ] ) && '' === $_POST[ $this->id . '_bank_account' ] ) {
+            wc_add_notice( __( 'Bank Account is a required field', 'multisafepay' ), 'error' );
         }
 
-        if (isset($_POST['multisafepay_' . $this->id . '_bank_account']) && $_POST['multisafepay_' . $this->id . '_bank_account'] !== '' ) {
-            if (!$this->validate_iban($_POST['multisafepay_' . $this->id . '_bank_account'])) {
-                wc_add_notice(  __('IBAN does not seems valid', 'multisafepay'), 'error' );
+        if ( isset( $_POST[ $this->id . '_bank_account' ] ) && '' !== $_POST[ $this->id . '_bank_account' ] ) {
+            if ( ! $this->validate_iban( $_POST[ $this->id . '_bank_account' ] ) ) {
+                wc_add_notice( __( 'IBAN does not seems valid', 'multisafepay' ), 'error' );
             }
         }
 
-        if (isset($_POST['multisafepay_' . $this->id . '_account_holder_name']) && $_POST['multisafepay_' . $this->id . '_account_holder_name'] === '' ) {
-            wc_add_notice(  __('Account holder is a required field', 'multisafepay'), 'error' );
+        if ( isset( $_POST[ $this->id . '_account_holder_name' ] ) && '' === $_POST[ $this->id . '_account_holder_name' ] ) {
+            wc_add_notice( __( 'Account holder is a required field', 'multisafepay' ), 'error' );
         }
 
-        if (isset($_POST['multisafepay_' . $this->id . '_account_holder_iban']) && $_POST['multisafepay_' . $this->id . '_account_holder_iban'] === '' ) {
-            wc_add_notice(  __('IBAN is a required field', 'multisafepay'), 'error' );
+        if ( isset( $_POST[ $this->id . '_account_holder_iban' ] ) && '' === $_POST[ $this->id . '_account_holder_iban' ] ) {
+            wc_add_notice( __( 'IBAN is a required field', 'multisafepay' ), 'error' );
         }
 
-        if (isset($_POST['multisafepay_' . $this->id . '_account_holder_iban']) && $_POST['multisafepay_' . $this->id . '_account_holder_iban'] !== '' ) {
-            if (!$this->validate_iban($_POST['multisafeay_' . $this->id . '_account_holder_iban'])) {
-                wc_add_notice(  __('IBAN does not seems valid', 'multisafepay'), 'error' );
+        if ( isset( $_POST[ $this->id . '_account_holder_iban' ] ) && '' !== $_POST[ $this->id . '_account_holder_iban' ] ) {
+            if ( ! $this->validate_iban( $_POST[ 'multisafeay_' . $this->id . '_account_holder_iban' ] ) ) {
+                wc_add_notice( __( 'IBAN does not seems valid', 'multisafepay' ), 'error' );
             }
         }
 
-        if( wc_get_notices( 'error' ) ) {
+        if ( wc_get_notices( 'error' ) ) {
             return false;
         }
 
@@ -360,39 +348,36 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      *
      * @param string $iban
      * @return  boolean
-     *
      */
-    public function validate_iban($iban): bool
-    {
+    public function validate_iban( $iban ): bool {
         try {
-            $iban = new IbanNumber($iban);
+            $iban = new IbanNumber( $iban );
             return true;
-        } catch (\MultiSafepay\Exception\InvalidArgumentException $invalidArgumentException) {
+        } catch ( InvalidArgumentException $invalid_argument_exception ) {
             return false;
         }
     }
 
     /**
      * Returns the WooCommerce registered order statuses
+     *
      * @see     http://hookr.io/functions/wc_get_order_statuses/
      *
      * @return  array
      */
-    private function get_order_statuses(): array
-    {
-        $order_statuses = wc_get_order_statuses();
-        $order_statuses['wc-default'] = __('Default value set in common settings', 'multisafepay');
+    private function get_order_statuses(): array {
+        $order_statuses               = wc_get_order_statuses();
+        $order_statuses['wc-default'] = __( 'Default value set in common settings', 'multisafepay' );
         return $order_statuses;
     }
 
     /**
      * Validate the gatewayinfo, return true if validation is successful
      *
-     * @param GatewayInfoInterface $gatewayInfo
+     * @param GatewayInfoInterface $gateway_info
      * @return boolean
      */
-    public function validate_gateway_info(GatewayInfoInterface $gatewayInfo): bool
-    {
+    public function validate_gateway_info( GatewayInfoInterface $gateway_info ): bool {
         return true;
     }
 

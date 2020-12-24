@@ -19,7 +19,6 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce;
@@ -37,7 +36,6 @@ use MultiSafepay\WooCommerce\Utils\Loader;
  * public face site hooks.
  *
  * @since      4.0.0
- *
  */
 class Main {
 
@@ -85,11 +83,11 @@ class Main {
 	 * the public face of the site.
 	 */
 	public function __construct() {
-		$this->plugin_name = 'multisafepay';
-		$this->version = MULTISAFEPAY_PLUGIN_VERSION;
-		$this->plugin_dir_url = plugin_dir_url(__DIR__);
-        $this->plugin_dir_path = plugin_dir_path(__DIR__);
-		$this->loader = new Loader();
+		$this->plugin_name     = 'multisafepay';
+		$this->version         = MULTISAFEPAY_PLUGIN_VERSION;
+		$this->plugin_dir_url  = plugin_dir_url( __DIR__ );
+        $this->plugin_dir_path = plugin_dir_path( __DIR__ );
+		$this->loader          = new Loader();
 		$this->set_locale();
         $this->add_custom_links_in_plugin_list();
         $this->define_settings_hooks();
@@ -119,8 +117,8 @@ class Main {
      * @return  void
      */
     private function add_custom_links_in_plugin_list(): void {
-        $custom_links = new CustomLinks( $this->get_plugin_name(), $this->get_version(), $this->plugin_dir_url );
-        $this->loader->add_filter( 'plugin_action_links_multisafepay/multisafepay.php', $custom_links, 'get_links');
+        $custom_links = new CustomLinks();
+        $this->loader->add_filter( 'plugin_action_links_multisafepay/multisafepay.php', $custom_links, 'get_links' );
     }
 
 
@@ -132,7 +130,7 @@ class Main {
 	 */
 	private function define_settings_hooks(): void {
 
-	    $plugin_settings = new SettingsController( $this->get_plugin_name(), $this->get_version(), $this->plugin_dir_url,  $this->plugin_dir_path );
+	    $plugin_settings = new SettingsController( $this->get_plugin_name(), $this->get_version(), $this->plugin_dir_url, $this->plugin_dir_path );
         // Filter get_option for some option names.
         $this->loader->add_filter( 'option_multisafepay_testmode', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
         $this->loader->add_filter( 'option_multisafepay_debugmode', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
@@ -140,7 +138,7 @@ class Main {
         $this->loader->add_filter( 'option_multisafepay_remove_all_settings', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
         $this->loader->add_filter( 'option_multisafepay_time_active', $plugin_settings, 'filter_multisafepay_settings_as_int' );
 
-        if( is_admin() ) {
+        if ( is_admin() ) {
             // Enqueue styles in controller settings page
             $this->loader->add_action( 'admin_enqueue_scripts', $plugin_settings, 'enqueue_styles', 1 );
             // Enqueue scripts in controller settings page
@@ -164,7 +162,6 @@ class Main {
 	 * of the plugin.
      *
      * @return  void
-     * @todo    Probably css and js is just necessary in checkout page
 	 */
 	private function define_payment_methods_hooks(): void {
         // Payment controller
@@ -178,9 +175,9 @@ class Main {
         // Filter per min amount
         $this->loader->add_filter( 'woocommerce_available_payment_gateways', $payment_methods, 'filter_gateway_per_min_amount', 12 );
         // Set MSP transaction as shipped
-        $this->loader->add_action( 'woocommerce_order_status_' . str_replace( 'wc-', '', get_option( 'multisafepay_shipped_status', 'wc-completed' ) ), $payment_methods, 'set_msp_transaction_as_shipped', 10, 2 );
+        $this->loader->add_action( 'woocommerce_order_status_' . str_replace( 'wc-', '', get_option( 'multisafepay_shipped_status', 'wc-completed' ) ), $payment_methods, 'set_msp_transaction_as_shipped', 10, 1 );
         // Set MSP transaction as invoiced
-        $this->loader->add_action( 'woocommerce_order_status_' . str_replace( 'wc-', '', get_option( 'multisafepay_invoiced_status', 'wc-completed' ) ), $payment_methods, 'set_msp_transaction_as_invoiced', 11, 2 );
+        $this->loader->add_action( 'woocommerce_order_status_' . str_replace( 'wc-', '', get_option( 'multisafepay_invoiced_status', 'wc-completed' ) ), $payment_methods, 'set_msp_transaction_as_invoiced', 11, 1 );
     }
 
 	/**

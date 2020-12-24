@@ -19,7 +19,6 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
@@ -51,7 +50,7 @@ class Klarna extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_title(): string {
-        return __('Klarna - Pay in 30 days', 'multisafepay');
+        return __( 'Klarna - Pay in 30 days', 'multisafepay' );
     }
 
     /**
@@ -59,7 +58,7 @@ class Klarna extends BasePaymentMethod {
      */
     public function get_payment_method_description(): string {
         $method_description = sprintf(
-            __('A popular post-payment solution available for webshops based in Austria, Germany and the Netherlands. <br />Read more about <a href="%s" target="_blank">%s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay'),
+            __( 'A popular post-payment solution available for webshops based in Austria, Germany and the Netherlands. <br />Read more about <a href="%1$s" target="_blank">%2$s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay' ),
             'https://docs.multisafepay.com/payment-methods/billing-suite/klarna/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
             $this->get_payment_method_title()
         );

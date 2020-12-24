@@ -19,7 +19,6 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
@@ -31,7 +30,8 @@ use WC_Order;
 
 /**
  * The payment method callback handle the notification process.
- **
+ * *
+ *
  * @since   4.0.0
  */
 class PaymentMethodCallback {
@@ -70,10 +70,10 @@ class PaymentMethodCallback {
      * @param string $order_id
      */
     public function __construct( string $order_id ) {
-        $this->order_id     = $order_id;
-        $this->time_stamp   = date('d/m/Y H:i:s');
-        $this->order        = wc_get_order( $order_id );
-        $this->transaction  = $this->get_transaction();
+        $this->order_id    = $order_id;
+        $this->time_stamp  = date( 'd/m/Y H:i:s' );
+        $this->order       = wc_get_order( $order_id );
+        $this->transaction = $this->get_transaction();
     }
 
     /**
@@ -81,18 +81,17 @@ class PaymentMethodCallback {
      *
      * @return TransactionResponse
      */
-    private function get_transaction( ): TransactionResponse {
+    private function get_transaction(): TransactionResponse {
         $transaction_manager = ( new SdkService() )->get_transaction_manager();
         try {
             $transaction = $transaction_manager->get( $this->order_id );
             return $transaction;
-        }
-        catch ( ApiException $apiException ) {
-            if( get_option( 'multisafepay_debugmode', false ) ) {
+        } catch ( ApiException $api_exception ) {
+            if ( get_option( 'multisafepay_debugmode', false ) ) {
                 $logger = wc_get_logger();
-                $logger->log( 'error', $apiException->getMessage() );
+                $logger->log( 'error', $api_exception->getMessage() );
             }
-            wp_die( __( 'Invalid request', 'multisafepay'), __( 'Invalid request', 'multisafepay'), 400 );
+            wp_die( esc_html__( 'Invalid request', 'multisafepay' ), esc_html__( 'Invalid request', 'multisafepay' ), 400 );
         }
     }
 
@@ -139,39 +138,39 @@ class PaymentMethodCallback {
      */
     public function process_callback(): void {
 
-        if(strpos($this->order->get_payment_method(), 'multisafepay_') === false) {
-            header("Content-type: text/plain");
-            die('OK');
+        if ( strpos( $this->order->get_payment_method(), 'multisafepay_' ) === false ) {
+            header( 'Content-type: text/plain' );
+            die( 'OK' );
         }
 
-        $payment_method_id_registered_by_msp = Gateways::get_payment_method_id_by_gateway_code( $this->get_multisafepay_transaction_gateway_code()) ;
-        $payment_method_id_registered_by_wc  = $this->order->get_payment_method();
+        $payment_method_id_registered_by_msp    = Gateways::get_payment_method_id_by_gateway_code( $this->get_multisafepay_transaction_gateway_code() );
+        $payment_method_id_registered_by_wc     = $this->order->get_payment_method();
         $payment_method_title_registered_by_msp = Gateways::get_payment_method_name_by_gateway_code( $this->get_multisafepay_transaction_gateway_code() );
         $payment_method_title_registered_by_wc  = $this->order->get_payment_method_title();
 
-        if($payment_method_id_registered_by_wc !== $payment_method_id_registered_by_msp) {
-            if( get_option( 'multisafepay_debugmode', false) ) {
-                $logger = wc_get_logger();
-                $message = 'Callback received with a different payment method for Order ID: ' . $this->order_id . ' on ' . $this->time_stamp . '. Payment method pass from ' . $payment_method_title_registered_by_wc . ' to '. $payment_method_title_registered_by_msp .'.';
+        if ( $payment_method_id_registered_by_wc !== $payment_method_id_registered_by_msp ) {
+            if ( get_option( 'multisafepay_debugmode', false ) ) {
+                $logger  = wc_get_logger();
+                $message = 'Callback received with a different payment method for Order ID: ' . $this->order_id . ' on ' . $this->time_stamp . '. Payment method pass from ' . $payment_method_title_registered_by_wc . ' to ' . $payment_method_title_registered_by_msp . '.';
                 $logger->log( 'info', $message );
                 $this->order->add_order_note( $message );
             }
-            update_post_meta( $this->order_id, '_payment_method', $payment_method_id_registered_by_msp);
-            update_post_meta( $this->order_id, '_payment_method_title', $payment_method_title_registered_by_msp);
+            update_post_meta( $this->order_id, '_payment_method', $payment_method_id_registered_by_msp );
+            update_post_meta( $this->order_id, '_payment_method_title', $payment_method_title_registered_by_msp );
         }
 
-        if ( $this->get_wc_order_status() !== str_replace( 'wc-', '', get_option( 'multisafepay_' . $this->get_multisafepay_transaction_status() . '_status', false) ) ) {
+        if ( $this->get_wc_order_status() !== str_replace( 'wc-', '', get_option( 'multisafepay_' . $this->get_multisafepay_transaction_status() . '_status', false ) ) ) {
             $this->order->update_status( str_replace( 'wc-', '', get_option( 'multisafepay_' . $this->get_multisafepay_transaction_status() . '_status', false ) ) );
-            if( get_option( 'multisafepay_debugmode', false) ) {
-                $logger = wc_get_logger();
+            if ( get_option( 'multisafepay_debugmode', false ) ) {
+                $logger  = wc_get_logger();
                 $message = 'Callback received for Order ID: ' . $this->order_id . ' on ' . $this->time_stamp . ' with status: ' . $this->get_multisafepay_transaction_status() . ' and PSP ID' . $this->get_multisafepay_transaction_id() . '.';
                 $logger->log( 'info', $message );
                 $this->order->add_order_note( $message );
             }
         }
 
-        header("Content-type: text/plain");
-        die('OK');
+        header( 'Content-type: text/plain' );
+        die( 'OK' );
 
     }
 

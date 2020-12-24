@@ -19,7 +19,6 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
@@ -51,7 +50,7 @@ class Cbc extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_title(): string {
-        return __('CBC', 'multisafepay');
+        return __( 'CBC', 'multisafepay' );
     }
 
     /**
@@ -59,7 +58,7 @@ class Cbc extends BasePaymentMethod {
      */
     public function get_payment_method_description(): string {
         $method_description = sprintf(
-            __('Accept payments from CBC customers allowing them to pay using their CBC bank account. <br />Read more about <a href="%s" target="_blank">%s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay'),
+            __( 'Accept payments from CBC customers allowing them to pay using their CBC bank account. <br />Read more about <a href="%1$s" target="_blank">%2$s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay' ),
             'https://docs.multisafepay.com/payment-methods/banks/cbc/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
             $this->get_payment_method_title()
         );

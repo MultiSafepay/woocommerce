@@ -19,7 +19,6 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
@@ -32,37 +31,37 @@ namespace MultiSafepay\WooCommerce\PaymentMethods;
 class Gateways {
 
     const GATEWAYS = array(
-        'multisafepay_multisafepay'  => MultiSafepay::class,
-        'multisafepay_afterpay'      => Afterpay::class,
-        'multisafepay_alipay'        => Alipay::class,
-        'multisafepay_amex'          => Amex::class,
-        'multisafepay_applepay'      => ApplePay::class,
-        'multisafepay_bancontact'    => Bancontact::class,
-        'multisafepay_banktrans'     => BankTrans::class,
-        'multisafepay_belfius'       => Belfius::class,
-        'multisafepay_cbc'           => Cbc::class,
-        'multisafepay_creditcard'    => CreditCard::class,
-        'multisafepay_dbrtp'         => Dbrtp::class,
-        'multisafepay_dirdeb'        => Dirdeb::class,
-        'multisafepay_dotpay'        => Dotpay::class,
-        'multisafepay_einvocing'     => Einvocing::class,
-        'multisafepay_eps'           => Eps::class,
-        'multisafepay_giropay'       => Giropay::class,
-        'multisafepay_ideal'         => Ideal::class,
-        'multisafepay_idealqr'       => IdealQr::class,
-        'multisafepay_in3'           => In3::class,
-        'multisafepay_inghome'       => IngHomePay::class,
-        'multisafepay_kbc'           => Kbc::class,
-        'multisafepay_klarna'        => Klarna::class,
-        'multisafepay_maestro'       => Maestro::class,
-        'multisafepay_mastercard'    => MasterCard::class,
-        'multisafepay_payafter'      => PayAfterDelivery::class,
-        'multisafepay_paypal'        => PayPal::class,
-        'multisafepay_paysafecard'   => Paysafecard::class,
-        'multisafepay_santander'     => Santander::class,
-        'multisafepay_directbank'    => Sofort::class,
-        'multisafepay_trustly'       => Trustly::class,
-        'multisafepay_visa'          => Visa::class,
+        'multisafepay_multisafepay'      => MultiSafepay::class,
+        'multisafepay_afterpay'          => Afterpay::class,
+        'multisafepay_alipay'            => Alipay::class,
+        'multisafepay_amex'              => Amex::class,
+        'multisafepay_applepay'          => ApplePay::class,
+        'multisafepay_bancontact'        => Bancontact::class,
+        'multisafepay_banktrans'         => BankTrans::class,
+        'multisafepay_belfius'           => Belfius::class,
+        'multisafepay_cbc'               => Cbc::class,
+        'multisafepay_creditcard'        => CreditCard::class,
+        'multisafepay_dbrtp'             => Dbrtp::class,
+        'multisafepay_dirdeb'            => Dirdeb::class,
+        'multisafepay_dotpay'            => Dotpay::class,
+        'multisafepay_einvocing'         => Einvocing::class,
+        'multisafepay_eps'               => Eps::class,
+        'multisafepay_giropay'           => Giropay::class,
+        'multisafepay_ideal'             => Ideal::class,
+        'multisafepay_idealqr'           => IdealQr::class,
+        'multisafepay_in3'               => In3::class,
+        'multisafepay_inghome'           => IngHomePay::class,
+        'multisafepay_kbc'               => Kbc::class,
+        'multisafepay_klarna'            => Klarna::class,
+        'multisafepay_maestro'           => Maestro::class,
+        'multisafepay_mastercard'        => MasterCard::class,
+        'multisafepay_payafter'          => PayAfterDelivery::class,
+        'multisafepay_paypal'            => PayPal::class,
+        'multisafepay_paysafecard'       => Paysafecard::class,
+        'multisafepay_santander'         => Santander::class,
+        'multisafepay_directbank'        => Sofort::class,
+        'multisafepay_trustly'           => Trustly::class,
+        'multisafepay_visa'              => Visa::class,
 
         'multisafepay_babycadeaubon'     => Babycadeaubon::class,
         'multisafepay_beautywellness'    => Beautywellness::class,
@@ -93,7 +92,7 @@ class Gateways {
      */
     public static function get_gateways_ids(): array {
         $gateways_ids = array();
-        foreach (self::GATEWAYS as $gateway_id => $gateway) {
+        foreach ( self::GATEWAYS as $gateway_id => $gateway ) {
             $gateways_ids[] = $gateway_id;
         }
         return $gateways_ids;
@@ -108,7 +107,7 @@ class Gateways {
     public static function get_payment_method_id_by_gateway_code( string $code ): string {
         foreach ( self::GATEWAYS as $gateway ) {
             $gateway = new $gateway();
-            if ($gateway->get_payment_method_code() === $code ) {
+            if ( $gateway->get_payment_method_code() === $code ) {
                 return $gateway->get_payment_method_id();
             }
         }
@@ -123,12 +122,12 @@ class Gateways {
     public static function get_payment_method_name_by_gateway_code( string $code ): string {
         foreach ( self::GATEWAYS as $gateway ) {
             $gateway = new $gateway();
-            if($gateway->get_payment_method_code() === $code ) {
+            if ( $gateway->get_payment_method_code() === $code ) {
                 return $gateway->get_payment_method_title();
             }
         }
     }
-    
+
     /**
      * Return the gateway code for the given gateway_id
      *
@@ -136,8 +135,8 @@ class Gateways {
      * @return string
      */
     public static function get_gateway_code_by_gateway_id( string $gateway_id ): string {
-        $gateway = self::GATEWAYS[$gateway_id];
-        return (new $gateway)->get_payment_method_code();
+        $gateway = self::GATEWAYS[ $gateway_id ];
+        return ( new $gateway() )->get_payment_method_code();
     }
 
 }

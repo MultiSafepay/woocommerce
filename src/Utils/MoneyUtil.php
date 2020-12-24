@@ -19,7 +19,6 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\Utils;
@@ -29,6 +28,7 @@ use MultiSafepay\ValueObject\Money;
 
 /**
  * Class MoneyUtil
+ *
  * @package MultiSafepay\WooCommerce\Utils
  * @since    4.0.0
  */
@@ -37,20 +37,18 @@ class MoneyUtil {
 
     /**
      * @param float  $amount
-     * @param string $currencyCode
+     * @param string $currency_code
      * @return Money
      */
-    public static function createMoney(float $amount, string $currencyCode = self::DEFAULT_CURRENCY_CODE): Money
-    {
-        return new Money(self::priceToCents($amount), $currencyCode);
+    public static function create_money( float $amount, string $currency_code = self::DEFAULT_CURRENCY_CODE ): Money {
+        return new Money( self::price_to_cents( $amount ), $currency_code );
     }
 
     /**
      * @param float $price
      * @return float|integer
      */
-    private static function priceToCents(float $price)
-    {
+    private static function price_to_cents( float $price ) {
         return $price * 100;
     }
 }

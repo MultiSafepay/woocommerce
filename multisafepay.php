@@ -37,7 +37,6 @@
  * Requires PHP:            7.2
  * Text Domain:             multisafepay
  * Domain Path:             /languages
- *
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -47,13 +46,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Plugin version
  */
-define('MULTISAFEPAY_PLUGIN_VERSION', '4.0.0');
+define( 'MULTISAFEPAY_PLUGIN_VERSION', '4.0.0' );
 
 
 /**
  * Composer's autoload file.
  */
-require_once plugin_dir_path(__FILE__ ) . 'vendor/autoload.php';
+require_once plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
 
 use MultiSafepay\WooCommerce\Utils\Activator;
 use MultiSafepay\WooCommerce\Utils\Deactivator;
@@ -66,12 +65,11 @@ use MultiSafepay\WooCommerce\Main;
  * @since   4.0.0
  * @see     https://developer.wordpress.org/reference/functions/register_activation_hook/
  *
- * @param   bool   $network_wide
- *
+ * @param   bool $network_wide
  */
-function activate_multisafepay( bool $network_wide): void {
+function activate_multisafepay( bool $network_wide ): void {
     $activator = new Activator();
-    $activator->activate($network_wide);
+    $activator->activate( $network_wide );
 }
 register_activation_hook( __FILE__, 'activate_multisafepay' );
 
@@ -82,12 +80,11 @@ register_activation_hook( __FILE__, 'activate_multisafepay' );
  * @since   4.0.0
  * @see     https://developer.wordpress.org/reference/functions/register_deactivation_hook/
  *
- * @param   bool   $network_wide
- *
+ * @param   bool $network_wide
  */
-function deactivate_multisafepay( bool $network_wide): void {
+function deactivate_multisafepay( bool $network_wide ): void {
     $deactivator = new Deactivator();
-    $deactivator->deactivate($network_wide);
+    $deactivator->deactivate( $network_wide );
 }
 register_deactivation_hook( __FILE__, 'deactivate_multisafepay' );
 
@@ -97,7 +94,6 @@ register_deactivation_hook( __FILE__, 'deactivate_multisafepay' );
  *
  * @since    4.0.0
  * @see      https://developer.wordpress.org/plugins/hooks/
- *
  */
 function init_multisafepay() {
 	$plugin = new Main();

@@ -1,5 +1,6 @@
 (function( $, multisafepay ) {
 	'use strict';
+
 	$(function() {
 
 		if ( 'undefined' === typeof multisafepay ) {
@@ -34,5 +35,6 @@
 			} );
 			return false;
 		});
+
 	});
 })( jQuery, multisafepay );

@@ -19,7 +19,6 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
@@ -45,28 +44,28 @@ abstract class BaseBillingSuitePaymentMethod extends BasePaymentMethod {
      * @param array|null $data
      * @return Meta
      */
-    public function get_gateway_info(array $data = null): GatewayInfoInterface {
-        $gatewayInfo = new Meta();
+    public function get_gateway_info( array $data = null ): GatewayInfoInterface {
+        $gateway_info = new Meta();
 
-        if (isset($_POST[ $this->id . '_gender'])) {
-            $gatewayInfo->addGender(new Gender($_POST[ $this->id . '_gender']));
+        if ( isset( $_POST[ $this->id . '_gender' ] ) ) {
+            $gateway_info->addGender( new Gender( $_POST[ $this->id . '_gender' ] ) );
         }
 
-        if (isset($_POST[ $this->id . '_birthday'])) {
-            $gatewayInfo->addBirthday(new Date($_POST[ $this->id . '_birthday']));
+        if ( isset( $_POST[ $this->id . '_birthday' ] ) ) {
+            $gateway_info->addBirthday( new Date( $_POST[ $this->id . '_birthday' ] ) );
         }
 
-        if (isset($_POST[ $this->id . '_bank_account'])) {
-            $gatewayInfo->addBankAccount(new BankAccount($_POST[ $this->id . '_bank_account']));
+        if ( isset( $_POST[ $this->id . '_bank_account' ] ) ) {
+            $gateway_info->addBankAccount( new BankAccount( $_POST[ $this->id . '_bank_account' ] ) );
         }
 
-        if (isset($data) && !empty($data['order_id'])) {
-            $order = wc_get_order($data['order_id']);
-            $gatewayInfo->addEmailAddress(new EmailAddress($order->get_billing_email()));
-            $gatewayInfo->addPhone(new PhoneNumber($order->get_billing_phone()));
+        if ( isset( $data ) && ! empty( $data['order_id'] ) ) {
+            $order = wc_get_order( $data['order_id'] );
+            $gateway_info->addEmailAddress( new EmailAddress( $order->get_billing_email() ) );
+            $gateway_info->addPhone( new PhoneNumber( $order->get_billing_phone() ) );
         }
 
-        return $gatewayInfo;
+        return $gateway_info;
     }
 
 }

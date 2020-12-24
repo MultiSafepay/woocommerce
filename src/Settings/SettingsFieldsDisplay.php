@@ -19,7 +19,6 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\Settings;
@@ -30,7 +29,6 @@ namespace MultiSafepay\WooCommerce\Settings;
  * Contains all the functions needed to display each setting field
  *
  * @since   4.0.0
- * @todo Remove html and use sprinfs
  */
 class SettingsFieldsDisplay {
 
@@ -51,24 +49,24 @@ class SettingsFieldsDisplay {
     /**
      * Constructor the the class
      *
-     * @param      string    $plugin_name
-     * @param      array     $field
+     * @param      string $plugin_name
+     * @param      array  $field
      */
-    public function __construct(string $plugin_name, array $field) {
+    public function __construct( string $plugin_name, array $field ) {
         $this->plugin_name = $plugin_name;
-        $this->field = $field;
+        $this->field       = $field;
     }
 
     /**
      * Get the value by setting field
      *
      * @see https://developer.wordpress.org/reference/functions/get_option/
-     * @param   array   $field
+     * @param   array $field
      * @return  mixed
      */
     private function get_option_by_field( array $field ) {
         $value = get_option( $field['id'], false );
-        if(!$value) {
+        if ( ! $value ) {
             return $field['default'];
         }
         return $value;
@@ -81,11 +79,11 @@ class SettingsFieldsDisplay {
      * @return string
      */
     private function render_text_field( array $field ): string {
-        $value = $this->get_option_by_field($field);
-        $field_id = esc_attr( $field['id'] );
+        $value       = $this->get_option_by_field( $field );
+        $field_id    = esc_attr( $field['id'] );
         $placeholder = esc_attr( $field['placeholder'] );
-        $html = '<input id="' . $field_id . '" type="' . $field['type'] . '" name="' . $field_id . '" placeholder="' . $placeholder . '" value="' . $value . '"/>';
-        if(!empty($field['description'])) {
+        $html        = '<input id="' . $field_id . '" type="' . $field['type'] . '" name="' . $field_id . '" placeholder="' . $placeholder . '" value="' . $value . '"/>';
+        if ( ! empty( $field['description'] ) ) {
             $html .= '<p class="description">' . $field['description'] . '</p>';
         }
         return $html;
@@ -98,19 +96,19 @@ class SettingsFieldsDisplay {
      * @return string
      */
     private function render_select_field( array $field ): string {
-        $value = $this->get_option_by_field($field);
+        $value    = $this->get_option_by_field( $field );
         $field_id = esc_attr( $field['id'] );
-        $html = '<select name="' . $field_id . '" id="' . $field_id . '">';
-        foreach( $field['options'] as $option_value => $option_name ) {
-            if( $option_value === $value ) {
+        $html     = '<select name="' . $field_id . '" id="' . $field_id . '">';
+        foreach ( $field['options'] as $option_value => $option_name ) {
+            if ( $option_value === $value ) {
                 $html .= '<option value="' . esc_attr( $option_value ) . '" selected>' . $option_name . '</option>';
             }
-            if( $option_value !== $value ) {
+            if ( $option_value !== $value ) {
                 $html .= '<option value="' . esc_attr( $option_value ) . '">' . $option_name . '</option>';
             }
         }
         $html .= '</select> ';
-        if(!empty($field['description'])) {
+        if ( ! empty( $field['description'] ) ) {
             $html .= '<p class="description">' . $field['description'] . '</p>';
         }
         return $html;
@@ -122,12 +120,12 @@ class SettingsFieldsDisplay {
      * @param array $field
      * @return string
      */
-    private function render_checkbox_field(array $field ): string {
-        $checked = ($this->get_option_by_field($field)) ? 'checked="checked"' : '';
-        $field_id = esc_attr( $field['id'] );
+    private function render_checkbox_field( array $field ): string {
+        $checked     = ( $this->get_option_by_field( $field ) ) ? 'checked="checked"' : '';
+        $field_id    = esc_attr( $field['id'] );
         $placeholder = esc_attr( $field['placeholder'] );
-        $html = '<input id="' . $field_id . '" type="' . $field['type'] . '" name="' . $field_id . '" placeholder="' . $placeholder . '" value="1" ' . $checked . ' />';
-        if(!empty($field['description'])) {
+        $html        = '<input id="' . $field_id . '" type="' . $field['type'] . '" name="' . $field_id . '" placeholder="' . $placeholder . '" value="1" ' . $checked . ' />';
+        if ( ! empty( $field['description'] ) ) {
             $html .= '<p class="description">' . $field['description'] . '</p>';
         }
         return $html;
@@ -139,19 +137,19 @@ class SettingsFieldsDisplay {
      * @return void
      */
     public function display(): void {
-        $html           = '';
-        switch( $this->field['type'] ) {
+        $html = '';
+        switch ( $this->field['type'] ) {
             case 'text':
-                $html .= $this->render_text_field($this->field);
+                $html .= $this->render_text_field( $this->field );
                 break;
             case 'select':
-                $html .= $this->render_select_field($this->field);
+                $html .= $this->render_select_field( $this->field );
                 break;
             case 'checkbox':
-                $html .= $this->render_checkbox_field($this->field);
+                $html .= $this->render_checkbox_field( $this->field );
                 break;
         }
-        echo $html;
+        echo $html; // phpcs:ignore Standard.Category.SniffName.ErrorCode, WordPress.Security.EscapeOutput.OutputNotEscaped
     }
 
 }

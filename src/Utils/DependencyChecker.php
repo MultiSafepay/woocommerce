@@ -19,7 +19,6 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\Utils;
@@ -46,8 +45,8 @@ class DependencyChecker {
      */
     public function check(): void {
         $missing_plugins = $this->get_missing_plugins_list();
-        if (!empty($missing_plugins)) {
-            throw new MissingDependencyException($missing_plugins);
+        if ( ! empty( $missing_plugins ) ) {
+            throw new MissingDependencyException( $missing_plugins );
         }
     }
 
@@ -57,20 +56,20 @@ class DependencyChecker {
      * @return  array
      */
     private function get_missing_plugins_list(): array {
-        return array_keys( array_filter( self::REQUIRED_PLUGINS, array($this, 'is_plugin_inactive') ) );
+        return array_keys( array_filter( self::REQUIRED_PLUGINS, array( $this, 'is_plugin_inactive' ) ) );
     }
 
     /**
      * Check if a certain plugin is inactive
      *
-     * @param   string  $plugin_path
+     * @param   string $plugin_path
      * @return  boolean
      */
     private function is_plugin_inactive( string $plugin_path ): bool {
-        if( !is_plugin_active( $plugin_path ) ) {
+        if ( ! is_plugin_active( $plugin_path ) ) {
             return true;
         }
-        if( is_plugin_active( $plugin_path ) ) {
+        if ( is_plugin_active( $plugin_path ) ) {
             return false;
         }
     }

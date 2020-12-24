@@ -19,7 +19,6 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\Utils;
@@ -31,8 +30,6 @@ namespace MultiSafepay\WooCommerce\Utils;
  *
  * @since    4.0.0
  * @see      https://developer.wordpress.org/reference/functions/register_deactivation_hook/
- * @todo     Define the actions needed to run during the plugin's deactivation.
- *
  */
 class Deactivator {
 
@@ -42,8 +39,8 @@ class Deactivator {
      * @param  bool $network_wide
      * @return void
      */
-	public function deactivate( bool $network_wide): void {
-        if ( ( !is_multisite() ) || ( is_multisite() && !$network_wide) ) {
+	public function deactivate( bool $network_wide ): void {
+        if ( ( ! is_multisite() ) || ( is_multisite() && ! $network_wide ) ) {
             $this->deactivate_plugin_single_site();
         }
         if ( is_multisite() && $network_wide ) {

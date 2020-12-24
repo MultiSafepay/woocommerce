@@ -19,11 +19,15 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\Exceptions;
 
+/**
+ * Class MissingDependencyException
+ *
+ * @package MultiSafepay\WooCommerce\Exceptions
+ */
 class MissingDependencyException extends \Exception {
 
     /**
@@ -35,9 +39,10 @@ class MissingDependencyException extends \Exception {
 
     /**
      * MissingDependencyException constructor.
+     *
      * @param array $missing_plugins
      */
-    public function __construct( array $missing_plugins )  {
+    public function __construct( array $missing_plugins ) {
         parent::__construct();
         $this->missing_plugin_names = $missing_plugins;
     }

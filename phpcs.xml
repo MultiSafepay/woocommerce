@@ -28,8 +28,18 @@
         <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
         <!-- At this moment we are not using Wordpress conventions for the files names  -->
         <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
-        <!-- We dont required and need a dot at the end of each comment -->
+        <!-- We dont require and need a dot at the end of each comment -->
         <exclude name="Squiz.Commenting.InlineComment.InvalidEndChar"/>
+        <!-- We dont require a comment for each @throws comment -->
+        <exclude name="Squiz.Commenting.FunctionComment.EmptyThrows"/>
+        <!-- We dont require each comment ends in a characters that means the end of the line; like a dot. -->
+        <exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop"/>
+        <!-- In some places we use date() function. We want to use TimeZone set in the store and not gmdate() suggestion from PHPCS -->
+        <exclude name="WordPress.DateTime.RestrictedFunctions.date_date"/>
+        <!-- Exclude warning if founds a method which does not use a parameter -->
+        <exclude name="Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed"/>
+        <!-- Exclude warning if founds a method which does not use a parameter in a extended class -->
+        <exclude name="Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClass"/>
     </rule>
 
 
@@ -41,6 +51,26 @@
     <!-- Exclude all gateways and giftcards classes from this rule -->
     <rule ref="WordPress.WP.I18n.MissingTranslatorsComment">
         <exclude-pattern>*/src/PaymentMethods/*</exclude-pattern>
+    </rule>
+
+    <!-- Exclude nonce verification for uninstall.php file and from some payment methods in which we use GatewayInterface -->
+    <rule ref="WordPress.Security.NonceVerification.Missing">
+        <exclude-pattern>uninstall.php</exclude-pattern>
+        <exclude-pattern>*/src/PaymentMethods/BasePaymentMethod.php</exclude-pattern>
+        <exclude-pattern>*/src/PaymentMethods/BaseBillingSuitePaymentMethod.php</exclude-pattern>
+        <exclude-pattern>*/src/PaymentMethods/Ideal.php</exclude-pattern>
+        <exclude-pattern>*/src/PaymentMethods/Dirdeb.php</exclude-pattern>
+    </rule>
+
+    <!-- Exclude nonce verification recomendation -->
+    <rule ref="WordPress.Security.NonceVerification.Recommended">
+        <exclude-pattern>*/src/PaymentMethods/BasePaymentMethod.php</exclude-pattern>
+        <exclude-pattern>*/src/Settings/SettingsController.php</exclude-pattern>
+    </rule>
+
+    <!-- Exclude BasePaymentMethod.php length limit -->
+    <rule ref="ObjectCalisthenics.Files.ClassTraitAndInterfaceLength.ObjectCalisthenics\Sniffs\Files\ClassTraitAndInterfaceLengthSniff">
+        <exclude-pattern>*/src/PaymentMethods/BasePaymentMethod.php</exclude-pattern>
     </rule>
 
     <!-- Let's also check that everything is properly documented. -->
@@ -69,10 +99,10 @@
     <!-- No "else" -->
     <rule ref="ObjectCalisthenics.ControlStructures.NoElse"/>
 
-    <!-- Only 2 indentation level per function/method -->
+    <!-- Only 3 indentation level per function/method -->
     <rule ref="ObjectCalisthenics.Metrics.MaxNestingLevel">
         <properties>
-            <property name="maxNestingLevel" value="2"/>
+            <property name="maxNestingLevel" value="3"/>
         </properties>
     </rule>
 
@@ -87,22 +117,22 @@
     <!-- The following ensure small classes -->
     <rule ref="ObjectCalisthenics.Files.ClassTraitAndInterfaceLength">
         <properties>
-            <property name="maxLength" value="200"/>
+            <property name="maxLength" value="500"/>
         </properties>
     </rule>
     <rule ref="ObjectCalisthenics.Files.FunctionLength">
         <properties>
-            <property name="maxLength" value="200"/>
+            <property name="maxLength" value="500"/>
         </properties>
     </rule>
     <rule ref="ObjectCalisthenics.Metrics.PropertyPerClassLimit">
         <properties>
-            <property name="maxCount" value="10"/>
+            <property name="maxCount" value="25"/>
         </properties>
     </rule>
     <rule ref="ObjectCalisthenics.Metrics.MethodPerClassLimit">
         <properties>
-            <property name="maxCount" value="10"/>
+            <property name="maxCount" value="25"/>
         </properties>
     </rule>
 

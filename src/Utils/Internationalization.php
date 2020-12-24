@@ -19,14 +19,12 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\Utils;
 
 /**
  * Define the internationalization functionality.
- *
  */
 class Internationalization {
 
@@ -43,13 +41,13 @@ class Internationalization {
      * @return void
 	 */
 	public function load_plugin_textdomain(): void {
-		load_plugin_textdomain( $this->domain, false, dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/');
+		load_plugin_textdomain( $this->domain, false, dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/' );
 	}
 
 	/**
 	 * Set the domain equal to that of the specified domain.
 	 *
-	 * @param   string    $domain    The domain that represents the locale of this plugin.
+	 * @param   string $domain    The domain that represents the locale of this plugin.
      * @return  void
 	 */
 	public function set_domain( string $domain ) {

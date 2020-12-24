@@ -19,7 +19,6 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
@@ -55,7 +54,7 @@ class Ideal extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_title(): string {
-        return __('iDEAL', 'multisafepay');
+        return __( 'iDEAL', 'multisafepay' );
     }
 
     /**
@@ -63,7 +62,7 @@ class Ideal extends BasePaymentMethod {
      */
     public function get_payment_method_description(): string {
         $method_description = sprintf(
-            __('The leading ecommerce payment method in the Netherlands connecting all major Dutch banks. <br />Read more about <a href="%s" target="_blank">%s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay'),
+            __( 'The leading ecommerce payment method in the Netherlands connecting all major Dutch banks. <br />Read more about <a href="%1$s" target="_blank">%2$s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay' ),
             'https://docs.multisafepay.com/payment-methods/banks/ideal/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
             $this->get_payment_method_title()
         );
@@ -96,39 +95,37 @@ class Ideal extends BasePaymentMethod {
      *
      * @return  void
      */
-    public function payment_fields(): void
-    {
-        $issuerService = new IssuerService();
-        $issuers = $issuerService->get_issuers($this->get_payment_method_code());
+    public function payment_fields(): void {
+        $issuer_service = new IssuerService();
+        $issuers        = $issuer_service->get_issuers( $this->get_payment_method_code() );
 
-        require($this->plugin_dir_path . 'templates/multisafepay-checkout-fields-display.php');
+        require $this->plugin_dir_path . 'templates/multisafepay-checkout-fields-display.php';
     }
 
     /**
      * @param array|null $data
      * @return IdealGatewayInfo
      */
-    public function get_gateway_info(array $data = null): GatewayInfoInterface {
-        $gatewayInfo = new IdealGatewayInfo();
+    public function get_gateway_info( array $data = null ): GatewayInfoInterface {
+        $gateway_info = new IdealGatewayInfo();
 
-        if (isset($_POST[ $this->id . '_issuer_id'])) {
-            $gatewayInfo->addIssuerId($_POST[ $this->id . '_issuer_id']);
+        if ( isset( $_POST[ $this->id . '_issuer_id' ] ) ) {
+            $gateway_info->addIssuerId( $_POST[ $this->id . '_issuer_id' ] );
         }
 
-        return $gatewayInfo;
+        return $gateway_info;
     }
 
     /**
      * Check if issuer_id has been set
      *
-     * @param GatewayInfoInterface $gatewayInfo
+     * @param GatewayInfoInterface $gateway_info
      * @return boolean
      */
-    public function validate_gateway_info(GatewayInfoInterface $gatewayInfo): bool
-    {
-        $data = $gatewayInfo->getData();
+    public function validate_gateway_info( GatewayInfoInterface $gateway_info ): bool {
+        $data = $gateway_info->getData();
 
-        if (empty($data[ 'issuer_id' ])) {
+        if ( empty( $data['issuer_id'] ) ) {
             $this->type = 'redirect';
             return false;
         }

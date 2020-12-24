@@ -19,7 +19,6 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\Settings;
@@ -32,8 +31,6 @@ use MultiSafepay\WooCommerce\Services\SdkService;
  * Defines all the settings fields properties
  *
  * @since   4.0.0
- * @todo Validate sections id
- * @todo Add validations tasks
  */
 class SettingsFields {
 
@@ -47,9 +44,9 @@ class SettingsFields {
     /**
      * Constructor the the class
      *
-     * @param   string    $plugin_name
+     * @param   string $plugin_name
      */
-    public function __construct(string $plugin_name) {
+    public function __construct( string $plugin_name ) {
         $this->plugin_name = $plugin_name;
     }
 
@@ -59,11 +56,11 @@ class SettingsFields {
      * @return  array
      */
     public function get_settings(): array {
-        $settings = array();
-        $settings['general'] = $this->get_settings_general();
-        $settings['options'] = $this->get_settings_options();
+        $settings                 = array();
+        $settings['general']      = $this->get_settings_general();
+        $settings['options']      = $this->get_settings_options();
         $settings['order_status'] = $this->get_settings_order_status();
-        $settings = apply_filters( 'multisafepay_common_settings_fields', $settings );
+        $settings                 = apply_filters( 'multisafepay_common_settings_fields', $settings );
         return $settings;
     }
 
@@ -74,58 +71,58 @@ class SettingsFields {
      */
     private function get_settings_general(): array {
         return array(
-            'title'					=> '',
-            'intro'			        => '',
-            'fields'				=> array(
+            'title'  => '',
+            'intro'  => '',
+            'fields' => array(
                 array(
-                    'id' 			=> $this->plugin_name . '_testmode',
-                    'label'			=> __( 'Test Mode' , $this->plugin_name ),
-                    'description'   => '',
-                    'type'			=> 'checkbox',
-                    'default'		=> false,
-                    'placeholder'	=> __( 'Test Mode', $this->plugin_name ),
-                    'tooltip'	    => __( 'Check this option if you want to enable MultiSafepay in test mode.' , $this->plugin_name ),
-                    'callback'      => '',
-                    'setting_type'  => 'boolean',
-                    'sort_order'    => 1,
+                    'id'           => $this->plugin_name . '_testmode',
+                    'label'        => __( 'Test Mode', 'multisafepay' ),
+                    'description'  => '',
+                    'type'         => 'checkbox',
+                    'default'      => false,
+                    'placeholder'  => __( 'Test Mode', 'multisafepay' ),
+                    'tooltip'      => __( 'Check this option if you want to enable MultiSafepay in test mode.', 'multisafepay' ),
+                    'callback'     => '',
+                    'setting_type' => 'boolean',
+                    'sort_order'   => 1,
                 ),
                 array(
-                    'id' 			=> $this->plugin_name . '_test_api_key',
-                    'label'			=> __( 'Test API Key' , $this->plugin_name ),
-                    'description'	=> '',
-                    'type'			=> 'text',
-                    'default'		=> '',
-                    'placeholder'	=> '',
-                    'tooltip'       => __( 'Test API Key', $this->plugin_name ),
-                    'callback'      => array($this, 'validate_test_api_key'),
-                    'setting_type'  => 'string',
-                    'sort_order'    => 2,
+                    'id'           => $this->plugin_name . '_test_api_key',
+                    'label'        => __( 'Test API Key', 'multisafepay' ),
+                    'description'  => '',
+                    'type'         => 'text',
+                    'default'      => '',
+                    'placeholder'  => '',
+                    'tooltip'      => __( 'Test API Key', 'multisafepay' ),
+                    'callback'     => array( $this, 'validate_test_api_key' ),
+                    'setting_type' => 'string',
+                    'sort_order'   => 2,
                 ),
                 array(
-                    'id' 			=> $this->plugin_name . '_api_key',
-                    'label'			=> __( 'API Key' , $this->plugin_name ),
-                    'description'	=> '',
-                    'type'			=> 'text',
-                    'default'		=> '',
-                    'placeholder'	=> __( 'API Key ', $this->plugin_name ),
-                    'tooltip'       => __( 'API Key', $this->plugin_name ),
-                    'callback'      => array($this, 'validate_api_key'),
-                    'setting_type'  => 'string',
-                    'sort_order'    => 3,
+                    'id'           => $this->plugin_name . '_api_key',
+                    'label'        => __( 'API Key', 'multisafepay' ),
+                    'description'  => '',
+                    'type'         => 'text',
+                    'default'      => '',
+                    'placeholder'  => __( 'API Key ', 'multisafepay' ),
+                    'tooltip'      => __( 'API Key', 'multisafepay' ),
+                    'callback'     => array( $this, 'validate_api_key' ),
+                    'setting_type' => 'string',
+                    'sort_order'   => 3,
                 ),
                 array(
-                    'id' 			=> $this->plugin_name . '_debugmode',
-                    'label'			=> __( 'Debug Mode' , $this->plugin_name ),
-                    'description'	=> '',
-                    'type'			=> 'checkbox',
-                    'default'		=> false,
-                    'placeholder'	=> __( 'Debug Mode' , $this->plugin_name ),
-                    'tooltip'       => __( 'Logs additional information to the system log', $this->plugin_name ),
-                    'callback'      => '',
-                    'setting_type'  => 'boolean',
-                    'sort_order'    => 4,
+                    'id'           => $this->plugin_name . '_debugmode',
+                    'label'        => __( 'Debug Mode', 'multisafepay' ),
+                    'description'  => '',
+                    'type'         => 'checkbox',
+                    'default'      => false,
+                    'placeholder'  => __( 'Debug Mode', 'multisafepay' ),
+                    'tooltip'      => __( 'Logs additional information to the system log', 'multisafepay' ),
+                    'callback'     => '',
+                    'setting_type' => 'boolean',
+                    'sort_order'   => 4,
                 ),
-            )
+            ),
         );
     }
 
@@ -136,75 +133,75 @@ class SettingsFields {
      */
     private function get_settings_options(): array {
         return array(
-            'title'					=> '',
-            'intro'			        => '',
-            'fields'		        => array(
+            'title'  => '',
+            'intro'  => '',
+            'fields' => array(
                 array(
-                    'id' 			=> $this->plugin_name . '_ga',
-                    'label'			=> __( 'Google Analytics' , $this->plugin_name ),
-                    'description'	=> __( 'Google Analytics Universal Account ID. Format: UA-XXXXXXXXX' , $this->plugin_name ),
-                    'type'			=> 'text',
-                    'default'		=> '',
-                    'placeholder'	=> __( 'Google Analytics', $this->plugin_name ),
-                    'tooltip'       => '',
-                    'callback'      => '',
-                    'setting_type'  => 'string',
-                    'sort_order'    => 1,
+                    'id'           => $this->plugin_name . '_ga',
+                    'label'        => __( 'Google Analytics', 'multisafepay' ),
+                    'description'  => __( 'Google Analytics Universal Account ID. Format: UA-XXXXXXXXX', 'multisafepay' ),
+                    'type'         => 'text',
+                    'default'      => '',
+                    'placeholder'  => __( 'Google Analytics', 'multisafepay' ),
+                    'tooltip'      => '',
+                    'callback'     => '',
+                    'setting_type' => 'string',
+                    'sort_order'   => 1,
                 ),
                 array(
-                    'id' 			=> $this->plugin_name . '_time_active',
-                    'label'			=> __( 'Value lifetime of payment link' , $this->plugin_name ),
-                    'description'	=> '',
-                    'type'			=> 'text',
-                    'default'		=> '30',
-                    'placeholder'	=> __( 'Value lifetime of payment link', $this->plugin_name ),
-                    'tooltip'       => '',
-                    'callback'      => '',
-                    'setting_type'  => 'int',
-                    'sort_order'    => 2,
+                    'id'           => $this->plugin_name . '_time_active',
+                    'label'        => __( 'Value lifetime of payment link', 'multisafepay' ),
+                    'description'  => '',
+                    'type'         => 'text',
+                    'default'      => '30',
+                    'placeholder'  => __( 'Value lifetime of payment link', 'multisafepay' ),
+                    'tooltip'      => '',
+                    'callback'     => '',
+                    'setting_type' => 'int',
+                    'sort_order'   => 2,
                 ),
                 array(
-                    'id' 			=> $this->plugin_name . '_time_unit',
-                    'label'			=> __( 'Unit lifetime of payment link' , $this->plugin_name ),
-                    'description'	=> __( 'The lifetime of a payment link by default is 30 days. This means that the customer has 30 days to complete the transaction using the payment link' , $this->plugin_name ),
-                    'type'			=> 'select',
-                    'options'		=> array(
-                        'days'    => __('Days', $this->plugin_name),
-                        'hours'   => __('Hours', $this->plugin_name),
-                        'seconds' => __('Seconds', $this->plugin_name),
+                    'id'           => $this->plugin_name . '_time_unit',
+                    'label'        => __( 'Unit lifetime of payment link', 'multisafepay' ),
+                    'description'  => __( 'The lifetime of a payment link by default is 30 days. This means that the customer has 30 days to complete the transaction using the payment link', 'multisafepay' ),
+                    'type'         => 'select',
+                    'options'      => array(
+                        'days'    => __( 'Days', 'multisafepay' ),
+                        'hours'   => __( 'Hours', 'multisafepay' ),
+                        'seconds' => __( 'Seconds', 'multisafepay' ),
                     ),
-                    'default'		=> 'days',
-                    'placeholder'	=> __( 'Unit lifetime of payment link', $this->plugin_name ),
-                    'tooltip'       => '',
-                    'callback'      => '',
-                    'setting_type'  => 'string',
-                    'sort_order'    => 3,
+                    'default'      => 'days',
+                    'placeholder'  => __( 'Unit lifetime of payment link', 'multisafepay' ),
+                    'tooltip'      => '',
+                    'callback'     => '',
+                    'setting_type' => 'string',
+                    'sort_order'   => 3,
                 ),
                 array(
-                    'id' 			=> $this->plugin_name . '_second_chance',
-                    'label'			=> __( 'Second Chance' , $this->plugin_name ),
-                    'description'	=> __( 'More information about Second Chance on <a href="https://docs.multisafepay.com/tools/second-chance/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms" target="_blank">MultiSafepay\'s Documentation Center</a>.' , $this->plugin_name ),
-                    'type'			=> 'checkbox',
-                    'default'		=> false,
-                    'placeholder'	=> __( 'Second Chance', $this->plugin_name ),
-                    'tooltip'       => __( 'MultiSafepay will send two Second Chance reminder emails. In the emails, MultiSafepay will include a link to allow the consumer to finalize the payment. The first Second Chance email is sent 1 hour after the transaction was initiated and the second after 24 hours. To receive second chance emails, this option must also be activated within your MultiSafepay account, otherwise it will not work.' , $this->plugin_name ),
-                    'callback'      => '',
-                    'setting_type'  => 'boolean',
-                    'sort_order'    => 4,
+                    'id'           => $this->plugin_name . '_second_chance',
+                    'label'        => __( 'Second Chance', 'multisafepay' ),
+                    'description'  => __( 'More information about Second Chance on <a href="https://docs.multisafepay.com/tools/second-chance/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
+                    'type'         => 'checkbox',
+                    'default'      => false,
+                    'placeholder'  => __( 'Second Chance', 'multisafepay' ),
+                    'tooltip'      => __( 'MultiSafepay will send two Second Chance reminder emails. In the emails, MultiSafepay will include a link to allow the consumer to finalize the payment. The first Second Chance email is sent 1 hour after the transaction was initiated and the second after 24 hours. To receive second chance emails, this option must also be activated within your MultiSafepay account, otherwise it will not work.', 'multisafepay' ),
+                    'callback'     => '',
+                    'setting_type' => 'boolean',
+                    'sort_order'   => 4,
                 ),
                 array(
-                    'id' 			=> $this->plugin_name . '_remove_all_settings',
-                    'label'			=> __( 'Delete settings if uninstall' , $this->plugin_name ),
-                    'description'      => '',
-                    'type'			=> 'checkbox',
-                    'default'		=> false,
-                    'placeholder'	=> __( 'Delete settings if uninstall', $this->plugin_name ),
-                    'tooltip'	    => __( 'Delete all settings of this plugin if you uninstall' , $this->plugin_name ),
-                    'callback'      => '',
-                    'setting_type'  => 'boolean',
-                    'sort_order'    => 5,
+                    'id'           => $this->plugin_name . '_remove_all_settings',
+                    'label'        => __( 'Delete settings if uninstall', 'multisafepay' ),
+                    'description'  => '',
+                    'type'         => 'checkbox',
+                    'default'      => false,
+                    'placeholder'  => __( 'Delete settings if uninstall', 'multisafepay' ),
+                    'tooltip'      => __( 'Delete all settings of this plugin if you uninstall', 'multisafepay' ),
+                    'callback'     => '',
+                    'setting_type' => 'boolean',
+                    'sort_order'   => 5,
                 ),
-            )
+            ),
         );
     }
 
@@ -214,63 +211,61 @@ class SettingsFields {
      * @return  array
      */
     private function get_settings_order_status(): array {
-        $wc_order_statuses = $this->get_wc_get_order_statuses();
-        $msp_order_statuses = $this->get_msp_order_statuses();
+        $wc_order_statuses   = $this->get_wc_get_order_statuses();
+        $msp_order_statuses  = $this->get_msp_order_statuses();
         $order_status_fields = array();
-        $x = 1;
-        foreach ($msp_order_statuses as $key => $msp_order_status) {
+        $sort_order          = 1;
+        foreach ( $msp_order_statuses as $key => $msp_order_status ) {
             $order_status_fields[] = array(
-                'id' 			=> $this->plugin_name . '_' . $key,
-                'label'			=> __( $msp_order_status['label'], $this->plugin_name ),
-                'description'	=> '',
-                'type'			=> 'select',
-                'options'		=> $wc_order_statuses,
-                'default'		=> $msp_order_status['default'],
-                'placeholder'	=> __( 'Select order status', $this->plugin_name ),
-                'tooltip'       => '',
-                'callback'      => '',
-                'setting_type'  => 'string',
-                'sort_order'    => $x,
+                'id'           => $this->plugin_name . '_' . $key,
+                'label'        => $msp_order_status['label'],
+                'description'  => '',
+                'type'         => 'select',
+                'options'      => $wc_order_statuses,
+                'default'      => $msp_order_status['default'],
+                'placeholder'  => __( 'Select order status', 'multisafepay' ),
+                'tooltip'      => '',
+                'callback'     => '',
+                'setting_type' => 'string',
+                'sort_order'   => $sort_order,
             );
-            $x++;
+            $sort_order++;
         }
 
         return array(
-            'title'					=> '',
-            'intro'			        => '',
-            'fields'		        => $order_status_fields
+            'title'  => '',
+            'intro'  => '',
+            'fields' => $order_status_fields,
         );
     }
 
     /**
-     * Validates the api key field on submit
+     * Validates the api key field on submit.
      *
-     * @todo    Validate the api key in the SDK.
-     *
-     * @param   string   $api_key   The api key
+     * @param   string $api_key   The api key
      * @return  mixed
      */
     public function validate_api_key( string $api_key ) {
 
         $testmode = get_option( $this->plugin_name . '_testmode', false );
 
-        if( !$testmode && empty($api_key) ) {
+        if ( ! $testmode && empty( $api_key ) ) {
             add_settings_error(
                 '',
                 '',
-                __('You need to fill the API Key', $this->plugin_name),
+                __( 'You need to fill the API Key', 'multisafepay' ),
                 'error'
             );
             return false;
         }
 
-        if( !$testmode &&  !empty($api_key) ) {
-            $sdk = new SdkService( $api_key, (bool)$testmode );
-            if( ( strlen( $api_key ) < 5) || ( $sdk && is_wp_error( $sdk->get_gateways() ) ) ) {
+        if ( ! $testmode && ! empty( $api_key ) ) {
+            $sdk = new SdkService( $api_key, (bool) $testmode );
+            if ( ( strlen( $api_key ) < 5 ) || ( $sdk && is_wp_error( $sdk->get_gateways() ) ) ) {
                 add_settings_error(
                     '',
                     '',
-                    __('It seems the API Key is not valid on the live environment', $this->plugin_name),
+                    __( 'It seems the API Key is not valid on the live environment', 'multisafepay' ),
                     'error'
                 );
 
@@ -284,31 +279,30 @@ class SettingsFields {
     /**
      * Validates the test api key field on submit
      *
-     *
-     * @param   string   $api_key   The test api key
+     * @param   string $api_key   The test api key
      * @return  mixed
      */
     public function validate_test_api_key( string $api_key ) {
 
         $testmode = get_option( $this->plugin_name . '_testmode', false );
 
-        if( $testmode && empty($api_key) ) {
+        if ( $testmode && empty( $api_key ) ) {
             add_settings_error(
                 '',
                 '',
-                __('You need to fill the Test API Key', $this->plugin_name),
+                __( 'You need to fill the Test API Key', 'multisafepay' ),
                 'error'
             );
             return false;
         }
 
-        if( $testmode && !empty($api_key) ) {
-            $sdk = new SdkService( $api_key, (bool)$testmode );
-            if( ( strlen( $api_key ) < 5) || ( $sdk && is_wp_error( $sdk->get_gateways() ) ) ) {
+        if ( $testmode && ! empty( $api_key ) ) {
+            $sdk = new SdkService( $api_key, (bool) $testmode );
+            if ( ( strlen( $api_key ) < 5 ) || ( $sdk && is_wp_error( $sdk->get_gateways() ) ) ) {
                 add_settings_error(
                     '',
                     '',
-                    __('It seems the Test API Key is not valid on the test environment', $this->plugin_name),
+                    __( 'It seems the Test API Key is not valid on the test environment', 'multisafepay' ),
                     'error'
                 );
                 return $api_key;
@@ -320,6 +314,7 @@ class SettingsFields {
 
     /**
      * Returns the WooCommerce registered order statuses
+     *
      * @see     http://hookr.io/functions/wc_get_order_statuses/
      *
      * @return  array
@@ -336,18 +331,51 @@ class SettingsFields {
      * @return  array
      */
     private function get_msp_order_statuses(): array {
-        return array (
-            'initialized_status'        => array('label' => __('Initialized', $this->plugin_name),       'default' => 'wc-pending'),
-            'completed_status'          => array('label' => __('Completed', $this->plugin_name),         'default' => 'wc-processing'),
-            'uncleared_status'          => array('label' => __('Uncleared', $this->plugin_name),         'default' => 'wc-on-hold'),
-            'reserved_status'           => array('label' => __('Reserved', $this->plugin_name),          'default' => 'wc-on-hold'),
-            'void_status'               => array('label' => __('Void', $this->plugin_name),              'default' => 'wc-cancelled'),
-            'declined_status'           => array('label' => __('Declined', $this->plugin_name),          'default' => 'wc-cancelled'),
-            'expired_status'            => array('label' => __('Expired', $this->plugin_name),           'default' => 'wc-cancelled'),
-            'shipped_status'            => array('label' => __('Shipped', $this->plugin_name),           'default' => 'wc-completed'),
-            'refunded_status'           => array('label' => __('Refunded', $this->plugin_name),          'default' => 'wc-refunded'),
-            'partial_refunded_status'   => array('label' => __('Partial refunded', $this->plugin_name),  'default' => 'wc-refunded'),
-            'cancelled_status'          => array('label' => __('Cancelled', $this->plugin_name),         'default' => 'wc-cancelled'),
+        return array(
+            'initialized_status'      => array(
+				'label'   => __( 'Initialized', 'multisafepay' ),
+				'default' => 'wc-pending',
+			),
+            'completed_status'        => array(
+				'label'   => __( 'Completed', 'multisafepay' ),
+				'default' => 'wc-processing',
+			),
+            'uncleared_status'        => array(
+				'label'   => __( 'Uncleared', 'multisafepay' ),
+				'default' => 'wc-on-hold',
+			),
+            'reserved_status'         => array(
+				'label'   => __( 'Reserved', 'multisafepay' ),
+				'default' => 'wc-on-hold',
+			),
+            'void_status'             => array(
+				'label'   => __( 'Void', 'multisafepay' ),
+				'default' => 'wc-cancelled',
+			),
+            'declined_status'         => array(
+				'label'   => __( 'Declined', 'multisafepay' ),
+				'default' => 'wc-cancelled',
+			),
+            'expired_status'          => array(
+				'label'   => __( 'Expired', 'multisafepay' ),
+				'default' => 'wc-cancelled',
+			),
+            'shipped_status'          => array(
+				'label'   => __( 'Shipped', 'multisafepay' ),
+				'default' => 'wc-completed',
+			),
+            'refunded_status'         => array(
+				'label'   => __( 'Refunded', 'multisafepay' ),
+				'default' => 'wc-refunded',
+			),
+            'partial_refunded_status' => array(
+				'label'   => __( 'Partial refunded', 'multisafepay' ),
+				'default' => 'wc-refunded',
+			),
+            'cancelled_status'        => array(
+				'label'   => __( 'Cancelled', 'multisafepay' ),
+				'default' => 'wc-cancelled',
+			),
         );
     }
 

@@ -19,11 +19,9 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\Services;
-
 
 use MultiSafepay\Api\GatewayManager;
 use MultiSafepay\Api\Gateways\Gateway;
@@ -60,20 +58,19 @@ class SdkService {
     /**
      * SdkService constructor.
      *
-     * @param  string   $api_key
-     * @param  boolean  $test_mode
+     * @param  string  $api_key
+     * @param  boolean $test_mode
      */
     public function __construct( string $api_key = null, bool $test_mode = null ) {
         $this->api_key   = $api_key ?? $this->get_api_key();
         $this->test_mode = $test_mode ?? $this->get_test_mode();
 
         try {
-            $this->sdk = new Sdk( $this->api_key, ($this->test_mode) ? false: true );
-        }
-        catch ( InvalidApiKeyException $invalidApiKeyException ) {
-            if( get_option( 'multisafepay_debugmode', false ) ) {
+            $this->sdk = new Sdk( $this->api_key, ( $this->test_mode ) ? false : true );
+        } catch ( InvalidApiKeyException $invalid_api_key_exception ) {
+            if ( get_option( 'multisafepay_debugmode', false ) ) {
                 $logger = wc_get_logger();
-                $logger->log( 'warning', $invalidApiKeyException->getMessage() );
+                $logger->log( 'warning', $invalid_api_key_exception->getMessage() );
             }
         }
     }
@@ -84,7 +81,7 @@ class SdkService {
      * @return  boolean
      */
     public function get_test_mode(): bool {
-        return (bool)get_option( 'multisafepay_testmode', false );
+        return (bool) get_option( 'multisafepay_testmode', false );
     }
 
     /**
@@ -94,7 +91,7 @@ class SdkService {
      * @return  string
      */
     public function get_api_key(): string {
-        if( $this->get_test_mode() ) {
+        if ( $this->get_test_mode() ) {
             return get_option( 'multisafepay_test_api_key', false );
         }
         return get_option( 'multisafepay_api_key', false );
@@ -110,13 +107,12 @@ class SdkService {
         try {
             $gateway_manager = $this->sdk->getGatewayManager();
             return $gateway_manager;
-        }
-        catch ( ApiException $apiException ) {
-            if( get_option( 'multisafepay_debugmode', false ) ) {
+        } catch ( ApiException $api_exception ) {
+            if ( get_option( 'multisafepay_debugmode', false ) ) {
                 $logger = wc_get_logger();
-                $logger->log( 'warning', $apiException->getMessage() );
+                $logger->log( 'warning', $api_exception->getMessage() );
             }
-            return new WP_Error( 'multisafepay-warning', $apiException->getMessage() );
+            return new WP_Error( 'multisafepay-warning', $api_exception->getMessage() );
         }
     }
 
@@ -130,13 +126,12 @@ class SdkService {
         try {
             $gateways = $this->get_gateway_manager()->getGateways( true );
             return $gateways;
-        }
-        catch ( ApiException $apiException ) {
-            if( get_option( 'multisafepay_debugmode', false ) ) {
+        } catch ( ApiException $api_exception ) {
+            if ( get_option( 'multisafepay_debugmode', false ) ) {
                 $logger = wc_get_logger();
-                $logger->log( 'warning', $apiException->getMessage() );
+                $logger->log( 'warning', $api_exception->getMessage() );
             }
-            return new WP_Error( 'multisafepay-warning', $apiException->getMessage() );
+            return new WP_Error( 'multisafepay-warning', $api_exception->getMessage() );
         }
     }
 

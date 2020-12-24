@@ -19,7 +19,6 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\Utils;
@@ -34,10 +33,6 @@ use MultiSafepay\WooCommerce\Exceptions\MissingDependencyException;
  *
  * @since    4.0.0
  * @see      https://developer.wordpress.org/reference/functions/register_activation_hook/
- * @todo     Weird things could happen when a new blog is activate and the plugin has been activated in all network
- * @todo     Check if user can not activate plugin user_can
- * @todo     For some reason, if activate plugin network wide, and woocommerce is not active on one of the sites, return the error, but no the message
- *
  */
 class Activator {
 
@@ -48,7 +43,7 @@ class Activator {
      * @return  void
      */
 	public function activate( bool $network_wide ): void {
-        if ( ( !is_multisite() ) || ( is_multisite() && !$network_wide) ) {
+        if ( ( ! is_multisite() ) || ( is_multisite() && ! $network_wide ) ) {
             $this->activate_plugin_single_site();
         }
         if ( is_multisite() && $network_wide ) {
@@ -64,14 +59,12 @@ class Activator {
      */
     private function activate_plugin_single_site(): void {
         try {
-            $dependencyChecker = new DependencyChecker();
-            $dependencyChecker->check();
-        } catch (MissingDependencyException $exception) {
-            $message = sprintf(
-                __('Missing dependencies: %s <br>Please install these extensions to use the Multisafepay WooCommerce plugin', 'multisafepay'),
-                implode(', ', $exception->get_missing_plugin_names())
-            );
-            die($message);
+            $dependency_checker = new DependencyChecker();
+            $dependency_checker->check();
+        } catch ( MissingDependencyException $missing_dependency_exception ) {
+            $dependencies = implode( ', ', $missing_dependency_exception->get_missing_plugin_names() );
+            $message      = sprintf( __( 'Missing dependencies: %s <br>Please install these extensions to use the Multisafepay WooCommerce plugin', 'multisafepay' ), $dependencies ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+            die( esc_html( $message ) );
         }
     }
 
@@ -83,8 +76,8 @@ class Activator {
      */
     private function activate_plugin_all_sites(): void {
         $blog_ids = $this->get_blogs_ids();
-        foreach ($blog_ids as $blog_id) {
-            switch_to_blog($blog_id);
+        foreach ( $blog_ids as $blog_id ) {
+            switch_to_blog( $blog_id );
             $this->activate_plugin_single_site();
             restore_current_blog();
         }
@@ -96,10 +89,10 @@ class Activator {
      * @return array
      */
 	private function get_blogs_ids(): array {
-        $args = array(
-            'fields' => 'ids'
+        $args      = array(
+            'fields' => 'ids',
         );
-        $blogs_ids = get_sites($args);
+        $blogs_ids = get_sites( $args );
         return $blogs_ids;
 	}
 

@@ -19,11 +19,9 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\Services;
-
 
 use MultiSafepay\Api\Transactions\OrderRequest;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
@@ -35,10 +33,11 @@ use WC_Order;
 
 /**
  * Class OrderService
+ *
  * @package MultiSafepay\WooCommerce\Services
  */
-class OrderService
-{
+class OrderService {
+
 
     /**
      * @var CustomerService
@@ -53,56 +52,55 @@ class OrderService
     /**
      * OrderService constructor.
      */
-    public function __construct()
-    {
-        $this->customer_service = new CustomerService();
+    public function __construct() {
+        $this->customer_service      = new CustomerService();
         $this->shopping_cart_service = new ShoppingCartService();
     }
 
     /**
-     * @param int $order_id
-     * @param string $gateway_code
-     * @param string $type
-     * @param string $gateway_id
+     * @param int                  $order_id
+     * @param string               $gateway_code
+     * @param string               $type
+     * @param string               $gateway_id
      * @param GatewayInfoInterface $gateway_info
      * @return OrderRequest
      */
-    public function create_order_request(int $order_id, string $gateway_code, string $type, string $gateway_id, GatewayInfoInterface $gateway_info = null): OrderRequest
-    {
-        $order = wc_get_order($order_id);
-        $time_active = get_option('multisafepay_time_active', '30');
-        $time_active_unit = get_option('multisafepay_time_unit', 'days');
+    public function create_order_request( int $order_id, string $gateway_code, string $type, string $gateway_id, GatewayInfoInterface $gateway_info = null ): OrderRequest {
+        $order            = wc_get_order( $order_id );
+        $time_active      = get_option( 'multisafepay_time_active', '30' );
+        $time_active_unit = get_option( 'multisafepay_time_unit', 'days' );
 
-        if ($time_active_unit === 'days') {
+        if ( 'days' === $time_active_unit ) {
             $time_active = $time_active * 24 * 60 * 60;
-        } elseif ($time_active_unit === 'hours') {
+        }
+        if ( 'hours' === $time_active_unit ) {
             $time_active = $time_active * 60 * 60;
         }
 
         $order_request = new OrderRequest();
         $order_request
-            ->addOrderId($order->get_order_number())
-            ->addMoney(MoneyUtil::createMoney((float)($order->get_total()), $order->get_currency()))
-            ->addGatewayCode($gateway_code)
-            ->addType($type)
-            ->addPluginDetails($this->create_plugin_details())
-            ->addDescriptionText('Payment for order: ' . $order->get_id())
-            ->addCustomer($this->customer_service->create_customer_details($order))
-            ->addPaymentOptions($this->create_payment_options($order, $gateway_id))
-            ->addShoppingCart($this->shopping_cart_service->create_shopping_cart($order, $order->get_currency()))
-            ->addSecondsActive($time_active);
+            ->addOrderId( $order->get_order_number() )
+            ->addMoney( MoneyUtil::create_money( (float) ( $order->get_total() ), $order->get_currency() ) )
+            ->addGatewayCode( $gateway_code )
+            ->addType( $type )
+            ->addPluginDetails( $this->create_plugin_details() )
+            ->addDescriptionText( 'Payment for order: ' . $order->get_id() )
+            ->addCustomer( $this->customer_service->create_customer_details( $order ) )
+            ->addPaymentOptions( $this->create_payment_options( $order, $gateway_id ) )
+            ->addShoppingCart( $this->shopping_cart_service->create_shopping_cart( $order, $order->get_currency() ) )
+            ->addSecondsActive( $time_active );
 
-        if ($order->get_shipping_total() > 0) {
-            $order_request->addDelivery($this->customer_service->create_delivery_details($order));
+        if ( $order->get_shipping_total() > 0 ) {
+            $order_request->addDelivery( $this->customer_service->create_delivery_details( $order ) );
         }
 
-        $ga_code = get_option('multisafepay_ga', false);
-        if ($ga_code) {
-            $order_request->addGoogleAnalytics((new GoogleAnalytics())->addAccountId($ga_code));
+        $ga_code = get_option( 'multisafepay_ga', false );
+        if ( $ga_code ) {
+            $order_request->addGoogleAnalytics( ( new GoogleAnalytics() )->addAccountId( $ga_code ) );
         }
 
-        if ($gateway_info) {
-            $order_request->addGatewayInfo($gateway_info);
+        if ( $gateway_info ) {
+            $order_request->addGatewayInfo( $gateway_info );
         }
 
         return $order_request;
@@ -111,29 +109,27 @@ class OrderService
     /**
      * @return PluginDetails
      */
-    protected function create_plugin_details()
-    {
+    protected function create_plugin_details() {
         $plugin_details = new PluginDetails();
         global $wp_version;
         return $plugin_details
-            ->addApplicationName('Wordpress-WooCommerce')
-            ->addApplicationVersion('Wordpress version: ' . $wp_version . '. WooCommerce version: ' . WC_VERSION)
-            ->addPluginVersion(MULTISAFEPAY_PLUGIN_VERSION)
-            ->addShopRootUrl( get_bloginfo('url') );
+            ->addApplicationName( 'Wordpress-WooCommerce' )
+            ->addApplicationVersion( 'WordPress version: ' . $wp_version . '. WooCommerce version: ' . WC_VERSION )
+            ->addPluginVersion( MULTISAFEPAY_PLUGIN_VERSION )
+            ->addShopRootUrl( get_bloginfo( 'url' ) );
     }
 
     /**
-     * @param   WC_Order  $order
-     * @param   string    $gateway_id
+     * @param   WC_Order $order
+     * @param   string   $gateway_id
      * @return  PaymentOptions
      */
-    protected function create_payment_options(WC_Order $order, string $gateway_id): PaymentOptions
-    {
+    protected function create_payment_options( WC_Order $order, string $gateway_id ): PaymentOptions {
         $payment_options = new PaymentOptions();
         return $payment_options
             ->addNotificationUrl( str_replace( 'https:', 'http:', add_query_arg( 'wc-api', $gateway_id, home_url( '/' ) ) ) )
-            ->addNotificationMethod('GET')
-            ->addCancelUrl($order->get_cancel_order_url())
-            ->addRedirectUrl($order->get_checkout_order_received_url());
+            ->addNotificationMethod( 'GET' )
+            ->addCancelUrl( $order->get_cancel_order_url() )
+            ->addRedirectUrl( $order->get_checkout_order_received_url() );
     }
 }

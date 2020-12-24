@@ -19,7 +19,6 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
@@ -61,13 +60,13 @@ class PaymentMethodsController {
     /**
      * Initialize the class and set its properties.
      *
-     * @param      string    $plugin_name       The name of this plugin.
-     * @param      string    $version           The version of this plugin.
-     * @param      string    $plugin_dir_url    The plugin dir url of this plugin.
+     * @param      string $plugin_name       The name of this plugin.
+     * @param      string $version           The version of this plugin.
+     * @param      string $plugin_dir_url    The plugin dir url of this plugin.
      */
 	public function __construct( string $plugin_name, string $version, string $plugin_dir_url ) {
-		$this->plugin_name = $plugin_name;
-		$this->version = $version;
+		$this->plugin_name    = $plugin_name;
+		$this->version        = $version;
 		$this->plugin_dir_url = $plugin_dir_url;
 	}
 
@@ -75,7 +74,6 @@ class PaymentMethodsController {
 	 * Register the stylesheets related with the payment methods
 	 *
      * @see https://developer.wordpress.org/reference/functions/wp_enqueue_style/
-     * @todo restrict this to checkout page. Probably won`` be needed in any other place.
      *
      * @return void
 	 */
@@ -90,19 +88,19 @@ class PaymentMethodsController {
      * @return array
      */
     public static function get_gateways( array $gateways ): array {
-        return array_merge($gateways, Gateways::GATEWAYS);
+        return array_merge( $gateways, Gateways::GATEWAYS );
     }
 
     /**
      * Filter the payment methods by the countries defined in their settings
      *
-     * @param   array   $payment_gateways
+     * @param   array $payment_gateways
      * @return  array
      */
     public function filter_gateway_per_country( array $payment_gateways ): array {
-        $customer_country = (WC()->customer) ? WC()->customer->get_billing_country() : false;
+        $customer_country = ( WC()->customer ) ? WC()->customer->get_billing_country() : false;
         foreach ( $payment_gateways as $gateway_id => $gateway ) {
-            if (!empty( $gateway->countries ) && $customer_country && ! in_array( $customer_country, $gateway->countries, true ) ) {
+            if ( ! empty( $gateway->countries ) && $customer_country && ! in_array( $customer_country, $gateway->countries, true ) ) {
                 unset( $payment_gateways[ $gateway_id ] );
             }
         }
@@ -112,13 +110,13 @@ class PaymentMethodsController {
     /**
      * Filter the payment methods by min amount defined in their settings
      *
-     * @param   array   $payment_gateways
+     * @param   array $payment_gateways
      * @return  array
      */
     public function filter_gateway_per_min_amount( array $payment_gateways ): array {
-        $total_amount = (WC()->cart) ? WC()->cart->total : false;
+        $total_amount = ( WC()->cart ) ? WC()->cart->total : false;
         foreach ( $payment_gateways as $gateway_id => $gateway ) {
-            if (!empty( $gateway->min_amount ) && $total_amount < $gateway->min_amount ) {
+            if ( ! empty( $gateway->min_amount ) && $total_amount < $gateway->min_amount ) {
                 unset( $payment_gateways[ $gateway_id ] );
             }
         }
@@ -129,17 +127,16 @@ class PaymentMethodsController {
      * Set the MultiSafepay transaction as shipped when the order
      * status change to the one defined as shipped in the settings.
      *
-     * @param   int         $order_id
-     * @param   WC_Order    $order
+     * @param   int $order_id
      * @return  void
      */
-    public function set_msp_transaction_as_shipped( int $order_id, WC_Order $order ): void {
-        $sdk = new SdkService();
+    public function set_msp_transaction_as_shipped( int $order_id ): void {
+        $sdk                 = new SdkService();
         $transaction_manager = $sdk->get_transaction_manager();
-        $update_order = new UpdateRequest();
-        $update_order->addId((string)$order_id);
-        $update_order->addStatus('shipped');
-        $transaction_manager->update((string)$order_id, $update_order);
+        $update_order        = new UpdateRequest();
+        $update_order->addId( (string) $order_id );
+        $update_order->addStatus( 'shipped' );
+        $transaction_manager->update( (string) $order_id, $update_order );
     }
 
 
@@ -148,16 +145,15 @@ class PaymentMethodsController {
      * Set the MultiSafepay transaction as invoiced when the order
      * status change to the one defined as invoiced in the settings.
      *
-     * @param   int         $order_id
-     * @param   WC_Order    $order
+     * @param   int $order_id
      * @return  void
      */
-    public function set_msp_transaction_as_invoiced( int $order_id, WC_Order $order ): void {
-        $sdk = new SdkService();
+    public function set_msp_transaction_as_invoiced( int $order_id ): void {
+        $sdk                 = new SdkService();
         $transaction_manager = $sdk->get_transaction_manager();
-        $update_order = new UpdateRequest();
-        $update_order->addData(array('invoice_id' => $order_id));
-        $transaction_manager->update((string)$order_id, $update_order);
+        $update_order        = new UpdateRequest();
+        $update_order->addData( array( 'invoice_id' => $order_id ) );
+        $transaction_manager->update( (string) $order_id, $update_order );
     }
 
 }

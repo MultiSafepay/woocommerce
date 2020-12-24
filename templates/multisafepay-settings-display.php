@@ -19,47 +19,44 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 ?>
 <div class="wrap multisafepay woocommerce" id="multisafepay-settings">
-    <h1><?php echo get_admin_page_title(); ?></h1>
+    <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
     <?php settings_errors(); ?>
     <h2 class="nav-tab-wrapper">
-        <a href="<?php echo admin_url('admin.php?page=multisafepay-settings&tab=general'); ?>" class="nav-tab <?php if($tab_active === 'general') { ?>nav-tab-active<?php } ?>"><?php echo __('Account', 'multisafepay'); ?></a>
-        <a href="<?php echo admin_url('admin.php?page=multisafepay-settings&tab=payment_methods'); ?>" class="nav-tab <?php if($tab_active === 'payment_methods') { ?>nav-tab-active<?php } ?>"><?php echo __('Payment Methods', 'multisafepay'); ?></a>
-        <a href="<?php echo admin_url('admin.php?page=multisafepay-settings&tab=order_status'); ?>" class="nav-tab <?php if($tab_active === 'order_status') { ?>nav-tab-active<?php } ?>"><?php echo __('Order Status', 'multisafepay'); ?></a>
-        <a href="<?php echo admin_url('admin.php?page=multisafepay-settings&tab=options'); ?>" class="nav-tab <?php if($tab_active === 'options') { ?>nav-tab-active<?php } ?>"><?php echo __('Options', 'multisafepay'); ?></a>
-        <a href="<?php echo admin_url('admin.php?page=multisafepay-settings&tab=support'); ?>" class="nav-tab <?php if($tab_active === 'support') { ?>nav-tab-active<?php } ?>"><?php echo __('Support', 'multisafepay'); ?></a>
+        <?php // phpcs:disable ?>
+        <a href="<?php echo esc_url( admin_url( 'admin.php?page=multisafepay-settings&tab=general' ) ); ?>" class="nav-tab <?php if ( 'general' === $tab_active ) { ?> nav-tab-active <?php } ?>"><?php echo esc_html__( 'Account', 'multisafepay' ); ?></a>
+        <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout' ) ); ?>" class="nav-tab"><?php echo esc_html__( 'Payment Methods', 'multisafepay' ); ?></a>
+        <a href="<?php echo esc_url( admin_url( 'admin.php?page=multisafepay-settings&tab=order_status' ) ); ?>" class="nav-tab <?php if ( 'order_status' === $tab_active ) { ?> nav-tab-active<?php } ?>"><?php echo esc_html__( 'Order Status', 'multisafepay' ); ?></a>
+        <a href="<?php echo esc_url( admin_url( 'admin.php?page=multisafepay-settings&tab=options' ) ); ?>" class="nav-tab <?php if ( 'options' === $tab_active ) { ?> nav-tab-active<?php } ?>"><?php echo esc_html__( 'Options', 'multisafepay' ); ?></a>
+        <a href="<?php echo esc_url( admin_url( 'admin.php?page=multisafepay-settings&tab=support' ) ); ?>" class="nav-tab <?php if ( 'support' === $tab_active ) { ?> nav-tab-active<?php } ?>"><?php echo esc_html__( 'Support', 'multisafepay' ); ?></a>
+        <?php // phpcs:enable ?>
     </h2>
-    <form method="POST" action="<?php echo admin_url('options.php'); ?>">
+    <form method="POST" action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>">
         <?php
-            switch ($tab_active) {
-                case 'order_status':
-                    settings_fields( 'multisafepay-settings-order_status' );
-                    do_settings_sections( 'multisafepay-settings-order_status' );
-                    submit_button();
-                    break;
-                case 'payment_methods':
-                    wp_redirect( admin_url('admin.php?page=wc-settings&tab=checkout'));
-                    exit;
-                    break;
-                case 'options':
-                    settings_fields( 'multisafepay-settings-options' );
-                    do_settings_sections( 'multisafepay-settings-options' );
-                    submit_button();
-                    break;
-                case 'support':
-                    $this->display_multisafepay_support_section();
-                    break;
-                case 'general':
-                default:
-                    settings_fields( 'multisafepay-settings-general' );
-                    do_settings_sections( 'multisafepay-settings-general' );
-                    submit_button();
-                    break;
-            }
+        switch ( $tab_active ) {
+            case 'order_status':
+                settings_fields( 'multisafepay-settings-order_status' );
+                do_settings_sections( 'multisafepay-settings-order_status' );
+                submit_button();
+                break;
+            case 'options':
+                settings_fields( 'multisafepay-settings-options' );
+                do_settings_sections( 'multisafepay-settings-options' );
+                submit_button();
+                break;
+            case 'support':
+                $this->display_multisafepay_support_section();
+                break;
+            case 'general':
+            default:
+                settings_fields( 'multisafepay-settings-general' );
+                do_settings_sections( 'multisafepay-settings-general' );
+                submit_button();
+                break;
+        }
         ?>
     </form>
 </div>

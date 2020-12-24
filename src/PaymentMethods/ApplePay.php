@@ -19,7 +19,6 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
@@ -59,7 +58,7 @@ class ApplePay extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_title(): string {
-        return __('Apple Pay', 'multisafepay');
+        return __( 'Apple Pay', 'multisafepay' );
     }
 
     /**
@@ -67,7 +66,7 @@ class ApplePay extends BasePaymentMethod {
      */
     public function get_payment_method_description(): string {
         $method_description = sprintf(
-            __('Apple Pay is a digital wallet service allowing seamless NFC payments for consumers worldwide. <br />Read more about <a href="%s" target="_blank">%s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay'),
+            __( 'Apple Pay is a digital wallet service allowing seamless NFC payments for consumers worldwide. <br />Read more about <a href="%1$s" target="_blank">%2$s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay' ),
             'https://docs.multisafepay.com/payment-methods/wallet/applepay/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
             $this->get_payment_method_title()
         );
@@ -87,7 +86,7 @@ class ApplePay extends BasePaymentMethod {
      * @return void
      */
     public function enqueue_script(): void {
-        if( is_checkout() ) {
+        if ( is_checkout() ) {
             $route = get_bloginfo( 'url' ) . '/wp-content/plugins/multisafepay/assets/public/js/multisafepay-apple-pay.js';
             wp_enqueue_script( 'multisafepay', $route, array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
         }

@@ -19,11 +19,9 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\Services;
-
 
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\ShoppingCart;
 use MultiSafepay\ValueObject\CartItem;
@@ -38,55 +36,54 @@ use WC_Tax;
 
 /**
  * Class ShoppingCartService
+ *
  * @package MultiSafepay\WooCommerce\Services
  */
-class ShoppingCartService
-{
-    public CONST MSP_SHIPPING_ITEM_CODE = 'msp-shipping';
+class ShoppingCartService {
+
+    public const MSP_SHIPPING_ITEM_CODE = 'msp-shipping';
 
     /**
      * @param WC_Order $order
-     * @param string $currency
+     * @param string   $currency
      * @return ShoppingCart
      */
-    public function create_shopping_cart(WC_Order $order, string $currency): ShoppingCart
-    {
+    public function create_shopping_cart( WC_Order $order, string $currency ): ShoppingCart {
         $cart_items = array();
 
-        foreach ($order->get_items() as $item) {
-            $cart_items[] = $this->create_cart_item($item, $currency);
+        foreach ( $order->get_items() as $item ) {
+            $cart_items[] = $this->create_cart_item( $item, $currency );
         }
 
-        foreach ($order->get_items('coupon') as $item ) {
-            $cart_items[] = $this->create_coupon_cart_item($item, $currency);
+        foreach ( $order->get_items( 'coupon' ) as $item ) {
+            $cart_items[] = $this->create_coupon_cart_item( $item, $currency );
         }
 
-        if ($order->get_shipping_total() > 0) {
-            foreach ($order->get_items('shipping') as $item) {
-                $cart_items[] = $this->create_shipping_cart_item($item, $currency);
+        if ( $order->get_shipping_total() > 0 ) {
+            foreach ( $order->get_items( 'shipping' ) as $item ) {
+                $cart_items[] = $this->create_shipping_cart_item( $item, $currency );
             }
         }
 
-        foreach ($order->get_items( 'fee' ) as $item) {
-            $cart_items[] = $this->create_fee_cart_item($item, $currency);
+        foreach ( $order->get_items( 'fee' ) as $item ) {
+            $cart_items[] = $this->create_fee_cart_item( $item, $currency );
         }
 
-        return new ShoppingCart($cart_items);
+        return new ShoppingCart( $cart_items );
     }
 
     /**
      * @param WC_Order_Item_Product $item
-     * @param string $currency
+     * @param string                $currency
      * @return CartItem
      */
-    private function create_cart_item(WC_Order_Item_Product $item, string $currency): CartItem
-    {
-        $cartItem = new CartItem();
-        return $cartItem->addName($item->get_name())
-            ->addQuantity($item->get_quantity())
-            ->addMerchantItemId((string)$item->get_id())
-            ->addUnitPrice(MoneyUtil::createMoney((float)wc_get_price_excluding_tax($item->get_product()), $currency))
-            ->addTaxRate($this->get_item_tax_rate($item));
+    private function create_cart_item( WC_Order_Item_Product $item, string $currency ): CartItem {
+        $cart_item = new CartItem();
+        return $cart_item->addName( $item->get_name() )
+            ->addQuantity( $item->get_quantity() )
+            ->addMerchantItemId( (string) $item->get_id() )
+            ->addUnitPrice( MoneyUtil::create_money( (float) wc_get_price_excluding_tax( $item->get_product() ), $currency ) )
+            ->addTaxRate( $this->get_item_tax_rate( $item ) );
     }
 
     /**
@@ -95,18 +92,18 @@ class ShoppingCartService
      * @param WC_Order_Item_Product $item
      * @return float
      */
-    private function get_item_tax_rate(WC_Order_Item_Product $item): float {
-        $tax_rates  = WC_Tax::get_rates($item->get_tax_class());
-        switch (count($tax_rates)) {
+    private function get_item_tax_rate( WC_Order_Item_Product $item ): float {
+        $tax_rates = WC_Tax::get_rates( $item->get_tax_class() );
+        switch ( count( $tax_rates ) ) {
             case 0:
                 $tax_rate = 0;
                 break;
             case 1:
-                $tax = reset($tax_rates);
+                $tax      = reset( $tax_rates );
                 $tax_rate = $tax['rate'];
                 break;
             default:
-                $tax_rate = ( (wc_get_price_including_tax($item->get_product()) / wc_get_price_excluding_tax($item->get_product())) - 1) * 100;
+                $tax_rate = ( ( wc_get_price_including_tax( $item->get_product() ) / wc_get_price_excluding_tax( $item->get_product() ) ) - 1 ) * 100;
                 break;
         }
         return $tax_rate;
@@ -114,17 +111,16 @@ class ShoppingCartService
 
     /**
      * @param WC_Order_Item_Coupon $item
-     * @param string $currency
+     * @param string               $currency
      * @return CartItem
      */
-    private function create_coupon_cart_item(WC_Order_Item_Coupon $item, string $currency): CartItem
-    {
-        $cartItem = new CartItem();
-        return $cartItem->addName( $item->get_name() )
+    private function create_coupon_cart_item( WC_Order_Item_Coupon $item, string $currency ): CartItem {
+        $cart_item = new CartItem();
+        return $cart_item->addName( $item->get_name() )
             ->addQuantity( 1 )
-            ->addMerchantItemId( (string)$item->get_id() )
-            ->addUnitPrice(MoneyUtil::createMoney((float)$item->get_discount(), $currency)->negative())
-            ->addTaxRate($this->get_coupon_tax_rate($item));
+            ->addMerchantItemId( (string) $item->get_id() )
+            ->addUnitPrice( MoneyUtil::create_money( (float) $item->get_discount(), $currency )->negative() )
+            ->addTaxRate( $this->get_coupon_tax_rate( $item ) );
     }
 
     /**
@@ -133,12 +129,12 @@ class ShoppingCartService
      * @param WC_Order_Item_Coupon $item
      * @return float
      */
-    private function get_coupon_tax_rate(WC_Order_Item_Coupon $item): float {
-        if($item->get_discount_tax() === '0') {
+    private function get_coupon_tax_rate( WC_Order_Item_Coupon $item ): float {
+        if ( $item->get_discount_tax() === '0' ) {
             return 0;
         }
         $total_tax = $this->extract_coupon_total_tax_amount( $item->get_order() );
-        $tax_rate = ((float)$total_tax * 100) / $item->get_discount();
+        $tax_rate  = ( (float) $total_tax * 100 ) / $item->get_discount();
         return $tax_rate;
     }
 
@@ -150,11 +146,11 @@ class ShoppingCartService
      */
     private function extract_coupon_total_tax_amount( WC_Order $order ): float {
         $total_tax = 0;
-        foreach ($order->get_items('line_item') as $item) {
-            $taxes = $item->get_taxes();
-            $total_without_discount = array_sum($taxes['subtotal']);
-            $total_with_discount = array_sum($taxes['total']);
-            $total_tax +=  $total_without_discount - $total_with_discount;
+        foreach ( $order->get_items( 'line_item' ) as $item ) {
+            $taxes                  = $item->get_taxes();
+            $total_without_discount = array_sum( $taxes['subtotal'] );
+            $total_with_discount    = array_sum( $taxes['total'] );
+            $total_tax             += $total_without_discount - $total_with_discount;
         }
         return $total_tax;
     }
@@ -162,17 +158,16 @@ class ShoppingCartService
 
     /**
      * @param WC_Order_Item_Shipping $item
-     * @param string $currency
+     * @param string                 $currency
      * @return CartItem
      */
-    private function create_shipping_cart_item(WC_Order_Item_Shipping $item, string $currency): CartItem
-    {
-        $cartItem = new CartItem();
-        return $cartItem->addName(__("Shipping", 'multisafepay'))
-            ->addQuantity(1)
-            ->addMerchantItemId(self::MSP_SHIPPING_ITEM_CODE)
-            ->addUnitPrice(MoneyUtil::createMoney((float)$item->get_total(), $currency))
-            ->addTaxRate($this->get_shipping_tax_rate($item));
+    private function create_shipping_cart_item( WC_Order_Item_Shipping $item, string $currency ): CartItem {
+        $cart_item = new CartItem();
+        return $cart_item->addName( __( 'Shipping', 'multisafepay' ) )
+            ->addQuantity( 1 )
+            ->addMerchantItemId( self::MSP_SHIPPING_ITEM_CODE )
+            ->addUnitPrice( MoneyUtil::create_money( (float) $item->get_total(), $currency ) )
+            ->addTaxRate( $this->get_shipping_tax_rate( $item ) );
     }
 
     /**
@@ -181,29 +176,28 @@ class ShoppingCartService
      * @param WC_Order_Item_Shipping $item
      * @return float
      */
-    private function get_shipping_tax_rate(WC_Order_Item_Shipping $item): float {
+    private function get_shipping_tax_rate( WC_Order_Item_Shipping $item ): float {
         $taxes = $item->get_taxes();
-        if(empty($taxes)) {
+        if ( empty( $taxes ) ) {
             return 0;
         }
-        $total_tax = array_sum($taxes['total']);
-        $tax_rate = ( (float)$total_tax * 100 ) / (float)$item->get_total();
+        $total_tax = array_sum( $taxes['total'] );
+        $tax_rate  = ( (float) $total_tax * 100 ) / (float) $item->get_total();
         return $tax_rate;
     }
 
     /**
      * @param WC_Order_Item_Fee $item
-     * @param string $currency
+     * @param string            $currency
      * @return CartItem
      */
-    private function create_fee_cart_item(WC_Order_Item_Fee $item, string $currency): CartItem
-    {
-        $cartItem = new CartItem();
-        return $cartItem->addName($item->get_name())
-            ->addQuantity($item->get_quantity())
-            ->addMerchantItemId((string)$item->get_id())
-            ->addUnitPrice(MoneyUtil::createMoney((float)$item->get_total(), $currency))
-            ->addTaxRate($this->get_fee_tax_rate($item));
+    private function create_fee_cart_item( WC_Order_Item_Fee $item, string $currency ): CartItem {
+        $cart_item = new CartItem();
+        return $cart_item->addName( $item->get_name() )
+            ->addQuantity( $item->get_quantity() )
+            ->addMerchantItemId( (string) $item->get_id() )
+            ->addUnitPrice( MoneyUtil::create_money( (float) $item->get_total(), $currency ) )
+            ->addTaxRate( $this->get_fee_tax_rate( $item ) );
     }
 
     /**
@@ -212,13 +206,13 @@ class ShoppingCartService
      * @param WC_Order_Item_Fee $item
      * @return float
      */
-    private function get_fee_tax_rate(WC_Order_Item_Fee $item): float {
+    private function get_fee_tax_rate( WC_Order_Item_Fee $item ): float {
         $taxes = $item->get_taxes();
-        if( empty($taxes) || NULL === $taxes ) {
+        if ( empty( $taxes ) || null === $taxes ) {
             return 0;
         }
-        $total_tax = array_sum($taxes['total']);
-        $tax_rate = ( (float)$total_tax * 100 ) / (float)$item->get_total();
+        $total_tax = array_sum( $taxes['total'] );
+        $tax_rate  = ( (float) $total_tax * 100 ) / (float) $item->get_total();
         return $tax_rate;
     }
 

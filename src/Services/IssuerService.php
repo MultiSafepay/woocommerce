@@ -19,12 +19,9 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
  * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 
 namespace MultiSafepay\WooCommerce\Services;
-
-
 
 use MultiSafepay\Api\IssuerManager;
 
@@ -41,9 +38,8 @@ class IssuerService {
     /**
      * IssuerService constructor.
      */
-    public function __construct()
-    {
-        $this->issuer_manager = (new SdkService())->get_issuer_manager();
+    public function __construct() {
+        $this->issuer_manager = ( new SdkService() )->get_issuer_manager();
     }
 
     /**
@@ -51,8 +47,7 @@ class IssuerService {
      * @return array
      * @throws \Psr\Http\Client\ClientExceptionInterface
      */
-    public function get_issuers(string $gateway_code): array
-    {
-        return $this->issuer_manager->getIssuersByGatewayCode($gateway_code);
+    public function get_issuers( string $gateway_code ): array {
+        return $this->issuer_manager->getIssuersByGatewayCode( $gateway_code );
     }
 }
