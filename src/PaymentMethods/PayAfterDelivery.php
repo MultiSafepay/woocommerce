@@ -76,7 +76,7 @@ class PayAfterDelivery extends BaseBillingSuitePaymentMethod {
      * @return array
      */
     public function get_checkout_fields_ids(): array {
-        return array( 'birthday', 'bankaccount' );
+        return array( 'birthday', 'bank_account' );
     }
 
     /**
