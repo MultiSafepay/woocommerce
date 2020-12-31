@@ -41,7 +41,7 @@ class MultiSafepay extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_code(): string {
-        return 'MULTISAFEPAY';
+        return 'WALLET';
     }
 
     /**

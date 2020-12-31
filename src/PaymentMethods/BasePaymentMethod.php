@@ -283,7 +283,6 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
                 admin_url( 'admin.php?page=multisafepay-settings&tab=support' )
             );
             $this->add_error( $message );
-            return 'no';
         }
         return 'yes';
     }
