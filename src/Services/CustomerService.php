@@ -100,7 +100,7 @@ class CustomerService {
      * @param string  $user_agent
      * @return CustomerDetails
      */
-    protected function create_customer(
+    private function create_customer(
         Address $address,
         string $email_address,
         string $phone_number,
@@ -129,7 +129,7 @@ class CustomerService {
      * @param string $zip_code
      * @return Address
      */
-    protected function create_address(
+    private function create_address(
         string $address_line_1,
         string $address_line_2,
         string $country,

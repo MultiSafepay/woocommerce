@@ -42,12 +42,12 @@ class OrderService {
     /**
      * @var CustomerService
      */
-    protected $customer_service;
+    private $customer_service;
 
     /**
      * @var ShoppingCartService
      */
-    protected $shopping_cart_service;
+    private $shopping_cart_service;
 
     /**
      * OrderService constructor.
@@ -109,7 +109,7 @@ class OrderService {
     /**
      * @return PluginDetails
      */
-    protected function create_plugin_details() {
+    private function create_plugin_details() {
         $plugin_details = new PluginDetails();
         global $wp_version;
         return $plugin_details
@@ -124,7 +124,7 @@ class OrderService {
      * @param   string   $gateway_id
      * @return  PaymentOptions
      */
-    protected function create_payment_options( WC_Order $order, string $gateway_id ): PaymentOptions {
+    private function create_payment_options( WC_Order $order, string $gateway_id ): PaymentOptions {
         $payment_options = new PaymentOptions();
         return $payment_options
             ->addNotificationUrl( str_replace( 'https:', 'http:', add_query_arg( 'wc-api', $gateway_id, home_url( '/' ) ) ) )

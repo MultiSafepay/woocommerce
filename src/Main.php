@@ -45,35 +45,35 @@ class Main {
 	 *
 	 * @var      Loader     Maintains and registers all hooks for the plugin.
 	 */
-	protected $loader;
+	private $loader;
 
 	/**
 	 * The unique identifier of this plugin.
 	 *
 	 * @var      string     The string used to uniquely identify this plugin.
 	 */
-	protected $plugin_name;
+    private $plugin_name;
 
 	/**
 	 * The current version of the plugin.
 	 *
 	 * @var      string     The current version of the plugin.
 	 */
-	protected $version;
+    private $version;
 
     /**
      * The plugin dir url
      *
      * @var      string     The plugin directory url
      */
-    protected $plugin_dir_url;
+    private $plugin_dir_url;
 
     /**
      * The plugin dir path
      *
      * @var      string     The plugin directory path
      */
-    protected $plugin_dir_path;
+    private $plugin_dir_path;
 
 	/**
 	 * Define the core functionality of the plugin.

@@ -35,14 +35,14 @@ class Loader {
      *
 	 * @var     array    The actions registered with WordPress to fire when the plugin loads.
 	 */
-	protected $actions;
+    private $actions;
 
 	/**
 	 * The array of filters registered with WordPress.
 	 *
 	 * @var      array    The filters registered with WordPress to fire when the plugin loads.
 	 */
-	protected $filters;
+    private $filters;
 
 	/**
 	 * Initialize the collections used to maintain the actions and filters.

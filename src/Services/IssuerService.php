@@ -33,7 +33,7 @@ class IssuerService {
     /**
      * @var IssuerManager
      */
-    protected $issuer_manager;
+    private $issuer_manager;
 
     /**
      * IssuerService constructor.

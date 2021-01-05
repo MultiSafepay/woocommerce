@@ -35,26 +35,46 @@ use MultiSafepay\Exception\InvalidArgumentException;
 abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMethodInterface {
 
     /**
-     * @var TransactionManager
-     */
-    protected $transaction_manager;
-
-    /**
-     * @var OrderService
-     */
-    protected $order_service;
-
-    /**
-     * @var string
-     */
-    protected $gateway_code;
-
-    /**
      * What type of transaction, should be 'direct' or 'redirect'
      *
      * @var string
      */
     protected $type;
+
+    /**
+     * The MultiSafepay gateway code.
+     *
+     * @var string
+     */
+    protected $gateway_code;
+
+    /**
+     * An array with the keys of the required custom fields
+     *
+     * @var array
+     */
+    protected $checkout_fields_ids;
+
+    /**
+     * The minimun amount for the payment method
+     *
+     * @var string
+     */
+    protected $min_amount;
+
+    /**
+     * A custom initialized order status for this payment method
+     *
+     * @var string
+     */
+    protected $initial_order_status;
+
+    /**
+     * The plugin directory path
+     *
+     * @var string
+     */
+    protected $plugin_dir_path;
 
     /**
      * Construct for Core class.
@@ -65,7 +85,6 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $this->type                = $this->get_payment_method_type();
         $this->method_title        = $this->get_payment_method_title();
         $this->method_description  = $this->get_payment_method_description();
-        $this->type                = $this->get_payment_method_type();
         $this->gateway_code        = $this->get_payment_method_code();
         $this->has_fields          = $this->has_fields();
         $this->checkout_fields_ids = $this->get_checkout_fields_ids();
@@ -81,12 +100,10 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $this->countries            = $this->get_option( 'countries' );
         $this->initial_order_status = $this->get_option( 'initial_order_status', false );
         $this->plugin_dir_path      = plugin_dir_path( dirname( __DIR__ ) );
-
-        $this->errors = array();
+        $this->errors               = array();
 
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'display_errors' ) );
-
         add_action( 'woocommerce_api_' . $this->id, array( $this, 'callback' ) );
     }
 
