@@ -7,9 +7,31 @@
 		convertNoticesToExceptions="true"
 		convertWarningsToExceptions="true"
 >
+	<php>
+		<const name="WP_TESTS_MULTISITE" value="1" />
+		<env name="API_KEY" value="" />
+	</php>
 	<testsuites>
 		<testsuite name="multisafepay">
-			<directory prefix="Test_" suffix=".php">./tests/</directory>
+			<directory prefix="Test_" suffix=".php">./tests/phpunit/</directory>
+			<directory prefix="Multisite_Test_" suffix=".php">./tests/phpunit/</directory>
 		</testsuite>
 	</testsuites>
+	<filter>
+		<whitelist processUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">./src</directory>
+			<exclude>
+				<directory>./tests</directory>
+				<directory>./assets</directory>
+				<directory>./bin</directory>
+				<directory>./languages</directory>
+				<directory>./vendor</directory>
+				<directory>./templates</directory>
+			</exclude>
+		</whitelist>
+	</filter>
+	<logging>
+		<log type="coverage-html" target="./coverage-report" lowUpperBound="35" highLowerBound="70"/>
+		<log type="coverage-clover" target="./coverage.xml"/>
+	</logging>
 </phpunit>
