@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare( strict_types=1 );
 
 /**
  *
@@ -85,6 +85,14 @@ class Gateways {
         'multisafepay_yourgift'          => Yourgift::class,
     );
 
+    const GATEWAYS_WITH_SHOPPING_CART = array(
+        'AFTERPAY',
+        'KLARNA',
+        'EINVOICE',
+        'PAYAFTER',
+        'IN3',
+    );
+
     /**
      * Return an array with all MultiSafepay gateways ids
      *
@@ -95,6 +103,7 @@ class Gateways {
         foreach ( self::GATEWAYS as $gateway_id => $gateway ) {
             $gateways_ids[] = $gateway_id;
         }
+
         return $gateways_ids;
     }
 
@@ -102,6 +111,7 @@ class Gateways {
      * Return the payment method code needed by WooCommerce
      *
      * @param string $code
+     *
      * @return array
      */
     public static function get_payment_method_id_by_gateway_code( string $code ): string {
@@ -117,6 +127,7 @@ class Gateways {
      * Return the payment method title needed by WooCommerce
      *
      * @param string $code
+     *
      * @return string
      */
     public static function get_payment_method_name_by_gateway_code( string $code ): string {
@@ -132,10 +143,12 @@ class Gateways {
      * Return the gateway code for the given gateway_id
      *
      * @param string $gateway_id
+     *
      * @return string
      */
     public static function get_gateway_code_by_gateway_id( string $gateway_id ): string {
         $gateway = self::GATEWAYS[ $gateway_id ];
+
         return ( new $gateway() )->get_payment_method_code();
     }
 

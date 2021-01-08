@@ -78,10 +78,12 @@ class ShoppingCartService {
      * @return CartItem
      */
     private function create_cart_item( WC_Order_Item_Product $item, string $currency ): CartItem {
+        $merchant_item_id = $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id();
+
         $cart_item = new CartItem();
         return $cart_item->addName( $item->get_name() )
             ->addQuantity( $item->get_quantity() )
-            ->addMerchantItemId( (string) $item->get_id() )
+            ->addMerchantItemId( (string) $merchant_item_id )
             ->addUnitPrice( MoneyUtil::create_money( (float) wc_get_price_excluding_tax( $item->get_product() ), $currency ) )
             ->addTaxRate( $this->get_item_tax_rate( $item ) );
     }

@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare( strict_types=1 );
 
 /**
  *
@@ -23,11 +23,15 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
+use Exception;
 use MultiSafepay\Api\TransactionManager;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
 use MultiSafepay\ValueObject\IbanNumber;
 use MultiSafepay\WooCommerce\Services\OrderService;
+use MultiSafepay\WooCommerce\Services\RefundService;
 use MultiSafepay\WooCommerce\Services\SdkService;
+use MultiSafepay\WooCommerce\Utils\MoneyUtil;
+use Psr\Http\Client\ClientExceptionInterface;
 use WC_Countries;
 use WC_Payment_Gateway;
 use MultiSafepay\Exception\InvalidArgumentException;
@@ -92,6 +96,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $this->add_form_fields();
         $this->init_form_fields();
         $this->init_settings();
+
         $this->enabled              = $this->get_option( 'enabled', 'no' );
         $this->title                = $this->get_option( 'title', $this->get_method_title() );
         $this->description          = $this->get_option( 'description' );
@@ -102,7 +107,13 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $this->plugin_dir_path      = plugin_dir_path( dirname( __DIR__ ) );
         $this->errors               = array();
 
-        add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+        add_action(
+            'woocommerce_update_options_payment_gateways_' . $this->id,
+            array(
+                $this,
+                'process_admin_options',
+            )
+        );
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'display_errors' ) );
         add_action( 'woocommerce_api_' . $this->id, array( $this, 'callback' ) );
     }
@@ -117,7 +128,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
 
         $icon = $this->get_payment_method_icon();
 
-        $icon_locale = substr_replace( $icon, "-$language", -4, -4 );
+        $icon_locale = substr_replace( $icon, "-$language", - 4, - 4 );
         if ( file_exists( WP_PLUGIN_DIR . '/multisafepay/assets/public/img/' . $icon_locale ) ) {
             $icon = $icon_locale;
         }
@@ -133,6 +144,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
     private function get_countries(): array {
         $countries         = new WC_Countries();
         $allowed_countries = $countries->get_allowed_countries();
+
         return $allowed_countries;
     }
 
@@ -158,6 +170,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * Return the gateway info
      *
      * @param array|null $data
+     *
      * @return GatewayInfoInterface
      */
     public function get_gateway_info( array $data = null ): GatewayInfoInterface {
@@ -223,6 +236,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * Process the payment and return the result.
      *
      * @param integer $order_id Order ID.
+     *
      * @return  array|mixed|void
      */
     public function process_payment( $order_id ): array {
@@ -252,11 +266,61 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * Process the refund.
      *
      * @param integer $order_id Order ID.
-     * @param float   $amount Amount to be refunded.
-     * @param string  $reason Reason description.
+     * @param float   $amount     Amount to be refunded.
+     * @param string  $reason    Reason description.
+     *
      * @return  boolean
+     * @throws  Exception
      */
     public function process_refund( $order_id, $amount = null, $reason = '' ): bool {
+        $sdk                 = new SdkService();
+        $transaction_manager = $sdk->get_transaction_manager();
+
+        $order           = wc_get_order( $order_id );
+        $msp_transaction = $transaction_manager->get( $order->get_order_number() );
+
+        $refund_request = $transaction_manager->createRefundRequest( $msp_transaction );
+        $refund_request->addDescriptionText( $reason );
+
+        // If the used gateway is a billing suite gateway, create the refund based on items
+        if ( in_array( $msp_transaction->getPaymentDetails()->getType(), Gateways::GATEWAYS_WITH_SHOPPING_CART, true ) ) {
+            $refund_service = new RefundService();
+
+            $refund       = $refund_service->get_latest_refund( $order );
+            $refund_items = $refund_service->get_refund_items_and_quantity( $refund );
+            foreach ( $refund_items as $item_id => $quantity ) {
+                $refund_request->getCheckoutData()->refundByMerchantItemId( (string) $item_id, $quantity );
+            }
+
+            if ( $amount !== $order->get_total() ) {
+                throw new Exception( __( 'Partial refund is not possible with billing suite payment methods', 'multisafepay' ) );
+            }
+        }
+
+        if ( ! in_array( $msp_transaction->getPaymentDetails()->getType(), Gateways::GATEWAYS_WITH_SHOPPING_CART, true ) ) {
+            $refund_request->addMoney( MoneyUtil::create_money( (float) $amount, $order->get_currency() ) );
+        }
+
+        try {
+            $msg = null;
+            $transaction_manager->refund( $msp_transaction, $refund_request );
+        } catch ( \Exception $exception ) {
+            $msg = __( 'Error:', 'multisafepay' ) . htmlspecialchars( $exception->getMessage() );
+            wc_add_notice( $msg, 'error' );
+        }
+
+        if ( ! $msg ) {
+            $order->add_order_note( sprintf( __( 'Refund of %1$s%2$s has been processed successfully.', 'multisafepay' ), $order->get_currency(), $amount ) );
+
+            return true;
+        }
+
+        if ( get_option( 'multisafepay_debugmode', false ) ) {
+            $logger  = wc_get_logger();
+            $message = sprintf( __( 'Refund for Order ID: %1$s with transactionId: %2$s gives message: %3$s.', 'multisafepay' ), $order_id, $msp_transaction->getTransactionId(), $msg );
+            $logger->log( 'info', $message );
+        }
+
         return false;
     }
 
@@ -282,6 +346,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      *
      * @param string $key
      * @param string $value
+     *
      * @return  string
      */
     public function validate_enabled_field( $key, $value ) {
@@ -301,6 +366,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
             );
             $this->add_error( $message );
         }
+
         return 'yes';
     }
 
@@ -363,11 +429,13 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * Returns bool after validates IBAN format
      *
      * @param string $iban
+     *
      * @return  boolean
      */
     public function validate_iban( $iban ): bool {
         try {
             $iban = new IbanNumber( $iban );
+
             return true;
         } catch ( InvalidArgumentException $invalid_argument_exception ) {
             return false;
@@ -384,6 +452,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
     private function get_order_statuses(): array {
         $order_statuses               = wc_get_order_statuses();
         $order_statuses['wc-default'] = __( 'Default value set in common settings', 'multisafepay' );
+
         return $order_statuses;
     }
 
@@ -391,10 +460,24 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * Validate the gatewayinfo, return true if validation is successful
      *
      * @param GatewayInfoInterface $gateway_info
+     *
      * @return boolean
      */
     public function validate_gateway_info( GatewayInfoInterface $gateway_info ): bool {
         return true;
+    }
+
+    /**
+     * @param \WC_Order $order
+     *
+     * @return bool
+     */
+    public function can_refund_order( $order ) {
+        if ( in_array( $order->get_status(), RefundService::NOT_ALLOW_REFUND_ORDER_STATUSES, true ) ) {
+            return false;
+        }
+
+        return $order && $this->supports( 'refunds' );
     }
 
 }
