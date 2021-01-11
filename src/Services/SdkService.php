@@ -70,7 +70,7 @@ class SdkService {
         } catch ( InvalidApiKeyException $invalid_api_key_exception ) {
             if ( get_option( 'multisafepay_debugmode', false ) ) {
                 $logger = wc_get_logger();
-                $logger->log( 'warning', $invalid_api_key_exception->getMessage() );
+                $logger->log( 'error', $invalid_api_key_exception->getMessage() );
             }
         }
     }
@@ -110,7 +110,7 @@ class SdkService {
         } catch ( ApiException $api_exception ) {
             if ( get_option( 'multisafepay_debugmode', false ) ) {
                 $logger = wc_get_logger();
-                $logger->log( 'warning', $api_exception->getMessage() );
+                $logger->log( 'error', $api_exception->getMessage() );
             }
             return new WP_Error( 'multisafepay-warning', $api_exception->getMessage() );
         }
@@ -129,7 +129,7 @@ class SdkService {
         } catch ( ApiException $api_exception ) {
             if ( get_option( 'multisafepay_debugmode', false ) ) {
                 $logger = wc_get_logger();
-                $logger->log( 'warning', $api_exception->getMessage() );
+                $logger->log( 'error', $api_exception->getMessage() );
             }
             return new WP_Error( 'multisafepay-warning', $api_exception->getMessage() );
         }
