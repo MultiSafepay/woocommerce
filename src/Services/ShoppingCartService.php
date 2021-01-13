@@ -135,28 +135,9 @@ class ShoppingCartService {
         if ( $item->get_discount_tax() === '0' ) {
             return 0;
         }
-        $total_tax = $this->extract_coupon_total_tax_amount( $item->get_order() );
-        $tax_rate  = ( (float) $total_tax * 100 ) / $item->get_discount();
-        return $tax_rate;
+        $tax_rate = ( (float) $item->get_discount_tax() * 100 ) / $item->get_discount();
+        return round( $tax_rate, 4 );
     }
-
-    /**
-     * Returns the sum of the total tax rate discounted in the items by a coupon
-     *
-     * @param WC_Order $order
-     * @return float
-     */
-    private function extract_coupon_total_tax_amount( WC_Order $order ): float {
-        $total_tax = 0;
-        foreach ( $order->get_items( 'line_item' ) as $item ) {
-            $taxes                  = $item->get_taxes();
-            $total_without_discount = array_sum( $taxes['subtotal'] );
-            $total_with_discount    = array_sum( $taxes['total'] );
-            $total_tax             += $total_without_discount - $total_with_discount;
-        }
-        return $total_tax;
-    }
-
 
     /**
      * @param WC_Order_Item_Shipping $item

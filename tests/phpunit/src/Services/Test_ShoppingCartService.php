@@ -148,8 +148,8 @@ class Test_ShoppingCartService extends WP_UnitTestCase {
         $wc_order_item_coupon->method( 'get_order' )->willReturn( $this->wc_order );
 
         // Consecutive calls for WC_Order->get_items()
-        $this->wc_order->method( 'get_items' )->withConsecutive( array('line_item'), array('coupon'), array('line_item'), array('shipping'), array('fee') )
-            ->willReturnOnConsecutiveCalls( $items, array( $wc_order_item_coupon ), $items, array($wc_order_item_shipping), array($wc_order_item_fee) );
+        $this->wc_order->method( 'get_items' )->withConsecutive( array('line_item'), array('coupon'), array('shipping'), array('fee') )
+            ->willReturnOnConsecutiveCalls( $items, array( $wc_order_item_coupon ), array($wc_order_item_shipping), array($wc_order_item_fee) );
 
     }
 
