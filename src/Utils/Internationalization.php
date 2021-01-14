@@ -41,7 +41,7 @@ class Internationalization {
      * @return void
 	 */
 	public function load_plugin_textdomain(): void {
-		load_plugin_textdomain( $this->domain, false, dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/' );
+        load_plugin_textdomain( $this->domain, false, dirname( plugin_basename( __FILE__ ), 3 ) . '/languages/' );
 	}
 
 	/**

@@ -1,0 +1,1098 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MultiSafepay\n"
+"POT-Creation-Date: 2021-01-04 21:53+0100\n"
+"PO-Revision-Date: 2021-01-14 11:02+0000\n"
+"Last-Translator: \n"
+"Language-Team: Nederlands\n"
+"Language: nl_NL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-KeywordsList: __\n"
+"X-Poedit-SearchPath-0: .\n"
+"Report-Msgid-Bugs-To: \n"
+"X-Loco-Version: 2.5.0; wp-5.6"
+
+#: templates/multisafepay-checkout-fields-display.php:103
+msgid "(optional)"
+msgstr "(Optioneel)"
+
+#: src/PaymentMethods/Einvocing.php:61
+#, php-format
+msgid ""
+"A flexible payment solution allowing businesses to take control and "
+"personalize consumer payments. <br />Read more about <a href=\"%1$s\" "
+"target=\"_blank\">%2$s</a> on MultiSafepay's Documentation Center."
+msgstr ""
+"Een flexibele betalingsoplossing waarbij bedrijven de controle behouden en "
+"de betalingen van consumenten kunnen personaliseren. <br />Lees meer over <a "
+"href=\"%1$s\" target=\"_blank\">%2$s</a> in het documentatiecentrum van "
+"MultiSafepay."
+
+#: src/PaymentMethods/PayPal.php:61
+#, php-format
+msgid ""
+"A frequently used online virtual payment method used by consumers all over "
+"the world. <br />Read more about <a href=\"%1$s\" target=\"_blank\">%2$s</a> "
+"on MultiSafepay's Documentation Center."
+msgstr ""
+"Een veelgebruikte betaalmethode die door consumenten over de hele wereld "
+"wordt gebruikt. <br/>Lees meer over <a href=\"%1$s\" target=\"_blank\">"
+"%2$s</a> in het documentatiecentrum van MultiSafepay."
+
+#: src/PaymentMethods/Dotpay.php:61
+#, php-format
+msgid ""
+"A popular payment method in Poland allowing customers to pay through their "
+"own Polish bank. <br />Read more about <a href=\"%1$s\" target=\"_blank\">"
+"%2$s</a> on MultiSafepay's Documentation Center."
+msgstr ""
+"Een populaire betaalmethode in Polen waarmee consumenten via hun eigen "
+"Poolse bank kunnen betalen. <br />Lees meer over <a href=\"%1$s\" "
+"target=\"_blank\">%2$s</a> in het documentatiecentrum van MultiSafepay."
+
+#: src/PaymentMethods/Klarna.php:61
+#, php-format
+msgid ""
+"A popular post-payment solution available for webshops based in Austria, "
+"Germany and the Netherlands. <br />Read more about <a href=\"%1$s\" "
+"target=\"_blank\">%2$s</a> on MultiSafepay's Documentation Center."
+msgstr ""
+"Een populaire oplossing voor achteraf betalen die beschikbaar is voor "
+"webwinkels in Oostenrijk, Duitsland en Nederland. <br/>Lees meer over <a "
+"href=\"%1$s\" target=\"_blank\">%2$s</a> in het documentatiecentrum van "
+"MultiSafepay."
+
+#: src/PaymentMethods/BankTrans.php:61
+#, php-format
+msgid ""
+"A traditional method for customers to safely transfer Euros within the SEPA "
+"region. <br />Read more about <a href=\"%1$s\" target=\"_blank\">%2$s</a> on "
+"MultiSafepay's Documentation Center."
+msgstr ""
+"Een veelgebruikte betaalmethode om veilig geld over te maken tussen SEPA "
+"landen. <br/>Lees meer over <a href=\"%1$s\" target=\"_blank\">%2$s</a> in "
+"het Documentatiecentrum van MultiSafepay."
+
+#: src/PaymentMethods/Belfius.php:61
+#, php-format
+msgid ""
+"A useful addition to your website helping you reach a large number of "
+"Belgian customers. <br />Read more about <a href=\"%1$s\" target=\"_blank\">"
+"%2$s</a> on MultiSafepay's Documentation Center."
+msgstr ""
+"Een goede aanvulling op uw website waarmee u een groot aantal Belgische "
+"consumenten bereikt. <br/>Lees meer over <a href=\"%1$s\" target=\"_blank\">"
+"%2$s</a> in het Documentatiecentrum van MultiSafepay."
+
+#: src/PaymentMethods/MasterCard.php:61
+#, php-format
+msgid ""
+"Accept Mastercard credit card payments from consumers worldwide. <br />Read "
+"more about <a href=\"%1$s\" target=\"_blank\">%2$s</a> on MultiSafepay's "
+"Documentation Center."
+msgstr ""
+"Accepteer Mastercard betalingen van consumenten over de hele wereld. <br/>"
+"Lees meer over <a href=\"%1$s\" target=\"_blank\">%2$s</a> in het "
+"documentatiecentrum van MultiSafepay."
+
+#: src/PaymentMethods/Cbc.php:61
+#, php-format
+msgid ""
+"Accept payments from CBC customers allowing them to pay using their CBC bank "
+"account. <br />Read more about <a href=\"%1$s\" target=\"_blank\">%2$s</a> "
+"on MultiSafepay's Documentation Center."
+msgstr ""
+"Accepteer betalingen van consumenten via hun CBC-bankrekening. <br/>Lees "
+"meer over <a href=\"%1$s\" target=\"_blank\">%2$s</a> in het "
+"Documentatiecentrum van MultiSafepay."
+
+#: src/PaymentMethods/Kbc.php:61
+#, php-format
+msgid ""
+"Accept payments from KBC customers allowing them to pay using their KBC bank "
+"account. <br />Read more about <a href=\"%1$s\" target=\"_blank\">%2$s</a> "
+"on MultiSafepay's Documentation Center."
+msgstr ""
+"Accepteer betalingen van consumenten via hun KBC-bankrekening. <br/>Lees "
+"meer over <a href=\"%1$s\" target=\"_blank\">%2$s</a> in het "
+"documentatiecentrum van MultiSafepay."
+
+#: templates/multisafepay-settings-display.php:30
+#: templates/partials/multisafepay-settings-support-display.php:48
+msgid "Account"
+msgstr "Account"
+
+#: src/PaymentMethods/BasePaymentMethod.php:325
+msgid "Account holder is a required field"
+msgstr "Rekeninghouder is een verplicht veld"
+
+#: templates/multisafepay-checkout-fields-display.php:87
+msgid "Account Holder Name"
+msgstr "Naam Rekeninghouder"
+
+#: templates/multisafepay-checkout-fields-display.php:95
+msgid "Account IBAN"
+msgstr "IBAN Rekeninghouder"
+
+#: src/PaymentMethods/Afterpay.php:53
+msgid "Afterpay"
+msgstr ""
+
+#: src/PaymentMethods/Alipay.php:53
+msgid "Alipay"
+msgstr ""
+
+#: src/PaymentMethods/Alipay.php:61
+#, php-format
+msgid ""
+"Alipay is a payment platform allowing you to make safe payments online. Only "
+"suitable for Chinese residents. <br />Read more about <a href=\"%1$s\" "
+"target=\"_blank\">%2$s</a> on MultiSafepay's Documentation Center."
+msgstr ""
+"Alipay is een betaalmethode waarmee u veilig online kunt betalen. Alleen "
+"geschikt voor Chinese consumenten. <br/>Lees meer over <a href=\"%1$s\" "
+"target=\"_blank\">%2$s</a> het Documentatiecentrum van MultiSafepay."
+
+#: src/PaymentMethods/IngHomePay.php:61
+#, php-format
+msgid ""
+"Allow Belgian customers to pay for purchases safely through the ING banking "
+"environment. <br />Read more about <a href=\"%1$s\" target=\"_blank\">"
+"%2$s</a> on MultiSafepay's Documentation Center."
+msgstr ""
+"Laat Belgische consumenten hun aankopen veilig betalen via de ING-"
+"bankomgeving. <br/>Lees meer over <a href=\"%1$s\" target=\"_blank\">%2$s</a>"
+" in het documentatiecentrum van MultiSafepay."
+
+#: src/PaymentMethods/Paysafecard.php:61
+#, php-format
+msgid ""
+"Allow customers to pay for purchases without providing any sensitive "
+"financial information. <br />Read more about <a href=\"%1$s\" "
+"target=\"_blank\">%2$s</a> on MultiSafepay's Documentation Center."
+msgstr ""
+"Sta consumenten toe om aankopen te betalen zonder gevoelige financiële "
+"informatie te verstrekken. <br/>Lees meer over <a href=\"%1$s\" "
+"target=\"_blank\">%2$s</a> in het documentatiecentrum van MultiSafepay."
+
+#: src/PaymentMethods/Dbrtp.php:61
+#, php-format
+msgid ""
+"Allowing merchants to collect funds from end consumers in an automated, "
+"integrated and secure way. <br />Read more about <a href=\"%1$s\" "
+"target=\"_blank\">%2$s</a> on MultiSafepay's Documentation Center."
+msgstr ""
+"Stelt bedrijven in staat om op een geautomatiseerde, geïntegreerde en "
+"veilige manier geld te ontvangen van de consument. <br/>Lees meer over <a "
+"href=\"%1$s\" target=\"_blank\">%2$s</a> in het documentatiecentrum van "
+"MultiSafepay."
+
+#: src/PaymentMethods/Santander.php:61
+#, php-format
+msgid ""
+"Allows customers to pay for online purchases as a one-off post-payment or in "
+"monthly installments. <br />Read more about <a href=\"%1$s\" "
+"target=\"_blank\">%2$s</a> on MultiSafepay's Documentation Center."
+msgstr ""
+"Hiermee kunnen consumenten aankopen betalen in maandelijkse termijnen, of "
+"eenmalige achteraf. <br/>Lees meer over <a href=\"%1$s\" target=\"_blank\">"
+"%2$s</a> in het documentatiecentrum van MultiSafepay."
+
+#: src/PaymentMethods/Amex.php:53
+msgid "American Express"
+msgstr ""
+
+#: templates/partials/multisafepay-settings-support-display.php:42
+msgid "API Documentation"
+msgstr "API Documentatie"
+
+#: src/Settings/SettingsFields.php:103 src/Settings/SettingsFields.php:108
+msgid "API Key"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:107
+msgid "API Key "
+msgstr ""
+
+#: src/PaymentMethods/ApplePay.php:61
+msgid "Apple Pay"
+msgstr ""
+
+#: src/PaymentMethods/ApplePay.php:69
+#, php-format
+msgid ""
+"Apple Pay is a digital wallet service allowing seamless NFC payments for "
+"consumers worldwide. <br />Read more about <a href=\"%1$s\" "
+"target=\"_blank\">%2$s</a> on MultiSafepay's Documentation Center."
+msgstr ""
+"Apple Pay is een digitale portemonnee die het consumenten wereldwijd "
+"mogelijk maakt om NFC-betalingen te doen. <br/>Lees meer over <a "
+"href=\"%1$s\" target=\"_blank\">%2$s</a> het Documentatiecentrum van "
+"MultiSafepay."
+
+#: src/PaymentMethods/Babycadeaubon.php:53
+msgid "Baby Cadeaubon"
+msgstr ""
+
+#: src/PaymentMethods/Bancontact.php:53
+msgid "Bancontact"
+msgstr ""
+
+#: templates/multisafepay-checkout-fields-display.php:79
+msgid "Bank Account"
+msgstr "Bankrekening"
+
+#: src/PaymentMethods/BasePaymentMethod.php:315
+msgid "Bank Account is a required field"
+msgstr "Bankrekening is een verplicht veld"
+
+#: src/PaymentMethods/BankTrans.php:53
+msgid "Bank transfer"
+msgstr "Bankoverboeking"
+
+#: src/PaymentMethods/Beautywellness.php:53
+msgid "Beauty & Wellness"
+msgstr ""
+
+#: src/PaymentMethods/Belfius.php:53
+msgid "Belfius"
+msgstr ""
+
+#: templates/partials/multisafepay-settings-support-display.php:66
+msgid "Belgium:"
+msgstr "Belgie:"
+
+#: src/PaymentMethods/Boekenbon.php:53
+msgid "Boekenbon"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:376
+msgid "Cancelled"
+msgstr "Geannuleerd"
+
+#: src/PaymentMethods/Cbc.php:53
+msgid "CBC"
+msgstr ""
+
+#: templates/partials/multisafepay-settings-support-display.php:33
+msgid "Changelog"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:84
+msgid "Check this option if you want to enable MultiSafepay in test mode."
+msgstr "Vink deze optie aan om de test-modus van MultiSafepay te activeren."
+
+#: src/Settings/SettingsFields.php:340
+msgid "Completed"
+msgstr "Afgerond"
+
+#: templates/partials/multisafepay-settings-support-display.php:99
+msgid "Contact"
+msgstr ""
+
+#: src/PaymentMethods/Afterpay.php:61
+#, php-format
+msgid ""
+"Conveniently allows customers to make a payment for their online purchases "
+"once receiving them. <br />Read more about <a href=\"%1$s\" "
+"target=\"_blank\">%2$s</a> on MultiSafepay's Documentation Center."
+msgstr ""
+"Stelt consumenten eenvoudig in staat om een betaling voor hun online "
+"aankopen te doen, nadat ze deze hebben ontvangen. <br/>Lees meer over <a "
+"href=\"%1$s\" target=\"_blank\">%2$s</a> het Documentatiecentrum van "
+"MultiSafepay."
+
+#: src/PaymentMethods/In3.php:61
+#, php-format
+msgid ""
+"Conveniently allows customers to make three seperate payments for a single "
+"purchase. <br />Read more about <a href=\"%1$s\" target=\"_blank\">%2$s</a> "
+"on MultiSafepay's Documentation Center."
+msgstr ""
+"Hiermee kunnen consumenten gemakkelijk hun aankoop in drie termijnen betalen."
+" <br/>Lees meer over <a href=\"%1$s\" target=\"_blank\">%2$s</a> in het "
+"documentatiecentrum van MultiSafepay."
+
+#: src/PaymentMethods/BasePaymentMethod.php:195
+msgid "Country"
+msgstr "Land"
+
+#: src/PaymentMethods/CreditCard.php:53
+msgid "Credit Card"
+msgstr "Creditcard"
+
+#: templates/multisafepay-checkout-fields-display.php:71
+#, fuzzy
+#| msgid "Date of birth"
+msgid "Date of birth"
+msgstr "Geboortedatum"
+
+#: src/PaymentMethods/BasePaymentMethod.php:311
+msgid "Date of birth is a required field"
+msgstr "Geboortedatum is een verplicht veld"
+
+#: src/Settings/SettingsFields.php:169
+msgid "Days"
+msgstr "Dagen"
+
+#: src/Settings/SettingsFields.php:115 src/Settings/SettingsFields.php:119
+msgid "Debug Mode"
+msgstr "Debug modus"
+
+#: src/Settings/SettingsFields.php:356
+msgid "Declined"
+msgstr "Geweigerd"
+
+#: src/PaymentMethods/BasePaymentMethod.php:369
+msgid "Default value set in common settings"
+msgstr "Standaardwaarde ingesteld bij de algemene instellingen"
+
+#: src/Settings/SettingsFields.php:199
+msgid "Delete all settings of this plugin if you uninstall"
+msgstr "Verwijder de instellingen van deze plugin bij de-installatie"
+
+#: src/Settings/SettingsFields.php:194 src/Settings/SettingsFields.php:198
+msgid "Delete settings if uninstall"
+msgstr "Verwijder de instellingen bij de-installatie"
+
+#: src/PaymentMethods/BasePaymentMethod.php:170
+msgid "Description"
+msgstr "Beschrijving"
+
+#: src/Utils/CustomLinks.php:45
+msgid "Docs"
+msgstr "Documentatie"
+
+#: templates/partials/multisafepay-settings-support-display.php:26
+msgid "Documentation"
+msgstr "Documentatie"
+
+#: src/PaymentMethods/Dotpay.php:53
+msgid "Dotpay"
+msgstr ""
+
+#: src/PaymentMethods/Einvocing.php:53
+msgid "E-invocing"
+msgstr ""
+
+#: templates/partials/multisafepay-settings-support-display.php:62
+#: templates/partials/multisafepay-settings-support-display.php:72
+#: templates/partials/multisafepay-settings-support-display.php:82
+#: templates/partials/multisafepay-settings-support-display.php:92
+#: templates/partials/multisafepay-settings-support-display.php:108
+msgid "E-mail:"
+msgstr ""
+
+#: src/PaymentMethods/IdealQr.php:64
+#, php-format
+msgid ""
+"Easily receive payments with a simple scan of an iDEAL QR code. <br />Read "
+"more about <a href=\"%1$s\" target=\"_blank\">%2$s</a> on MultiSafepay's "
+"Documentation Center."
+msgstr ""
+"Ontvang eenvoudig betalingen met een simpele scan van een iDEAL QR-code. "
+"<br/>Lees meer over <a href=\"%1$s\" target=\"_blank\">%2$s</a> in het "
+"documentatiecentrum van MultiSafepay."
+
+#: templates/multisafepay-checkout-fields-display.php:103
+msgid "Emandate"
+msgstr "e-mandate"
+
+#: src/PaymentMethods/Amex.php:61
+#, php-format
+msgid ""
+"Enable a widely used credit card payment method by American Express. <br />"
+"Read more about <a href=\"%1$s\" target=\"_blank\">%2$s</a> on "
+"MultiSafepay's Documentation Center."
+msgstr ""
+"Schakel een veelgebruikte creditcard betalingsmethode in via American "
+"Express. <br/>Lees meer over <a href=\"%1$s\" target=\"_blank\">%2$s</a> in "
+"het Documentatiecentrum van MultiSafepay."
+
+#: src/PaymentMethods/Maestro.php:61
+#, php-format
+msgid ""
+"Enable a widely used debit card payment method by MasterCard. <br />Read "
+"more about <a href=\"%1$s\" target=\"_blank\">%2$s</a> on MultiSafepay's "
+"Documentation Center."
+msgstr ""
+"Schakel de veelgebruikte betaalmethode MasterCard in. <br/>Lees meer over <a "
+"href=\"%1$s\" target=\"_blank\">%2$s</a> in het documentatiecentrum van "
+"MultiSafepay."
+
+#: src/PaymentMethods/BasePaymentMethod.php:158
+msgid "Enable/Disable"
+msgstr "Activeer/Deactiveer"
+
+#: src/PaymentMethods/Eps.php:53
+msgid "EPS"
+msgstr ""
+
+#: src/PaymentMethods/Eps.php:61
+#, php-format
+msgid ""
+"EPS is a secure payment method and a popular choice for online consumers in "
+"Austria. <br />Read more about <a href=\"%1$s\" target=\"_blank\">%2$s</a> "
+"on MultiSafepay's Documentation Center."
+msgstr ""
+"EPS is een veilige betaalmethode en een populaire keuze voor Oostenrijkse "
+"consumenten. <br/>Lees meer over <a href=\"%1$s\" target=\"_blank\">%2$s</a> "
+"in het documentatiecentrum van MultiSafepay."
+
+#: src/Settings/SettingsFields.php:360
+msgid "Expired"
+msgstr "Verlopen"
+
+#: templates/partials/multisafepay-settings-support-display.php:36
+msgid "FAQ"
+msgstr ""
+
+#: src/PaymentMethods/Fashioncheque.php:53
+msgid "Fashioncheque"
+msgstr ""
+
+#: src/PaymentMethods/Fashiongiftcard.php:53
+msgid "Fashiongiftcard"
+msgstr ""
+
+#: templates/multisafepay-checkout-fields-display.php:64
+msgid "Female"
+msgstr "Vrouw"
+
+#: src/PaymentMethods/Fietsenbon.php:53
+msgid "Fietsenbon"
+msgstr ""
+
+#: templates/partials/multisafepay-settings-support-display.php:39
+msgid "For developers:"
+msgstr "Voor ontwikkelaars:"
+
+#: src/PaymentMethods/BasePaymentMethod.php:198
+msgid ""
+"For most operating system and configurations, you must hold Ctrl + D or Cmd "
+"+ D on your keyboard, to select more than one value."
+msgstr ""
+"Voor de meeste besturingssystemen en configuraties moet u Ctrl + D of Cmd + "
+"D op uw toetsenbord ingedrukt houden om meer dan één waarde te selecteren."
+
+#: src/PaymentMethods/Bancontact.php:61
+#, php-format
+msgid ""
+"Formerly known as Mister Cash, Bancontact is the market leader for online "
+"payments in Belgium. <br />Read more about <a href=\"%1$s\" "
+"target=\"_blank\">%2$s</a> on MultiSafepay's Documentation Center."
+msgstr ""
+"Bancontact, voorheen bekend als Mister Cash, is de marktleider voor online "
+"betalingen in Belgie. <br/>Lees meer over <a href=\"%1$s\" target=\"_blank\">"
+"%2$s</a> in het Documentatiecentrum van MultiSafepay."
+
+#: templates/multisafepay-checkout-fields-display.php:59
+msgid "Gender"
+msgstr "Geslacht"
+
+#: src/PaymentMethods/BasePaymentMethod.php:307
+msgid "Gender is a required field"
+msgstr "Geslacht is een verplicht veld"
+
+#: src/PaymentMethods/Gezondheidsbon.php:53
+msgid "Gezondheidsbon"
+msgstr ""
+
+#: src/PaymentMethods/Giropay.php:53
+msgid "Giropay"
+msgstr ""
+
+#: src/PaymentMethods/Givacard.php:53
+msgid "Givacard"
+msgstr ""
+
+#: src/PaymentMethods/Good4fun.php:53
+msgid "Good4fun"
+msgstr ""
+
+#: src/PaymentMethods/Goodcard.php:53
+msgid "Goodcard"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:141 src/Settings/SettingsFields.php:145
+msgid "Google Analytics"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:142
+msgid "Google Analytics Universal Account ID. Format: UA-XXXXXXXXX"
+msgstr "Google Analytics Universeel Account ID. Formaat: UA-XXXXXXXXX"
+
+#: src/Settings/SettingsFields.php:170
+msgid "Hours"
+msgstr "Uren"
+
+#. URI of the plugin
+msgid "https://docs.multisafepay.com/integrations/woocommerce/"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://www.multisafepay.com"
+msgstr ""
+
+#: src/PaymentMethods/BasePaymentMethod.php:320
+#: src/PaymentMethods/BasePaymentMethod.php:334
+msgid "IBAN does not seems valid"
+msgstr "IBAN is ongeldig"
+
+#: src/PaymentMethods/BasePaymentMethod.php:329
+msgid "IBAN is a required field"
+msgstr "IBAN is een verplicht veld"
+
+#: src/PaymentMethods/Ideal.php:57
+msgid "iDEAL"
+msgstr ""
+
+#: src/PaymentMethods/IdealQr.php:56
+msgid "iDEAL QR"
+msgstr ""
+
+#: src/PaymentMethods/BasePaymentMethod.php:197
+msgid ""
+"If you select one or more countries, this payment method won't show in the "
+"checkout page, if the payment address`s country of the customer match with "
+"the selected values. Leave blank for no restrictions."
+msgstr ""
+"Indien een of meer landen worden geselecteerd, wordt deze betalingsmethode "
+"niet getoond bij het afrekenen als het land van het betalingsadres van de "
+"consument overeenkomt met de geselecteerde waarden."
+
+#: templates/partials/multisafepay-settings-support-display.php:53
+msgid ""
+"If you would like to have a clear overview of what MultiSafepay has to offer,"
+" feel free to create a "
+msgstr ""
+"Wilt u een duidelijk overzicht van wat MultiSafepay te bieden heeft, maak "
+"dan gerust een"
+
+#: templates/partials/multisafepay-settings-support-display.php:54
+msgid ""
+"If you would like to set up a live account, please contact the MultiSafepay "
+"sales department:"
+msgstr ""
+"Als u een live account wilt aanmaken, neem dan contact op met de "
+"verkoopafdeling van MultiSafepay:"
+
+#: src/PaymentMethods/In3.php:53
+msgid "in3"
+msgstr ""
+
+#: src/PaymentMethods/Visa.php:61
+#, php-format
+msgid ""
+"Increase conversions by accepting Visa payments with a worldwide reach. <br "
+"/>Read more about <a href=\"%1$s\" target=\"_blank\">%2$s</a> on "
+"MultiSafepay's Documentation Center."
+msgstr ""
+"Verhoog het aantal conversies door Visa-betalingen met een wereldwijd bereik "
+"te accepteren. <br/>Lees meer over <a href=\"%1$s\" target=\"_blank\">"
+"%2$s</a> in het documentatiecentrum van MultiSafepay."
+
+#: src/PaymentMethods/IngHomePay.php:53
+msgid "ING Home'Pay"
+msgstr ""
+
+#: src/PaymentMethods/BasePaymentMethod.php:176
+msgid "Initial Order Status"
+msgstr "Initiële order status"
+
+#: src/PaymentMethods/BasePaymentMethod.php:179
+msgid "Initial order status for this payment method."
+msgstr "Initiële order status voor deze betaalmethode."
+
+#: src/Settings/SettingsFields.php:336
+msgid "Initialized"
+msgstr "geïnitialiseerd"
+
+#: src/PaymentMethods/PaymentMethodCallback.php:94
+#: src/PaymentMethods/BasePaymentMethod.php:256
+#: src/PaymentMethods/BasePaymentMethod.php:256
+msgid "Invalid request"
+msgstr "Foutief verzoek"
+
+#: templates/multisafepay-checkout-fields-display.php:31
+msgid "Issuer"
+msgstr "Banken"
+
+#: src/PaymentMethods/BasePaymentMethod.php:281
+#, php-format
+msgid ""
+"It seems %1$s is not available for your MultiSafepay account. <a "
+"href=\"%2$s\">Contact support</a>"
+msgstr ""
+"Het lijkt erop dat %1$s niet beschikbaar is voor uw MultiSafepay-account. <a "
+"href=\"%2$s\"> Neem contact op met de helpdesk</a>"
+
+#: src/Settings/SettingsFields.php:268
+msgid "It seems the API Key is not valid on the live environment"
+msgstr "Dit is geen geldige API Key voor de live omgeving"
+
+#: src/Settings/SettingsFields.php:305
+msgid "It seems the Test API Key is not valid on the test environment"
+msgstr "Dit is geen geldige API Key voor de test omgeving"
+
+#: templates/partials/multisafepay-settings-support-display.php:86
+msgid "Italy"
+msgstr "Italië"
+
+#: src/PaymentMethods/Kbc.php:53
+msgid "KBC"
+msgstr ""
+
+#: src/PaymentMethods/Klarna.php:53
+#, fuzzy
+msgid "Klarna - Pay in 30 days"
+msgstr "Klarna - Betaal later in 14 dagen"
+
+#: src/Settings/SettingsFields.php:120
+msgid "Logs additional information to the system log"
+msgstr "Schrijf aanvullende informatie naar het systeemlogboek"
+
+#: src/PaymentMethods/Maestro.php:53
+msgid "Maestro"
+msgstr ""
+
+#: templates/multisafepay-checkout-fields-display.php:63
+msgid "Male"
+msgstr "Man"
+
+#: templates/partials/multisafepay-settings-support-display.php:30
+msgid "Manual"
+msgstr "Handleiding"
+
+#: src/PaymentMethods/MasterCard.php:53
+msgid "Mastercard"
+msgstr ""
+
+#: src/PaymentMethods/BasePaymentMethod.php:189
+msgid "Max Amount"
+msgstr "Maximaal bedrag"
+
+#: src/PaymentMethods/BasePaymentMethod.php:183
+msgid "Min Amount"
+msgstr "Minimaal bedrag"
+
+#: templates/multisafepay-checkout-fields-display.php:52
+msgid "Miss"
+msgstr "Mej."
+
+#: src/Utils/Activator.php:66
+#, php-format
+msgid ""
+"Missing dependencies: %s <br>Please install these extensions to use the "
+"Multisafepay WooCommerce plugin"
+msgstr ""
+"Ontbrekende afhankelijkheden: %s <br/>Installeer deze extensies om de "
+"Multisafepay WooCommerce plugin te kunnen gebruiken."
+
+#: src/Settings/SettingsFields.php:183
+msgid ""
+"More information about Second Chance on <a href=\"https://docs.multisafepay."
+"com/tools/second-chance/?utm_source=woocommerce&utm_medium=woocommerce-"
+"cms&utm_campaign=woocommerce-cms\" target=\"_blank\">MultiSafepay's "
+"Documentation Center</a>."
+msgstr ""
+"Meer informatie over betaalherinneringen op <a href=\"https://docs."
+"multisafepay.com/tools/second-chance/?"
+"utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-"
+"cms\" target=\"_blank\"> MultiSafepay's documentatiecentrum</a>."
+
+#: templates/multisafepay-checkout-fields-display.php:50
+msgid "Mr"
+msgstr "Hr."
+
+#: templates/multisafepay-checkout-fields-display.php:51
+msgid "Mrs"
+msgstr "Mevr."
+
+#. Name of the plugin
+#. Author of the plugin
+#: src/PaymentMethods/MultiSafepay.php:58
+msgid "MultiSafepay"
+msgstr ""
+
+#: templates/partials/multisafepay-settings-support-display.php:45
+msgid "MultiSafepay Github"
+msgstr ""
+
+#. Description of the plugin
+msgid "MultiSafepay Payment Plugin"
+msgstr "MultiSafepay Betaal Plugin"
+
+#: src/Settings/SettingsController.php:155
+msgid "MultiSafepay Settings"
+msgstr "MultiSafepay Instellingen"
+
+#: src/Settings/SettingsController.php:151
+#, php-format
+msgid "MultiSafepay Settings v. %s"
+msgstr "MultiSafepay Instellingen v. %s"
+
+#: src/Settings/SettingsFields.php:187
+msgid ""
+"MultiSafepay will send two Second Chance reminder emails. In the emails, "
+"MultiSafepay will include a link to allow the consumer to finalize the "
+"payment. The first Second Chance email is sent 1 hour after the transaction "
+"was initiated and the second after 24 hours. To receive second chance emails,"
+" this option must also be activated within your MultiSafepay account, "
+"otherwise it will not work."
+msgstr ""
+"MultiSafepay verstuurt twee keer een betaalherinnering. In de e-mails zal "
+"MultiSafepay een link opnemen waarmee de consument de betaling kan afronden. "
+"De eerste betaalherinnering wordt verstuurd 1 uur nadat de transactie is "
+"gestart en de tweede na 24 uur. Om de betaalherinnerings e-mails te "
+"ontvangen, moet deze optie ook geactiveerd zijn binnen uw MultiSafepay-"
+"account, anders werkt het niet."
+
+#: src/PaymentMethods/Nationaletuinbon.php:53
+msgid "Nationale Tuinbon"
+msgstr ""
+
+#: templates/partials/multisafepay-settings-support-display.php:101
+msgid "Need assistance? Feel free to contact our Integration Team:"
+msgstr "Assistentie nodig? Neem gerust contact op met ons Integratieteam:"
+
+#: templates/partials/multisafepay-settings-support-display.php:56
+msgid "Netherlands:"
+msgstr "Nederland:"
+
+#: src/PaymentMethods/Trustly.php:61
+#, php-format
+msgid ""
+"Offering fast, simple and safe online banking payment solutions available in "
+"a number of European countries. <br />Read more about <a href=\"%1$s\" "
+"target=\"_blank\">%2$s</a> on MultiSafepay's Documentation Center."
+msgstr ""
+"Een snelle, eenvoudige en veilige betalingsoplossingen voor online bankieren "
+"die beschikbaar is in een aantal Europese landen. <br/>Lees meer over <a "
+"href=\"%1$s\" target=\"_blank\">%2$s</a> in het documentatiecentrum van "
+"MultiSafepay."
+
+#: templates/multisafepay-settings-display.php:33
+msgid "Options"
+msgstr "Opties"
+
+#: templates/multisafepay-settings-display.php:32
+msgid "Order Status"
+msgstr "Bestelstatus"
+
+#: src/PaymentMethods/Parfumcadeaukaart.php:53
+msgid "Parfumcadeaukaart"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:372
+msgid "Partial refunded"
+msgstr "Deels terugbetaald"
+
+#: src/PaymentMethods/PayAfterDelivery.php:53
+msgid "Pay After Delivery"
+msgstr "Betaal Na Ontvangst"
+
+#: templates/multisafepay-settings-display.php:31
+msgid "Payment Methods"
+msgstr "Betaalmethodes"
+
+#: src/PaymentMethods/PayPal.php:53
+msgid "Paypal"
+msgstr ""
+
+#: src/PaymentMethods/Paysafecard.php:53
+msgid "Paysafecard"
+msgstr ""
+
+#: src/PaymentMethods/Podium.php:53
+msgid "Podium"
+msgstr ""
+
+#: src/PaymentMethods/Winkelcheque.php:61
+#: src/PaymentMethods/Beautywellness.php:61
+#: src/PaymentMethods/Vvvcadeaukaart.php:61 src/PaymentMethods/Givacard.php:61
+#: src/PaymentMethods/Gezondheidsbon.php:61
+#: src/PaymentMethods/Sportenfit.php:61
+#: src/PaymentMethods/Wellnessgiftcard.php:61
+#: src/PaymentMethods/Nationaletuinbon.php:61
+#: src/PaymentMethods/Boekenbon.php:61 src/PaymentMethods/Yourgift.php:61
+#: src/PaymentMethods/Goodcard.php:61 src/PaymentMethods/Fashioncheque.php:61
+#: src/PaymentMethods/Wijncadeau.php:61 src/PaymentMethods/MultiSafepay.php:66
+#: src/PaymentMethods/Parfumcadeaukaart.php:61
+#: src/PaymentMethods/CreditCard.php:61 src/PaymentMethods/Good4fun.php:61
+#: src/PaymentMethods/Fietsenbon.php:61 src/PaymentMethods/Podium.php:61
+#: src/PaymentMethods/Babycadeaubon.php:61
+#: src/PaymentMethods/Webshopgiftcard.php:61
+#: src/PaymentMethods/Fashiongiftcard.php:61
+#, php-format
+msgid ""
+"Read more about <a href=\"%1$s\" target=\"_blank\">%2$s</a> on "
+"MultiSafepay's Documentation Center."
+msgstr ""
+"Lees meer over <a href=\"%1$s\" target=\"_blank\">%2$s</a> in het "
+"Documentatiecentrum van MultiSafepay."
+
+#: templates/partials/multisafepay-settings-support-display.php:27
+msgid ""
+"Read our documentation for more information about MultiSafepay and how to "
+"get started:"
+msgstr ""
+"Lees onze documentatie voor meer informatie over MultiSafepay en hoe u aan "
+"de slag kunt:"
+
+#: src/Settings/SettingsFields.php:368
+msgid "Refunded"
+msgstr "Terugbetaald"
+
+#: src/PaymentMethods/Dbrtp.php:53
+msgid "Request to Pay powered by Deutsche Bank"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:348
+msgid "Reserved"
+msgstr "Gereserveerd"
+
+#: src/PaymentMethods/Santander.php:53
+msgid "Santander Consumer Finance | Pay per month"
+msgstr "Santander Consumer Finance Betaal per Maand"
+
+#: src/Settings/SettingsFields.php:182 src/Settings/SettingsFields.php:186
+msgid "Second Chance"
+msgstr "Betaalherinnering"
+
+#: src/Settings/SettingsFields.php:171
+msgid "Seconds"
+msgstr "Seconden"
+
+#: templates/multisafepay-checkout-fields-display.php:34
+msgid "Select an issuer"
+msgstr "Selecteer een bank"
+
+#: templates/multisafepay-checkout-fields-display.php:49
+#: templates/multisafepay-checkout-fields-display.php:62
+msgid "Select an option"
+msgstr "Selecteer een optie"
+
+#: src/Settings/SettingsFields.php:226
+msgid "Select order status"
+msgstr "Selecteer een orderstatus"
+
+#: src/PaymentMethods/Dirdeb.php:57
+msgid "SEPA Direct Debit"
+msgstr "SEPA Automatische incasso"
+
+#: src/Utils/CustomLinks.php:44
+msgid "Settings"
+msgstr "Instellingen"
+
+#: src/Settings/SettingsFields.php:364
+msgid "Shipped"
+msgstr "Verzonden"
+
+#: src/Services/ShoppingCartService.php:166
+msgid "Shipping"
+msgstr "Verzendmethode"
+
+#: src/PaymentMethods/Sofort.php:53
+msgid "SOFORT Banking"
+msgstr ""
+
+#: templates/partials/multisafepay-settings-support-display.php:76
+msgid "Spain:"
+msgstr "Spanje:"
+
+#: src/PaymentMethods/Sportenfit.php:53
+msgid "Sport & Fit"
+msgstr ""
+
+#: src/PaymentMethods/Dirdeb.php:65 src/PaymentMethods/Sofort.php:61
+#, php-format
+msgid ""
+"Suitable for collecting funds from your customers bank account on a "
+"recurring basis by means of authorization. <br />Read more about <a "
+"href=\"%1$s\" target=\"_blank\">%2$s</a> on MultiSafepay's Documentation "
+"Center."
+msgstr ""
+"Geschikt om door middel van autorisatie periodiek geld van de bankrekening "
+"van de consument te incasseren. <br/>Lees meer over <a href=\"%1$s\" "
+"target=\"_blank\">%2$s</a> in het documentatiecentrum van MultiSafepay."
+
+#: src/PaymentMethods/PayAfterDelivery.php:61
+#, php-format
+msgid ""
+"Suitable for Dutch merchants allowing consumers to pay after they have "
+"received their order. <br />Read more about <a href=\"%1$s\" "
+"target=\"_blank\">%2$s</a> on MultiSafepay's Documentation Center."
+msgstr ""
+"Geschikt om consumenten te laten betalen nadat ze hun bestelling hebben "
+"ontvangen, beschikbaar voor Nederlandse bedrijven. <br/>Lees meer over <a "
+"href=\"%1$s\" target=\"_blank\">%2$s</a> in het documentatiecentrum van "
+"MultiSafepay."
+
+#: templates/multisafepay-settings-display.php:34 src/Utils/CustomLinks.php:46
+msgid "Support"
+msgstr "Support"
+
+#: templates/partials/multisafepay-settings-support-display.php:59
+#: templates/partials/multisafepay-settings-support-display.php:69
+#: templates/partials/multisafepay-settings-support-display.php:79
+#: templates/partials/multisafepay-settings-support-display.php:89
+#: templates/partials/multisafepay-settings-support-display.php:105
+msgid "Telephone:"
+msgstr "Telefoon:"
+
+#: templates/partials/multisafepay-settings-support-display.php:53
+msgid "test account"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:91 src/Settings/SettingsFields.php:96
+msgid "Test API Key"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:79 src/Settings/SettingsFields.php:83
+msgid "Test Mode"
+msgstr "Test modus"
+
+#: src/PaymentMethods/Giropay.php:61
+#, php-format
+msgid ""
+"The #1 payment method in Germany offering real-time bank transfers for a "
+"large base of German online consumers. <br />Read more about <a "
+"href=\"%1$s\" target=\"_blank\">%2$s</a> on MultiSafepay's Documentation "
+"Center."
+msgstr ""
+"De #1 betaalmethode in Duitsland die realtime bankoverschrijvingen aanbiedt "
+"aan een groot aantal Duitse consumenten. <br/>Lees meer over <a "
+"href=\"%1$s\" target=\"_blank\">%2$s</a> in het documentatiecentrum van "
+"MultiSafepay."
+
+#: src/PaymentMethods/Ideal.php:65
+#, php-format
+msgid ""
+"The leading ecommerce payment method in the Netherlands connecting all major "
+"Dutch banks. <br />Read more about <a href=\"%1$s\" target=\"_blank\">"
+"%2$s</a> on MultiSafepay's Documentation Center."
+msgstr ""
+"De toonaangevende e-commerce betaalmethode in Nederland die alle grote "
+"Nederlandse banken met elkaar verbindt. <br/>Lees meer over <a href=\"%1$s\" "
+"target=\"_blank\">%2$s</a> in het documentatiecentrum van MultiSafepay."
+
+#: src/Settings/SettingsFields.php:166
+msgid ""
+"The lifetime of a payment link by default is 30 days. This means that the "
+"customer has 30 days to complete the transaction using the payment link"
+msgstr ""
+"De beschikbaareid van een betaallink is standaard 30 dagen. Dit betekent dat "
+"de consument 30 dagen de tijd heeft om de transactie af te ronden via de "
+"betaallink"
+
+#: src/PaymentMethods/BasePaymentMethod.php:172
+msgid "This controls the description which the user sees during checkout."
+msgstr ""
+"Vul hier de omschrijving in die de consument ziet tijdens het afrekenen."
+
+#: src/PaymentMethods/BasePaymentMethod.php:166
+msgid "This controls the title which the user sees during checkout."
+msgstr "Vul hier de titel in die de consument ziet tijdens het afrekenen."
+
+#: src/PaymentMethods/BasePaymentMethod.php:191
+msgid ""
+"This payment method is not shown in the checkout if the order total exceeds "
+"a certain amount. Leave blank for no restrictions."
+msgstr ""
+"Indien gevuld, wordt deze betaalmethode niet getoond bij het afrekenen als "
+"het ordertotaal hoger is dan het gedefinieerde bedrag."
+
+#: src/PaymentMethods/BasePaymentMethod.php:185
+msgid ""
+"This payment method is not shown in the checkout if the order total is lower "
+"than the defined amount. Leave blank for no restrictions."
+msgstr ""
+"Indien gevuld, wordt deze betaalmethode niet getoond bij het afrekenen als "
+"het ordertotaal lager is dan het gedefinieerde bedrag."
+
+#: src/PaymentMethods/BasePaymentMethod.php:164
+msgid "Title"
+msgstr "Titel"
+
+#: templates/partials/multisafepay-settings-support-display.php:50
+msgid "To use this plugin you need a MultiSafepay account."
+msgstr "Om deze plugin te gebruiken heeft u een MultiSafepay account nodig."
+
+#: src/PaymentMethods/BasePaymentMethod.php:221
+#: src/PaymentMethods/BasePaymentMethod.php:225
+msgid "Transaction has been initialized."
+msgstr "De transactie is geïnitialiseerd."
+
+#: templates/multisafepay-checkout-fields-display.php:46
+msgid "Treatment"
+msgstr "Aanspreekvorm"
+
+#: src/PaymentMethods/Trustly.php:53
+msgid "Trustly"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:344
+msgid "Uncleared"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:165 src/Settings/SettingsFields.php:174
+msgid "Unit lifetime of payment link"
+msgstr "Eenheid verlooptijd van de betaallink"
+
+#: src/Settings/SettingsFields.php:153 src/Settings/SettingsFields.php:157
+msgid "Value lifetime of payment link"
+msgstr "Waarde verlooptijd van de betaallink"
+
+#: src/PaymentMethods/Visa.php:53
+msgid "Visa"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:352
+msgid "Void"
+msgstr "Ongeldig"
+
+#: src/PaymentMethods/Vvvcadeaukaart.php:53
+msgid "VVV Cadeaukaart"
+msgstr ""
+
+#: src/PaymentMethods/Webshopgiftcard.php:53
+msgid "Webshop gift card"
+msgstr ""
+
+#: src/PaymentMethods/Wellnessgiftcard.php:53
+msgid "Wellness gift card"
+msgstr ""
+
+#: src/PaymentMethods/Wijncadeau.php:53
+msgid "Wijncadeau"
+msgstr ""
+
+#: src/PaymentMethods/Winkelcheque.php:53
+msgid "Winkelcheque"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:256
+msgid "You need to fill the API Key"
+msgstr "API Key is een verplicht veld"
+
+#: src/Settings/SettingsFields.php:293
+msgid "You need to fill the Test API Key"
+msgstr "Test API Key is een verplicht veld"
+
+#: src/Settings/SettingsController.php:196
+msgid ""
+"You need to fill these settings, to be able to enable a MultiSafepay payment "
+"method"
+msgstr ""
+"Deze instellingen dienen ingevuld te zijn om een MultiSafepay betaalmethode "
+"te kunnen activeren"
+
+#: src/PaymentMethods/Yourgift.php:53
+msgid "Yourgift"
+msgstr ""
