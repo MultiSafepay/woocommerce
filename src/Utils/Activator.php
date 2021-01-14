@@ -43,6 +43,9 @@ class Activator {
      * @return  void
      */
 	public function activate( bool $network_wide ): void {
+	    if ( ! current_user_can( 'activate_plugins' ) ) {
+            die( esc_html__( 'It seems you don\'t have permissions to activate plugins', 'multisafepay' ) );
+        }
         if ( ( ! is_multisite() ) || ( is_multisite() && ! $network_wide ) ) {
             $this->activate_plugin_single_site();
         }
@@ -63,7 +66,7 @@ class Activator {
             $dependency_checker->check();
         } catch ( MissingDependencyException $missing_dependency_exception ) {
             $dependencies = implode( ', ', $missing_dependency_exception->get_missing_plugin_names() );
-            $message      = sprintf( __( 'Missing dependencies: %s <br>Please install these extensions to use the Multisafepay WooCommerce plugin', 'multisafepay' ), $dependencies ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+            $message      = sprintf( __( 'Missing dependencies: %s. Please install these extensions to use the MultiSafepay WooCommerce plugin', 'multisafepay' ), $dependencies ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
             die( esc_html( $message ) );
         }
     }

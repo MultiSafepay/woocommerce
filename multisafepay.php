@@ -55,7 +55,6 @@ define( 'MULTISAFEPAY_PLUGIN_VERSION', '4.0.0' );
 require_once plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
 
 use MultiSafepay\WooCommerce\Utils\Activator;
-use MultiSafepay\WooCommerce\Utils\Deactivator;
 use MultiSafepay\WooCommerce\Main;
 
 /**
@@ -72,21 +71,6 @@ function activate_multisafepay( bool $network_wide ): void {
     $activator->activate( $network_wide );
 }
 register_activation_hook( __FILE__, 'activate_multisafepay' );
-
-/**
- * The code that runs during plugin deactivation.
- * The class is documented in src/utils/Deactivator.php
- *
- * @since   4.0.0
- * @see     https://developer.wordpress.org/reference/functions/register_deactivation_hook/
- *
- * @param   bool $network_wide
- */
-function deactivate_multisafepay( bool $network_wide ): void {
-    $deactivator = new Deactivator();
-    $deactivator->deactivate( $network_wide );
-}
-register_deactivation_hook( __FILE__, 'deactivate_multisafepay' );
 
 /**
  * Init plugin
