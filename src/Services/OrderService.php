@@ -84,7 +84,8 @@ class OrderService {
             ->addGatewayCode( $gateway_code )
             ->addType( $type )
             ->addPluginDetails( $this->create_plugin_details() )
-            ->addDescriptionText( 'Payment for order: ' . $order->get_id() )
+            /* translators: %s: order id */
+            ->addDescriptionText( sprintf( __( 'Payment for order: %s', 'multisafepay' ), $order->get_id() ) )
             ->addCustomer( $this->customer_service->create_customer_details( $order ) )
             ->addPaymentOptions( $this->create_payment_options( $order, $gateway_id ) )
             ->addShoppingCart( $this->shopping_cart_service->create_shopping_cart( $order, $order->get_currency() ) )

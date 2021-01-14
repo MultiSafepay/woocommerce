@@ -95,6 +95,9 @@ class ShoppingCartService {
      * @return float
      */
     private function get_item_tax_rate( WC_Order_Item_Product $item ): float {
+        if ( 'taxable' !== $item->get_tax_status() ) {
+            return 0;
+        }
         $tax_rates = WC_Tax::get_rates( $item->get_tax_class() );
         switch ( count( $tax_rates ) ) {
             case 0:
