@@ -23,6 +23,11 @@
 			"MultiSafepay\\WooCommerce\\": "src/"
 		}
 	},
+    "autoload-dev": {
+        "psr-4": {
+            "MultiSafepay\\WooCommerce\\Tests\\Fixtures\\": "tests/fixtures/"
+        }
+    },
 	"scripts": {
 		"phpcs": "@php vendor/bin/phpcs -s --standard=phpcs.xml .",
 		"phpcbf": "@php vendor/bin/phpcbf --standard=phpcs.xml .",
