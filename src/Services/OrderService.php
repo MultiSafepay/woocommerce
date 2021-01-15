@@ -78,6 +78,7 @@ class OrderService {
         }
 
         $order_request = new OrderRequest();
+
         $order_request
             ->addOrderId( $order->get_order_number() )
             ->addMoney( MoneyUtil::create_money( (float) ( $order->get_total() ), $order->get_currency() ) )

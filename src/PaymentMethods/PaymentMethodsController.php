@@ -24,6 +24,8 @@
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
 use MultiSafepay\Api\Transactions\UpdateRequest;
+use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
+use MultiSafepay\WooCommerce\Services\OrderService;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use WC_Order;
 
@@ -133,15 +135,16 @@ class PaymentMethodsController {
      * @return  void
      */
     public function set_msp_transaction_as_shipped( int $order_id ): void {
-        $sdk                 = new SdkService();
-        $transaction_manager = $sdk->get_transaction_manager();
-        $update_order        = new UpdateRequest();
-        $update_order->addId( (string) $order_id );
-        $update_order->addStatus( 'shipped' );
-        $transaction_manager->update( (string) $order_id, $update_order );
+        $order = wc_get_order( $order_id );
+        if ( strpos( $order->get_payment_method(), 'multisafepay_' ) !== false ) {
+            $sdk                 = new SdkService();
+            $transaction_manager = $sdk->get_transaction_manager();
+            $update_order        = new UpdateRequest();
+            $update_order->addId( (string) $order_id );
+            $update_order->addStatus( 'shipped' );
+            $transaction_manager->update( (string) $order_id, $update_order );
+        }
     }
-
-
 
     /**
      * Set the MultiSafepay transaction as invoiced when the order
@@ -151,11 +154,70 @@ class PaymentMethodsController {
      * @return  void
      */
     public function set_msp_transaction_as_invoiced( int $order_id ): void {
+        $order = wc_get_order( $order_id );
+        if ( strpos( $order->get_payment_method(), 'multisafepay_' ) !== false ) {
+            $sdk                 = new SdkService();
+            $transaction_manager = $sdk->get_transaction_manager();
+            $update_order        = new UpdateRequest();
+            $update_order->addData( array( 'invoice_id' => $order_id ) );
+            $transaction_manager->update( (string) $order_id, $update_order );
+        }
+    }
+
+    /**
+     * Action added to woocommerce_new_order hook.
+     * Takes an order generated in admin and pass the data to MultiSafepay to process the order request.
+     *
+     * @param   int      $order_id
+     * @param   WC_Order $order
+     * @return  void
+     */
+    public function generate_orders_from_backend( int $order_id, WC_Order $order ): void {
+
+        // Check if the order is created in admin
+        if ( ! $order->is_created_via( 'admin' ) ) {
+            return;
+        }
+
+        // Check if the payment method belongs to MultiSafepay
+        if ( strpos( $order->get_payment_method(), 'multisafepay_' ) === false ) {
+            return;
+        }
+
+        // Create the order request and process the transaction
         $sdk                 = new SdkService();
         $transaction_manager = $sdk->get_transaction_manager();
-        $update_order        = new UpdateRequest();
-        $update_order->addData( array( 'invoice_id' => $order_id ) );
-        $transaction_manager->update( (string) $order_id, $update_order );
+        $order_service       = new OrderService();
+        $gateway_code        = Gateways::get_gateway_code_by_gateway_id( $order->get_payment_method() );
+        $gateway_info        = Gateways::get_gateway_info_by_gateway_id( $order->get_payment_method() );
+        $order_request       = $order_service->create_order_request( $order_id, $gateway_code, 'paymentlink', $order->get_payment_method(), $gateway_info );
+        $transaction         = $transaction_manager->create( $order_request );
+
+        if ( $transaction->getPaymentUrl() ) {
+            // Update order meta data with the payment link
+            update_post_meta( $order_id, 'payment_url', $transaction->getPaymentUrl() );
+            update_post_meta( $order_id, 'send_payment_link', '1' );
+
+            // Log information
+            if ( get_option( 'multisafepay_debugmode', false ) ) {
+                $logger  = wc_get_logger();
+                $message = 'Order details has been registered in MultiSafepay and a payment link has been generated: ' . esc_url( $transaction->getPaymentUrl() );
+                $logger->log( 'info', $message );
+                $order->add_order_note( $message );
+            }
+        }
+    }
+
+    /**
+     * @param string   $default_payment_link
+     * @param WC_Order $order
+     */
+    public function replace_checkout_payment_url( string $default_payment_link, WC_Order $order ) {
+        $send_payment_link = get_post_meta( $order->get_id(), 'send_payment_link', true );
+        if ( $send_payment_link ) {
+            return get_post_meta( $order->get_id(), 'payment_url', true );
+        }
+        return $default_payment_link;
     }
 
 }

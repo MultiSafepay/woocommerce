@@ -60,8 +60,8 @@ class CustomerService {
             $order->get_billing_phone(),
             $order->get_billing_first_name(),
             $order->get_billing_last_name(),
-            $order->get_customer_ip_address(),
-            $order->get_customer_user_agent()
+            $order->get_customer_ip_address() ? $order->get_customer_ip_address() : '',
+            $order->get_customer_user_agent() ? $order->get_customer_user_agent() : ''
         );
     }
 
@@ -85,8 +85,8 @@ class CustomerService {
             $order->get_billing_phone(),
             $order->get_shipping_first_name(),
             $order->get_shipping_last_name(),
-            $order->get_customer_ip_address(),
-            $order->get_customer_user_agent()
+            $order->get_customer_ip_address() ? $order->get_customer_ip_address() : $this->get_the_user_ip(),
+            $order->get_customer_user_agent() ? $order->get_customer_user_agent() : $this->get_the_user_agent()
         );
     }
 
@@ -110,14 +110,22 @@ class CustomerService {
         string $user_agent
     ): CustomerDetails {
         $customer_details = new CustomerDetails();
-        return $customer_details
+        $customer_details
             ->addAddress( $address )
             ->addEmailAddress( new EmailAddress( $email_address ) )
             ->addFirstName( $first_name )
             ->addLastName( $last_name )
-            ->addIpAddress( new IpAddress( $ip_address ) )
-            ->addUserAgent( $user_agent )
             ->addPhoneNumber( new PhoneNumber( $phone_number ) );
+
+        if ( ! empty( $ip_address ) ) {
+            $customer_details->addIpAddress( new IpAddress( $ip_address ) );
+        }
+
+        if ( ! empty( $user_agent ) ) {
+            $customer_details->addUserAgent( $user_agent );
+        }
+
+        return $customer_details;
     }
 
     /**
@@ -152,4 +160,5 @@ class CustomerService {
             ->addCountry( new Country( $country ) )
             ->addZipCode( $zip_code );
     }
+
 }

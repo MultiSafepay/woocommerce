@@ -23,6 +23,8 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
+
 /**
  * Define the Gateways.
  *
@@ -150,6 +152,17 @@ class Gateways {
         $gateway = self::GATEWAYS[ $gateway_id ];
 
         return ( new $gateway() )->get_payment_method_code();
+    }
+
+    /**
+     * Return the gateway info for the given gateway_id
+     *
+     * @param string $gateway_id
+     * @return GatewayInfoInterface
+     */
+    public static function get_gateway_info_by_gateway_id( string $gateway_id ): GatewayInfoInterface {
+        $gateway = self::GATEWAYS[ $gateway_id ];
+        return ( new $gateway() )->get_gateway_info();
     }
 
 }

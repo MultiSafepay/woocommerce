@@ -178,6 +178,12 @@ class Main {
         $this->loader->add_action( 'woocommerce_order_status_' . str_replace( 'wc-', '', get_option( 'multisafepay_shipped_status', 'wc-completed' ) ), $payment_methods, 'set_msp_transaction_as_shipped', 10, 1 );
         // Set MSP transaction as invoiced
         $this->loader->add_action( 'woocommerce_order_status_' . str_replace( 'wc-', '', get_option( 'multisafepay_invoiced_status', 'wc-completed' ) ), $payment_methods, 'set_msp_transaction_as_invoiced', 11, 1 );
+        // Generate orders from backend.
+        if ( is_admin() ) {
+            $this->loader->add_action( 'woocommerce_new_order', $payment_methods, 'generate_orders_from_backend', 10, 2 );
+        }
+        // Replace checkout payment url if a payment link has been generated in backoffice
+        $this->loader->add_filter( 'woocommerce_get_checkout_payment_url', $payment_methods, 'replace_checkout_payment_url', 10, 2 );
     }
 
 	/**
