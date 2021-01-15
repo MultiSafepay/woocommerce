@@ -44,7 +44,7 @@ class Activator {
      */
 	public function activate( bool $network_wide ): void {
 	    if ( ! current_user_can( 'activate_plugins' ) ) {
-            die( esc_html__( 'It seems you don\'t have permissions to activate plugins', 'multisafepay' ) );
+            die( esc_html__( 'It seems you don\'t have permission to activate plugins', 'multisafepay' ) );
         }
         if ( ( ! is_multisite() ) || ( is_multisite() && ! $network_wide ) ) {
             $this->activate_plugin_single_site();

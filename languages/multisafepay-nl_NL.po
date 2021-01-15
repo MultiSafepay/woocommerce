@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MultiSafepay\n"
 "POT-Creation-Date: 2021-01-04 21:53+0100\n"
-"PO-Revision-Date: 2021-01-14 11:02+0000\n"
+"PO-Revision-Date: 2021-01-15 11:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: Nederlands\n"
 "Language: nl_NL\n"
@@ -127,7 +127,7 @@ msgstr ""
 msgid "Account"
 msgstr "Account"
 
-#: src/PaymentMethods/BasePaymentMethod.php:325
+#: src/PaymentMethods/BasePaymentMethod.php:408
 msgid "Account holder is a required field"
 msgstr "Rekeninghouder is een verplicht veld"
 
@@ -247,7 +247,7 @@ msgstr ""
 msgid "Bank Account"
 msgstr "Bankrekening"
 
-#: src/PaymentMethods/BasePaymentMethod.php:315
+#: src/PaymentMethods/BasePaymentMethod.php:398
 msgid "Bank Account is a required field"
 msgstr "Bankrekening is een verplicht veld"
 
@@ -318,7 +318,7 @@ msgstr ""
 " <br/>Lees meer over <a href=\"%1$s\" target=\"_blank\">%2$s</a> in het "
 "documentatiecentrum van MultiSafepay."
 
-#: src/PaymentMethods/BasePaymentMethod.php:195
+#: src/PaymentMethods/BasePaymentMethod.php:225
 msgid "Country"
 msgstr "Land"
 
@@ -327,12 +327,11 @@ msgid "Credit Card"
 msgstr "Creditcard"
 
 #: templates/multisafepay-checkout-fields-display.php:71
-#, fuzzy
 #| msgid "Date of birth"
 msgid "Date of birth"
 msgstr "Geboortedatum"
 
-#: src/PaymentMethods/BasePaymentMethod.php:311
+#: src/PaymentMethods/BasePaymentMethod.php:394
 msgid "Date of birth is a required field"
 msgstr "Geboortedatum is een verplicht veld"
 
@@ -348,7 +347,7 @@ msgstr "Debug modus"
 msgid "Declined"
 msgstr "Geweigerd"
 
-#: src/PaymentMethods/BasePaymentMethod.php:369
+#: src/PaymentMethods/BasePaymentMethod.php:454
 msgid "Default value set in common settings"
 msgstr "Standaardwaarde ingesteld bij de algemene instellingen"
 
@@ -360,7 +359,7 @@ msgstr "Verwijder de instellingen van deze plugin bij de-installatie"
 msgid "Delete settings if uninstall"
 msgstr "Verwijder de instellingen bij de-installatie"
 
-#: src/PaymentMethods/BasePaymentMethod.php:170
+#: src/PaymentMethods/BasePaymentMethod.php:200
 msgid "Description"
 msgstr "Beschrijving"
 
@@ -425,7 +424,7 @@ msgstr ""
 "href=\"%1$s\" target=\"_blank\">%2$s</a> in het documentatiecentrum van "
 "MultiSafepay."
 
-#: src/PaymentMethods/BasePaymentMethod.php:158
+#: src/PaymentMethods/BasePaymentMethod.php:188
 msgid "Enable/Disable"
 msgstr "Activeer/Deactiveer"
 
@@ -444,13 +443,17 @@ msgstr ""
 "consumenten. <br/>Lees meer over <a href=\"%1$s\" target=\"_blank\">%2$s</a> "
 "in het documentatiecentrum van MultiSafepay."
 
+#: src/PaymentMethods/BasePaymentMethod.php:308
+msgid "Error:"
+msgstr "Fout:"
+
 #: src/Settings/SettingsFields.php:360
 msgid "Expired"
 msgstr "Verlopen"
 
 #: templates/partials/multisafepay-settings-support-display.php:36
 msgid "FAQ"
-msgstr ""
+msgstr "Veelgestelde vragen"
 
 #: src/PaymentMethods/Fashioncheque.php:53
 msgid "Fashioncheque"
@@ -472,7 +475,7 @@ msgstr ""
 msgid "For developers:"
 msgstr "Voor ontwikkelaars:"
 
-#: src/PaymentMethods/BasePaymentMethod.php:198
+#: src/PaymentMethods/BasePaymentMethod.php:228
 msgid ""
 "For most operating system and configurations, you must hold Ctrl + D or Cmd "
 "+ D on your keyboard, to select more than one value."
@@ -495,7 +498,7 @@ msgstr ""
 msgid "Gender"
 msgstr "Geslacht"
 
-#: src/PaymentMethods/BasePaymentMethod.php:307
+#: src/PaymentMethods/BasePaymentMethod.php:390
 msgid "Gender is a required field"
 msgstr "Geslacht is een verplicht veld"
 
@@ -539,12 +542,12 @@ msgstr ""
 msgid "https://www.multisafepay.com"
 msgstr ""
 
-#: src/PaymentMethods/BasePaymentMethod.php:320
-#: src/PaymentMethods/BasePaymentMethod.php:334
+#: src/PaymentMethods/BasePaymentMethod.php:403
+#: src/PaymentMethods/BasePaymentMethod.php:417
 msgid "IBAN does not seems valid"
 msgstr "IBAN is ongeldig"
 
-#: src/PaymentMethods/BasePaymentMethod.php:329
+#: src/PaymentMethods/BasePaymentMethod.php:412
 msgid "IBAN is a required field"
 msgstr "IBAN is een verplicht veld"
 
@@ -556,7 +559,7 @@ msgstr ""
 msgid "iDEAL QR"
 msgstr ""
 
-#: src/PaymentMethods/BasePaymentMethod.php:197
+#: src/PaymentMethods/BasePaymentMethod.php:227
 msgid ""
 "If you select one or more countries, this payment method won't show in the "
 "checkout page, if the payment address`s country of the customer match with "
@@ -601,11 +604,11 @@ msgstr ""
 msgid "ING Home'Pay"
 msgstr ""
 
-#: src/PaymentMethods/BasePaymentMethod.php:176
+#: src/PaymentMethods/BasePaymentMethod.php:206
 msgid "Initial Order Status"
 msgstr "Initiële order status"
 
-#: src/PaymentMethods/BasePaymentMethod.php:179
+#: src/PaymentMethods/BasePaymentMethod.php:209
 msgid "Initial order status for this payment method."
 msgstr "Initiële order status voor deze betaalmethode."
 
@@ -614,8 +617,8 @@ msgid "Initialized"
 msgstr "geïnitialiseerd"
 
 #: src/PaymentMethods/PaymentMethodCallback.php:94
-#: src/PaymentMethods/BasePaymentMethod.php:256
-#: src/PaymentMethods/BasePaymentMethod.php:256
+#: src/PaymentMethods/BasePaymentMethod.php:337
+#: src/PaymentMethods/BasePaymentMethod.php:337
 msgid "Invalid request"
 msgstr "Foutief verzoek"
 
@@ -623,7 +626,7 @@ msgstr "Foutief verzoek"
 msgid "Issuer"
 msgstr "Banken"
 
-#: src/PaymentMethods/BasePaymentMethod.php:281
+#: src/PaymentMethods/BasePaymentMethod.php:363
 #, php-format
 msgid ""
 "It seems %1$s is not available for your MultiSafepay account. <a "
@@ -640,6 +643,10 @@ msgstr "Dit is geen geldige API Key voor de live omgeving"
 msgid "It seems the Test API Key is not valid on the test environment"
 msgstr "Dit is geen geldige API Key voor de test omgeving"
 
+#: src/Utils/Activator.php:47
+msgid "It seems you don't have permission to activate plugins"
+msgstr "U heeft geen rechten om de plugin te activeren"
+
 #: templates/partials/multisafepay-settings-support-display.php:86
 msgid "Italy"
 msgstr "Italië"
@@ -649,7 +656,6 @@ msgid "KBC"
 msgstr ""
 
 #: src/PaymentMethods/Klarna.php:53
-#, fuzzy
 msgid "Klarna - Pay in 30 days"
 msgstr "Klarna - Betaal later in 14 dagen"
 
@@ -673,11 +679,11 @@ msgstr "Handleiding"
 msgid "Mastercard"
 msgstr ""
 
-#: src/PaymentMethods/BasePaymentMethod.php:189
+#: src/PaymentMethods/BasePaymentMethod.php:219
 msgid "Max Amount"
 msgstr "Maximaal bedrag"
 
-#: src/PaymentMethods/BasePaymentMethod.php:183
+#: src/PaymentMethods/BasePaymentMethod.php:213
 msgid "Min Amount"
 msgstr "Minimaal bedrag"
 
@@ -685,11 +691,14 @@ msgstr "Minimaal bedrag"
 msgid "Miss"
 msgstr "Mej."
 
-#: src/Utils/Activator.php:66
+#: src/Utils/Activator.php:69
 #, php-format
+#| msgid ""
+#| "Missing dependencies: %s <br>Please install these extensions to use the "
+#| "Multisafepay WooCommerce plugin"
 msgid ""
-"Missing dependencies: %s <br>Please install these extensions to use the "
-"Multisafepay WooCommerce plugin"
+"Missing dependencies: %s. Please install these extensions to use the "
+"MultiSafepay WooCommerce plugin"
 msgstr ""
 "Ontbrekende afhankelijkheden: %s <br/>Installeer deze extensies om de "
 "Multisafepay WooCommerce plugin te kunnen gebruiken."
@@ -789,6 +798,10 @@ msgstr "Bestelstatus"
 msgid "Parfumcadeaukaart"
 msgstr ""
 
+#: src/PaymentMethods/BasePaymentMethod.php:296
+msgid "Partial refund is not possible with billing suite payment methods"
+msgstr "Gedeeltelijke refund is niet mogelijk bij de gebruikte betaalmethode"
+
 #: src/Settings/SettingsFields.php:372
 msgid "Partial refunded"
 msgstr "Deels terugbetaald"
@@ -796,6 +809,12 @@ msgstr "Deels terugbetaald"
 #: src/PaymentMethods/PayAfterDelivery.php:53
 msgid "Pay After Delivery"
 msgstr "Betaal Na Ontvangst"
+
+#. %s: order id
+#: src/Services/OrderService.php:89
+#, php-format
+msgid "Payment for order: %s"
+msgstr "Betaling voor order: %s"
 
 #: templates/multisafepay-settings-display.php:31
 msgid "Payment Methods"
@@ -844,6 +863,17 @@ msgid ""
 msgstr ""
 "Lees onze documentatie voor meer informatie over MultiSafepay en hoe u aan "
 "de slag kunt:"
+
+#: src/PaymentMethods/BasePaymentMethod.php:320
+#, php-format
+msgid "Refund for Order ID: %1$s with transactionId: %2$s gives message: %3$s."
+msgstr ""
+"Terugbetaling van order: %1$s met transactie-id: %2$s geeft de melding: %3$s."
+
+#: src/PaymentMethods/BasePaymentMethod.php:313
+#, php-format
+msgid "Refund of %1$s%2$s has been processed successfully."
+msgstr "Terugbetaling van %1$s%2$s is gelukt."
 
 #: src/Settings/SettingsFields.php:368
 msgid "Refunded"
@@ -894,7 +924,7 @@ msgstr "Instellingen"
 msgid "Shipped"
 msgstr "Verzonden"
 
-#: src/Services/ShoppingCartService.php:166
+#: src/Services/ShoppingCartService.php:152
 msgid "Shipping"
 msgstr "Verzendmethode"
 
@@ -991,16 +1021,16 @@ msgstr ""
 "de consument 30 dagen de tijd heeft om de transactie af te ronden via de "
 "betaallink"
 
-#: src/PaymentMethods/BasePaymentMethod.php:172
+#: src/PaymentMethods/BasePaymentMethod.php:202
 msgid "This controls the description which the user sees during checkout."
 msgstr ""
 "Vul hier de omschrijving in die de consument ziet tijdens het afrekenen."
 
-#: src/PaymentMethods/BasePaymentMethod.php:166
+#: src/PaymentMethods/BasePaymentMethod.php:196
 msgid "This controls the title which the user sees during checkout."
 msgstr "Vul hier de titel in die de consument ziet tijdens het afrekenen."
 
-#: src/PaymentMethods/BasePaymentMethod.php:191
+#: src/PaymentMethods/BasePaymentMethod.php:221
 msgid ""
 "This payment method is not shown in the checkout if the order total exceeds "
 "a certain amount. Leave blank for no restrictions."
@@ -1008,7 +1038,7 @@ msgstr ""
 "Indien gevuld, wordt deze betaalmethode niet getoond bij het afrekenen als "
 "het ordertotaal hoger is dan het gedefinieerde bedrag."
 
-#: src/PaymentMethods/BasePaymentMethod.php:185
+#: src/PaymentMethods/BasePaymentMethod.php:215
 msgid ""
 "This payment method is not shown in the checkout if the order total is lower "
 "than the defined amount. Leave blank for no restrictions."
@@ -1016,7 +1046,7 @@ msgstr ""
 "Indien gevuld, wordt deze betaalmethode niet getoond bij het afrekenen als "
 "het ordertotaal lager is dan het gedefinieerde bedrag."
 
-#: src/PaymentMethods/BasePaymentMethod.php:164
+#: src/PaymentMethods/BasePaymentMethod.php:194
 msgid "Title"
 msgstr "Titel"
 
@@ -1024,8 +1054,8 @@ msgstr "Titel"
 msgid "To use this plugin you need a MultiSafepay account."
 msgstr "Om deze plugin te gebruiken heeft u een MultiSafepay account nodig."
 
-#: src/PaymentMethods/BasePaymentMethod.php:221
-#: src/PaymentMethods/BasePaymentMethod.php:225
+#: src/PaymentMethods/BasePaymentMethod.php:252
+#: src/PaymentMethods/BasePaymentMethod.php:256
 msgid "Transaction has been initialized."
 msgstr "De transactie is geïnitialiseerd."
 
