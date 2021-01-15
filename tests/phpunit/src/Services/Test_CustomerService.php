@@ -43,6 +43,7 @@ class Test_CustomerService extends WP_UnitTestCase {
                     'get_billing_phone',
                     'get_billing_first_name',
                     'get_billing_last_name',
+                    'get_billing_company',
                     'get_shipping_address_1',
                     'get_shipping_address_2',
                     'get_shipping_country',
@@ -50,6 +51,7 @@ class Test_CustomerService extends WP_UnitTestCase {
                     'get_shipping_city',
                     'get_shipping_first_name',
                     'get_shipping_last_name',
+                    'get_shipping_company',
                     'get_shipping_postcode',
                     'get_customer_ip_address',
                     'get_customer_user_agent'
@@ -66,6 +68,7 @@ class Test_CustomerService extends WP_UnitTestCase {
         $this->mock->method('get_billing_phone')->will($this->returnValue('123456789'));
         $this->mock->method('get_billing_first_name')->will($this->returnValue('John'));
         $this->mock->method('get_billing_last_name')->will($this->returnValue('Doe'));
+        $this->mock->method('get_billing_company')->will($this->returnValue('MultiSafepay'));
         $this->mock->method('get_customer_ip_address')->will($this->returnValue('127.0.0.1'));
         $this->mock->method('get_customer_user_agent')->will($this->returnValue('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36'));
         $this->mock->method('get_shipping_address_1')->will($this->returnValue('Kraanspoor'));
@@ -76,6 +79,7 @@ class Test_CustomerService extends WP_UnitTestCase {
         $this->mock->method('get_shipping_postcode')->will($this->returnValue('1033 SC'));
         $this->mock->method('get_shipping_first_name')->will($this->returnValue('John'));
         $this->mock->method('get_shipping_last_name')->will($this->returnValue('Doe'));
+        $this->mock->method('get_shipping_company')->will($this->returnValue('MultiSafepay'));
     }
 
     /**
@@ -87,6 +91,7 @@ class Test_CustomerService extends WP_UnitTestCase {
         $output = $customer_details->getData();
         $this->assertArrayHasKey( 'firstname', $output );
         $this->assertArrayHasKey( 'lastname', $output );
+        $this->assertArrayHasKey( 'company_name', $output );
         $this->assertArrayHasKey( 'address1', $output );
         $this->assertArrayHasKey( 'address2', $output );
         $this->assertArrayHasKey( 'house_number', $output );
@@ -112,6 +117,7 @@ class Test_CustomerService extends WP_UnitTestCase {
         $output = $customer_details->getData();
         $this->assertArrayHasKey( 'firstname', $output );
         $this->assertArrayHasKey( 'lastname', $output );
+        $this->assertArrayHasKey( 'company_name', $output );
         $this->assertArrayHasKey( 'address1', $output );
         $this->assertArrayHasKey( 'address2', $output );
         $this->assertArrayHasKey( 'house_number', $output );
@@ -137,6 +143,7 @@ class Test_CustomerService extends WP_UnitTestCase {
         $output = $customer_details->getData();
         $this->assertEquals( 'John', $output['firstname'] );
         $this->assertEquals( 'Doe', $output['lastname'] );
+        $this->assertEquals( 'MultiSafepay', $output['company_name'] );
         $this->assertEquals( 'Kraanspoor', $output['address1'] );
         $this->assertEquals( '', $output['address2'] );
         $this->assertEquals( '39C', $output['house_number'] );
@@ -162,6 +169,7 @@ class Test_CustomerService extends WP_UnitTestCase {
         $output = $customer_details->getData();
         $this->assertEquals( 'John', $output['firstname'] );
         $this->assertEquals( 'Doe', $output['lastname'] );
+        $this->assertEquals( 'MultiSafepay', $output['company_name'] );
         $this->assertEquals( 'Kraanspoor', $output['address1'] );
         $this->assertEquals( '', $output['address2'] );
         $this->assertEquals( '39C', $output['house_number'] );

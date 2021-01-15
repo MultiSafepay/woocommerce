@@ -61,7 +61,8 @@ class CustomerService {
             $order->get_billing_first_name(),
             $order->get_billing_last_name(),
             $order->get_customer_ip_address() ? $order->get_customer_ip_address() : '',
-            $order->get_customer_user_agent() ? $order->get_customer_user_agent() : ''
+            $order->get_customer_user_agent() ? $order->get_customer_user_agent() : '',
+            $order->get_billing_company()
         );
     }
 
@@ -86,7 +87,8 @@ class CustomerService {
             $order->get_shipping_first_name(),
             $order->get_shipping_last_name(),
             $order->get_customer_ip_address() ? $order->get_customer_ip_address() : $this->get_the_user_ip(),
-            $order->get_customer_user_agent() ? $order->get_customer_user_agent() : $this->get_the_user_agent()
+            $order->get_customer_user_agent() ? $order->get_customer_user_agent() : $this->get_the_user_agent(),
+            $order->get_shipping_company()
         );
     }
 
@@ -98,6 +100,7 @@ class CustomerService {
      * @param string  $last_name
      * @param string  $ip_address
      * @param string  $user_agent
+     * @param string  $company_name
      * @return CustomerDetails
      */
     private function create_customer(
@@ -107,7 +110,8 @@ class CustomerService {
         string $first_name,
         string $last_name,
         string $ip_address,
-        string $user_agent
+        string $user_agent,
+        string $company_name = null
     ): CustomerDetails {
         $customer_details = new CustomerDetails();
         $customer_details
@@ -115,7 +119,8 @@ class CustomerService {
             ->addEmailAddress( new EmailAddress( $email_address ) )
             ->addFirstName( $first_name )
             ->addLastName( $last_name )
-            ->addPhoneNumber( new PhoneNumber( $phone_number ) );
+            ->addPhoneNumber( new PhoneNumber( $phone_number ) )
+            ->addCompanyName( $company_name ? $company_name : '' );
 
         if ( ! empty( $ip_address ) ) {
             $customer_details->addIpAddress( new IpAddress( $ip_address ) );

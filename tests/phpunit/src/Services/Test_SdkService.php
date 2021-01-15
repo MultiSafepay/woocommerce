@@ -96,7 +96,4 @@ class Test_SdkService extends WP_UnitTestCase {
         $this->assertInstanceOf( GatewayManager::class, $output);
     }
 
-
-
-
 }
