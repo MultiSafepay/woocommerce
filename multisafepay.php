@@ -30,11 +30,11 @@
  * Copyright:               Copyright (c) MultiSafepay, Inc. (https://www.multisafepay.com)
  * License:                 GNU General Public License v3.0
  * License URI:             http://www.gnu.org/licenses/gpl-3.0.html
- * Requires at least:       5.0.0
- * Tested up to:            5.5.1
+ * Requires at least:       5.6
+ * Tested up to:            5.6
  * WC requires at least:    4.2.0
- * WC tested up to:         4.6.0
- * Requires PHP:            7.2
+ * WC tested up to:         4.9.0
+ * Requires PHP:            7.4
  * Text Domain:             multisafepay
  * Domain Path:             /languages
  */
