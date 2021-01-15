@@ -45,27 +45,33 @@ abstract class BaseBillingSuitePaymentMethod extends BasePaymentMethod {
      * @return Meta
      */
     public function get_gateway_info( array $data = null ): GatewayInfoInterface {
-        $gateway_info = new Meta();
+        if (
+            ( isset( $_POST['woocommerce-process-checkout-nonce'] ) && wp_verify_nonce( $_POST['woocommerce-process-checkout-nonce'], 'woocommerce-process_checkout' ) ) ||
+            ( isset( $_POST['woocommerce-pay-nonce'] ) && wp_verify_nonce( $_POST['woocommerce-pay-nonce'], 'woocommerce-pay' ) )
+        ) {
 
-        if ( isset( $_POST[ $this->id . '_gender' ] ) ) {
-            $gateway_info->addGender( new Gender( $_POST[ $this->id . '_gender' ] ) );
+            $gateway_info = new Meta();
+
+            if ( isset( $_POST[ $this->id . '_gender' ] ) ) {
+                $gateway_info->addGender( new Gender( $_POST[ $this->id . '_gender' ] ) );
+            }
+
+            if ( isset( $_POST[ $this->id . '_birthday' ] ) ) {
+                $gateway_info->addBirthday( new Date( $_POST[ $this->id . '_birthday' ] ) );
+            }
+
+            if ( isset( $_POST[ $this->id . '_bank_account' ] ) ) {
+                $gateway_info->addBankAccount( new BankAccount( $_POST[ $this->id . '_bank_account' ] ) );
+            }
+
+            if ( isset( $data ) && ! empty( $data['order_id'] ) ) {
+                $order = wc_get_order( $data['order_id'] );
+                $gateway_info->addEmailAddress( new EmailAddress( $order->get_billing_email() ) );
+                $gateway_info->addPhone( new PhoneNumber( $order->get_billing_phone() ) );
+            }
+
+            return $gateway_info;
         }
-
-        if ( isset( $_POST[ $this->id . '_birthday' ] ) ) {
-            $gateway_info->addBirthday( new Date( $_POST[ $this->id . '_birthday' ] ) );
-        }
-
-        if ( isset( $_POST[ $this->id . '_bank_account' ] ) ) {
-            $gateway_info->addBankAccount( new BankAccount( $_POST[ $this->id . '_bank_account' ] ) );
-        }
-
-        if ( isset( $data ) && ! empty( $data['order_id'] ) ) {
-            $order = wc_get_order( $data['order_id'] );
-            $gateway_info->addEmailAddress( new EmailAddress( $order->get_billing_email() ) );
-            $gateway_info->addPhone( new PhoneNumber( $order->get_billing_phone() ) );
-        }
-
-        return $gateway_info;
     }
 
 }

@@ -310,13 +310,15 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         }
 
         if ( ! $msg ) {
-            $order->add_order_note( sprintf( __( 'Refund of %1$s%2$s has been processed successfully.', 'multisafepay' ), $order->get_currency(), $amount ) );
+            /* translators: %1$: The currency code. %2$ The transaction amount */
+            $order->add_order_note( sprintf( __( 'Refund of %1$s%2$s has been processed successfully.', 'multisafepay' ), get_woocommerce_currency_symbol( $order->get_currency() ), $amount ) );
 
             return true;
         }
 
         if ( get_option( 'multisafepay_debugmode', false ) ) {
-            $logger  = wc_get_logger();
+            $logger = wc_get_logger();
+            /* translators: %1$: The order ID. %2$ The PSP transaction ID */
             $message = sprintf( __( 'Refund for Order ID: %1$s with transactionId: %2$s gives message: %3$s.', 'multisafepay' ), $order_id, $msp_transaction->getTransactionId(), $msg );
             $logger->log( 'info', $message );
         }
@@ -360,6 +362,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         }
         if ( ! in_array( $this->gateway_code, $available_gateways, true ) ) {
             $message = sprintf(
+                /* translators: %1$: The payment method title */
                 __( 'It seems %1$s is not available for your MultiSafepay account. <a href="%2$s">Contact support</a>', 'multisafepay' ),
                 $this->get_payment_method_title(),
                 admin_url( 'admin.php?page=multisafepay-settings&tab=support' )
@@ -386,43 +389,51 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      */
     public function validate_fields(): bool {
 
-        if ( ( isset( $_POST[ $this->id . '_gender' ] ) ) && '' === $_POST[ $this->id . '_gender' ] ) {
-            wc_add_notice( __( 'Gender is a required field', 'multisafepay' ), 'error' );
-        }
+        if (
+            ( isset( $_POST['woocommerce-process-checkout-nonce'] ) && wp_verify_nonce( $_POST['woocommerce-process-checkout-nonce'], 'woocommerce-process_checkout' ) ) ||
+            ( isset( $_POST['woocommerce-pay-nonce'] ) && wp_verify_nonce( $_POST['woocommerce-pay-nonce'], 'woocommerce-pay' ) )
+        ) {
 
-        if ( isset( $_POST[ $this->id . '_birthday' ] ) && '' === $_POST[ $this->id . '_birthday' ] ) {
-            wc_add_notice( __( 'Date of birth is a required field', 'multisafepay' ), 'error' );
-        }
-
-        if ( isset( $_POST[ $this->id . '_bank_account' ] ) && '' === $_POST[ $this->id . '_bank_account' ] ) {
-            wc_add_notice( __( 'Bank Account is a required field', 'multisafepay' ), 'error' );
-        }
-
-        if ( isset( $_POST[ $this->id . '_bank_account' ] ) && '' !== $_POST[ $this->id . '_bank_account' ] ) {
-            if ( ! $this->validate_iban( $_POST[ $this->id . '_bank_account' ] ) ) {
-                wc_add_notice( __( 'IBAN does not seems valid', 'multisafepay' ), 'error' );
+            if ( ( isset( $_POST[ $this->id . '_gender' ] ) ) && '' === $_POST[ $this->id . '_gender' ] ) {
+                wc_add_notice( __( 'Gender is a required field', 'multisafepay' ), 'error' );
             }
-        }
 
-        if ( isset( $_POST[ $this->id . '_account_holder_name' ] ) && '' === $_POST[ $this->id . '_account_holder_name' ] ) {
-            wc_add_notice( __( 'Account holder is a required field', 'multisafepay' ), 'error' );
-        }
-
-        if ( isset( $_POST[ $this->id . '_account_holder_iban' ] ) && '' === $_POST[ $this->id . '_account_holder_iban' ] ) {
-            wc_add_notice( __( 'IBAN is a required field', 'multisafepay' ), 'error' );
-        }
-
-        if ( isset( $_POST[ $this->id . '_account_holder_iban' ] ) && '' !== $_POST[ $this->id . '_account_holder_iban' ] ) {
-            if ( ! $this->validate_iban( $_POST[ 'multisafeay_' . $this->id . '_account_holder_iban' ] ) ) {
-                wc_add_notice( __( 'IBAN does not seems valid', 'multisafepay' ), 'error' );
+            if ( isset( $_POST[ $this->id . '_birthday' ] ) && '' === $_POST[ $this->id . '_birthday' ] ) {
+                wc_add_notice( __( 'Date of birth is a required field', 'multisafepay' ), 'error' );
             }
+
+            if ( isset( $_POST[ $this->id . '_bank_account' ] ) && '' === $_POST[ $this->id . '_bank_account' ] ) {
+                wc_add_notice( __( 'Bank Account is a required field', 'multisafepay' ), 'error' );
+            }
+
+            if ( isset( $_POST[ $this->id . '_bank_account' ] ) && '' !== $_POST[ $this->id . '_bank_account' ] ) {
+                if ( ! $this->validate_iban( $_POST[ $this->id . '_bank_account' ] ) ) {
+                    wc_add_notice( __( 'IBAN does not seems valid', 'multisafepay' ), 'error' );
+                }
+            }
+
+            if ( isset( $_POST[ $this->id . '_account_holder_name' ] ) && '' === $_POST[ $this->id . '_account_holder_name' ] ) {
+                wc_add_notice( __( 'Account holder is a required field', 'multisafepay' ), 'error' );
+            }
+
+            if ( isset( $_POST[ $this->id . '_account_holder_iban' ] ) && '' === $_POST[ $this->id . '_account_holder_iban' ] ) {
+                wc_add_notice( __( 'IBAN is a required field', 'multisafepay' ), 'error' );
+            }
+
+            if ( isset( $_POST[ $this->id . '_account_holder_iban' ] ) && '' !== $_POST[ $this->id . '_account_holder_iban' ] ) {
+                if ( ! $this->validate_iban( $_POST[ $this->id . '_account_holder_iban' ] ) ) {
+                    wc_add_notice( __( 'IBAN does not seems valid', 'multisafepay' ), 'error' );
+                }
+            }
+
+            if ( wc_get_notices( 'error' ) ) {
+                return false;
+            }
+
+            return true;
+
         }
 
-        if ( wc_get_notices( 'error' ) ) {
-            return false;
-        }
-
-        return true;
     }
 
     /**

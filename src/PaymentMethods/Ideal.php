@@ -62,6 +62,7 @@ class Ideal extends BasePaymentMethod {
      */
     public function get_payment_method_description(): string {
         $method_description = sprintf(
+            /* translators: %2$: The payment method title */
             __( 'The leading ecommerce payment method in the Netherlands connecting all major Dutch banks. <br />Read more about <a href="%1$s" target="_blank">%2$s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay' ),
             'https://docs.multisafepay.com/payment-methods/banks/ideal/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
             $this->get_payment_method_title()
@@ -98,7 +99,6 @@ class Ideal extends BasePaymentMethod {
     public function payment_fields(): void {
         $issuer_service = new IssuerService();
         $issuers        = $issuer_service->get_issuers( $this->get_payment_method_code() );
-
         require $this->plugin_dir_path . 'templates/multisafepay-checkout-fields-display.php';
     }
 
@@ -107,13 +107,16 @@ class Ideal extends BasePaymentMethod {
      * @return IdealGatewayInfo
      */
     public function get_gateway_info( array $data = null ): GatewayInfoInterface {
-        $gateway_info = new IdealGatewayInfo();
-
-        if ( isset( $_POST[ $this->id . '_issuer_id' ] ) ) {
-            $gateway_info->addIssuerId( $_POST[ $this->id . '_issuer_id' ] );
+        if (
+            ( isset( $_POST['woocommerce-process-checkout-nonce'] ) && wp_verify_nonce( $_POST['woocommerce-process-checkout-nonce'], 'woocommerce-process_checkout' ) ) ||
+            ( isset( $_POST['woocommerce-pay-nonce'] ) && wp_verify_nonce( $_POST['woocommerce-pay-nonce'], 'woocommerce-pay' ) )
+        ) {
+            $gateway_info = new IdealGatewayInfo();
+            if ( isset( $_POST[ $this->id . '_issuer_id' ] ) ) {
+                $gateway_info->addIssuerId( $_POST[ $this->id . '_issuer_id' ] );
+            }
+            return $gateway_info;
         }
-
-        return $gateway_info;
     }
 
     /**
@@ -124,12 +127,10 @@ class Ideal extends BasePaymentMethod {
      */
     public function validate_gateway_info( GatewayInfoInterface $gateway_info ): bool {
         $data = $gateway_info->getData();
-
         if ( empty( $data['issuer_id'] ) ) {
             $this->type = 'redirect';
             return false;
         }
-
         return true;
     }
 

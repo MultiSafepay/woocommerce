@@ -48,18 +48,9 @@
         <exclude-pattern>*/src/PaymentMethods/*</exclude-pattern>
     </rule>
 
-    <!-- Exclude all gateways and giftcards classes from this rule -->
-    <rule ref="WordPress.WP.I18n.MissingTranslatorsComment">
-        <exclude-pattern>*/src/PaymentMethods/*</exclude-pattern>
-    </rule>
-
-    <!-- Exclude nonce verification for uninstall.php file and from some payment methods in which we use GatewayInterface -->
+    <!-- Exclude nonce verification for uninstall.php file. According with documentation this is not required. -->
     <rule ref="WordPress.Security.NonceVerification.Missing">
         <exclude-pattern>uninstall.php</exclude-pattern>
-        <exclude-pattern>*/src/PaymentMethods/BasePaymentMethod.php</exclude-pattern>
-        <exclude-pattern>*/src/PaymentMethods/BaseBillingSuitePaymentMethod.php</exclude-pattern>
-        <exclude-pattern>*/src/PaymentMethods/Ideal.php</exclude-pattern>
-        <exclude-pattern>*/src/PaymentMethods/Dirdeb.php</exclude-pattern>
     </rule>
 
     <!-- Exclude nonce verification recomendation -->

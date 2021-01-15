@@ -58,6 +58,7 @@ class PayAfterDelivery extends BaseBillingSuitePaymentMethod {
      */
     public function get_payment_method_description(): string {
         $method_description = sprintf(
+            /* translators: %2$: The payment method title */
             __( 'Suitable for Dutch merchants allowing consumers to pay after they have received their order. <br />Read more about <a href="%1$s" target="_blank">%2$s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay' ),
             'https://docs.multisafepay.com/payment-methods/billing-suite/pay-after-delivery/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
             $this->get_payment_method_title()
