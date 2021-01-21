@@ -74,13 +74,14 @@ register_activation_hook( __FILE__, 'activate_multisafepay' );
 
 /**
  * Init plugin
- * Since all actions are loading via hooks, init Main class in bootstrap file is ok
  *
  * @since    4.0.0
  * @see      https://developer.wordpress.org/plugins/hooks/
  */
 function init_multisafepay() {
-	$plugin = new Main();
-	$plugin->init();
+    if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ), true ) ) {
+        $plugin = new Main();
+        $plugin->init();
+    }
 }
 init_multisafepay();
