@@ -43,7 +43,7 @@ class Dotpay extends BaseBillingSuitePaymentMethod {
      * @return string
      */
     public function get_payment_method_type(): string {
-        return 'direct';
+        return 'redirect';
     }
 
     /**
