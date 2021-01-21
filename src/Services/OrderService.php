@@ -129,7 +129,7 @@ class OrderService {
     private function create_payment_options( WC_Order $order, string $gateway_id ): PaymentOptions {
         $payment_options = new PaymentOptions();
         return $payment_options
-            ->addNotificationUrl( str_replace( 'https:', 'http:', add_query_arg( 'wc-api', $gateway_id, home_url( '/' ) ) ) )
+            ->addNotificationUrl( add_query_arg( 'wc-api', $gateway_id, home_url( '/' ) ) )
             ->addNotificationMethod( 'GET' )
             ->addCancelUrl( $order->get_cancel_order_url() )
             ->addRedirectUrl( $order->get_checkout_order_received_url() );
