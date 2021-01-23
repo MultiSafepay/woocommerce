@@ -110,18 +110,6 @@ class SettingsFields {
                     'setting_type' => 'string',
                     'sort_order'   => 3,
                 ),
-                array(
-                    'id'           => $this->plugin_name . '_debugmode',
-                    'label'        => __( 'Debug Mode', 'multisafepay' ),
-                    'description'  => '',
-                    'type'         => 'checkbox',
-                    'default'      => false,
-                    'placeholder'  => __( 'Debug Mode', 'multisafepay' ),
-                    'tooltip'      => __( 'Logs additional information to the system log', 'multisafepay' ),
-                    'callback'     => '',
-                    'setting_type' => 'boolean',
-                    'sort_order'   => 4,
-                ),
             ),
         );
     }
@@ -137,6 +125,18 @@ class SettingsFields {
             'intro'  => '',
             'fields' => array(
                 array(
+                    'id'           => $this->plugin_name . '_debugmode',
+                    'label'        => __( 'Debug Mode', 'multisafepay' ),
+                    'description'  => '',
+                    'type'         => 'checkbox',
+                    'default'      => false,
+                    'placeholder'  => __( 'Debug Mode', 'multisafepay' ),
+                    'tooltip'      => __( 'Logs additional information to the system log', 'multisafepay' ),
+                    'callback'     => '',
+                    'setting_type' => 'boolean',
+                    'sort_order'   => 1,
+                ),
+                array(
                     'id'           => $this->plugin_name . '_ga',
                     'label'        => __( 'Google Analytics', 'multisafepay' ),
                     'description'  => __( 'Google Analytics Universal Account ID. Format: UA-XXXXXXXXX', 'multisafepay' ),
@@ -146,7 +146,7 @@ class SettingsFields {
                     'tooltip'      => '',
                     'callback'     => '',
                     'setting_type' => 'string',
-                    'sort_order'   => 1,
+                    'sort_order'   => 2,
                 ),
                 array(
                     'id'           => $this->plugin_name . '_time_active',
@@ -158,7 +158,7 @@ class SettingsFields {
                     'tooltip'      => '',
                     'callback'     => '',
                     'setting_type' => 'int',
-                    'sort_order'   => 2,
+                    'sort_order'   => 3,
                 ),
                 array(
                     'id'           => $this->plugin_name . '_time_unit',
@@ -175,7 +175,7 @@ class SettingsFields {
                     'tooltip'      => '',
                     'callback'     => '',
                     'setting_type' => 'string',
-                    'sort_order'   => 3,
+                    'sort_order'   => 4,
                 ),
                 array(
                     'id'           => $this->plugin_name . '_second_chance',
@@ -187,7 +187,7 @@ class SettingsFields {
                     'tooltip'      => __( 'MultiSafepay will send two Second Chance reminder emails. In the emails, MultiSafepay will include a link to allow the consumer to finalize the payment. The first Second Chance email is sent 1 hour after the transaction was initiated and the second after 24 hours. To receive second chance emails, this option must also be activated within your MultiSafepay account, otherwise it will not work.', 'multisafepay' ),
                     'callback'     => '',
                     'setting_type' => 'boolean',
-                    'sort_order'   => 4,
+                    'sort_order'   => 5,
                 ),
                 array(
                     'id'           => $this->plugin_name . '_remove_all_settings',
@@ -199,7 +199,7 @@ class SettingsFields {
                     'tooltip'      => __( 'Delete all settings of this plugin if you uninstall', 'multisafepay' ),
                     'callback'     => '',
                     'setting_type' => 'boolean',
-                    'sort_order'   => 5,
+                    'sort_order'   => 6,
                 ),
             ),
         );
