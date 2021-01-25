@@ -273,6 +273,11 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * @throws  Exception
      */
     public function process_refund( $order_id, $amount = null, $reason = '' ): bool {
+
+        if ( 0.00 === (float) $amount ) {
+            throw new Exception( __( 'Amount of refund should be higher than 0', 'multisafepay' ) );
+        }
+
         $sdk                 = new SdkService();
         $transaction_manager = $sdk->get_transaction_manager();
 
