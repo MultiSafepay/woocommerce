@@ -41,11 +41,11 @@
 <?php } ?>
 
 <?php if ( $this->checkout_fields_ids ) { ?>
-    <?php if ( in_array( 'gender', $this->checkout_fields_ids, true ) ) { ?>
-        <p class="form-row form-row-wide validate-required" id="<?php echo esc_attr( $this->id ); ?>_gender_field">
-            <label for="<?php echo esc_attr( $this->id ); ?>_gender" class=""><?php echo esc_html__( 'Treatment', 'multisafepay' ); ?><abbr class="required" title="required">*</abbr></label>
+    <?php if ( in_array( 'salutation', $this->checkout_fields_ids, true ) ) { ?>
+        <p class="form-row form-row-wide validate-required" id="<?php echo esc_attr( $this->id ); ?>_salutation_field">
+            <label for="<?php echo esc_attr( $this->id ); ?>_salutation" class=""><?php echo esc_html__( 'Salutation', 'multisafepay' ); ?><abbr class="required" title="required">*</abbr></label>
             <span class="woocommerce-input-wrapper">
-                <select name="<?php echo esc_attr( $this->id ); ?>_gender" id="<?php echo esc_attr( $this->id ); ?>_gender">
+                <select name="<?php echo esc_attr( $this->id ); ?>_salutation" id="<?php echo esc_attr( $this->id ); ?>_salutation">
                     <option value=""><?php echo esc_html__( 'Select an option', 'multisafepay' ); ?></option>
                     <option value="male"><?php echo esc_html__( 'Mr', 'multisafepay' ); ?></option>
                     <option value="female"><?php echo esc_html__( 'Mrs', 'multisafepay' ); ?></option>
@@ -54,7 +54,7 @@
             </span>
         </p>
     <?php } ?>
-    <?php if ( in_array( 'sex', $this->checkout_fields_ids, true ) ) { ?>
+    <?php if ( in_array( 'gender', $this->checkout_fields_ids, true ) ) { ?>
         <p class="form-row form-row-wide validate-required" id="<?php echo esc_attr( $this->id ); ?>_gender_field">
             <label for="<?php echo esc_attr( $this->id ); ?>_gender" class=""><?php echo esc_html__( 'Gender', 'multisafepay' ); ?><abbr class="required" title="required">*</abbr></label>
             <span class="woocommerce-input-wrapper">

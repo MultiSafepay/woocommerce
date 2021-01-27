@@ -56,6 +56,10 @@ abstract class BaseBillingSuitePaymentMethod extends BasePaymentMethod {
                 $gateway_info->addGender( new Gender( $_POST[ $this->id . '_gender' ] ) );
             }
 
+            if ( isset( $_POST[ $this->id . '_salutation' ] ) ) {
+                $gateway_info->addGender( new Gender( $_POST[ $this->id . '_salutation' ] ) );
+            }
+
             if ( isset( $_POST[ $this->id . '_birthday' ] ) ) {
                 $gateway_info->addBirthday( new Date( $_POST[ $this->id . '_birthday' ] ) );
             }

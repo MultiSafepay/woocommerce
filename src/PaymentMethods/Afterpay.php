@@ -77,7 +77,7 @@ class Afterpay extends BaseBillingSuitePaymentMethod {
      * @return array
      */
     public function get_checkout_fields_ids(): array {
-        return array( 'gender', 'birthday' );
+        return array( 'salutation', 'birthday' );
     }
 
     /**

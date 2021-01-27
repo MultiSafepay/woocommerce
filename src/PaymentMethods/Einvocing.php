@@ -50,7 +50,7 @@ class Einvocing extends BaseBillingSuitePaymentMethod {
      * @return string
      */
     public function get_payment_method_title(): string {
-        return __( 'E-invocing', 'multisafepay' );
+        return __( 'E-Invoicing', 'multisafepay' );
     }
 
     /**

@@ -399,6 +399,10 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
             ( isset( $_POST['woocommerce-pay-nonce'] ) && wp_verify_nonce( $_POST['woocommerce-pay-nonce'], 'woocommerce-pay' ) )
         ) {
 
+            if ( ( isset( $_POST[ $this->id . '_salutation' ] ) ) && '' === $_POST[ $this->id . '_salutation' ] ) {
+                wc_add_notice( __( 'Salutation is a required field', 'multisafepay' ), 'error' );
+            }
+
             if ( ( isset( $_POST[ $this->id . '_gender' ] ) ) && '' === $_POST[ $this->id . '_gender' ] ) {
                 wc_add_notice( __( 'Gender is a required field', 'multisafepay' ), 'error' );
             }

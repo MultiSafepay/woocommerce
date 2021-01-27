@@ -77,7 +77,7 @@ class Santander extends BaseBillingSuitePaymentMethod {
      * @return array
      */
     public function get_checkout_fields_ids(): array {
-        return array( 'sex', 'birthday', 'bank_account' );
+        return array( 'gender', 'birthday', 'bank_account' );
     }
 
     /**
