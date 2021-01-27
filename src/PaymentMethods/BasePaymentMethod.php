@@ -64,7 +64,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      *
      * @var string
      */
-    protected $min_amount;
+    public $min_amount;
 
     /**
      * A custom initialized order status for this payment method
