@@ -27,7 +27,6 @@ use MultiSafepay\Api\Transactions\OrderRequest\Arguments\ShoppingCart;
 use MultiSafepay\ValueObject\CartItem;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
 use WC_Order;
-use WC_Order_Item_Coupon;
 use WC_Order_Item_Fee;
 use WC_Order_Item_Product;
 use WC_Order_Item_Shipping;
@@ -55,10 +54,6 @@ class ShoppingCartService {
             $cart_items[] = $this->create_cart_item( $item, $currency );
         }
 
-        foreach ( $order->get_items( 'coupon' ) as $item ) {
-            $cart_items[] = $this->create_coupon_cart_item( $item, $currency );
-        }
-
         if ( $order->get_shipping_total() > 0 ) {
             foreach ( $order->get_items( 'shipping' ) as $item ) {
                 $cart_items[] = $this->create_shipping_cart_item( $item, $currency );
@@ -70,6 +65,7 @@ class ShoppingCartService {
         }
 
         return new ShoppingCart( $cart_items );
+
     }
 
     /**
@@ -79,12 +75,23 @@ class ShoppingCartService {
      */
     private function create_cart_item( WC_Order_Item_Product $item, string $currency ): CartItem {
         $merchant_item_id = $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id();
+        $product_name     = $item->get_name();
+        $product_price    = wc_get_price_excluding_tax( $item->get_product() );
+
+        // If product price without discount get_subtotal() is not the same than product price with discount
+        // Then a percentage coupon has been applied to this item
+        if ( (float) $item->get_subtotal() !== (float) $item->get_total() ) {
+            $discount = (float) $item->get_subtotal() - (float) $item->get_total();
+            // translators: %1$ The currency. %2$ The total amount of the discount per line item
+            $product_name .= sprintf( __( ' - Coupon applied: - %1$s %2$s', 'multisafepay' ), number_format( $discount, 2, '.', '' ), $currency );
+            $product_price = (float) $item->get_total() / (int) $item->get_quantity();
+        }
 
         $cart_item = new CartItem();
-        return $cart_item->addName( $item->get_name() )
+        return $cart_item->addName( $product_name )
             ->addQuantity( $item->get_quantity() )
             ->addMerchantItemId( (string) $merchant_item_id )
-            ->addUnitPrice( MoneyUtil::create_money( (float) wc_get_price_excluding_tax( $item->get_product() ), $currency ) )
+            ->addUnitPrice( MoneyUtil::create_money( $product_price, $currency ) )
             ->addTaxRate( $this->get_item_tax_rate( $item ) );
     }
 
@@ -112,34 +119,6 @@ class ShoppingCartService {
                 break;
         }
         return $tax_rate;
-    }
-
-    /**
-     * @param WC_Order_Item_Coupon $item
-     * @param string               $currency
-     * @return CartItem
-     */
-    private function create_coupon_cart_item( WC_Order_Item_Coupon $item, string $currency ): CartItem {
-        $cart_item = new CartItem();
-        return $cart_item->addName( $item->get_name() )
-            ->addQuantity( 1 )
-            ->addMerchantItemId( (string) $item->get_id() )
-            ->addUnitPrice( MoneyUtil::create_money( (float) $item->get_discount(), $currency )->negative() )
-            ->addTaxRate( $this->get_coupon_tax_rate( $item ) );
-    }
-
-    /**
-     * Returns the tax rate value applied for a coupon item.
-     *
-     * @param WC_Order_Item_Coupon $item
-     * @return float
-     */
-    private function get_coupon_tax_rate( WC_Order_Item_Coupon $item ): float {
-        if ( $item->get_discount_tax() === '0' ) {
-            return 0;
-        }
-        $tax_rate = ( (float) $item->get_discount_tax() * 100 ) / $item->get_discount();
-        return round( $tax_rate, 4 );
     }
 
     /**
