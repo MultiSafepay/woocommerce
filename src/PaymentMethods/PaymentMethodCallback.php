@@ -150,7 +150,7 @@ class PaymentMethodCallback {
         $payment_method_title_registered_by_wc  = $this->order->get_payment_method_title();
         $default_order_status                   = SettingsFields::get_msp_order_statuses();
 
-        if ( $payment_method_id_registered_by_wc !== $payment_method_id_registered_by_msp ) {
+        if ( $payment_method_id_registered_by_msp && $payment_method_id_registered_by_wc !== $payment_method_id_registered_by_msp ) {
             if ( get_option( 'multisafepay_debugmode', false ) ) {
                 $logger  = wc_get_logger();
                 $message = 'Callback received with a different payment method for Order ID: ' . $this->order_id . ' on ' . $this->time_stamp . '. Payment method pass from ' . $payment_method_title_registered_by_wc . ' to ' . $payment_method_title_registered_by_msp . '.';

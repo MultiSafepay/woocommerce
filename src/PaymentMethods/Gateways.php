@@ -114,15 +114,16 @@ class Gateways {
      *
      * @param string $code
      *
-     * @return array
+     * @return mixed string|false
      */
-    public static function get_payment_method_id_by_gateway_code( string $code ): string {
+    public static function get_payment_method_id_by_gateway_code( string $code ) {
         foreach ( self::GATEWAYS as $gateway ) {
             $gateway = new $gateway();
             if ( $gateway->get_payment_method_code() === $code ) {
                 return $gateway->get_payment_method_id();
             }
         }
+        return false;
     }
 
     /**
