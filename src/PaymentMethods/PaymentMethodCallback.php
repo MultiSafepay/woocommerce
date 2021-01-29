@@ -26,6 +26,7 @@ namespace MultiSafepay\WooCommerce\PaymentMethods;
 use MultiSafepay\Api\Transactions\TransactionResponse;
 use MultiSafepay\Exception\ApiException;
 use MultiSafepay\WooCommerce\Services\SdkService;
+use MultiSafepay\WooCommerce\Settings\SettingsFields;
 use WC_Order;
 
 /**
@@ -147,6 +148,7 @@ class PaymentMethodCallback {
         $payment_method_id_registered_by_wc     = $this->order->get_payment_method();
         $payment_method_title_registered_by_msp = Gateways::get_payment_method_name_by_gateway_code( $this->get_multisafepay_transaction_gateway_code() );
         $payment_method_title_registered_by_wc  = $this->order->get_payment_method_title();
+        $default_order_status                   = SettingsFields::get_msp_order_statuses();
 
         if ( $payment_method_id_registered_by_wc !== $payment_method_id_registered_by_msp ) {
             if ( get_option( 'multisafepay_debugmode', false ) ) {
@@ -159,8 +161,8 @@ class PaymentMethodCallback {
             update_post_meta( $this->order_id, '_payment_method_title', $payment_method_title_registered_by_msp );
         }
 
-        if ( $this->get_wc_order_status() !== str_replace( 'wc-', '', get_option( 'multisafepay_' . $this->get_multisafepay_transaction_status() . '_status', false ) ) ) {
-            $this->order->update_status( str_replace( 'wc-', '', get_option( 'multisafepay_' . $this->get_multisafepay_transaction_status() . '_status', false ) ) );
+        if ( $this->get_wc_order_status() !== str_replace( 'wc-', '', get_option( 'multisafepay_' . $this->get_multisafepay_transaction_status() . '_status', $default_order_status[ $this->get_multisafepay_transaction_status() . '_status' ]['default'] ) ) ) {
+            $this->order->update_status( str_replace( 'wc-', '', get_option( 'multisafepay_' . $this->get_multisafepay_transaction_status() . '_status', $default_order_status[ $this->get_multisafepay_transaction_status() . '_status' ]['default'] ) ) );
             if ( get_option( 'multisafepay_debugmode', false ) ) {
                 $logger  = wc_get_logger();
                 $message = 'Callback received for Order ID: ' . $this->order_id . ' on ' . $this->time_stamp . ' with status: ' . $this->get_multisafepay_transaction_status() . ' and PSP ID' . $this->get_multisafepay_transaction_id() . '.';

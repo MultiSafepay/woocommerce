@@ -330,7 +330,7 @@ class SettingsFields {
      *
      * @return  array
      */
-    private function get_msp_order_statuses(): array {
+    public static function get_msp_order_statuses(): array {
         return array(
             'initialized_status'      => array(
 				'label'   => __( 'Initialized', 'multisafepay' ),
