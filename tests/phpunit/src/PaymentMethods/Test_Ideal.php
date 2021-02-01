@@ -22,7 +22,7 @@
  *
  */
 
-use MultiSafepay\WooCommerce\PaymentMethods\Ideal;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Ideal;
 
 class Test_Ideal extends WP_UnitTestCase {
 

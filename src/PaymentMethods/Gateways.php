@@ -24,6 +24,57 @@
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Babycadeaubon;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Beautywellness;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Boekenbon;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Fashioncheque;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Fashiongiftcard;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Fietsenbon;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Gezondheidsbon;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Givacard;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Good4fun;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Goodcard;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Nationaletuinbon;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Parfumcadeaukaart;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Podium;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Sportenfit;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Vvvcadeaukaart;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Webshopgiftcard;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Wellnessgiftcard;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Wijncadeau;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Winkelcheque;
+use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Yourgift;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Afterpay;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Alipay;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Amex;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\ApplePay;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Bancontact;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\BankTrans;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Belfius;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Cbc;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\CreditCard;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Dbrtp;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Dirdeb;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Dotpay;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Einvocing;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Eps;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Giropay;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Ideal;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\IdealQr;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\In3;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\IngHomePay;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Kbc;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Klarna;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Maestro;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\MasterCard;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\MultiSafepay;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\PayAfterDelivery;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\PayPal;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Paysafecard;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Santander;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Sofort;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Trustly;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Visa;
 
 /**
  * Define the Gateways.

@@ -22,7 +22,7 @@
  *
  */
 
-use MultiSafepay\WooCommerce\PaymentMethods\MultiSafepay;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\MultiSafepay;
 
 class Test_MultiSafepay extends WP_UnitTestCase {
 
