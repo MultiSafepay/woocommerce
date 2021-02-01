@@ -90,8 +90,7 @@ class ApplePay extends BasePaymentMethod {
      */
     public function enqueue_script(): void {
         if ( is_checkout() ) {
-            $route = get_bloginfo( 'url' ) . '/wp-content/plugins/multisafepay/assets/public/js/multisafepay-apple-pay.js';
-            wp_enqueue_script( 'multisafepay', $route, array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
+            wp_enqueue_script( 'multisafepay', plugins_url( 'multisafepay/assets/public/js/multisafepay-apple-pay.js' ), array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
         }
     }
 
