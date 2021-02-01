@@ -281,14 +281,14 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $sdk                 = new SdkService();
         $transaction_manager = $sdk->get_transaction_manager();
 
-        $order           = wc_get_order( $order_id );
-        $msp_transaction = $transaction_manager->get( $order->get_order_number() );
+        $order                    = wc_get_order( $order_id );
+        $multisafepay_transaction = $transaction_manager->get( $order->get_order_number() );
 
-        $refund_request = $transaction_manager->createRefundRequest( $msp_transaction );
+        $refund_request = $transaction_manager->createRefundRequest( $multisafepay_transaction );
         $refund_request->addDescriptionText( $reason );
 
         // If the used gateway is a billing suite gateway, create the refund based on items
-        if ( in_array( $msp_transaction->getPaymentDetails()->getType(), Gateways::GATEWAYS_WITH_SHOPPING_CART, true ) ) {
+        if ( in_array( $multisafepay_transaction->getPaymentDetails()->getType(), Gateways::GATEWAYS_WITH_SHOPPING_CART, true ) ) {
             $refund_service = new RefundService();
 
             $refund       = $refund_service->get_latest_refund( $order );
@@ -302,13 +302,13 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
             }
         }
 
-        if ( ! in_array( $msp_transaction->getPaymentDetails()->getType(), Gateways::GATEWAYS_WITH_SHOPPING_CART, true ) ) {
+        if ( ! in_array( $multisafepay_transaction->getPaymentDetails()->getType(), Gateways::GATEWAYS_WITH_SHOPPING_CART, true ) ) {
             $refund_request->addMoney( MoneyUtil::create_money( (float) $amount, $order->get_currency() ) );
         }
 
         try {
             $msg = null;
-            $transaction_manager->refund( $msp_transaction, $refund_request );
+            $transaction_manager->refund( $multisafepay_transaction, $refund_request );
         } catch ( \Exception $exception ) {
             $msg = __( 'Error:', 'multisafepay' ) . htmlspecialchars( $exception->getMessage() );
             wc_add_notice( $msg, 'error' );
@@ -324,7 +324,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         if ( get_option( 'multisafepay_debugmode', false ) ) {
             $logger = wc_get_logger();
             /* translators: %1$: The order ID. %2$ The PSP transaction ID */
-            $message = sprintf( __( 'Refund for Order ID: %1$s with transactionId: %2$s gives message: %3$s.', 'multisafepay' ), $order_id, $msp_transaction->getTransactionId(), $msg );
+            $message = sprintf( __( 'Refund for Order ID: %1$s with transactionId: %2$s gives message: %3$s.', 'multisafepay' ), $order_id, $multisafepay_transaction->getTransactionId(), $msg );
             $logger->log( 'info', $message );
         }
 

@@ -211,18 +211,18 @@ class SettingsFields {
      * @return  array
      */
     private function get_settings_order_status(): array {
-        $wc_order_statuses   = $this->get_wc_get_order_statuses();
-        $msp_order_statuses  = $this->get_msp_order_statuses();
-        $order_status_fields = array();
-        $sort_order          = 1;
-        foreach ( $msp_order_statuses as $key => $msp_order_status ) {
+        $wc_order_statuses           = $this->get_wc_get_order_statuses();
+        $multisafepay_order_statuses = $this->get_multisafepay_order_statuses();
+        $order_status_fields         = array();
+        $sort_order                  = 1;
+        foreach ( $multisafepay_order_statuses as $key => $multisafepay_order_status ) {
             $order_status_fields[] = array(
                 'id'           => $this->plugin_name . '_' . $key,
-                'label'        => $msp_order_status['label'],
+                'label'        => $multisafepay_order_status['label'],
                 'description'  => '',
                 'type'         => 'select',
                 'options'      => $wc_order_statuses,
-                'default'      => $msp_order_status['default'],
+                'default'      => $multisafepay_order_status['default'],
                 'placeholder'  => __( 'Select order status', 'multisafepay' ),
                 'tooltip'      => '',
                 'callback'     => '',
@@ -330,7 +330,7 @@ class SettingsFields {
      *
      * @return  array
      */
-    public static function get_msp_order_statuses(): array {
+    public static function get_multisafepay_order_statuses(): array {
         return array(
             'initialized_status'      => array(
 				'label'   => __( 'Initialized', 'multisafepay' ),

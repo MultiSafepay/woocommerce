@@ -40,7 +40,7 @@ use WC_Tax;
  */
 class ShoppingCartService {
 
-    public const MSP_SHIPPING_ITEM_CODE = 'msp-shipping';
+    public const MULTISAFEPAY_SHIPPING_ITEM_CODE = 'msp-shipping';
 
     /**
      * @param WC_Order $order
@@ -130,7 +130,7 @@ class ShoppingCartService {
         $cart_item = new CartItem();
         return $cart_item->addName( __( 'Shipping', 'multisafepay' ) )
             ->addQuantity( 1 )
-            ->addMerchantItemId( self::MSP_SHIPPING_ITEM_CODE )
+            ->addMerchantItemId( self::MULTISAFEPAY_SHIPPING_ITEM_CODE )
             ->addUnitPrice( MoneyUtil::create_money( (float) $item->get_total(), $currency ) )
             ->addTaxRate( $this->get_shipping_tax_rate( $item ) );
     }

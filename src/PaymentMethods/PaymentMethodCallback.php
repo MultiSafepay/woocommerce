@@ -144,21 +144,21 @@ class PaymentMethodCallback {
             die( 'OK' );
         }
 
-        $payment_method_id_registered_by_msp    = Gateways::get_payment_method_id_by_gateway_code( $this->get_multisafepay_transaction_gateway_code() );
-        $payment_method_id_registered_by_wc     = $this->order->get_payment_method();
-        $payment_method_title_registered_by_msp = Gateways::get_payment_method_name_by_gateway_code( $this->get_multisafepay_transaction_gateway_code() );
-        $payment_method_title_registered_by_wc  = $this->order->get_payment_method_title();
-        $default_order_status                   = SettingsFields::get_msp_order_statuses();
+        $payment_method_id_registered_by_multisafepay    = Gateways::get_payment_method_id_by_gateway_code( $this->get_multisafepay_transaction_gateway_code() );
+        $payment_method_id_registered_by_wc              = $this->order->get_payment_method();
+        $payment_method_title_registered_by_multisafepay = Gateways::get_payment_method_name_by_gateway_code( $this->get_multisafepay_transaction_gateway_code() );
+        $payment_method_title_registered_by_wc           = $this->order->get_payment_method_title();
+        $default_order_status                            = SettingsFields::get_multisafepay_order_statuses();
 
-        if ( $payment_method_id_registered_by_msp && $payment_method_id_registered_by_wc !== $payment_method_id_registered_by_msp ) {
+        if ( $payment_method_id_registered_by_multisafepay && $payment_method_id_registered_by_wc !== $payment_method_id_registered_by_multisafepay ) {
             if ( get_option( 'multisafepay_debugmode', false ) ) {
                 $logger  = wc_get_logger();
-                $message = 'Callback received with a different payment method for Order ID: ' . $this->order_id . ' on ' . $this->time_stamp . '. Payment method pass from ' . $payment_method_title_registered_by_wc . ' to ' . $payment_method_title_registered_by_msp . '.';
+                $message = 'Callback received with a different payment method for Order ID: ' . $this->order_id . ' on ' . $this->time_stamp . '. Payment method pass from ' . $payment_method_title_registered_by_wc . ' to ' . $payment_method_title_registered_by_multisafepay . '.';
                 $logger->log( 'info', $message );
                 $this->order->add_order_note( $message );
             }
-            update_post_meta( $this->order_id, '_payment_method', $payment_method_id_registered_by_msp );
-            update_post_meta( $this->order_id, '_payment_method_title', $payment_method_title_registered_by_msp );
+            update_post_meta( $this->order_id, '_payment_method', $payment_method_id_registered_by_multisafepay );
+            update_post_meta( $this->order_id, '_payment_method_title', $payment_method_title_registered_by_multisafepay );
         }
 
         if ( $this->get_wc_order_status() !== str_replace( 'wc-', '', get_option( 'multisafepay_' . $this->get_multisafepay_transaction_status() . '_status', $default_order_status[ $this->get_multisafepay_transaction_status() . '_status' ]['default'] ) ) ) {

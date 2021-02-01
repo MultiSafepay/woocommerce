@@ -134,7 +134,7 @@ class PaymentMethodsController {
      * @param   int $order_id
      * @return  void
      */
-    public function set_msp_transaction_as_shipped( int $order_id ): void {
+    public function set_multisafepay_transaction_as_shipped( int $order_id ): void {
         $order = wc_get_order( $order_id );
         if ( strpos( $order->get_payment_method(), 'multisafepay_' ) !== false ) {
             $sdk                 = new SdkService();
@@ -153,7 +153,7 @@ class PaymentMethodsController {
      * @param   int $order_id
      * @return  void
      */
-    public function set_msp_transaction_as_invoiced( int $order_id ): void {
+    public function set_multisafepay_transaction_as_invoiced( int $order_id ): void {
         $order = wc_get_order( $order_id );
         if ( strpos( $order->get_payment_method(), 'multisafepay_' ) !== false ) {
             $sdk                 = new SdkService();
