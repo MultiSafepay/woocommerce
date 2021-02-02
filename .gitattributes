@@ -7,4 +7,5 @@
 /phpunit.xml.dist export-ignore
 /phpcs.xml export-ignore
 /grumphp.yml export-ignore
+/README.md export-ignore
 
