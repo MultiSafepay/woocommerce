@@ -376,6 +376,10 @@ class SettingsFields {
 				'label'   => __( 'Cancelled', 'multisafepay' ),
 				'default' => 'wc-cancelled',
 			),
+            'invoiced_status'         => array(
+                'label'   => __( 'Invoiced', 'multisafepay' ),
+                'default' => 'wc-completed',
+            ),
         );
     }
 
