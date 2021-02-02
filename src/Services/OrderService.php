@@ -134,4 +134,5 @@ class OrderService {
             ->addCancelUrl( $order->get_cancel_order_url() )
             ->addRedirectUrl( $order->get_checkout_order_received_url() );
     }
+
 }

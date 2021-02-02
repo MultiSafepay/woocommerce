@@ -23,9 +23,9 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods;
 
-use MultiSafepay\WooCommerce\PaymentMethods\Base\BasePaymentMethod;
+use MultiSafepay\WooCommerce\PaymentMethods\Base\BaseTokenizationPaymentMethod;
 
-class CreditCard extends BasePaymentMethod {
+class CreditCard extends BaseTokenizationPaymentMethod {
 
     /**
      * @return string

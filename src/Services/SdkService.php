@@ -152,4 +152,11 @@ class SdkService {
     public function get_issuer_manager(): IssuerManager {
         return $this->sdk->getIssuerManager();
     }
+
+    /**
+     * @return Sdk
+     */
+    public function get_sdk(): Sdk {
+        return $this->sdk;
+    }
 }

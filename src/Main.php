@@ -27,6 +27,7 @@ use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodsController;
 use MultiSafepay\WooCommerce\Settings\SettingsController;
 use MultiSafepay\WooCommerce\Utils\CustomLinks;
 use MultiSafepay\WooCommerce\Utils\Internationalization;
+use MultiSafepay\WooCommerce\PaymentMethods\TokenizationMethodsController;
 use MultiSafepay\WooCommerce\Utils\Loader;
 
 /**
@@ -92,7 +93,30 @@ class Main {
         $this->add_custom_links_in_plugin_list();
         $this->define_settings_hooks();
 		$this->define_payment_methods_hooks();
+        if ( (bool) get_option( 'multisafepay_tokenization', false ) ) {
+            $this->define_tokenization_hooks();
+        }
 	}
+
+    /**
+     * Register all of the hooks related to the tokenization methods
+     * of the plugin.
+     *
+     * @return  void
+     */
+    private function define_tokenization_hooks(): void {
+        // Tokenization controller
+        $tokenization_methods = new TokenizationMethodsController();
+        // Add tokens to user account
+        $this->loader->add_filter( 'woocommerce_get_customer_payment_tokens', $tokenization_methods, 'multisafepay_get_customer_payment_tokens', 10, 3 );
+        // Delete token action
+        $this->loader->add_action( 'woocommerce_payment_token_deleted', $tokenization_methods, 'woocommerce_payment_token_deleted', 10, 2 );
+        // Set token as default
+        $this->loader->add_action( 'woocommerce_payment_token_set_default', $tokenization_methods, 'woocommerce_payment_token_set_default', 10, 2 );
+        // Customize save payment method checkbox
+        $this->loader->add_filter( 'woocommerce_payment_gateway_save_new_payment_method_option_html', $tokenization_methods, 'multisafepay_payment_gateway_save_new_payment_method_option_html', 10, 1 );
+
+    }
 
 	/**
 	 * Define the locale for this plugin for internationalization.
@@ -129,7 +153,7 @@ class Main {
      * @return void
 	 */
 	private function define_settings_hooks(): void {
-
+        // Settings controller
 	    $plugin_settings = new SettingsController( $this->get_plugin_name(), $this->get_version(), $this->plugin_dir_url, $this->plugin_dir_path );
         // Filter get_option for some option names.
         $this->loader->add_filter( 'option_multisafepay_testmode', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );

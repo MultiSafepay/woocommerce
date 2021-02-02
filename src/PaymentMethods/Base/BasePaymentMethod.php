@@ -38,7 +38,6 @@ use WC_Payment_Gateway;
 use MultiSafepay\Exception\InvalidArgumentException;
 
 abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMethodInterface {
-
     /**
      * What type of transaction, should be 'direct' or 'redirect'
      *
