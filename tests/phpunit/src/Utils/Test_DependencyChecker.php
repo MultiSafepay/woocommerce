@@ -34,8 +34,8 @@ class Test_DependencyChecker extends WP_UnitTestCase {
     }
 
     public function test_dependency_checker_missing_dependency_exception() {
-        $this->expectNotToPerformAssertions();
-        $dependency_checker = (new DependencyChecker())->check();;
+        $this->expectException(MissingDependencyException::class);
+        (new DependencyChecker())->check();
     }
 
 }
