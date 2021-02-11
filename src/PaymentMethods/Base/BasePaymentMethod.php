@@ -93,7 +93,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $this->has_fields          = $this->has_fields();
         $this->checkout_fields_ids = $this->get_checkout_fields_ids();
         $this->icon                = $this->get_logo();
-        $this->add_form_fields();
+        $this->form_fields         = $this->add_form_fields();
         $this->init_form_fields();
         $this->init_settings();
 
@@ -180,10 +180,10 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
     /**
      * Define the form option - settings fields.
      *
-     * @return  void
+     * @return  array
      */
-    public function add_form_fields(): void {
-        $this->form_fields = array(
+    public function add_form_fields(): array {
+        $form_fields = array(
             'enabled'              => array(
                 'title'   => __( 'Enable/Disable', 'multisafepay' ),
                 'label'   => 'Enable ' . $this->get_method_title() . ' Gateway',
@@ -230,6 +230,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
                 'default'     => $this->get_option( 'countries', array() ),
             ),
         );
+        return $form_fields;
     }
 
     /**

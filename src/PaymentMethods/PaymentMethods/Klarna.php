@@ -69,6 +69,16 @@ class Klarna extends BasePaymentMethod {
     }
 
     /**
+     * @return array
+     */
+    public function add_form_fields(): array {
+        $form_fields                          = parent::add_form_fields();
+        $form_fields['min_amount']['default'] = '15';
+        $form_fields['max_amount']['default'] = '300';
+        return $form_fields;
+    }
+
+    /**
      * @return string
      */
     public function get_payment_method_icon(): string {
