@@ -70,7 +70,7 @@ interface PaymentMethodInterface {
     /**
      * Add extra settings to a gateway
      *
-     * @return mixed
+     * @return array
      */
     public function add_form_fields();
 

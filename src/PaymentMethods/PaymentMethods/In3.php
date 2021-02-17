@@ -78,6 +78,16 @@ class In3 extends BaseBillingSuitePaymentMethod {
     /**
      * @return array
      */
+    public function add_form_fields(): array {
+        $form_fields                          = parent::add_form_fields();
+        $form_fields['min_amount']['default'] = '100';
+        $form_fields['max_amount']['default'] = '3000';
+        return $form_fields;
+    }
+
+    /**
+     * @return array
+     */
     public function get_checkout_fields_ids(): array {
         return array( 'salutation', 'birthday' );
     }

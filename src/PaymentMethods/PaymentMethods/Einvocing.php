@@ -78,6 +78,16 @@ class Einvocing extends BaseBillingSuitePaymentMethod {
     /**
      * @return array
      */
+    public function add_form_fields(): array {
+        $form_fields                          = parent::add_form_fields();
+        $form_fields['min_amount']['default'] = '15';
+        $form_fields['max_amount']['default'] = '300';
+        return $form_fields;
+    }
+
+    /**
+     * @return array
+     */
     public function get_checkout_fields_ids(): array {
         return array( 'birthday', 'bank_account' );
     }

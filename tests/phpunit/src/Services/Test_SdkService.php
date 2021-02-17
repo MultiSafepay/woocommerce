@@ -51,6 +51,7 @@ class Test_SdkService extends WP_UnitTestCase {
      * @covers \MultiSafepay\WooCommerce\Services\SdkService::get_test_mode
      */
     public function test_get_test_mode_as_true() {
+        update_option('multisafepay_testmode', true);
         $sdk = new SdkService();
         $output = $sdk->get_test_mode();
         $this->assertTrue($output);
@@ -58,6 +59,7 @@ class Test_SdkService extends WP_UnitTestCase {
 
     /**
      * @covers \MultiSafepay\WooCommerce\Services\SdkService::get_test_mode
+     * @depends test_get_test_mode_as_true
      */
     public function test_get_test_mode_as_false() {
         update_option( 'multisafepay_testmode', 0 );
@@ -66,22 +68,12 @@ class Test_SdkService extends WP_UnitTestCase {
         $this->assertFalse($output);
     }
 
-    /**
-     * @covers \MultiSafepay\WooCommerce\Services\SdkService::get_gateways
-     */
-    public function test_get_gateways() {
-        $sdk = new SdkService();
-        $output = $sdk->get_gateways();
-        $this->assertIsArray($output);
-        $this->assertInstanceOf( Gateway::class, $output[0]);
-    }
-
 
     /**
      * @covers \MultiSafepay\WooCommerce\Services\SdkService::get_transaction_manager
      */
     public function test_get_transaction_manager() {
-        $sdk = new SdkService();
+        $sdk = new SdkService('string');
         $output = $sdk->get_transaction_manager();
         $this->assertInstanceOf( TransactionManager::class, $output);
     }
@@ -91,7 +83,7 @@ class Test_SdkService extends WP_UnitTestCase {
      * @covers \MultiSafepay\WooCommerce\Services\SdkService::get_gateway_manager
      */
     public function test_get_gateway_manager() {
-        $sdk = new SdkService();
+        $sdk = new SdkService('string');
         $output = $sdk->get_gateway_manager();
         $this->assertInstanceOf( GatewayManager::class, $output);
     }

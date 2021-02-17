@@ -1,0 +1,62 @@
+name: Build
+on:
+  schedule:
+    - cron: '0 2 * * 0' # Weekly on Sundays at 02:00
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  build:
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: wordpress
+        ports:
+          - 3306
+        options: --tmpfs /tmp:rw --tmpfs /var/lib/mysql:rw --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: [ '7.4' ]
+        shopware_version: [ 'latest' ]
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+      - name: Setup WP CLI
+        run: |
+          curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          php wp-cli.phar --info
+          chmod +x wp-cli.phar
+          sudo mv wp-cli.phar /usr/local/bin/wp
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: multisafepay
+      - name: Install WooCommerce
+        uses: actions/checkout@v2
+        with:
+          repository: 'woocommerce/woocommerce'
+          path: woocommerce
+      - name: Install composer for plugin
+        working-directory: multisafepay
+        run: composer install --dev
+      - name: install composer for woocommerce
+        working-directory: woocommerce
+        run: composer install
+      - name: Setup test environment
+        working-directory: multisafepay
+        shell: bash
+        run: bin/install-wp-tests.sh woocommerce_test root password 127.0.0.1:${{ job.services.mysql.ports['3306'] }}
+      - name: Run PHPUnit
+        working-directory: multisafepay
+        run: php vendor/bin/phpunit --coverage-clover=coverage.xml
+      - name: upload code coverage
+        run: bash <(curl -s https://codecov.io/bash) -t ${{ secrets.CODECOV_TOKEN }}
