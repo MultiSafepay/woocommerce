@@ -6,7 +6,7 @@
 			check_if_apple_pay_available();
 			$( document ).ajaxComplete(
                 function(e, xhr, settings) {
-                    if (settings.url == '/?wc-ajax=update_order_review') {
+                    if ( settings.url.indexOf( '?wc-ajax=update_order_review' ) != -1 ) {
                         check_if_apple_pay_available();
                     }
                 }

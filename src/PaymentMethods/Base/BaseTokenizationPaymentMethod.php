@@ -100,7 +100,10 @@ abstract class BaseTokenizationPaymentMethod extends BasePaymentMethod {
             echo '<p>' . esc_html( $message ) . '</p>';
         }
 
-        $this->save_payment_method_checkbox();
+        if ( is_checkout() ) {
+            $this->save_payment_method_checkbox();
+        }
+
         if ( wc_get_customer_saved_methods_list( get_current_user_id() ) && is_checkout() ) {
             $this->saved_payment_methods();
         }
@@ -138,6 +141,10 @@ abstract class BaseTokenizationPaymentMethod extends BasePaymentMethod {
         }
 
         if ( ! empty( $_POST[ 'wc-' . $this->id . '-payment-token' ] ) && 'new' === $_POST[ 'wc-' . $this->id . '-payment-token' ] && isset( $_POST[ 'wc-' . $this->id . '-new-payment-method' ] ) ) {
+            return true;
+        }
+
+        if ( ! isset( $_POST[ 'wc-' . $this->id . '-payment-token' ] ) && isset( $_POST[ 'wc-' . $this->id . '-new-payment-method' ] ) && 'true' === $_POST[ 'wc-' . $this->id . '-new-payment-method' ] ) {
             return true;
         }
 
