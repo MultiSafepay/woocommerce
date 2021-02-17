@@ -29,4 +29,4 @@ rm "$FILENAME_PREFIX""$RELEASE_VERSION".zip
 composer install --no-dev --working-dir="$FOLDER_PREFIX"
 
 # zip everything
-zip -9 -r "$FILENAME_PREFIX""$RELEASE_VERSION".zip "$FOLDER_PREFIX" -x "$FOLDER_PREFIX""/composer.json" -x "$FOLDER_PREFIX""/composer.lock" -x "$FOLDER_PREFIX""/.wordpress-org" -x "$FOLDER_PREFIX""/.distignore"
+zip -9 -r "$FILENAME_PREFIX""$RELEASE_VERSION".zip "$FOLDER_PREFIX" -x "$FOLDER_PREFIX""/composer.json" -x "$FOLDER_PREFIX""/composer.lock" -x "$FOLDER_PREFIX""/.wordpress-org/*" -x "$FOLDER_PREFIX""/.distignore"
