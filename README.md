@@ -11,17 +11,25 @@ Easily integrate MultiSafepay payment solutions into your WooCommerce webshop wi
 ## About MultiSafepay ##
 MultiSafepay is a collecting payment service provider which means we take care of the agreements, technical details and payment collection required for each payment method. You can start selling online today and manage all your transactions from one place.
 ## Supported Payment Methods ##
-The supported Payment Methods & Giftcards for this plugin can be found over here: [Payment Methods & Giftcards](https://docs.multisafepay.com/plugins/woocommerce/faq/#available-payment-methods-in-woocommerce)
+The supported Payment Methods & Giftcards for this plugin can be found over here: [Payment Methods & Giftcards](https://docs.multisafepay.com/integrations/plugins/woocommerce/faq/available-payment-methods-woocommerce/)
 
 ## Requirements
 - To use the plugin you need a MultiSafepay account. You can create a test account on https://testmerchant.multisafepay.com/signup
-- WooCommerce
+- WooCommerce 5.0.0
+- PHP 7.2
 
-## Installation through backend
-1. Navigate to the backend of your webshop and navigate to ‘Plugins->Add New’. Click on Browse file
-2. Upload the Plugin_WooCommerce_x.x.x.zip file.
+## Installation through Wordpress backend
+1. Navigate to the backend of your webshop and navigate to _Plugins_ -> _Add New_.
+2. Enter MultiSafepay in the search field and then click on _Install Now_.
+3. After installation finish, click on _Activate_.
 
-For additional information or instructions please see our [installation & configuration manual](https://docs.multisafepay.com/plugins/woocommerce/manual/)
+## Configuration
+1. Navigate to _WooCommerce_ -> _MultiSafepay Settings_
+2. Navigate to _Account_ tab, set the API key. Information about the API key can be found on our [API key page](/tools/multisafepay-control/get-your-api-key)
+3. Navigate to _Order Status_ tab and confirm the match between WooCommerce order statuses and MultiSafepay order statuses clicking on "Save Changes" button.
+4. Navigate to _Options_ tab and confirm the settings clicking on "Save Changes" button.
+5. Navigate to _WooCommerce_ -> _Settings_ -> _Payments_. Enable the payment methods you would like to offer, check and confirm the settings for those been enable.
+
 
 ## Support
 You can create issues on our repository. If you need any additional help or support, please contact <a href="mailto:integration@multisafepay.com">integration@multisafepay.com</a>

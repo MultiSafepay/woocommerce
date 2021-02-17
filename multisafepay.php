@@ -30,10 +30,10 @@
  * Copyright:               Copyright (c) MultiSafepay, Inc. (https://www.multisafepay.com)
  * License:                 GNU General Public License v3.0
  * License URI:             http://www.gnu.org/licenses/gpl-3.0.html
- * Requires at least:       5.6
+ * Requires at least:       5.0
  * Tested up to:            5.6
  * WC requires at least:    4.2.0
- * WC tested up to:         4.9.0
+ * WC tested up to:         5.0.0
  * Requires PHP:            7.2
  * Text Domain:             multisafepay
  * Domain Path:             /languages
@@ -46,7 +46,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Plugin version
  */
-define( 'MULTISAFEPAY_PLUGIN_VERSION', '4.1.0-RC1' );
+define( 'MULTISAFEPAY_PLUGIN_VERSION', '4.1.0' );
 
 
 /**
