@@ -94,7 +94,7 @@ class SettingsFields {
                     'default'      => '',
                     'placeholder'  => '',
                     'tooltip'      => __( 'Test API Key', 'multisafepay' ),
-                    'callback'     => array( $this, 'validate_test_api_key' ),
+                    'callback'     => '',
                     'setting_type' => 'string',
                     'sort_order'   => 2,
                 ),
@@ -106,7 +106,7 @@ class SettingsFields {
                     'default'      => '',
                     'placeholder'  => __( 'API Key ', 'multisafepay' ),
                     'tooltip'      => __( 'API Key', 'multisafepay' ),
-                    'callback'     => array( $this, 'validate_api_key' ),
+                    'callback'     => '',
                     'setting_type' => 'string',
                     'sort_order'   => 3,
                 ),
@@ -251,78 +251,6 @@ class SettingsFields {
         );
     }
 
-    /**
-     * Validates the api key field on submit.
-     *
-     * @param   string $api_key   The api key
-     * @return  mixed
-     */
-    public function validate_api_key( string $api_key ) {
-
-        $testmode = get_option( $this->plugin_name . '_testmode', false );
-
-        if ( ! $testmode && empty( $api_key ) ) {
-            add_settings_error(
-                '',
-                '',
-                __( 'You need to fill the API Key', 'multisafepay' ),
-                'error'
-            );
-            return false;
-        }
-
-        if ( ! $testmode && ! empty( $api_key ) ) {
-            $sdk = new SdkService( $api_key, (bool) $testmode );
-            if ( ( strlen( $api_key ) < 5 ) || ( $sdk && is_wp_error( $sdk->get_gateways() ) ) ) {
-                add_settings_error(
-                    '',
-                    '',
-                    __( 'It seems the API Key is not valid on the live environment', 'multisafepay' ),
-                    'error'
-                );
-
-                return $api_key;
-            }
-        }
-
-        return $api_key;
-    }
-
-    /**
-     * Validates the test api key field on submit
-     *
-     * @param   string $api_key   The test api key
-     * @return  mixed
-     */
-    public function validate_test_api_key( string $api_key ) {
-
-        $testmode = get_option( $this->plugin_name . '_testmode', false );
-
-        if ( $testmode && empty( $api_key ) ) {
-            add_settings_error(
-                '',
-                '',
-                __( 'You need to fill the Test API Key', 'multisafepay' ),
-                'error'
-            );
-            return false;
-        }
-
-        if ( $testmode && ! empty( $api_key ) ) {
-            $sdk = new SdkService( $api_key, (bool) $testmode );
-            if ( ( strlen( $api_key ) < 5 ) || ( $sdk && is_wp_error( $sdk->get_gateways() ) ) ) {
-                add_settings_error(
-                    '',
-                    '',
-                    __( 'It seems the Test API Key is not valid on the test environment', 'multisafepay' ),
-                    'error'
-                );
-                return $api_key;
-            }
-        }
-
-        return $api_key;
-    }
 
     /**
      * Returns the WooCommerce registered order statuses
