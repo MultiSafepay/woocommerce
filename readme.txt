@@ -4,7 +4,7 @@ Tags: multisafepay, credit card, credit cards, gateway, payments, woocommerce, i
 Requires at least: 5.0
 Tested up to: 5.6.1
 Requires PHP: 7.2
-Stable tag: 4.1.0
+Stable tag: 4.1.1
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -143,29 +143,35 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 
 == Changelog ==
 
+= Release Notes - WooCommerce 4.1.1 (Feb 18th, 2021) =
+
+### Changed
++ PLGWOOS-545: Remove API Key validation
+
+
 = Release Notes - WooCommerce 4.1.0 (Feb 17th, 2021) =
 
 ### Added
-PLGWOOS-512: Add support for tokenization.
-PLGWOOS-521: Change order status on callback even if merchant did not save the settings, using defaults.
-PLGWOOS-530: Process notification, even when the payment method returned by MultiSafepay is not registered as WooCommerce gateway.
-PLGWOOS-531: Avoid process refund if amount submited in backend is 0
++ PLGWOOS-512: Add support for tokenization.
++ PLGWOOS-521: Change order status on callback even if merchant did not save the settings, using defaults.
++ PLGWOOS-530: Process notification, even when the payment method returned by MultiSafepay is not registered as WooCommerce gateway.
++ PLGWOOS-531: Avoid process refund if amount submited in backend is 0
 
 ### Fixed
-PLGWOOS-535: Fix bug min_amount filter
-PLGWOOS-536: Fix instructions in multi select country field
-PLGWOOS-518: Fix protocol of notification URL
-PLGWOOS-526: Fix typo error in AfterPay payment method title
-PLGWOOS-523: Fix type of transaction to redirect for Dotpay payment method
++ PLGWOOS-535: Fix bug min_amount filter
++ PLGWOOS-536: Fix instructions in multi select country field
++ PLGWOOS-518: Fix protocol of notification URL
++ PLGWOOS-526: Fix typo error in AfterPay payment method title
++ PLGWOOS-523: Fix type of transaction to redirect for Dotpay payment method
 
 ### Changed
-PLGWOOS-519: Improvement for coupons support in ShoppingCart.
-PLGWOOS-528: Refactor gender and salutation fields to process different validation messages
-PLGWOOS-503: Move debug mode field to options section
++ PLGWOOS-519: Improvement for coupons support in ShoppingCart.
++ PLGWOOS-528: Refactor gender and salutation fields to process different validation messages
++ PLGWOOS-503: Move debug mode field to options section
 
 ### Removed
-PLGWOOS-525: Remove validation in backend for MultiSafepay payment method
-PLGWOOS-516: Avoid initialize the plugin if WooCommerce is not active
++ PLGWOOS-525: Remove validation in backend for MultiSafepay payment method
++ PLGWOOS-516: Avoid initialize the plugin if WooCommerce is not active
 
 
 = Release Notes - WooCommerce 4.0.0 (Unreleased) =
