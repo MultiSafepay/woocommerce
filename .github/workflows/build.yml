@@ -59,4 +59,5 @@ jobs:
         working-directory: multisafepay
         run: php vendor/bin/phpunit --coverage-clover=coverage.xml
       - name: upload code coverage
+        working-directory: multisafepay
         run: bash <(curl -s https://codecov.io/bash) -t ${{ secrets.CODECOV_TOKEN }}
