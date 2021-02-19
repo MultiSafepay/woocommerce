@@ -145,7 +145,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 
 = Release Notes - WooCommerce 4.1.2 (Feb 19th, 2021) =
 
-### Changed
+### Fixed
 + PLGWOOS-548: Fix iDEAL gateway if no issuer selected in checkout
 
 
