@@ -244,8 +244,14 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $sdk                 = new SdkService();
         $transaction_manager = $sdk->get_transaction_manager();
         $order_service       = new OrderService();
-        $order_request       = $order_service->create_order_request( $order_id, $this->gateway_code, $this->type, $this->id, $this->get_gateway_info() );
-        $transaction         = $transaction_manager->create( $order_request );
+
+        $gateway_info = $this->get_gateway_info( array( 'order_id' => $order_id ) );
+        if ( ! $this->validate_gateway_info( $gateway_info ) ) {
+            $gateway_info = null;
+        }
+
+        $order_request = $order_service->create_order_request( $order_id, $this->gateway_code, $this->type, $this->id, $gateway_info );
+        $transaction   = $transaction_manager->create( $order_request );
 
         $order = wc_get_order( $order_id );
 
