@@ -1,3 +1,9 @@
 #payment .payment_methods li p {
     margin: 0 0 1.41575em !important;
 }
+#payment .payment_methods li img {
+    float: right;
+    border: 0;
+    padding: 0;
+    max-height: 1.618em;
+}
