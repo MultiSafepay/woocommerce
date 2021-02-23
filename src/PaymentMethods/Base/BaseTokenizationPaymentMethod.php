@@ -48,7 +48,7 @@ abstract class BaseTokenizationPaymentMethod extends BasePaymentMethod {
      * @throws \Psr\Http\Client\ClientExceptionInterface
      */
     public function process_payment( $order_id ): array {
-        if ( $this->canSubmitToken() === false || ! wp_verify_nonce( $_POST['woocommerce-process-checkout-nonce'], 'woocommerce-process_checkout' ) ) {
+        if ( $this->canSubmitToken() === false ) {
             return parent::process_payment( $order_id );
         }
         $sdk                 = new SdkService();
@@ -131,10 +131,6 @@ abstract class BaseTokenizationPaymentMethod extends BasePaymentMethod {
      * @return bool
      */
     private function canSubmitToken(): bool {
-
-        if ( ! wp_verify_nonce( $_POST['woocommerce-process-checkout-nonce'], 'woocommerce-process_checkout' ) ) {
-            return false;
-        }
 
         if ( ! empty( $_POST[ 'wc-' . $this->id . '-payment-token' ] ) && 'new' !== $_POST[ 'wc-' . $this->id . '-payment-token' ] ) {
             return true;

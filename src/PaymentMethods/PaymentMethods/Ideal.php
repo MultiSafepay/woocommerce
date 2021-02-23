@@ -108,16 +108,11 @@ class Ideal extends BasePaymentMethod {
      * @return IdealGatewayInfo
      */
     public function get_gateway_info( array $data = null ): GatewayInfoInterface {
-        if (
-            ( isset( $_POST['woocommerce-process-checkout-nonce'] ) && wp_verify_nonce( $_POST['woocommerce-process-checkout-nonce'], 'woocommerce-process_checkout' ) ) ||
-            ( isset( $_POST['woocommerce-pay-nonce'] ) && wp_verify_nonce( $_POST['woocommerce-pay-nonce'], 'woocommerce-pay' ) )
-        ) {
-            $gateway_info = new IdealGatewayInfo();
-            if ( isset( $_POST[ $this->id . '_issuer_id' ] ) ) {
-                $gateway_info->addIssuerId( $_POST[ $this->id . '_issuer_id' ] );
-            }
-            return $gateway_info;
+        $gateway_info = new IdealGatewayInfo();
+        if ( isset( $_POST[ $this->id . '_issuer_id' ] ) ) {
+            $gateway_info->addIssuerId( $_POST[ $this->id . '_issuer_id' ] );
         }
+        return $gateway_info;
     }
 
     /**
