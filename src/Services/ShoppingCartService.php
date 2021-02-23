@@ -89,7 +89,7 @@ class ShoppingCartService {
 
         $cart_item = new CartItem();
         return $cart_item->addName( $product_name )
-            ->addQuantity( $item->get_quantity() )
+            ->addQuantity( (int) $item->get_quantity() )
             ->addMerchantItemId( (string) $merchant_item_id )
             ->addUnitPrice( MoneyUtil::create_money( $product_price, $currency ) )
             ->addTaxRate( $this->get_item_tax_rate( $item ) );
