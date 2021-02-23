@@ -6,10 +6,9 @@
     "minimum-stability": "RC",
     "keywords" : [ "wordpress", "multisafepay" ],
     "require": {
-        "php-http/guzzle6-adapter": "^2.0",
-        "guzzlehttp/psr7": "^1.6",
-        "http-interop/http-factory-guzzle": "^1.0",
-        "multisafepay/php-sdk": "^4.0"
+        "multisafepay/php-sdk": "^4.0",
+        "guzzlehttp/guzzle": "^7.0",
+        "http-interop/http-factory-guzzle": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit" : "7.5.20",
