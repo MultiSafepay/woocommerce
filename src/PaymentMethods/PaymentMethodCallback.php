@@ -38,11 +38,18 @@ use WC_Order;
 class PaymentMethodCallback {
 
     /**
-     * The transaction id.
+     * The WooCommerce Order Id.
      *
-     * @var      int    The order ID.
+     * @var      int    The WooCommerce Order Id.
      */
-    private $order_id;
+    private $woocommerce_order_id;
+
+    /**
+     * The MultiSafepay Order Id.
+     *
+     * @var      string    The MultiSafepay Order Id.
+     */
+    private $multisafepay_order_id;
 
     /**
      * The time stamp of the callback
@@ -65,16 +72,27 @@ class PaymentMethodCallback {
      */
     private $transaction;
 
+
     /**
-     * PaymentMethodCallback constructor.
+     * PaymentMethodCallback constructor
      *
-     * @param string $order_id
+     * @param string $multisafepay_order_id
      */
-    public function __construct( string $order_id ) {
-        $this->order_id    = $order_id;
-        $this->time_stamp  = date( 'd/m/Y H:i:s' );
-        $this->order       = wc_get_order( $order_id );
-        $this->transaction = $this->get_transaction();
+    public function __construct( string $multisafepay_order_id ) {
+        $this->multisafepay_order_id    = $multisafepay_order_id;
+        $this->multisafepay_transaction = $this->get_transaction();
+
+        // For most transactions var2 contains the order id; since the order request is being register using order number
+        if ( ! empty( $this->multisafepay_transaction->getVar2() ) ) {
+            $this->woocommerce_order_id = $this->multisafepay_transaction->getVar2();
+        }
+
+        // In case we nee it, a filter to set the right order id, based on order number
+        if ( empty( $this->multisafepay_transaction->getVar2() ) ) {
+            $this->woocommerce_order_id = apply_filters( 'multisafepay_transaction_order_id', $this->multisafepay_order_id );
+        }
+        $this->time_stamp = date( 'd/m/Y H:i:s' );
+        $this->order      = wc_get_order( $this->woocommerce_order_id );
     }
 
     /**
@@ -85,7 +103,7 @@ class PaymentMethodCallback {
     private function get_transaction(): TransactionResponse {
         $transaction_manager = ( new SdkService() )->get_transaction_manager();
         try {
-            $transaction = $transaction_manager->get( $this->order_id );
+            $transaction = $transaction_manager->get( $this->multisafepay_order_id );
             return $transaction;
         } catch ( ApiException $api_exception ) {
             if ( get_option( 'multisafepay_debugmode', false ) ) {
@@ -111,7 +129,7 @@ class PaymentMethodCallback {
      * @return string
      */
     private function get_multisafepay_transaction_gateway_code(): string {
-        return $this->transaction->getPaymentDetails()->getType();
+        return $this->multisafepay_transaction->getPaymentDetails()->getType();
     }
 
     /**
@@ -120,7 +138,7 @@ class PaymentMethodCallback {
      * @return string
      */
     private function get_multisafepay_transaction_status(): string {
-        return $this->transaction->getStatus();
+        return $this->multisafepay_transaction->getStatus();
     }
 
     /**
@@ -129,7 +147,7 @@ class PaymentMethodCallback {
      * @return string
      */
     private function get_multisafepay_transaction_id(): string {
-        return $this->transaction->getTransactionId();
+        return $this->multisafepay_transaction->getTransactionId();
     }
 
     /**
@@ -153,19 +171,19 @@ class PaymentMethodCallback {
         if ( $payment_method_id_registered_by_multisafepay && $payment_method_id_registered_by_wc !== $payment_method_id_registered_by_multisafepay ) {
             if ( get_option( 'multisafepay_debugmode', false ) ) {
                 $logger  = wc_get_logger();
-                $message = 'Callback received with a different payment method for Order ID: ' . $this->order_id . ' on ' . $this->time_stamp . '. Payment method pass from ' . $payment_method_title_registered_by_wc . ' to ' . $payment_method_title_registered_by_multisafepay . '.';
+                $message = 'Callback received with a different payment method for Order ID: ' . $this->woocommerce_order_id . ' and Order Number: ' . $this->multisafepay_order_id . ' on ' . $this->time_stamp . '. Payment method pass from ' . $payment_method_title_registered_by_wc . ' to ' . $payment_method_title_registered_by_multisafepay . '.';
                 $logger->log( 'info', $message );
                 $this->order->add_order_note( $message );
             }
-            update_post_meta( $this->order_id, '_payment_method', $payment_method_id_registered_by_multisafepay );
-            update_post_meta( $this->order_id, '_payment_method_title', $payment_method_title_registered_by_multisafepay );
+            update_post_meta( $this->woocommerce_order_id, '_payment_method', $payment_method_id_registered_by_multisafepay );
+            update_post_meta( $this->woocommerce_order_id, '_payment_method_title', $payment_method_title_registered_by_multisafepay );
         }
 
         if ( $this->get_wc_order_status() !== str_replace( 'wc-', '', get_option( 'multisafepay_' . $this->get_multisafepay_transaction_status() . '_status', $default_order_status[ $this->get_multisafepay_transaction_status() . '_status' ]['default'] ) ) ) {
             $this->order->update_status( str_replace( 'wc-', '', get_option( 'multisafepay_' . $this->get_multisafepay_transaction_status() . '_status', $default_order_status[ $this->get_multisafepay_transaction_status() . '_status' ]['default'] ) ) );
             if ( get_option( 'multisafepay_debugmode', false ) ) {
                 $logger  = wc_get_logger();
-                $message = 'Callback received for Order ID: ' . $this->order_id . ' on ' . $this->time_stamp . ' with status: ' . $this->get_multisafepay_transaction_status() . ' and PSP ID' . $this->get_multisafepay_transaction_id() . '.';
+                $message = 'Callback received for Order ID: ' . $this->woocommerce_order_id . ' and Order Number: ' . $this->multisafepay_order_id . ' on ' . $this->time_stamp . ' with status: ' . $this->get_multisafepay_transaction_status() . ' and PSP ID' . $this->get_multisafepay_transaction_id() . '.';
                 $logger->log( 'info', $message );
                 $this->order->add_order_note( $message );
             }

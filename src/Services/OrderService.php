@@ -86,11 +86,12 @@ class OrderService {
             ->addType( $type )
             ->addPluginDetails( $this->create_plugin_details() )
             /* translators: %s: order id */
-            ->addDescriptionText( sprintf( __( 'Payment for order: %s', 'multisafepay' ), $order->get_id() ) )
+            ->addDescriptionText( sprintf( __( 'Payment for order: %s', 'multisafepay' ), $order->get_order_number() ) )
             ->addCustomer( $this->customer_service->create_customer_details( $order ) )
             ->addPaymentOptions( $this->create_payment_options( $order, $gateway_id ) )
             ->addShoppingCart( $this->shopping_cart_service->create_shopping_cart( $order, $order->get_currency() ) )
-            ->addSecondsActive( $time_active );
+            ->addSecondsActive( $time_active )
+            ->addData( array( 'var2' => $order->get_id() ) );
 
         if ( $order->get_shipping_total() > 0 ) {
             $order_request->addDelivery( $this->customer_service->create_delivery_details( $order ) );

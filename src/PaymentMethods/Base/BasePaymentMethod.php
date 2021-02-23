@@ -351,7 +351,8 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
                 wp_die( esc_html__( 'Invalid request', 'multisafepay' ), esc_html__( 'Invalid request', 'multisafepay' ), 400 );
             }
         }
-        $payment_method_callback = ( new PaymentMethodCallback( $_GET['transactionid'] ) )->process_callback();
+        $multisafepay_order_id   = $_GET['transactionid'];
+        $payment_method_callback = ( new PaymentMethodCallback( (string) $multisafepay_order_id ) )->process_callback();
     }
 
     /**
