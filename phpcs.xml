@@ -51,6 +51,7 @@
     <!-- Exclude nonce verification for uninstall.php file. According with documentation this is not required. -->
     <rule ref="WordPress.Security.NonceVerification.Missing">
         <exclude-pattern>uninstall.php</exclude-pattern>
+        <exclude-pattern>*/src/PaymentMethods/Base/BasePaymentMethod.php</exclude-pattern>
     </rule>
 
     <!-- Exclude non used parameters warnings, since most of the filters requires skip this rule -->
