@@ -6,16 +6,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 4.1.5
+Release date: Feb 24th, 2021
+
+### Fixed
++ PLGWOOS-552: Fix product item price with discounts introduced by third party plugins (#252)
+
+***
+
 ## 4.1.4
 Release date: Feb 23th, 2021
 
 ### Fixed
-PLGWOOS-563: Remove some nonce validations to support custom checkouts forms (#249)
-PLGWOOS-550: Typecast cart item quantity to int to avoid errors in the PHP-SDK (#248)
++ PLGWOOS-563: Remove some nonce validations to support custom checkouts forms (#249)
++ PLGWOOS-550: Typecast cart item quantity to int to avoid errors in the PHP-SDK (#248)
 
 ### Changed
-PLGWOOS-556: Change composer dependencies to avoid conflicts with other plugins (#247)  
-PLGWOOS-562: Add fallback for in3, in case no fields is filled in checkout, convert the transaction to redirect type (#250)  
++ PLGWOOS-556: Change composer dependencies to avoid conflicts with other plugins (#247)  
++ PLGWOOS-562: Add fallback for in3, in case no fields is filled in checkout, convert the transaction to redirect type (#250)  
 
 ***
 

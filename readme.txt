@@ -4,7 +4,7 @@ Tags: multisafepay, credit card, credit cards, gateway, payments, woocommerce, i
 Requires at least: 5.0
 Tested up to: 5.6.1
 Requires PHP: 7.2
-Stable tag: 4.1.4
+Stable tag: 4.1.5
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -129,7 +129,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 
 == Upgrade Notice ==
 
-= 4.1.4 =
+= 4.1.5 =
 4.x.x is a major upgrade from 3.x.x, a complete rewrite of the plugin. After upgrade, please navigate to MultiSafepay settings page and confirm the settings.
 
 == Screenshots ==
@@ -143,15 +143,21 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 
 == Changelog ==
 
-= Release Notes - WooCommerce 4.1.4 (Feb 21th, 2021) =
+= Release Notes - WooCommerce 4.1.5 (Feb 24th, 2021) =
 
 ### Fixed
-PLGWOOS-563: Remove some nonce validations to support custom checkouts forms (#249)
-PLGWOOS-550: Typecast cart item quantity to int to avoid errors in the PHP-SDK (#248)
++ PLGWOOS-552: Fix product item price with discounts introduced by third party plugins (#252)
+
+= Release Notes - WooCommerce 4.1.4 (Feb 23th, 2021) =
+
+### Fixed
++ PLGWOOS-563: Remove some nonce validations to support custom checkouts forms (#249)
++ PLGWOOS-550: Typecast cart item quantity to int to avoid errors in the PHP-SDK (#248)
 
 ### Changed
-PLGWOOS-556: Change composer dependencies to avoid conflicts with other plugins (#247)
-PLGWOOS-562: Add fallback for in3, in case no fields is filled in checkout, convert the transaction to redirect type (#250)
++ PLGWOOS-556: Change composer dependencies to avoid conflicts with other plugins (#247)
++ PLGWOOS-562: Add fallback for in3, in case no fields is filled in checkout, convert the transaction to redirect type (#250)
+
 
 = Release Notes - WooCommerce 4.1.3 (Feb 21th, 2021) =
 
