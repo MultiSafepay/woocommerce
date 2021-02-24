@@ -76,7 +76,7 @@ class ShoppingCartService {
     private function create_cart_item( WC_Order_Item_Product $item, string $currency ): CartItem {
         $merchant_item_id = $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id();
         $product_name     = $item->get_name();
-        $product_price    = wc_get_price_excluding_tax( $item->get_product() );
+        $product_price    = (float) $item->get_subtotal() / (int) $item->get_quantity();
 
         // If product price without discount get_subtotal() is not the same than product price with discount
         // Then a percentage coupon has been applied to this item
