@@ -120,6 +120,7 @@ class CustomerService {
             ->addFirstName( $first_name )
             ->addLastName( $last_name )
             ->addPhoneNumber( new PhoneNumber( $phone_number ) )
+            ->addLocale( $this->get_locale() )
             ->addCompanyName( $company_name ? $company_name : '' );
 
         if ( ! empty( $ip_address ) ) {
@@ -164,6 +165,15 @@ class CustomerService {
             ->addCity( $city )
             ->addCountry( new Country( $country ) )
             ->addZipCode( $zip_code );
+    }
+
+    /**
+     * Return customer locale
+     *
+     * @return string
+     */
+    public function get_locale(): string {
+        return apply_filters( 'multisafepay_customer_locale', get_locale() );
     }
 
 }
