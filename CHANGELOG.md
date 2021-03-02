@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 4.1.6
+Release date: Feb 2nd, 2021
+
+### Added
++ PLGWOOS-574: Add locale support
+
+### Changed
++ PLGWOOS-575: Change settings page capability requirement from manage_options to manage_woocommerce
+
+### Fixed
++ PLGWOOS-580: Show credit card payment method description in checkout
++ PLGWOOS-569: Remove class that trigger validation styles for ideal select in checkout page
+
+
+***
+
 ## 4.1.5
 Release date: Feb 24th, 2021
 
