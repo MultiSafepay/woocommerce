@@ -153,7 +153,7 @@ class SettingsController {
             'woocommerce',
             esc_html( $title ),
             __( 'MultiSafepay Settings', 'multisafepay' ),
-            'manage_options',
+            'manage_woocommerce',
             'multisafepay-settings',
             array( $this, 'display_multisafepay_settings' )
         );
