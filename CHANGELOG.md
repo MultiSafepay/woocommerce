@@ -4,10 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+***
 
 ## 4.1.6
-Release date: Feb 2nd, 2021
+Release date: Mar 2nd, 2021
 
 ### Added
 + PLGWOOS-574: Add locale support
@@ -18,7 +18,6 @@ Release date: Feb 2nd, 2021
 ### Fixed
 + PLGWOOS-580: Show credit card payment method description in checkout
 + PLGWOOS-569: Remove class that trigger validation styles for ideal select in checkout page
-
 
 ***
 
@@ -95,8 +94,8 @@ Release date: Feb 17th, 2021
 
 ***
 
-## 4.0.0
-Unreleased
+## 4.0.0 [internal release]
+Release date: Feb 12th, 2021
 
 ### Added
 + Full and partial refunds for non billing suite payment methods
