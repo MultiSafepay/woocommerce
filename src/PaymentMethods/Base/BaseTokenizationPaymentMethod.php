@@ -95,6 +95,11 @@ abstract class BaseTokenizationPaymentMethod extends BasePaymentMethod {
         if ( ! is_user_logged_in() ) {
             return;
         }
+
+        if ( $this->description ) {
+            echo '<p>' . esc_html( $this->description ) . '</p>';
+        }
+
         if ( is_wc_endpoint_url( 'add-payment-method' ) ) {
             $message = __( 'To save a credit card you must process an order with products and pass by checkout page, selecting  the checkbox "Save your credit card for the next purchase"', 'multisafepay' );
             echo '<p>' . esc_html( $message ) . '</p>';
