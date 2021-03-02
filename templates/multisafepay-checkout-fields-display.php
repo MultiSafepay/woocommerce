@@ -27,8 +27,8 @@
 <?php } ?>
 
 <?php if ( isset( $issuers ) ) { ?>
-    <p class="form-row form-row-wide validate-required" id="<?php echo esc_attr( $this->id ); ?>_issuer_id_field">
-        <label for="<?php echo esc_attr( $this->id ); ?>_issuer_id" class=""><?php echo esc_html__( 'Issuer', 'multisafepay' ); ?><abbr class="required" title="required">*</abbr></label>
+    <p class="form-row form-row-wide" id="<?php echo esc_attr( $this->id ); ?>_issuer_id_field">
+        <label for="<?php echo esc_attr( $this->id ); ?>_issuer_id" class=""><?php echo esc_html__( 'Issuer', 'multisafepay' ); ?></label>
         <span class="woocommerce-input-wrapper">
             <select name="<?php echo esc_attr( $this->id ); ?>_issuer_id" id="<?php echo esc_attr( $this->id ); ?>_issuer_id">
                 <option value=""><?php echo esc_html__( 'Select an issuer', 'multisafepay' ); ?></option>
