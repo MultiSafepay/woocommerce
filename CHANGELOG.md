@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.1.7
+Release date: Mar 3th, 2021
+
+### Changed
++ PLGWOOS-579: Remove warning message on validation, when enabling CREDITCARD gateway
+
+### Fixed
++ PLGWOOS-584: Fix conflict with third party plugins related with Discovery exception 
++ PLGWOOS-585: Set MultiSafepay transaction as shipped or invoiced using order number instead of order id
+
+***
+
 ## 4.1.6
 Release date: Mar 2nd, 2021
 
