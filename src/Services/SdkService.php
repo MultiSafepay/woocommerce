@@ -30,6 +30,8 @@ use MultiSafepay\Api\TransactionManager;
 use MultiSafepay\Exception\ApiException;
 use MultiSafepay\Exception\InvalidApiKeyException;
 use MultiSafepay\Sdk;
+use Buzz\Client\Curl;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use WP_Error;
 
 /**
@@ -64,9 +66,10 @@ class SdkService {
     public function __construct( string $api_key = null, bool $test_mode = null ) {
         $this->api_key   = $api_key ?? $this->get_api_key();
         $this->test_mode = $test_mode ?? $this->get_test_mode();
-
+        $psr_factory     = new Psr17Factory();
+        $client          = new Curl( $psr_factory );
         try {
-            $this->sdk = new Sdk( $this->api_key, ( $this->test_mode ) ? false : true );
+            $this->sdk = new Sdk( $this->api_key, ( $this->test_mode ) ? false : true, $client, $psr_factory, $psr_factory );
         } catch ( InvalidApiKeyException $invalid_api_key_exception ) {
             if ( get_option( 'multisafepay_debugmode', false ) ) {
                 $logger = wc_get_logger();
