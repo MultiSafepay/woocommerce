@@ -373,7 +373,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         foreach ( $gateways as $gateway ) {
             $available_gateways[] = $gateway->getId();
         }
-        if ( ! in_array( $this->gateway_code, $available_gateways, true ) && ! empty( $this->gateway_code ) ) {
+        if ( 'CREDITCARD' !== $this->gateway_code && ! in_array( $this->gateway_code, $available_gateways, true ) && ! empty( $this->gateway_code ) ) {
             $message = sprintf(
                 /* translators: %1$: The payment method title */
                 __( 'It seems %1$s is not available for your MultiSafepay account. <a href="%2$s">Contact support</a>', 'multisafepay' ),
