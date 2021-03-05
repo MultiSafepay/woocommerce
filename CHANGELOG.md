@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.1.8
+Release date: Mar 5th, 2021
+
+### Changed
++ PLGWOOS-593: Register PSP ID in WooCommerce order using order complete payment method 
++ PLGWOOS-593: Change notification method on completed status to use $order->complete_payment()
+
+### Fixed
++ PLGWOOS-594: Fix Credit Card payment method form, to show description if customer is not logged in
+
+***
+
 ## 4.1.7
 Release date: Mar 3th, 2021
 
