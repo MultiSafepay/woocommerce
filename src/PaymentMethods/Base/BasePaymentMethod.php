@@ -389,9 +389,9 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
     /**
      * Prints checkout custom fields
      *
-     * @return  void
+     * @return  mixed
      */
-    public function payment_fields(): void {
+    public function payment_fields() {
         require $this->plugin_dir_path . 'templates/multisafepay-checkout-fields-display.php';
     }
 

@@ -89,11 +89,12 @@ abstract class BaseTokenizationPaymentMethod extends BasePaymentMethod {
 
     /**
      *
-     * @return void
+     * @return mixed
      */
-    public function payment_fields(): void {
-        if ( ! is_user_logged_in() ) {
-            return;
+    public function payment_fields() {
+
+        if ( ! $this->has_fields() ) {
+            return parent::payment_fields();
         }
 
         if ( $this->description ) {
