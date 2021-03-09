@@ -149,6 +149,38 @@ class SettingsFields {
                     'sort_order'   => 2,
                 ),
                 array(
+                    'id'           => $this->plugin_name . '_trigger_transaction_to_invoiced',
+                    'label'        => __( 'Set transaction as invoiced', 'multisafepay' ),
+                    'description'  => __( 'When the order reaches this status, we send the invoice id to MultiSafepay', 'multisafepay' ),
+                    'type'         => 'select',
+                    'options'      => array(
+                        'wc-processing' => __( 'Processing', 'multisafepay' ),
+                        'wc-completed'  => __( 'Completed', 'multisafepay' ),
+                    ),
+                    'default'      => 'wc-completed',
+                    'placeholder'  => __( 'Set transaction as invoiced', 'multisafepay' ),
+                    'tooltip'      => 'The invoice id will be added to financial reports and exports generated within MultiSafepay Control',
+                    'callback'     => '',
+                    'setting_type' => 'string',
+                    'sort_order'   => 3,
+                ),
+                array(
+                    'id'           => $this->plugin_name . '_trigger_transaction_to_shipped',
+                    'label'        => __( 'Set transaction as shipped', 'multisafepay' ),
+                    'description'  => __( 'When the order reaches this status, a notification will be sent to MultiSafepay to set the transaction status as shipped', 'multisafepay' ),
+                    'type'         => 'select',
+                    'options'      => array(
+                        'wc-processing' => __( 'Processing', 'multisafepay' ),
+                        'wc-completed'  => __( 'Completed', 'multisafepay' ),
+                    ),
+                    'default'      => 'wc-completed',
+                    'placeholder'  => __( 'Set transaction as shipped', 'multisafepay' ),
+                    'tooltip'      => '',
+                    'callback'     => '',
+                    'setting_type' => 'string',
+                    'sort_order'   => 4,
+                ),
+                array(
                     'id'           => $this->plugin_name . '_time_active',
                     'label'        => __( 'Value lifetime of payment link', 'multisafepay' ),
                     'description'  => '',
@@ -158,7 +190,7 @@ class SettingsFields {
                     'tooltip'      => '',
                     'callback'     => '',
                     'setting_type' => 'int',
-                    'sort_order'   => 3,
+                    'sort_order'   => 5,
                 ),
                 array(
                     'id'           => $this->plugin_name . '_time_unit',
@@ -175,7 +207,7 @@ class SettingsFields {
                     'tooltip'      => '',
                     'callback'     => '',
                     'setting_type' => 'string',
-                    'sort_order'   => 4,
+                    'sort_order'   => 6,
                 ),
                 array(
                     'id'           => $this->plugin_name . '_second_chance',
@@ -187,7 +219,7 @@ class SettingsFields {
                     'tooltip'      => __( 'MultiSafepay will send two Second Chance reminder emails. In the emails, MultiSafepay will include a link to allow the consumer to finalize the payment. The first Second Chance email is sent 1 hour after the transaction was initiated and the second after 24 hours. To receive second chance emails, this option must also be activated within your MultiSafepay account, otherwise it will not work.', 'multisafepay' ),
                     'callback'     => '',
                     'setting_type' => 'boolean',
-                    'sort_order'   => 5,
+                    'sort_order'   => 7,
                 ),
                 array(
                     'id'           => $this->plugin_name . '_tokenization',
@@ -199,7 +231,7 @@ class SettingsFields {
                     'tooltip'      => '',
                     'callback'     => '',
                     'setting_type' => 'boolean',
-                    'sort_order'   => 6,
+                    'sort_order'   => 8,
                 ),
                 array(
                     'id'           => $this->plugin_name . '_remove_all_settings',
@@ -211,7 +243,7 @@ class SettingsFields {
                     'tooltip'      => __( 'Delete all settings of this plugin if you uninstall', 'multisafepay' ),
                     'callback'     => '',
                     'setting_type' => 'boolean',
-                    'sort_order'   => 7,
+                    'sort_order'   => 9,
                 ),
             ),
         );
@@ -223,10 +255,15 @@ class SettingsFields {
      * @return  array
      */
     private function get_settings_order_status(): array {
-        $wc_order_statuses           = $this->get_wc_get_order_statuses();
+        $wc_order_statuses = $this->get_wc_get_order_statuses();
+
+        // Complete status is manage by $order->complete_payment() in the notification;
+        // but still is important get a default value for this in case is required somewhere else as a fallback.
         $multisafepay_order_statuses = $this->get_multisafepay_order_statuses();
-        $order_status_fields         = array();
-        $sort_order                  = 1;
+        unset( $multisafepay_order_statuses['completed_status'] );
+
+        $order_status_fields = array();
+        $sort_order          = 1;
         foreach ( $multisafepay_order_statuses as $key => $multisafepay_order_status ) {
             $order_status_fields[] = array(
                 'id'           => $this->plugin_name . '_' . $key,
@@ -316,10 +353,6 @@ class SettingsFields {
 				'label'   => __( 'Cancelled', 'multisafepay' ),
 				'default' => 'wc-cancelled',
 			),
-            'invoiced_status'         => array(
-                'label'   => __( 'Invoiced', 'multisafepay' ),
-                'default' => 'wc-completed',
-            ),
             'chargedback_status'      => array(
                 'label'   => __( 'Chargedback', 'multisafepay' ),
                 'default' => 'wc-on-hold',
