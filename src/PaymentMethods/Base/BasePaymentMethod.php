@@ -224,7 +224,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
             'countries'            => array(
                 'title'       => __( 'Country', 'multisafepay' ),
                 'type'        => 'multiselect',
-                'description' => __( 'If you select one or more countries, this payment method won\'t show in the checkout page, if the payment address`s country of the customer match with the selected values. Leave blank for no restrictions.', 'multisafepay' ),
+                'description' => __( 'If you select one or more countries, this payment method will be shown in the checkout page, if the payment address`s country of the customer match with the selected values. Leave blank for no restrictions.', 'multisafepay' ),
                 'desc_tip'    => __( 'For most operating system and configurations, you must hold Ctrl or Cmd in your keyboard, while you click in the options to select more than one value.', 'multisafepay' ),
                 'options'     => $this->get_countries(),
                 'default'     => $this->get_option( 'countries', array() ),
