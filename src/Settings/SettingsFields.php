@@ -320,6 +320,10 @@ class SettingsFields {
                 'label'   => __( 'Invoiced', 'multisafepay' ),
                 'default' => 'wc-completed',
             ),
+            'chargedback_status'      => array(
+                'label'   => __( 'Chargedback', 'multisafepay' ),
+                'default' => 'wc-on-hold',
+            ),
         );
     }
 
