@@ -127,6 +127,10 @@ class CustomerService {
             $customer_details->addIpAddress( new IpAddress( $ip_address ) );
         }
 
+        if ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+            $customer_details->addForwardedIp( new IpAddress( $_SERVER['HTTP_X_FORWARDED_FOR'] ) );
+        }
+
         if ( ! empty( $user_agent ) ) {
             $customer_details->addUserAgent( $user_agent );
         }
