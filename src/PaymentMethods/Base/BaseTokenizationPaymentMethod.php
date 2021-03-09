@@ -126,7 +126,7 @@ abstract class BaseTokenizationPaymentMethod extends BasePaymentMethod {
             $multisafepay_vars = array(
                 'id' => $this->id,
             );
-            $route             = get_bloginfo( 'url' ) . '/wp-content/plugins/multisafepay/assets/public/js/multisafepay-tokenization.js';
+            $route             = plugins_url( 'multisafepay/assets/public/js/multisafepay-tokenization.js' );
             wp_enqueue_script( 'multisafepay-' . $this->id . '-tokenization-js', $route, array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
             wp_localize_script( 'multisafepay-' . $this->id . '-tokenization-js', 'multisafepay', $multisafepay_vars );
             wp_enqueue_script( 'multisafepay-' . $this->id . '-tokenization-js' );
