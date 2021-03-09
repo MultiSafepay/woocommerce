@@ -105,6 +105,9 @@ class ShoppingCartService {
         if ( 'taxable' !== $item->get_tax_status() ) {
             return 0;
         }
+        if ( $this->is_order_vat_exempt( $item->get_order_id() ) ) {
+            return 0;
+        }
         $tax_rates = WC_Tax::get_rates( $item->get_tax_class() );
         switch ( count( $tax_rates ) ) {
             case 0:
@@ -142,10 +145,15 @@ class ShoppingCartService {
      * @return float
      */
     private function get_shipping_tax_rate( WC_Order_Item_Shipping $item ): float {
+        if ( $this->is_order_vat_exempt( $item->get_order_id() ) ) {
+            return 0;
+        }
+
         $taxes = $item->get_taxes();
         if ( empty( $taxes ) ) {
             return 0;
         }
+
         $total_tax = array_sum( $taxes['total'] );
         $tax_rate  = ( (float) $total_tax * 100 ) / (float) $item->get_total();
         return $tax_rate;
@@ -172,13 +180,31 @@ class ShoppingCartService {
      * @return float
      */
     private function get_fee_tax_rate( WC_Order_Item_Fee $item ): float {
+        if ( $this->is_order_vat_exempt( $item->get_order_id() ) ) {
+            return 0;
+        }
+
         $taxes = $item->get_taxes();
         if ( empty( $taxes ) || null === $taxes ) {
             return 0;
         }
+
         $total_tax = array_sum( $taxes['total'] );
         $tax_rate  = ( (float) $total_tax * 100 ) / (float) $item->get_total();
         return $tax_rate;
+    }
+
+    /**
+     * Returns if order is VAT exempt via WC->Customer->is_vat_exempt
+     *
+     * @param int $order_id
+     * @return boolean
+     */
+    private function is_order_vat_exempt( int $order_id ): bool {
+        if ( get_post_meta( $order_id, 'is_vat_exempt', true ) === 'yes' ) {
+            return true;
+        }
+        return false;
     }
 
 }
