@@ -294,7 +294,7 @@ class SettingsFields {
 			),
             'declined_status'         => array(
 				'label'   => __( 'Declined', 'multisafepay' ),
-				'default' => 'wc-cancelled',
+				'default' => 'wc-failed',
 			),
             'expired_status'          => array(
 				'label'   => __( 'Expired', 'multisafepay' ),
