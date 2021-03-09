@@ -137,6 +137,18 @@ class SettingsFields {
                     'sort_order'   => 1,
                 ),
                 array(
+                    'id'           => $this->plugin_name . '_order_request_description',
+                    'label'        => __( 'Order Description', 'multisafepay' ),
+                    'description'  => __( 'A text which will be shown with the order in MultiSafepay Control. If the customer’s bank supports it this description will also be shown on the customer’s bank statement', 'multisafepay' ),
+                    'type'         => 'text',
+                    'default'      => 'Payment for order: {order_number}',
+                    'placeholder'  => __( 'Order Description.', 'multisafepay' ),
+                    'tooltip'      => __( 'You can include the order number using {order_number}', 'multisafepay' ),
+                    'callback'     => '',
+                    'setting_type' => 'string',
+                    'sort_order'   => 2,
+                ),
+                array(
                     'id'           => $this->plugin_name . '_ga',
                     'label'        => __( 'Google Analytics', 'multisafepay' ),
                     'description'  => __( 'Google Analytics Universal Account ID. Format: UA-XXXXXXXXX', 'multisafepay' ),
@@ -146,7 +158,7 @@ class SettingsFields {
                     'tooltip'      => '',
                     'callback'     => '',
                     'setting_type' => 'string',
-                    'sort_order'   => 2,
+                    'sort_order'   => 3,
                 ),
                 array(
                     'id'           => $this->plugin_name . '_trigger_transaction_to_invoiced',
@@ -162,7 +174,7 @@ class SettingsFields {
                     'tooltip'      => 'The invoice id will be added to financial reports and exports generated within MultiSafepay Control',
                     'callback'     => '',
                     'setting_type' => 'string',
-                    'sort_order'   => 3,
+                    'sort_order'   => 4,
                 ),
                 array(
                     'id'           => $this->plugin_name . '_trigger_transaction_to_shipped',
@@ -178,7 +190,7 @@ class SettingsFields {
                     'tooltip'      => '',
                     'callback'     => '',
                     'setting_type' => 'string',
-                    'sort_order'   => 4,
+                    'sort_order'   => 5,
                 ),
                 array(
                     'id'           => $this->plugin_name . '_time_active',
@@ -190,7 +202,7 @@ class SettingsFields {
                     'tooltip'      => '',
                     'callback'     => '',
                     'setting_type' => 'int',
-                    'sort_order'   => 5,
+                    'sort_order'   => 6,
                 ),
                 array(
                     'id'           => $this->plugin_name . '_time_unit',
@@ -207,7 +219,7 @@ class SettingsFields {
                     'tooltip'      => '',
                     'callback'     => '',
                     'setting_type' => 'string',
-                    'sort_order'   => 6,
+                    'sort_order'   => 7,
                 ),
                 array(
                     'id'           => $this->plugin_name . '_second_chance',
@@ -219,7 +231,7 @@ class SettingsFields {
                     'tooltip'      => __( 'MultiSafepay will send two Second Chance reminder emails. In the emails, MultiSafepay will include a link to allow the consumer to finalize the payment. The first Second Chance email is sent 1 hour after the transaction was initiated and the second after 24 hours. To receive second chance emails, this option must also be activated within your MultiSafepay account, otherwise it will not work.', 'multisafepay' ),
                     'callback'     => '',
                     'setting_type' => 'boolean',
-                    'sort_order'   => 7,
+                    'sort_order'   => 8,
                 ),
                 array(
                     'id'           => $this->plugin_name . '_tokenization',
@@ -231,7 +243,7 @@ class SettingsFields {
                     'tooltip'      => '',
                     'callback'     => '',
                     'setting_type' => 'boolean',
-                    'sort_order'   => 8,
+                    'sort_order'   => 9,
                 ),
                 array(
                     'id'           => $this->plugin_name . '_remove_all_settings',
@@ -243,7 +255,7 @@ class SettingsFields {
                     'tooltip'      => __( 'Delete all settings of this plugin if you uninstall', 'multisafepay' ),
                     'callback'     => '',
                     'setting_type' => 'boolean',
-                    'sort_order'   => 9,
+                    'sort_order'   => 10,
                 ),
             ),
         );

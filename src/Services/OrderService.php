@@ -85,8 +85,7 @@ class OrderService {
             ->addGatewayCode( $gateway_code )
             ->addType( $type )
             ->addPluginDetails( $this->create_plugin_details() )
-            /* translators: %s: order id */
-            ->addDescriptionText( sprintf( __( 'Payment for order: %s', 'multisafepay' ), $order->get_order_number() ) )
+            ->addDescriptionText( $this->get_order_description_text( $order->get_order_number() ) )
             ->addCustomer( $this->customer_service->create_customer_details( $order ) )
             ->addPaymentOptions( $this->create_payment_options( $order, $gateway_id ) )
             ->addShoppingCart( $this->shopping_cart_service->create_shopping_cart( $order, $order->get_currency() ) )
@@ -134,6 +133,21 @@ class OrderService {
             ->addNotificationMethod( 'GET' )
             ->addCancelUrl( $order->get_cancel_order_url() )
             ->addRedirectUrl( $order->get_checkout_order_received_url() );
+    }
+
+    /**
+     * Return the order description.
+     *
+     * @param   string $order_number
+     * @return  string   $order_description
+     */
+    private function get_order_description_text( $order_number ):string {
+        /* translators: %s: order id */
+        $order_description = sprintf( __( 'Payment for order: %s', 'multisafepay' ), $order_number );
+        if ( get_option( 'multisafepay_order_request_description', false ) ) {
+            $order_description = str_replace( '{order_number}', $order_number, get_option( 'multisafepay_order_request_description', false ) );
+        }
+        return $order_description;
     }
 
 }
