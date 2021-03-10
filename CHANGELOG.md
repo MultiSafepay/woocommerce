@@ -10,20 +10,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Release date: Mar 9th, 2021
 
 ### Changed
-PLGWOOS-602: Move invoice and shipped settings field from order status tab to options tab
-PLGWOOS-602: Remove completed status from order status tab in settings page
-PLGWOOS-601: Change default status for declined transactions from wc-cancelled to wc-failed
++ PLGWOOS-602: Move invoice and shipped settings field from order status tab to options tab
++ PLGWOOS-602: Remove completed status from order status tab in settings page
++ PLGWOOS-601: Change default status for declined transactions from wc-cancelled to wc-failed
 
 ### Fixed
-PLGWOOS-599: Fix typo in string message when payment method changes
-PLGWOOS-598: Replace hardcoded url using plugins_url function
-PLGWOOS-605: Fix description of country filter field
++ PLGWOOS-599: Fix typo in string message when payment method changes
++ PLGWOOS-598: Replace hardcoded url using plugins_url function
++ PLGWOOS-605: Fix description of country filter field
 
 ### Added
-PLGWOOS-603: Add setting field for custom order description
-PLGWOOS-604: Add forwarded ip to the CustomerDetails object
-PLGWOOS-597: Support for orders with is_vat_exempt
-PLGWOOS-606: Add chargedback transaction status in plugin settings
++ PLGWOOS-603: Add setting field for custom order description
++ PLGWOOS-604: Add forwarded ip to the CustomerDetails object
++ PLGWOOS-597: Support for orders with is_vat_exempt
++ PLGWOOS-606: Add chargedback transaction status in plugin settings
 
 ***
 
