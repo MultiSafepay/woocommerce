@@ -105,7 +105,8 @@ class OrderService {
             $order_request->addGatewayInfo( $gateway_info );
         }
 
-        return $order_request;
+        return apply_filters( 'multisafepay_order_request', $order_request );
+
     }
 
     /**
