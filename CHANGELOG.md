@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.2.1
+Release date: Mar 11th, 2021
+
+### Fixed
++ PLGWOOS-613: Fix error related with multiple forwarded IPs by updating the PHP-SDK to 5.0.1
+
+### Added
++ PLGWOOS-398: Add support to change the data in the OrderRequest using Wordpress filters
+
+### Changed
++ PLGWOOS-614: Avoid changing order status if transaction is partially refunded
+
+***
+
 ## 4.2.0
 Release date: Mar 9th, 2021
 
@@ -21,7 +35,7 @@ Release date: Mar 9th, 2021
 
 ### Added
 + PLGWOOS-603: Add setting field for custom order description
-+ PLGWOOS-604: Add forwarded ip to the CustomerDetails object
++ PLGWOOS-604: Add forwarded IP to the CustomerDetails object
 + PLGWOOS-597: Support for orders with is_vat_exempt
 + PLGWOOS-606: Add chargedback transaction status in plugin settings
 
