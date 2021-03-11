@@ -25,7 +25,7 @@ namespace MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods;
 
 use MultiSafepay\WooCommerce\PaymentMethods\Base\BaseBillingSuitePaymentMethod;
 
-class Einvocing extends BaseBillingSuitePaymentMethod {
+class Einvoicing extends BaseBillingSuitePaymentMethod {
 
     /**
      * @return string
