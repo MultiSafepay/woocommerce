@@ -321,51 +321,47 @@ class SettingsFields {
      */
     public static function get_multisafepay_order_statuses(): array {
         return array(
-            'initialized_status'      => array(
+            'initialized_status' => array(
 				'label'   => __( 'Initialized', 'multisafepay' ),
 				'default' => 'wc-pending',
 			),
-            'completed_status'        => array(
+            'completed_status'   => array(
 				'label'   => __( 'Completed', 'multisafepay' ),
 				'default' => 'wc-processing',
 			),
-            'uncleared_status'        => array(
+            'uncleared_status'   => array(
 				'label'   => __( 'Uncleared', 'multisafepay' ),
 				'default' => 'wc-on-hold',
 			),
-            'reserved_status'         => array(
+            'reserved_status'    => array(
 				'label'   => __( 'Reserved', 'multisafepay' ),
 				'default' => 'wc-on-hold',
 			),
-            'void_status'             => array(
+            'void_status'        => array(
 				'label'   => __( 'Void', 'multisafepay' ),
 				'default' => 'wc-cancelled',
 			),
-            'declined_status'         => array(
+            'declined_status'    => array(
 				'label'   => __( 'Declined', 'multisafepay' ),
 				'default' => 'wc-failed',
 			),
-            'expired_status'          => array(
+            'expired_status'     => array(
 				'label'   => __( 'Expired', 'multisafepay' ),
 				'default' => 'wc-cancelled',
 			),
-            'shipped_status'          => array(
+            'shipped_status'     => array(
 				'label'   => __( 'Shipped', 'multisafepay' ),
 				'default' => 'wc-completed',
 			),
-            'refunded_status'         => array(
+            'refunded_status'    => array(
 				'label'   => __( 'Refunded', 'multisafepay' ),
 				'default' => 'wc-refunded',
 			),
-            'partial_refunded_status' => array(
-				'label'   => __( 'Partial refunded', 'multisafepay' ),
-				'default' => 'wc-refunded',
-			),
-            'cancelled_status'        => array(
+            'cancelled_status'   => array(
 				'label'   => __( 'Cancelled', 'multisafepay' ),
 				'default' => 'wc-cancelled',
 			),
-            'chargedback_status'      => array(
+            'chargedback_status' => array(
                 'label'   => __( 'Chargedback', 'multisafepay' ),
                 'default' => 'wc-on-hold',
             ),

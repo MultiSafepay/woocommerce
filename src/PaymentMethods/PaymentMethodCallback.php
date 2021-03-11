@@ -23,6 +23,7 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
+use MultiSafepay\Api\Transactions\Transaction;
 use MultiSafepay\Api\Transactions\TransactionResponse;
 use MultiSafepay\Exception\ApiException;
 use MultiSafepay\WooCommerce\Services\SdkService;
@@ -159,6 +160,12 @@ class PaymentMethodCallback {
 
         if ( strpos( $this->order->get_payment_method(), 'multisafepay_' ) === false ) {
             header( 'Content-type: text/plain' );
+            die( 'OK' );
+        }
+
+        if ( $this->get_multisafepay_transaction_status() === Transaction::PARTIAL_REFUNDED ) {
+            $message = 'A partial refund has been registered within MultiSafepay Control for Order ID: ' . $this->woocommerce_order_id . ' and Order Number: ' . $this->multisafepay_order_id;
+            $this->order->add_order_note( $message );
             die( 'OK' );
         }
 
