@@ -185,7 +185,7 @@ class ShoppingCartService {
         }
 
         $taxes = $item->get_taxes();
-        if ( empty( $taxes ) || null === $taxes ) {
+        if ( empty( $taxes ) ) {
             return 0;
         }
 
