@@ -140,7 +140,6 @@ class PaymentMethodsController {
             $sdk                 = new SdkService();
             $transaction_manager = $sdk->get_transaction_manager();
             $update_order        = new UpdateRequest();
-            $update_order->addId( (string) $order->get_order_number() );
             $update_order->addStatus( 'shipped' );
             $transaction_manager->update( (string) $order->get_order_number(), $update_order );
         }
