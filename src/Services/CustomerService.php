@@ -86,8 +86,8 @@ class CustomerService {
             $order->get_billing_phone(),
             $order->get_shipping_first_name(),
             $order->get_shipping_last_name(),
-            $order->get_customer_ip_address() ? $order->get_customer_ip_address() : $this->get_the_user_ip(),
-            $order->get_customer_user_agent() ? $order->get_customer_user_agent() : $this->get_the_user_agent(),
+            '',
+            '',
             $order->get_shipping_company()
         );
     }

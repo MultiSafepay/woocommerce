@@ -179,11 +179,10 @@ class Test_CustomerService extends WP_UnitTestCase {
         $this->assertEquals( 'NL', $output['country'] );
         $this->assertEquals( '123456789', $output['phone'] );
         $this->assertEquals( 'john.doe@multisafepay.com', $output['email'] );
-        $this->assertEquals( '127.0.0.1', $output['ip_address'] );
+        $this->assertEquals( '', $output['ip_address'] );
         $this->assertEquals( 'en_US', $output['locale'] );
         $this->assertEquals( '', $output['referrer'] );
         $this->assertEquals( '', $output['forwarded_ip'] );
-        $this->assertEquals( 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36', $output['user_agent'] );
     }
 
 }
