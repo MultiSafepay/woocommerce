@@ -68,7 +68,10 @@ class WC_Order_Item_Fee_Fixture extends WP_UnitTestCase {
         $wc_order_item_fee->method( 'get_total' )->willReturn( $this->fee_total );
         $wc_order_item_fee->method( 'get_total_tax' )->willReturn( $this->fee_total * ( $this->fee_tax_rate / 100 ) );
         $wc_order_item_fee->method( 'get_product_id' )->willReturn( 17 );
-        $wc_order_item_fee->method( 'get_taxes' )->willReturn( array( 'total' => array('4' => $this->fee_total * ( $this->fee_tax_rate / 100 ) ) ) );
+        if($this->fee_tax_rate > 0) {
+            $wc_order_item_fee->method( 'get_taxes' )->willReturn( array( 'total' => array('4' => $this->fee_total * ( $this->fee_tax_rate / 100 ) ) ) );
+        }
+        $wc_order_item_fee->method( 'get_taxes' )->willReturn( array( 'total' => array() ) );
         return $wc_order_item_fee;
     }
 

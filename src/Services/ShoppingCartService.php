@@ -150,7 +150,7 @@ class ShoppingCartService {
         }
 
         $taxes = $item->get_taxes();
-        if ( empty( $taxes ) ) {
+        if ( empty( $taxes['total'] ) ) {
             return 0;
         }
 
@@ -180,12 +180,18 @@ class ShoppingCartService {
      * @return float
      */
     private function get_fee_tax_rate( WC_Order_Item_Fee $item ): float {
+
         if ( $this->is_order_vat_exempt( $item->get_order_id() ) ) {
             return 0;
         }
 
+        if ( (float) $item->get_total() === 0.00 ) {
+            return 0;
+        }
+
         $taxes = $item->get_taxes();
-        if ( empty( $taxes ) ) {
+
+        if ( empty( $taxes['total'] ) ) {
             return 0;
         }
 

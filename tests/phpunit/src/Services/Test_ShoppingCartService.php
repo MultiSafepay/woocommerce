@@ -301,6 +301,58 @@ class Test_ShoppingCartService extends WP_UnitTestCase {
         $this->assertEquals( '', $product_fee['weight']['value'] );
     }
 
+    /**
+     * @covers \MultiSafepay\WooCommerce\Services\ShoppingCartService::create_shopping_cart
+     */
+    public function test_create_shopping_cart_has_values_test_case_4() {
+        $product_id                 = 11;
+        $product_name               = 'Vneck Tshirt';
+        $product_price              = 18.00;
+        $product_tax_rate           = 0;
+        $product_quantity           = 2;
+        $discount_percentage        = 10;
+        $shipping_total             = 0;
+        $shipping_tax_rate          = 0;
+
+        // Set Products.
+        $wc_order_item_product = (new WC_Order_Item_Product_Fixture( $product_id, $product_name, $product_price, $product_quantity, $product_tax_rate, $discount_percentage, sanitize_title('Tax Class Name')))->get_wc_order_item_product_mock();
+        $wc_order_item_fee = (new WC_Order_Item_Fee_Fixture( 0.00, 0 ))->get_wc_order_item_fee_mock();
+        $wc_order = (new WC_Order_Fixture( $shipping_total, $shipping_tax_rate ))->get_wc_order_mock();
+
+        // Consecutive calls for WC_Order->get_items()
+        $wc_order->method( 'get_items' )->withConsecutive( array('line_item'), array('fee') )
+                 ->willReturnOnConsecutiveCalls( array( $wc_order_item_product ), array($wc_order_item_fee) );
+
+
+        $shopping_cart_service = new ShoppingCartService();
+        $shopping_cart = $shopping_cart_service->create_shopping_cart($wc_order, 'EUR');
+        $output = $shopping_cart->getData();
+
+        $product_item       = $output['items'][0];
+        $product_fee        = $output['items'][1];
+
+        $this->assertEquals( 'Vneck Tshirt - Coupon applied: - 3.60 EUR', $product_item['name'] );
+        $this->assertEquals( '', $product_item['description'] );
+        $this->assertEquals( '16.2000000000', $product_item['unit_price'] );
+        $this->assertEquals( 'EUR', $product_item['currency'] );
+        $this->assertEquals( '2', $product_item['quantity'] );
+        $this->assertEquals( '11', $product_item['merchant_item_id'] );
+        $this->assertEquals( '0', $product_item['tax_table_selector'] );
+        $this->assertEquals( '', $product_item['weight']['unit'] );
+        $this->assertEquals( '', $product_item['weight']['value'] );
+
+
+        $this->assertEquals( 'Fee Name', $product_fee['name'] );
+        $this->assertEquals( '', $product_fee['description'] );
+        $this->assertEquals( '0.00', $product_fee['unit_price'] );
+        $this->assertEquals( 'EUR', $product_fee['currency'] );
+        $this->assertEquals( '1', $product_fee['quantity'] );
+        $this->assertEquals( '17', $product_fee['merchant_item_id'] );
+        $this->assertEquals( '0', $product_fee['tax_table_selector'] );
+        $this->assertEquals( '', $product_fee['weight']['unit'] );
+        $this->assertEquals( '', $product_fee['weight']['value'] );
+    }
+
     public function tearDown() {
         TaxesFixture::delete_tax_classes();
     }
