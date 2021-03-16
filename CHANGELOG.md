@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.2.2
+Release date: Mar 16th, 2021
+
+### Fixed
++ PLGWOOS-632: Fix undefined method get_the_user_ip
++ PLGWOOS-621: Fix division by zero when fee price is 0
+
+***
+
 ## 4.2.1
 Release date: Mar 11th, 2021
 
