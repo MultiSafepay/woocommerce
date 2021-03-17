@@ -132,7 +132,7 @@ class OrderService {
         return $payment_options
             ->addNotificationUrl( add_query_arg( 'wc-api', $gateway_id, home_url( '/' ) ) )
             ->addNotificationMethod( 'GET' )
-            ->addCancelUrl( $order->get_cancel_order_url() )
+            ->addCancelUrl( wp_specialchars_decode( $order->get_cancel_order_url() ) )
             ->addRedirectUrl( $order->get_checkout_order_received_url() );
     }
 
