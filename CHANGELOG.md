@@ -6,6 +6,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.3.0
+Release date: Mar 18th, 2021
+
+## Fixed
++ PLGWOOS-626: Fix order not being cancelled when customer cancels the order
++ PLGWOOS-630: Fix include shipping item in full refund of billing suite payment methods
+
+## Added
++ PLGWOOS-629: Add shipping item to the order request, even if this one is free
++ PLGWOOS-631: Add delivery address in order request even if the shipping amount is 0
++ PLGWOOS-634: Add settings field to redirect to checkout page or cart page on cancelling the order
++ PLGWOOS-635: Add suggestion to set default initial order status for bank transfer to wc-on-hold
++ PLGWOOS-636: Add notification endpoint from version 3.8.0 to process deprecated notifications
+
+## Changed
++ PLGWOOS-622: Change notification url for all payment methods to a single notification url
+
+***
+
 ## 4.2.2
 Release date: Mar 16th, 2021
 
