@@ -58,15 +58,15 @@ class OrderService {
     }
 
     /**
-     * @param int                  $order_id
+     * @param WC_Order             $order
      * @param string               $gateway_code
      * @param string               $type
      * @param string               $gateway_id
      * @param GatewayInfoInterface $gateway_info
      * @return OrderRequest
      */
-    public function create_order_request( int $order_id, string $gateway_code, string $type, string $gateway_id, GatewayInfoInterface $gateway_info = null ): OrderRequest {
-        $order            = wc_get_order( $order_id );
+    public function create_order_request( WC_Order $order, string $gateway_code, string $type, string $gateway_id, GatewayInfoInterface $gateway_info = null ): OrderRequest {
+
         $time_active      = get_option( 'multisafepay_time_active', '30' );
         $time_active_unit = get_option( 'multisafepay_time_unit', 'days' );
 

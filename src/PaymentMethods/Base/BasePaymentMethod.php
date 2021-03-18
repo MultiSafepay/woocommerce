@@ -250,10 +250,9 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
             $gateway_info = null;
         }
 
-        $order_request = $order_service->create_order_request( $order_id, $this->gateway_code, $this->type, $this->id, $gateway_info );
+        $order         = wc_get_order( $order_id );
+        $order_request = $order_service->create_order_request( $order, $this->gateway_code, $this->type, $this->id, $gateway_info );
         $transaction   = $transaction_manager->create( $order_request );
-
-        $order = wc_get_order( $order_id );
 
         if ( $this->initial_order_status && 'wc-default' !== $this->initial_order_status && $transaction->getPaymentUrl() ) {
             $order->update_status( str_replace( 'wc-', '', $this->initial_order_status ), __( 'Transaction has been initialized.', 'multisafepay' ) );

@@ -189,7 +189,7 @@ class PaymentMethodsController {
         $order_service       = new OrderService();
         $gateway_code        = Gateways::get_gateway_code_by_gateway_id( $order->get_payment_method() );
         $gateway_info        = Gateways::get_gateway_info_by_gateway_id( $order->get_payment_method() );
-        $order_request       = $order_service->create_order_request( $order_id, $gateway_code, 'paymentlink', $order->get_payment_method(), $gateway_info );
+        $order_request       = $order_service->create_order_request( $order, $gateway_code, 'paymentlink', $order->get_payment_method(), $gateway_info );
         $transaction         = $transaction_manager->create( $order_request );
 
         if ( $transaction->getPaymentUrl() ) {
