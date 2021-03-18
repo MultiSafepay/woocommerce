@@ -28,6 +28,7 @@ use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
 use MultiSafepay\WooCommerce\Services\OrderService;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use WC_Order;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodCallback;
 
 /**
  * The payment methods controller.
@@ -164,6 +165,45 @@ class PaymentMethodsController {
     }
 
     /**
+     * Action added to wp_loaded hook.
+     * Handles notifications from transactions created before 4.X.X plugin version
+     *
+     * @return void
+     */
+    public static function deprecated_callback() {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( isset( $_GET['page'] ) && 'multisafepaynotify' === $_GET['page'] ) {
+            $required_args = array( 'transactionid', 'timestamp' );
+            foreach ( $required_args as $arg ) {
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                if ( ! isset( $_GET[ $arg ] ) || empty( $_GET[ $arg ] ) ) {
+                    wp_die( esc_html__( 'Invalid request', 'multisafepay' ), esc_html__( 'Invalid request', 'multisafepay' ), 400 );
+                }
+            }
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            ( new PaymentMethodCallback( (string) $_GET['transactionid'] ) )->process_callback();
+        }
+    }
+
+    /**
+     * Catch the notification request.
+     *
+     * @return  void
+     */
+    public function callback(): void {
+        $required_args = array( 'transactionid', 'timestamp' );
+        foreach ( $required_args as $arg ) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            if ( ! isset( $_GET[ $arg ] ) || empty( $_GET[ $arg ] ) ) {
+                wp_die( esc_html__( 'Invalid request', 'multisafepay' ), esc_html__( 'Invalid request', 'multisafepay' ), 400 );
+            }
+        }
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        ( new PaymentMethodCallback( (string) $_GET['transactionid'] ) )->process_callback();
+    }
+
+
+    /**
      * Action added to woocommerce_new_order hook.
      * Takes an order generated in admin and pass the data to MultiSafepay to process the order request.
      *
@@ -189,7 +229,7 @@ class PaymentMethodsController {
         $order_service       = new OrderService();
         $gateway_code        = Gateways::get_gateway_code_by_gateway_id( $order->get_payment_method() );
         $gateway_info        = Gateways::get_gateway_info_by_gateway_id( $order->get_payment_method() );
-        $order_request       = $order_service->create_order_request( $order, $gateway_code, 'paymentlink', $order->get_payment_method(), $gateway_info );
+        $order_request       = $order_service->create_order_request( $order, $gateway_code, 'paymentlink', $gateway_info );
         $transaction         = $transaction_manager->create( $order_request );
 
         if ( $transaction->getPaymentUrl() ) {

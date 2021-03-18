@@ -122,7 +122,6 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
             )
         );
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'display_errors' ) );
-        add_action( 'woocommerce_api_' . $this->id, array( $this, 'callback' ) );
     }
 
     /**
@@ -258,7 +257,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         }
 
         $order         = wc_get_order( $order_id );
-        $order_request = $order_service->create_order_request( $order, $this->gateway_code, $this->type, $this->id, $gateway_info );
+        $order_request = $order_service->create_order_request( $order, $this->gateway_code, $this->type, $gateway_info );
         $transaction   = $transaction_manager->create( $order_request );
 
         if ( $this->initial_order_status && 'wc-default' !== $this->initial_order_status && $transaction->getPaymentUrl() ) {
@@ -337,23 +336,6 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         }
 
         return false;
-    }
-
-
-    /**
-     * Process the callback of the transaction.
-     *
-     * @return  void
-     */
-    public function callback(): void {
-        $required_args = array( 'transactionid', 'timestamp' );
-        foreach ( $required_args as $arg ) {
-            if ( ! isset( $_GET[ $arg ] ) || empty( $_GET[ $arg ] ) ) {
-                wp_die( esc_html__( 'Invalid request', 'multisafepay' ), esc_html__( 'Invalid request', 'multisafepay' ), 400 );
-            }
-        }
-        $multisafepay_order_id   = $_GET['transactionid'];
-        $payment_method_callback = ( new PaymentMethodCallback( (string) $multisafepay_order_id ) )->process_callback();
     }
 
     /**

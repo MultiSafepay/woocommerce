@@ -56,7 +56,7 @@ abstract class BaseTokenizationPaymentMethod extends BasePaymentMethod {
         $order               = wc_get_order( $order_id );
         $customer            = ( new CustomerService() )->create_customer_details( $order )->addReference( (string) get_current_user_id() );
         $order_service       = new OrderService();
-        $order_request       = $order_service->create_order_request( $order, $this->gateway_code, $this->type, $this->id, $this->get_gateway_info() );
+        $order_request       = $order_service->create_order_request( $order, $this->gateway_code, $this->type, $this->get_gateway_info() );
         $order_request->addRecurringModel( 'cardOnFile' );
         $order_request->addCustomer( $customer );
         if (

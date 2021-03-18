@@ -23,6 +23,7 @@
 
 namespace MultiSafepay\WooCommerce;
 
+use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodsController;
 use MultiSafepay\WooCommerce\Settings\SettingsController;
 use MultiSafepay\WooCommerce\Utils\CustomLinks;
@@ -210,7 +211,15 @@ class Main {
         }
         // Replace checkout payment url if a payment link has been generated in backoffice
         $this->loader->add_filter( 'woocommerce_get_checkout_payment_url', $payment_methods, 'replace_checkout_payment_url', 10, 2 );
-    }
+        // Register deprecated notification endpoint
+        $this->loader->add_action( 'wp_loaded', $payment_methods, 'deprecated_callback' );
+        // Register notification endpoint for each payment method
+        foreach ( Gateways::get_gateways_ids() as $gateway_id ) {
+            $this->loader->add_action( 'woocommerce_api_' . $gateway_id, $payment_methods, 'callback' );
+        }
+        // One new notification URL for all payment methods
+        $this->loader->add_action( 'woocommerce_api_multisafepay', $payment_methods, 'callback' );
+	}
 
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
