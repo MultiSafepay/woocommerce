@@ -92,7 +92,7 @@ class OrderService {
             ->addSecondsActive( $time_active )
             ->addData( array( 'var2' => $order->get_id() ) );
 
-        if ( $order->get_shipping_total() > 0 ) {
+        if ( $order->needs_shipping_address() ) {
             $order_request->addDelivery( $this->customer_service->create_delivery_details( $order ) );
         }
 
