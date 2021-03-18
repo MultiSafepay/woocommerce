@@ -54,10 +54,8 @@ class ShoppingCartService {
             $cart_items[] = $this->create_cart_item( $item, $currency );
         }
 
-        if ( $order->get_shipping_total() > 0 ) {
-            foreach ( $order->get_items( 'shipping' ) as $item ) {
-                $cart_items[] = $this->create_shipping_cart_item( $item, $currency );
-            }
+        foreach ( $order->get_items( 'shipping' ) as $item ) {
+            $cart_items[] = $this->create_shipping_cart_item( $item, $currency );
         }
 
         foreach ( $order->get_items( 'fee' ) as $item ) {
@@ -146,6 +144,10 @@ class ShoppingCartService {
      */
     private function get_shipping_tax_rate( WC_Order_Item_Shipping $item ): float {
         if ( $this->is_order_vat_exempt( $item->get_order_id() ) ) {
+            return 0;
+        }
+
+        if ( (float) $item->get_total() === 0.00 ) {
             return 0;
         }
 
