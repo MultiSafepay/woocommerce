@@ -128,11 +128,12 @@ class OrderService {
      * @return  PaymentOptions
      */
     private function create_payment_options( WC_Order $order, string $gateway_id ): PaymentOptions {
-        $payment_options = new PaymentOptions();
+        $url_redirect_on_cancel = ( get_option( 'multisafepay_redirect_after_cancel', 'cart' ) === 'cart' ? '' : wc_get_checkout_url() );
+        $payment_options        = new PaymentOptions();
         return $payment_options
             ->addNotificationUrl( add_query_arg( 'wc-api', $gateway_id, home_url( '/' ) ) )
             ->addNotificationMethod( 'GET' )
-            ->addCancelUrl( wp_specialchars_decode( $order->get_cancel_order_url() ) )
+            ->addCancelUrl( wp_specialchars_decode( $order->get_cancel_order_url( $url_redirect_on_cancel ) ) )
             ->addRedirectUrl( $order->get_checkout_order_received_url() );
     }
 
