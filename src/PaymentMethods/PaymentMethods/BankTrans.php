@@ -56,6 +56,15 @@ class BankTrans extends BasePaymentMethod {
     }
 
     /**
+     * @return array
+     */
+    public function add_form_fields(): array {
+        $form_fields                                    = parent::add_form_fields();
+        $form_fields['initial_order_status']['default'] = 'wc-on-hold';
+        return $form_fields;
+    }
+
+    /**
      * @return string
      */
     public function get_payment_method_description(): string {
