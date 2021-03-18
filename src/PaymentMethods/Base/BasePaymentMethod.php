@@ -30,14 +30,21 @@ use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\BaseGatewayInfo;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodCallback;
 use MultiSafepay\WooCommerce\Services\OrderService;
-use MultiSafepay\WooCommerce\Services\RefundService;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
 use WC_Countries;
 use WC_Payment_Gateway;
 use MultiSafepay\Exception\InvalidArgumentException;
+use WP_Error;
 
 abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMethodInterface {
+
+    const NOT_ALLOW_REFUND_ORDER_STATUSES = array(
+        'pending',
+        'on-hold',
+        'failed',
+    );
+
     /**
      * What type of transaction, should be 'direct' or 'redirect'
      *
@@ -275,13 +282,12 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * @param float   $amount     Amount to be refunded.
      * @param string  $reason    Reason description.
      *
-     * @return  boolean
-     * @throws  Exception
+     * @return  mixed boolean|WP_Error
      */
-    public function process_refund( $order_id, $amount = null, $reason = '' ): bool {
+    public function process_refund( $order_id, $amount = null, $reason = '' ) {
 
         if ( 0.00 === (float) $amount ) {
-            throw new Exception( __( 'Amount of refund should be higher than 0', 'multisafepay' ) );
+            return new WP_Error( '400', __( 'Amount of refund should be higher than 0', 'multisafepay' ) );
         }
 
         $sdk                 = new SdkService();
@@ -294,28 +300,25 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $refund_request->addDescriptionText( $reason );
 
         // If the used gateway is a billing suite gateway, create the refund based on items
-        if ( in_array( $multisafepay_transaction->getPaymentDetails()->getType(), Gateways::GATEWAYS_WITH_SHOPPING_CART, true ) ) {
-            $refund_service = new RefundService();
-
-            $refund       = $refund_service->get_latest_refund( $order );
-            $refund_items = $refund_service->get_refund_items_and_quantity( $refund );
-            foreach ( $refund_items as $item_id => $quantity ) {
-                $refund_request->getCheckoutData()->refundByMerchantItemId( (string) $item_id, $quantity );
-            }
-
+        if ( $multisafepay_transaction->requiresShoppingCart() ) {
             if ( $amount !== $order->get_total() ) {
-                throw new Exception( __( 'Partial refund is not possible with billing suite payment methods', 'multisafepay' ) );
+                return new WP_Error( '400', __( 'Partial refund is not possible with billing suite payment methods', 'multisafepay' ) );
             }
-        }
 
-        if ( ! in_array( $multisafepay_transaction->getPaymentDetails()->getType(), Gateways::GATEWAYS_WITH_SHOPPING_CART, true ) ) {
+            $refund_items = $multisafepay_transaction->getShoppingCart()->getItems();
+            foreach ( $refund_items as $item ) {
+                $refund_request->getCheckoutData()->refundByMerchantItemId( (string) $item->getMerchantItemId(), (int) -$item->getQuantity() );
+            }
+		}
+
+        if ( ! $multisafepay_transaction->requiresShoppingCart() ) {
             $refund_request->addMoney( MoneyUtil::create_money( (float) $amount, $order->get_currency() ) );
         }
 
         try {
             $msg = null;
             $transaction_manager->refund( $multisafepay_transaction, $refund_request );
-        } catch ( \Exception $exception ) {
+        } catch ( Exception $exception ) {
             $msg = __( 'Error:', 'multisafepay' ) . htmlspecialchars( $exception->getMessage() );
             wc_add_notice( $msg, 'error' );
         }
@@ -323,7 +326,6 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         if ( ! $msg ) {
             /* translators: %1$: The currency code. %2$ The transaction amount */
             $order->add_order_note( sprintf( __( 'Refund of %1$s%2$s has been processed successfully.', 'multisafepay' ), get_woocommerce_currency_symbol( $order->get_currency() ), $amount ) );
-
             return true;
         }
 
@@ -497,7 +499,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * @return bool
      */
     public function can_refund_order( $order ) {
-        if ( in_array( $order->get_status(), RefundService::NOT_ALLOW_REFUND_ORDER_STATUSES, true ) ) {
+        if ( in_array( $order->get_status(), self::NOT_ALLOW_REFUND_ORDER_STATUSES, true ) ) {
             return false;
         }
 

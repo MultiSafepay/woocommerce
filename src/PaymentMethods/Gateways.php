@@ -138,14 +138,6 @@ class Gateways {
         'multisafepay_yourgift'          => Yourgift::class,
     );
 
-    const GATEWAYS_WITH_SHOPPING_CART = array(
-        'AFTERPAY',
-        'KLARNA',
-        'EINVOICE',
-        'PAYAFTER',
-        'IN3',
-    );
-
     /**
      * Return an array with all MultiSafepay gateways ids
      *
