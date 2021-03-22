@@ -23,9 +23,9 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods;
 
-use MultiSafepay\WooCommerce\PaymentMethods\Base\BaseBillingSuitePaymentMethod;
+use MultiSafepay\WooCommerce\PaymentMethods\Base\BasePaymentMethod;
 
-class Dotpay extends BaseBillingSuitePaymentMethod {
+class Dotpay extends BasePaymentMethod {
 
     /**
      * @return string
@@ -66,20 +66,6 @@ class Dotpay extends BaseBillingSuitePaymentMethod {
             $this->get_payment_method_title()
         );
         return $method_description;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function has_fields(): bool {
-        return false;
-    }
-
-    /**
-     * @return array
-     */
-    public function get_checkout_fields_ids(): array {
-        return array();
     }
 
     /**

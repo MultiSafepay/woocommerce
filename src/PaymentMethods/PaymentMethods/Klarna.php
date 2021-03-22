@@ -23,9 +23,9 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods;
 
-use MultiSafepay\WooCommerce\PaymentMethods\Base\BasePaymentMethod;
+use MultiSafepay\WooCommerce\PaymentMethods\Base\BaseBillingSuitePaymentMethod;
 
-class Klarna extends BasePaymentMethod {
+class Klarna extends BaseBillingSuitePaymentMethod {
 
     /**
      * @return string
@@ -66,6 +66,14 @@ class Klarna extends BasePaymentMethod {
             $this->get_payment_method_title()
         );
         return $method_description;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function has_fields(): bool {
+        return false;
     }
 
     /**
