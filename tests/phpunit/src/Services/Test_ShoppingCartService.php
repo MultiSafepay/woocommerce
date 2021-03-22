@@ -31,7 +31,10 @@ use MultiSafepay\WooCommerce\Tests\Fixtures\WC_Order_Item_Fee_Fixture;
 use MultiSafepay\WooCommerce\Tests\Fixtures\WC_Order_Fixture;
 
 class Test_ShoppingCartService extends WP_UnitTestCase {
-
+    
+    public function setUp() {
+        update_option( 'woocommerce_calc_taxes', 'yes');
+    }
 
     /**
      * @covers \MultiSafepay\WooCommerce\Services\ShoppingCartService::create_shopping_cart

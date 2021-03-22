@@ -100,12 +100,18 @@ class ShoppingCartService {
      * @return float
      */
     private function get_item_tax_rate( WC_Order_Item_Product $item ): float {
+        if ( ! wc_tax_enabled() ) {
+            return 0;
+        }
+
         if ( 'taxable' !== $item->get_tax_status() ) {
             return 0;
         }
+
         if ( $this->is_order_vat_exempt( $item->get_order_id() ) ) {
             return 0;
         }
+
         $tax_rates = WC_Tax::get_rates( $item->get_tax_class() );
         switch ( count( $tax_rates ) ) {
             case 0:
@@ -143,6 +149,10 @@ class ShoppingCartService {
      * @return float
      */
     private function get_shipping_tax_rate( WC_Order_Item_Shipping $item ): float {
+        if ( ! wc_tax_enabled() ) {
+            return 0;
+        }
+
         if ( $this->is_order_vat_exempt( $item->get_order_id() ) ) {
             return 0;
         }
@@ -155,7 +165,6 @@ class ShoppingCartService {
         if ( empty( $taxes['total'] ) ) {
             return 0;
         }
-
         $total_tax = array_sum( $taxes['total'] );
         $tax_rate  = ( (float) $total_tax * 100 ) / (float) $item->get_total();
         return $tax_rate;
@@ -182,6 +191,9 @@ class ShoppingCartService {
      * @return float
      */
     private function get_fee_tax_rate( WC_Order_Item_Fee $item ): float {
+        if ( ! wc_tax_enabled() ) {
+            return 0;
+        }
 
         if ( $this->is_order_vat_exempt( $item->get_order_id() ) ) {
             return 0;
