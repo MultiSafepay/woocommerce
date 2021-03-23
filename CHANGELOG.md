@@ -6,21 +6,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.4.0
+Release date: Mar 23th, 2021
+
+### Fixed
++ PLGWOOS-648: Return 0 as tax rate, if WooCommerce taxes are disabled but tax rules are registered
++ PLGWOOS-647: Add verification to check if the token used in the transaction belongs to the customer
+
+### Added
++ PLGWOOS-651: Add setting to select type of transaction in SEPA Direct Debit, E-Invoicing, in3, Santander Consumer Finance, AfterPay and iDEAL
++ PLGWOOS-644: Add setting to select type of transaction in Pay After Delivery
++ PLGWOOS-640: Add setting to select type of transaction in Bank Transfer
+
+***
+
 ## 4.3.0
 Release date: Mar 18th, 2021
 
-## Fixed
+### Fixed
 + PLGWOOS-626: Fix order not being cancelled when customer cancels the order
 + PLGWOOS-630: Fix include shipping item in full refund of billing suite payment methods
 
-## Added
+### Added
 + PLGWOOS-629: Add shipping item to the order request, even if this one is free
 + PLGWOOS-631: Add delivery address in order request even if the shipping amount is 0
 + PLGWOOS-634: Add settings field to redirect to checkout page or cart page on cancelling the order
 + PLGWOOS-635: Add suggestion to set default initial order status for bank transfer to wc-on-hold
 + PLGWOOS-636: Add notification endpoint from version 3.8.0 to process deprecated notifications
 
-## Changed
+### Changed
 + PLGWOOS-622: Change notification url for all payment methods to a single notification url
 
 ***

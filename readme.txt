@@ -4,7 +4,7 @@ Tags: multisafepay, credit card, credit cards, gateway, payments, woocommerce, i
 Requires at least: 5.0
 Tested up to: 5.7
 Requires PHP: 7.2
-Stable tag: 4.3.0
+Stable tag: 4.4.0
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -129,7 +129,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 
 == Upgrade Notice ==
 
-= 4.3.0 =
+= 4.4.0 =
 4.x.x is a major upgrade from 3.x.x, a complete rewrite of the plugin. After upgrade, please navigate to MultiSafepay settings page and confirm the settings.
 
 == Screenshots ==
@@ -143,20 +143,31 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 
 == Changelog ==
 
+= Release Notes - WooCommerce 4.4.0 (Mar 23th, 2021) =
+
+### Fixed
++ PLGWOOS-648: Return 0 as tax rate, if WooCommerce taxes are disabled but tax rules are registered
++ PLGWOOS-647: Add verification to check if the token used in the transaction belongs to the customer
+
+### Added
++ PLGWOOS-651: Add setting to select type of transaction in SEPA Direct Debit, E-Invoicing, in3, Santander Consumer Finance, AfterPay and iDEAL
++ PLGWOOS-644: Add setting to select type of transaction in Pay After Delivery
++ PLGWOOS-640: Add setting to select type of transaction in Bank Transfer
+
 = Release Notes - WooCommerce 4.3.0 (Mar 18th, 2021) =
 
-## Fixed
+### Fixed
 + PLGWOOS-626: Fix order not being cancelled when customer cancels the order
 + PLGWOOS-630: Fix include shipping item in full refund of billing suite payment methods
 
-## Added
+### Added
 + PLGWOOS-629: Add shipping item to the order request, even if this one is free
 + PLGWOOS-631: Add delivery address in order request even if the shipping amount is 0
 + PLGWOOS-634: Add settings field to redirect to checkout page or cart page on cancelling the order
 + PLGWOOS-635: Add suggestion to set default initial order status for bank transfer to wc-on-hold
 + PLGWOOS-636: Add notification endpoint from version 3.8.0 to process deprecated notifications
 
-## Changed
+### Changed
 + PLGWOOS-622: Change notification url for all payment methods to a single notification url
 
 = Release Notes - WooCommerce 4.2.2 (Mar 16th, 2021) =
