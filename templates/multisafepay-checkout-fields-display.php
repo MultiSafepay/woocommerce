@@ -26,7 +26,7 @@
     <p><?php echo esc_html( $this->description ); ?></p>
 <?php } ?>
 
-<?php if ( isset( $issuers ) ) { ?>
+<?php if ( isset( $issuers ) && 'direct' === $this->type ) { ?>
     <p class="form-row form-row-wide" id="<?php echo esc_attr( $this->id ); ?>_issuer_id_field">
         <label for="<?php echo esc_attr( $this->id ); ?>_issuer_id" class=""><?php echo esc_html__( 'Issuer', 'multisafepay' ); ?></label>
         <span class="woocommerce-input-wrapper">
@@ -40,7 +40,7 @@
     </p>
 <?php } ?>
 
-<?php if ( $this->checkout_fields_ids ) { ?>
+<?php if ( $this->checkout_fields_ids && 'direct' === $this->type ) { ?>
     <?php if ( in_array( 'salutation', $this->checkout_fields_ids, true ) ) { ?>
         <p class="form-row form-row-wide validate-required" id="<?php echo esc_attr( $this->id ); ?>_salutation_field">
             <label for="<?php echo esc_attr( $this->id ); ?>_salutation" class=""><?php echo esc_html__( 'Salutation', 'multisafepay' ); ?><abbr class="required" title="required">*</abbr></label>

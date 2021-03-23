@@ -48,7 +48,7 @@ class Dirdeb extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_type(): string {
-        return 'direct';
+        return ( $this->get_option( 'direct', 'yes' ) === 'yes' ) ? 'direct' : 'redirect';
     }
 
     /**
@@ -75,7 +75,23 @@ class Dirdeb extends BasePaymentMethod {
      * @return boolean
      */
     public function has_fields(): bool {
-        return true;
+        return ( $this->get_option( 'direct', 'yes' ) === 'yes' ) ? true : false;
+    }
+
+    /**
+     * @return array
+     */
+    public function add_form_fields(): array {
+        $form_fields           = parent::add_form_fields();
+        $form_fields['direct'] = array(
+            'title'    => __( 'Transaction Type', 'multisafepay' ),
+            /* translators: %1$: The payment method title */
+            'label'    => sprintf( __( 'Enable direct %1$s', 'multisafepay' ), $this->get_payment_method_title() ),
+            'type'     => 'checkbox',
+            'default'  => 'yes',
+            'desc_tip' => __( 'If enabled, additional information can be entered during WooCommerce checkout. If disabled, additional information will be requested on the MultiSafepay payment page.', 'multisafepay' ),
+        );
+        return $form_fields;
     }
 
     /**

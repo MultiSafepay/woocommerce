@@ -88,7 +88,7 @@ class PayAfterDelivery extends BaseBillingSuitePaymentMethod {
             'label'    => sprintf( __( 'Enable direct %1$s', 'multisafepay' ), $this->get_payment_method_title() ),
             'type'     => 'checkbox',
             'default'  => 'yes',
-            'desc_tip' => __( 'If enabled, additional information can be entered during WooCommerce checkout. If disabled, additional information will be requested on the MultiSafepay payment page', 'multisafepay' ),
+            'desc_tip' => __( 'If enabled, additional information can be entered during WooCommerce checkout. If disabled, additional information will be requested on the MultiSafepay payment page.', 'multisafepay' ),
         );
         return $form_fields;
     }
