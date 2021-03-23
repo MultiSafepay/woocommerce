@@ -43,14 +43,17 @@ abstract class BaseTokenizationPaymentMethod extends BasePaymentMethod {
     }
 
     /**
+     * Process the payment and return the result.
+     *
      * @param int $order_id
-     * @return array
-     * @throws \Psr\Http\Client\ClientExceptionInterface
+     *
+     * @return array|mixed|void
      */
-    public function process_payment( $order_id ): array {
+    public function process_payment( $order_id ) {
         if ( $this->canSubmitToken() === false ) {
             return parent::process_payment( $order_id );
         }
+
         $sdk                 = new SdkService();
         $transaction_manager = $sdk->get_transaction_manager();
         $order               = wc_get_order( $order_id );
@@ -59,15 +62,19 @@ abstract class BaseTokenizationPaymentMethod extends BasePaymentMethod {
         $order_request       = $order_service->create_order_request( $order, $this->gateway_code, $this->type, $this->get_gateway_info() );
         $order_request->addRecurringModel( 'cardOnFile' );
         $order_request->addCustomer( $customer );
-        if (
-            isset( $_POST[ 'wc-' . $this->id . '-payment-token' ] ) && 'new' !== $_POST[ 'wc-' . $this->id . '-payment-token' ] ||
-            ! isset( $_POST[ 'wc-' . $this->id . '-payment-token' ] ) && 'true' !== $_POST[ 'wc-' . $this->id . '-new-payment-method' ]
-        ) {
+
+        if ( $this->is_order_using_token() ) {
             $wc_token = WC_Payment_Tokens::get( $_POST[ 'wc-' . $this->id . '-payment-token' ] );
+            if ( $wc_token->get_user_id() !== get_current_user_id() ) {
+                wc_add_notice( __( 'Error processing the order using a registered payment method', 'multisafepay' ), 'error' );
+                return;
+            }
             $order_request->addType( 'direct' );
             $order_request->addRecurringId( $wc_token->get_token() );
         }
+
         $transaction = $transaction_manager->create( $order_request );
+
         if ( $this->initial_order_status && 'wc-default' !== $this->initial_order_status && $transaction->getPaymentUrl() ) {
             $order->update_status( str_replace( 'wc-', '', $this->initial_order_status ), __( 'Transaction has been initialized.', 'multisafepay' ) );
         }
@@ -78,6 +85,19 @@ abstract class BaseTokenizationPaymentMethod extends BasePaymentMethod {
             'result'   => 'success',
             'redirect' => esc_url_raw( $transaction->getPaymentUrl() ),
         );
+    }
+
+    /**
+     * Return true if the order submit a token id
+     *
+     * @return boolean
+     */
+    private function is_order_using_token(): bool {
+        // If isset a payment token in the request and this one is not the string "new"
+        if ( isset( $_POST[ 'wc-' . $this->id . '-payment-token' ] ) && 'new' !== $_POST[ 'wc-' . $this->id . '-payment-token' ] ) {
+            return true;
+        }
+        return false;
     }
 
     /**

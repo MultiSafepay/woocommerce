@@ -246,7 +246,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      *
      * @return  array|mixed|void
      */
-    public function process_payment( $order_id ): array {
+    public function process_payment( $order_id ) {
         $sdk                 = new SdkService();
         $transaction_manager = $sdk->get_transaction_manager();
         $order_service       = new OrderService();
