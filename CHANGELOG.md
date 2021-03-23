@@ -13,7 +13,7 @@ Release date: Mar 18th, 2021
 + PLGWOOS-626: Fix order not being cancelled when customer cancels the order
 + PLGWOOS-630: Fix include shipping item in full refund of billing suite payment methods
 
-## Added
+## Added
 + PLGWOOS-629: Add shipping item to the order request, even if this one is free
 + PLGWOOS-631: Add delivery address in order request even if the shipping amount is 0
 + PLGWOOS-634: Add settings field to redirect to checkout page or cart page on cancelling the order
