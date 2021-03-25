@@ -71,7 +71,7 @@ class PaymentMethodCallback {
      *
      * @var     TransactionResponse    The MultiSafepay transaction
      */
-    private $transaction;
+    private $multisafepay_transaction;
 
 
     /**
@@ -88,10 +88,11 @@ class PaymentMethodCallback {
             $this->woocommerce_order_id = $this->multisafepay_transaction->getVar2();
         }
 
-        // In case we nee it, a filter to set the right order id, based on order number
+        // In case we need it, a filter to set the right order id, based on order number
         if ( empty( $this->multisafepay_transaction->getVar2() ) ) {
             $this->woocommerce_order_id = apply_filters( 'multisafepay_transaction_order_id', $this->multisafepay_order_id );
         }
+
         $this->time_stamp = date( 'd/m/Y H:i:s' );
         $this->order      = wc_get_order( $this->woocommerce_order_id );
     }
@@ -104,8 +105,7 @@ class PaymentMethodCallback {
     private function get_transaction(): TransactionResponse {
         $transaction_manager = ( new SdkService() )->get_transaction_manager();
         try {
-            $transaction = $transaction_manager->get( $this->multisafepay_order_id );
-            return $transaction;
+            return $transaction_manager->get( $this->multisafepay_order_id );
         } catch ( ApiException $api_exception ) {
             if ( get_option( 'multisafepay_debugmode', false ) ) {
                 $logger = wc_get_logger();
@@ -158,14 +158,17 @@ class PaymentMethodCallback {
      */
     public function process_callback(): void {
 
+        // If payment method of the order do not belong to MultiSafepay
         if ( strpos( $this->order->get_payment_method(), 'multisafepay_' ) === false ) {
             header( 'Content-type: text/plain' );
             die( 'OK' );
         }
 
+        // If transaction status is partial_refunded we just register a new order note.
         if ( $this->get_multisafepay_transaction_status() === Transaction::PARTIAL_REFUNDED ) {
             $message = 'A partial refund has been registered within MultiSafepay Control for Order ID: ' . $this->woocommerce_order_id . ' and Order Number: ' . $this->multisafepay_order_id;
             $this->order->add_order_note( $message );
+            header( 'Content-type: text/plain' );
             die( 'OK' );
         }
 
@@ -174,7 +177,9 @@ class PaymentMethodCallback {
         $payment_method_title_registered_by_multisafepay = Gateways::get_payment_method_name_by_gateway_code( $this->get_multisafepay_transaction_gateway_code() );
         $payment_method_title_registered_by_wc           = $this->order->get_payment_method_title();
         $default_order_status                            = SettingsFields::get_multisafepay_order_statuses();
+        $initial_order_status                            = Gateways::get_initial_order_status_by_gateway_id( $payment_method_id_registered_by_multisafepay );
 
+        // If the payment method changed in MultiSafepay payment page, after leave WooCommerce checkout page
         if ( $payment_method_id_registered_by_multisafepay && $payment_method_id_registered_by_wc !== $payment_method_id_registered_by_multisafepay ) {
             if ( get_option( 'multisafepay_debugmode', false ) ) {
                 $logger  = wc_get_logger();
@@ -186,13 +191,26 @@ class PaymentMethodCallback {
             update_post_meta( $this->woocommerce_order_id, '_payment_method_title', $payment_method_title_registered_by_multisafepay );
         }
 
+        // Check if the WooCommerce Order status do not match with the order status received in notification, to avoid to process repeated of notification.
         if ( $this->get_wc_order_status() !== str_replace( 'wc-', '', get_option( 'multisafepay_' . $this->get_multisafepay_transaction_status() . '_status', $default_order_status[ $this->get_multisafepay_transaction_status() . '_status' ]['default'] ) ) ) {
 
-            if ( $this->get_multisafepay_transaction_status() === 'completed' ) {
+            // If MultiSafepay transaction status is initialized, check if there is a custom initial order status for this payment method.
+            if ( $this->get_multisafepay_transaction_status() === Transaction::INITIALIZED ) {
+                if ( $initial_order_status && 'wc-default' !== $initial_order_status && $this->get_wc_order_status() !== $initial_order_status ) {
+                    $this->order->update_status( str_replace( 'wc-', '', $initial_order_status ), __( 'Transaction has been initialized.', 'multisafepay' ) );
+                }
+                if ( ! $initial_order_status || 'wc-default' === $initial_order_status ) {
+                    $this->order->update_status( str_replace( 'wc-', '', get_option( 'multisafepay_' . $this->get_multisafepay_transaction_status() . '_status', $default_order_status[ $this->get_multisafepay_transaction_status() . '_status' ]['default'] ) ) );
+                }
+            }
+
+            // If MultiSafepay transaction status is completed, payment_complete function will handle the order status change
+            if ( $this->get_multisafepay_transaction_status() === Transaction::COMPLETED ) {
                 $this->order->payment_complete( 'PSP ID: ' . $this->get_multisafepay_transaction_id() );
             }
 
-            if ( $this->get_multisafepay_transaction_status() !== 'completed' ) {
+            // If MultiSafepay transaction status is not completed and not initialized, process the notification according order status settings
+            if ( $this->get_multisafepay_transaction_status() !== 'completed' && $this->get_multisafepay_transaction_status() !== 'initialized' ) {
                 $this->order->update_status( str_replace( 'wc-', '', get_option( 'multisafepay_' . $this->get_multisafepay_transaction_status() . '_status', $default_order_status[ $this->get_multisafepay_transaction_status() . '_status' ]['default'] ) ) );
             }
 

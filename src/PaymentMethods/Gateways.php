@@ -195,8 +195,19 @@ class Gateways {
      */
     public static function get_gateway_code_by_gateway_id( string $gateway_id ): string {
         $gateway = self::GATEWAYS[ $gateway_id ];
-
         return ( new $gateway() )->get_payment_method_code();
+    }
+
+    /**
+     * Return the gateway initial order status for the given gateway_id
+     *
+     * @param string $gateway_id
+     *
+     * @return string
+     */
+    public static function get_initial_order_status_by_gateway_id( string $gateway_id ): string {
+        $gateway = self::GATEWAYS[ $gateway_id ];
+        return ( new $gateway() )->initial_order_status;
     }
 
     /**

@@ -78,7 +78,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      *
      * @var string
      */
-    protected $initial_order_status;
+    public $initial_order_status;
 
     /**
      * The plugin directory path
