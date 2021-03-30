@@ -79,7 +79,10 @@ register_activation_hook( __FILE__, 'activate_multisafepay' );
  * @see      https://developer.wordpress.org/plugins/hooks/
  */
 function init_multisafepay() {
-    if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ), true ) ) {
+    if ( ! function_exists( 'is_plugin_active' ) ) {
+        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+    }
+    if ( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
         $plugin = new Main();
         $plugin->init();
     }
