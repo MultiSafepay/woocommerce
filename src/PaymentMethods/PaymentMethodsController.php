@@ -40,13 +40,6 @@ use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodCallback;
 class PaymentMethodsController {
 
     /**
-     * The ID of this plugin.
-     *
-     * @var      string    The ID of this plugin.
-     */
-	private $plugin_name;
-
-    /**
      * The version of this plugin.
      *
      * @var      string    The current version of this plugin.
@@ -63,12 +56,10 @@ class PaymentMethodsController {
     /**
      * Initialize the class and set its properties.
      *
-     * @param      string $plugin_name       The name of this plugin.
      * @param      string $version           The version of this plugin.
      * @param      string $plugin_dir_url    The plugin dir url of this plugin.
      */
-	public function __construct( string $plugin_name, string $version, string $plugin_dir_url ) {
-		$this->plugin_name    = $plugin_name;
+	public function __construct( string $version, string $plugin_dir_url ) {
 		$this->version        = $version;
 		$this->plugin_dir_url = $plugin_dir_url;
 	}
@@ -82,7 +73,7 @@ class PaymentMethodsController {
 	 */
 	public function enqueue_styles(): void {
 	    if ( is_checkout() ) {
-            wp_enqueue_style( $this->plugin_name, $this->plugin_dir_url . 'assets/public/css/multisafepay-public.css', array(), $this->version, 'all' );
+            wp_enqueue_style( 'multisafepay', $this->plugin_dir_url . 'assets/public/css/multisafepay-public.css', array(), $this->version, 'all' );
         }
 	}
 

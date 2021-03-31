@@ -35,22 +35,6 @@ use MultiSafepay\WooCommerce\Services\SdkService;
 class SettingsFields {
 
     /**
-     * The ID of this plugin.
-     *
-     * @var      string
-     */
-    private $plugin_name;
-
-    /**
-     * Constructor the the class
-     *
-     * @param   string $plugin_name
-     */
-    public function __construct( string $plugin_name ) {
-        $this->plugin_name = $plugin_name;
-    }
-
-    /**
      * Return the settings fields
      *
      * @return  array
@@ -75,7 +59,7 @@ class SettingsFields {
             'intro'  => '',
             'fields' => array(
                 array(
-                    'id'           => $this->plugin_name . '_testmode',
+                    'id'           => 'multisafepay_testmode',
                     'label'        => __( 'Test Mode', 'multisafepay' ),
                     'description'  => '',
                     'type'         => 'checkbox',
@@ -87,7 +71,7 @@ class SettingsFields {
                     'sort_order'   => 1,
                 ),
                 array(
-                    'id'           => $this->plugin_name . '_test_api_key',
+                    'id'           => 'multisafepay_test_api_key',
                     'label'        => __( 'Test API Key', 'multisafepay' ),
                     'description'  => '',
                     'type'         => 'text',
@@ -99,7 +83,7 @@ class SettingsFields {
                     'sort_order'   => 2,
                 ),
                 array(
-                    'id'           => $this->plugin_name . '_api_key',
+                    'id'           => 'multisafepay_api_key',
                     'label'        => __( 'API Key', 'multisafepay' ),
                     'description'  => '',
                     'type'         => 'text',
@@ -125,7 +109,7 @@ class SettingsFields {
             'intro'  => '',
             'fields' => array(
                 array(
-                    'id'           => $this->plugin_name . '_debugmode',
+                    'id'           => 'multisafepay_debugmode',
                     'label'        => __( 'Debug Mode', 'multisafepay' ),
                     'description'  => '',
                     'type'         => 'checkbox',
@@ -137,7 +121,7 @@ class SettingsFields {
                     'sort_order'   => 5,
                 ),
                 array(
-                    'id'           => $this->plugin_name . '_order_request_description',
+                    'id'           => 'multisafepay_order_request_description',
                     'label'        => __( 'Order Description', 'multisafepay' ),
                     'description'  => __( 'A text which will be shown with the order in MultiSafepay Control. If the customer’s bank supports it this description will also be shown on the customer’s bank statement', 'multisafepay' ),
                     'type'         => 'text',
@@ -149,7 +133,7 @@ class SettingsFields {
                     'sort_order'   => 10,
                 ),
                 array(
-                    'id'           => $this->plugin_name . '_ga',
+                    'id'           => 'multisafepay_ga',
                     'label'        => __( 'Google Analytics', 'multisafepay' ),
                     'description'  => __( 'Google Analytics Universal Account ID. Format: UA-XXXXXXXXX', 'multisafepay' ),
                     'type'         => 'text',
@@ -161,7 +145,7 @@ class SettingsFields {
                     'sort_order'   => 15,
                 ),
                 array(
-                    'id'           => $this->plugin_name . '_trigger_transaction_to_invoiced',
+                    'id'           => 'multisafepay_trigger_transaction_to_invoiced',
                     'label'        => __( 'Set transaction as invoiced', 'multisafepay' ),
                     'description'  => __( 'When the order reaches this status, we send the invoice id to MultiSafepay', 'multisafepay' ),
                     'type'         => 'select',
@@ -177,7 +161,7 @@ class SettingsFields {
                     'sort_order'   => 20,
                 ),
                 array(
-                    'id'           => $this->plugin_name . '_trigger_transaction_to_shipped',
+                    'id'           => 'multisafepay_trigger_transaction_to_shipped',
                     'label'        => __( 'Set transaction as shipped', 'multisafepay' ),
                     'description'  => __( 'When the order reaches this status, a notification will be sent to MultiSafepay to set the transaction status as shipped', 'multisafepay' ),
                     'type'         => 'select',
@@ -193,7 +177,7 @@ class SettingsFields {
                     'sort_order'   => 25,
                 ),
                 array(
-                    'id'           => $this->plugin_name . '_redirect_after_cancel',
+                    'id'           => 'multisafepay_redirect_after_cancel',
                     'label'        => __( 'After cancel redirect the customer to', 'multisafepay' ),
                     'description'  => __( 'When the order is cancelled by the customer, redirect the customer to the selected page', 'multisafepay' ),
                     'type'         => 'select',
@@ -209,7 +193,7 @@ class SettingsFields {
                     'sort_order'   => 30,
                 ),
                 array(
-                    'id'           => $this->plugin_name . '_time_active',
+                    'id'           => 'multisafepay_time_active',
                     'label'        => __( 'Value lifetime of payment link', 'multisafepay' ),
                     'description'  => '',
                     'type'         => 'text',
@@ -221,7 +205,7 @@ class SettingsFields {
                     'sort_order'   => 35,
                 ),
                 array(
-                    'id'           => $this->plugin_name . '_time_unit',
+                    'id'           => 'multisafepay_time_unit',
                     'label'        => __( 'Unit lifetime of payment link', 'multisafepay' ),
                     'description'  => __( 'The lifetime of a payment link by default is 30 days. This means that the customer has 30 days to complete the transaction using the payment link', 'multisafepay' ),
                     'type'         => 'select',
@@ -238,7 +222,7 @@ class SettingsFields {
                     'sort_order'   => 40,
                 ),
                 array(
-                    'id'           => $this->plugin_name . '_second_chance',
+                    'id'           => 'multisafepay_second_chance',
                     'label'        => __( 'Second Chance', 'multisafepay' ),
                     'description'  => __( 'More information about Second Chance on <a href="https://docs.multisafepay.com/tools/second-chance/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
                     'type'         => 'checkbox',
@@ -250,7 +234,7 @@ class SettingsFields {
                     'sort_order'   => 45,
                 ),
                 array(
-                    'id'           => $this->plugin_name . '_tokenization',
+                    'id'           => 'multisafepay_tokenization',
                     'label'        => __( 'Tokenization', 'multisafepay' ),
                     'placeholder'  => __( 'Tokenization', 'multisafepay' ),
                     'description'  => __( 'More information about Tokenization on <a href="https://docs.multisafepay.com/tools/tokenization/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
@@ -262,7 +246,7 @@ class SettingsFields {
                     'sort_order'   => 50,
                 ),
                 array(
-                    'id'           => $this->plugin_name . '_remove_all_settings',
+                    'id'           => 'multisafepay_remove_all_settings',
                     'label'        => __( 'Delete settings if uninstall', 'multisafepay' ),
                     'description'  => '',
                     'type'         => 'checkbox',
@@ -294,7 +278,7 @@ class SettingsFields {
         $sort_order          = 1;
         foreach ( $multisafepay_order_statuses as $key => $multisafepay_order_status ) {
             $order_status_fields[] = array(
-                'id'           => $this->plugin_name . '_' . $key,
+                'id'           => 'multisafepay_' . $key,
                 'label'        => $multisafepay_order_status['label'],
                 'description'  => '',
                 'type'         => 'select',

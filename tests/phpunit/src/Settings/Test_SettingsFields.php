@@ -28,7 +28,7 @@ class Test_SettingsFields extends WP_UnitTestCase {
 
     public function setUp() {
         parent::setUp();
-        $settings_fields = new SettingsFields('multisafepay');
+        $settings_fields = new SettingsFields();
         $this->settings_fields = $settings_fields->get_settings();
     }
 

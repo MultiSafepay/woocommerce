@@ -33,13 +33,6 @@ namespace MultiSafepay\WooCommerce\Settings;
 class SettingsFieldsDisplay {
 
     /**
-     * The ID of this plugin.
-     *
-     * @var      string
-     */
-    private $plugin_name;
-
-    /**
      * The field
      *
      * @var      array
@@ -49,12 +42,10 @@ class SettingsFieldsDisplay {
     /**
      * Constructor the the class
      *
-     * @param      string $plugin_name
-     * @param      array  $field
+     * @param array $field
      */
-    public function __construct( string $plugin_name, array $field ) {
-        $this->plugin_name = $plugin_name;
-        $this->field       = $field;
+    public function __construct( array $field ) {
+        $this->field = $field;
     }
 
     /**

@@ -29,14 +29,14 @@ class Test_SettingsFieldsDisplay extends WP_UnitTestCase {
 
     public function setUp() {
         parent::setUp();
-        $settings_fields = new SettingsFields('multisafepay');
+        $settings_fields = new SettingsFields();
         $this->settings_fields = $settings_fields->get_settings();
     }
 
     public function test_display() {
         foreach ($this->settings_fields as $section) {
             foreach ($section['fields'] as $field) {
-                $settings_fields_display = new SettingsFieldsDisplay('multisafepay', $field);
+                $settings_fields_display = new SettingsFieldsDisplay( $field );
                 ob_start();
                 $settings_fields_display->display();
                 $output = ob_get_clean();

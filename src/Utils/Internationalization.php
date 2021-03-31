@@ -29,29 +29,12 @@ namespace MultiSafepay\WooCommerce\Utils;
 class Internationalization {
 
 	/**
-	 * The domain specified for this plugin.
-     *
-     * @var     string      The plugin text domains
-	 */
-	private $domain;
-
-	/**
 	 * Load the plugin text domain for translation.
      *
      * @return void
 	 */
 	public function load_plugin_textdomain(): void {
-        load_plugin_textdomain( $this->domain, false, dirname( plugin_basename( __FILE__ ), 3 ) . '/languages/' );
-	}
-
-	/**
-	 * Set the domain equal to that of the specified domain.
-	 *
-	 * @param   string $domain    The domain that represents the locale of this plugin.
-     * @return  void
-	 */
-	public function set_domain( string $domain ) {
-		$this->domain = $domain;
+        load_plugin_textdomain( 'multisafepay', false, dirname( plugin_basename( __FILE__ ), 3 ) . '/languages/' );
 	}
 
 }

@@ -49,12 +49,6 @@ class Main {
 	 */
 	private $loader;
 
-	/**
-	 * The unique identifier of this plugin.
-	 *
-	 * @var      string     The string used to uniquely identify this plugin.
-	 */
-    private $plugin_name;
 
 	/**
 	 * The current version of the plugin.
@@ -85,7 +79,6 @@ class Main {
 	 * the public face of the site.
 	 */
 	public function __construct() {
-		$this->plugin_name     = 'multisafepay';
 		$this->version         = MULTISAFEPAY_PLUGIN_VERSION;
 		$this->plugin_dir_url  = plugin_dir_url( __DIR__ );
         $this->plugin_dir_path = plugin_dir_path( __DIR__ );
@@ -129,7 +122,6 @@ class Main {
 	 */
 	private function set_locale() {
 		$plugin_i18n = new Internationalization();
-		$plugin_i18n->set_domain( $this->get_plugin_name() );
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 	}
 
@@ -155,7 +147,7 @@ class Main {
 	 */
 	private function define_settings_hooks(): void {
         // Settings controller
-	    $plugin_settings = new SettingsController( $this->get_plugin_name(), $this->get_version(), $this->plugin_dir_url, $this->plugin_dir_path );
+	    $plugin_settings = new SettingsController( $this->get_version(), $this->plugin_dir_url, $this->plugin_dir_path );
         // Filter get_option for some option names.
         $this->loader->add_filter( 'option_multisafepay_testmode', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
         $this->loader->add_filter( 'option_multisafepay_debugmode', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
@@ -190,7 +182,7 @@ class Main {
 	 */
 	private function define_payment_methods_hooks(): void {
         // Payment controller
-		$payment_methods = new PaymentMethodsController( $this->get_plugin_name(), $this->get_version(), $this->plugin_dir_url );
+		$payment_methods = new PaymentMethodsController( $this->get_version(), $this->plugin_dir_url );
         // Enqueue styles in payment methods
 		$this->loader->add_action( 'wp_enqueue_scripts', $payment_methods, 'enqueue_styles' );
         // Register the MultiSafepay payment gateways in WooCommerce.
@@ -228,16 +220,6 @@ class Main {
 	 */
 	public function init() {
 		$this->loader->init();
-	}
-
-	/**
-	 * The name of the plugin used to uniquely identify it within the context of
-	 * WordPress and to define internationalization functionality.
-     *
-	 * @return    string    The name of the plugin.
-	 */
-	public function get_plugin_name(): string {
-		return $this->plugin_name;
 	}
 
     /**

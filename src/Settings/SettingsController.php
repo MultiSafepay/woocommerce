@@ -36,13 +36,6 @@ use MultiSafepay\WooCommerce\Services\SdkService;
 class SettingsController {
 
 	/**
-	 * The ID of this plugin.
-	 *
-	 * @var      string
-	 */
-	private $plugin_name;
-
-	/**
 	 * The version of this plugin.
 	 *
 	 * @var      string
@@ -66,13 +59,11 @@ class SettingsController {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param   string $plugin_name       The name of this plugin.
 	 * @param   string $version           The version of this plugin.
      * @param   string $plugin_dir_url    The plugin dir url.
      * @param   string $plugin_dir_path   The plugin dir path.
 	 */
-	public function __construct( string $plugin_name, string $version, string $plugin_dir_url, string $plugin_dir_path ) {
-		$this->plugin_name     = $plugin_name;
+	public function __construct( string $version, string $plugin_dir_url, string $plugin_dir_path ) {
 		$this->version         = $version;
 		$this->plugin_dir_url  = $plugin_dir_url;
         $this->plugin_dir_path = $plugin_dir_path;
@@ -117,7 +108,7 @@ class SettingsController {
      * @return void
 	 */
 	public function enqueue_styles(): void {
-		wp_enqueue_style( $this->plugin_name, $this->plugin_dir_url . 'assets/admin/css/multisafepay-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( 'multisafepay', $this->plugin_dir_url . 'assets/admin/css/multisafepay-admin.css', array(), $this->version, 'all' );
 	}
 
     /**
@@ -136,9 +127,9 @@ class SettingsController {
                 'multisafepay_gateway_toggle' => wp_create_nonce( 'multisafepay-toggle-payment-gateway-enabled' ),
             ),
         );
-        wp_register_script( $this->plugin_name . 'admin-js', $this->plugin_dir_url . 'assets/admin/js/multisafepay-admin.js', array( 'jquery' ), $this->version, false );
-        wp_localize_script( $this->plugin_name . 'admin-js', 'multisafepay', $multisafepay_vars );
-        wp_enqueue_script( $this->plugin_name . 'admin-js' );
+        wp_register_script( 'multisafepay-admin-js', $this->plugin_dir_url . 'assets/admin/js/multisafepay-admin.js', array( 'jquery' ), $this->version, false );
+        wp_localize_script( 'multisafepay-admin-js', 'multisafepay', $multisafepay_vars );
+        wp_enqueue_script( 'multisafepay-admin-js' );
     }
 
     /**
@@ -168,7 +159,7 @@ class SettingsController {
         $tab_active   = $this->get_tab_active();
         $needs_update = $this->needs_update();
         remove_query_arg( 'needs-setup' );
-        require_once $this->plugin_dir_path . 'templates/' . $this->plugin_name . '-settings-display.php';
+        require_once $this->plugin_dir_path . 'templates/multisafepay-settings-display.php';
     }
 
     /**
@@ -177,7 +168,7 @@ class SettingsController {
      * @return void
      */
     public function display_multisafepay_support_section(): void {
-        require_once $this->plugin_dir_path . 'templates/partials/' . $this->plugin_name . '-settings-support-display.php';
+        require_once $this->plugin_dir_path . 'templates/partials/multisafepay-settings-support-display.php';
     }
 
     /**
@@ -220,7 +211,7 @@ class SettingsController {
      * @return void
      */
     public function register_common_settings(): void {
-        $settings_fields = new SettingsFields( $this->plugin_name );
+        $settings_fields = new SettingsFields();
         $settings        = $settings_fields->get_settings();
         foreach ( $settings as $tab_key => $section ) {
             $this->add_settings_section( $tab_key, $section['title'] );
@@ -323,7 +314,7 @@ class SettingsController {
      * @return  void
      */
     public function display_intro_section( array $args ): void {
-        $settings_fields = new SettingsFields( $this->plugin_name );
+        $settings_fields = new SettingsFields();
         $settings        = $settings_fields->get_settings();
         if ( ! empty( $settings[ $args['id'] ]['intro'] ) ) {
             esc_html( printf( '<p>%s</p>', $settings[ $args['id'] ]['intro'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -339,7 +330,7 @@ class SettingsController {
      */
     public function display_field( $args ): void {
         $field                  = $args['field'];
-        $settings_field_display = new SettingsFieldsDisplay( $this->plugin_name, $field );
+        $settings_field_display = new SettingsFieldsDisplay( $field );
         $settings_field_display->display();
     }
 
