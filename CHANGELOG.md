@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.5.0
+Release date: Mar 31th, 2021
+
+### Fixed
++ PLGWOOS-659: Fix initialization of the plugin on multisite environments in which WooCommerce has been activate network wide
+
+### Added
++ PLGWOOS-534: Add generic gateway
+
+***
+
 ## 4.4.1
 Release date: Mar 25th, 2021
 
