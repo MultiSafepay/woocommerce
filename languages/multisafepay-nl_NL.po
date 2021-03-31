@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MultiSafepay\n"
 "POT-Creation-Date: 2021-01-04 21:53+0100\n"
-"PO-Revision-Date: 2021-02-02 09:04+0000\n"
-"Last-Translator: \n"
-"Language-Team: Nederlands\n"
+"PO-Revision-Date: 2021-03-31 10:38+0000\n"
+"Last-Translator: Jhon Doe\n"
+"Language-Team: Dutch\n"
 "Language: nl_NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -15,10 +15,10 @@ msgstr ""
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-SearchPath-0: .\n"
 "Report-Msgid-Bugs-To: \n"
-"X-Loco-Version: 2.5.0; wp-5.6"
+"X-Loco-Version: 2.5.1; wp-5.7"
 
 #. %1$ The currency. %2$ The total amount of the discount per line item
-#: src/Services/ShoppingCartService.php:86
+#: src/Services/ShoppingCartService.php:84
 #, php-format
 msgid " - Coupon applied: - %1$s %2$s"
 msgstr " - Coupon toegepast: - %1$s %2$s"
@@ -28,7 +28,7 @@ msgid "(optional)"
 msgstr "(Optioneel)"
 
 #. %2$: The payment method title
-#: src/PaymentMethods/PaymentMethods/Einvocing.php:64
+#: src/PaymentMethods/PaymentMethods/Einvoicing.php:64
 #, php-format
 msgid ""
 "A flexible payment solution allowing businesses to take control and "
@@ -77,8 +77,15 @@ msgstr ""
 "href=\"%1$s\" target=\"_blank\">%2$s</a> in het documentatiecentrum van "
 "MultiSafepay."
 
+#: src/Settings/SettingsFields.php:126
+msgid ""
+"A text which will be shown with the order in MultiSafepay Control. If the "
+"customer’s bank supports it this description will also be shown on the "
+"customer’s bank statement"
+msgstr ""
+
 #. %2$: The payment method title
-#: src/PaymentMethods/PaymentMethods/BankTrans.php:64
+#: src/PaymentMethods/PaymentMethods/BankTrans.php:81
 #, php-format
 msgid ""
 "A traditional method for customers to safely transfer Euros within the SEPA "
@@ -142,7 +149,7 @@ msgstr ""
 msgid "Account"
 msgstr "Account"
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:426
+#: src/PaymentMethods/Base/BasePaymentMethod.php:413
 msgid "Account holder is a required field"
 msgstr "Rekeninghouder is een verplicht veld"
 
@@ -153,6 +160,10 @@ msgstr "Naam Rekeninghouder"
 #: templates/multisafepay-checkout-fields-display.php:95
 msgid "Account IBAN"
 msgstr "IBAN Rekeninghouder"
+
+#: src/Settings/SettingsFields.php:181 src/Settings/SettingsFields.php:189
+msgid "After cancel redirect the customer to"
+msgstr ""
 
 #: src/PaymentMethods/PaymentMethods/Afterpay.php:55
 msgid "AfterPay"
@@ -227,7 +238,7 @@ msgstr ""
 msgid "American Express"
 msgstr ""
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:279
+#: src/PaymentMethods/Base/BasePaymentMethod.php:285
 msgid "Amount of refund should be higher than 0"
 msgstr "Het bedrag van een refund moet altijd hoger zijn dan 0"
 
@@ -235,11 +246,11 @@ msgstr "Het bedrag van een refund moet altijd hoger zijn dan 0"
 msgid "API Documentation"
 msgstr "API Documentatie"
 
-#: src/Settings/SettingsFields.php:103 src/Settings/SettingsFields.php:108
+#: src/Settings/SettingsFields.php:87 src/Settings/SettingsFields.php:92
 msgid "API Key"
 msgstr ""
 
-#: src/Settings/SettingsFields.php:107
+#: src/Settings/SettingsFields.php:91
 msgid "API Key "
 msgstr ""
 
@@ -272,7 +283,7 @@ msgstr ""
 msgid "Bank Account"
 msgstr "Bankrekening"
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:416
+#: src/PaymentMethods/Base/BasePaymentMethod.php:403
 msgid "Bank Account is a required field"
 msgstr "Bankrekening is een verplicht veld"
 
@@ -296,9 +307,13 @@ msgstr "Belgie:"
 msgid "Boekenbon"
 msgstr ""
 
-#: src/Settings/SettingsFields.php:376
+#: src/Settings/SettingsFields.php:361
 msgid "Cancelled"
 msgstr "Geannuleerd"
+
+#: src/Settings/SettingsFields.php:185
+msgid "Cart Page"
+msgstr ""
 
 #: src/PaymentMethods/PaymentMethods/Cbc.php:55
 msgid "CBC"
@@ -308,11 +323,20 @@ msgstr ""
 msgid "Changelog"
 msgstr ""
 
-#: src/Settings/SettingsFields.php:84
+#: src/Settings/SettingsFields.php:365
+msgid "Chargedback"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:68
 msgid "Check this option if you want to enable MultiSafepay in test mode."
 msgstr "Vink deze optie aan om de test-modus van MultiSafepay te activeren."
 
-#: src/Settings/SettingsFields.php:340
+#: src/Settings/SettingsFields.php:186
+msgid "Checkout Page"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:154 src/Settings/SettingsFields.php:170
+#: src/Settings/SettingsFields.php:329
 msgid "Completed"
 msgstr "Afgerond"
 
@@ -334,7 +358,7 @@ msgstr ""
 "MultiSafepay."
 
 #. %2$: The payment method title
-#: src/PaymentMethods/PaymentMethods/In3.php:64
+#: src/PaymentMethods/PaymentMethods/In3.php:71
 #, php-format
 msgid ""
 "Conveniently allows customers to make three seperate payments for a single "
@@ -345,7 +369,7 @@ msgstr ""
 " <br/>Lees meer over <a href=\"%1$s\" target=\"_blank\">%2$s</a> in het "
 "documentatiecentrum van MultiSafepay."
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:226
+#: src/PaymentMethods/Base/BasePaymentMethod.php:227
 msgid "Country"
 msgstr "Land"
 
@@ -358,35 +382,35 @@ msgstr "Creditcard"
 msgid "Date of birth"
 msgstr "Geboortedatum"
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:412
+#: src/PaymentMethods/Base/BasePaymentMethod.php:399
 msgid "Date of birth is a required field"
 msgstr "Geboortedatum is een verplicht veld"
 
-#: src/Settings/SettingsFields.php:169
+#: src/Settings/SettingsFields.php:213
 msgid "Days"
 msgstr "Dagen"
 
-#: src/Settings/SettingsFields.php:129 src/Settings/SettingsFields.php:133
+#: src/Settings/SettingsFields.php:113 src/Settings/SettingsFields.php:117
 msgid "Debug Mode"
 msgstr "Debug modus"
 
-#: src/Settings/SettingsFields.php:356
+#: src/Settings/SettingsFields.php:345
 msgid "Declined"
 msgstr "Geweigerd"
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:475
+#: src/PaymentMethods/Base/BasePaymentMethod.php:460
 msgid "Default value set in common settings"
 msgstr "Standaardwaarde ingesteld bij de algemene instellingen"
 
-#: src/Settings/SettingsFields.php:199
+#: src/Settings/SettingsFields.php:255
 msgid "Delete all settings of this plugin if you uninstall"
 msgstr "Verwijder de instellingen van deze plugin bij de-installatie"
 
-#: src/Settings/SettingsFields.php:194 src/Settings/SettingsFields.php:198
+#: src/Settings/SettingsFields.php:250 src/Settings/SettingsFields.php:254
 msgid "Delete settings if uninstall"
 msgstr "Verwijder de instellingen bij de-installatie"
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:201
+#: src/PaymentMethods/Base/BasePaymentMethod.php:202
 msgid "Description"
 msgstr "Beschrijving"
 
@@ -402,7 +426,7 @@ msgstr "Documentatie"
 msgid "Dotpay"
 msgstr ""
 
-#: src/PaymentMethods/PaymentMethods/Einvocing.php:55
+#: src/PaymentMethods/PaymentMethods/Einvoicing.php:55
 msgid "E-Invoicing"
 msgstr ""
 
@@ -454,7 +478,26 @@ msgstr ""
 "href=\"%1$s\" target=\"_blank\">%2$s</a> in het documentatiecentrum van "
 "MultiSafepay."
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:189
+#. %1$: The payment method title
+#: src/PaymentMethods/PaymentMethods/BankTrans.php:67
+#: src/PaymentMethods/PaymentMethods/Einvoicing.php:88
+#: src/PaymentMethods/PaymentMethods/In3.php:95
+#: src/PaymentMethods/PaymentMethods/Santander.php:88
+#: src/PaymentMethods/PaymentMethods/Ideal.php:89
+#: src/PaymentMethods/PaymentMethods/PayAfterDelivery.php:88
+#: src/PaymentMethods/PaymentMethods/Afterpay.php:86
+#: src/PaymentMethods/PaymentMethods/Dirdeb.php:89
+#, php-format
+msgid "Enable direct %1$s"
+msgstr ""
+
+#: src/PaymentMethods/PaymentMethods/Generic.php:106
+msgid ""
+"Enable this option of the payment method or gift card you would like to use, "
+"require the shopping cart in the refund request."
+msgstr ""
+
+#: src/PaymentMethods/Base/BasePaymentMethod.php:190
 msgid "Enable/Disable"
 msgstr "Activeer/Deactiveer"
 
@@ -474,11 +517,15 @@ msgstr ""
 "consumenten. <br/>Lees meer over <a href=\"%1$s\" target=\"_blank\">%2$s</a> "
 "in het documentatiecentrum van MultiSafepay."
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:314
+#: src/PaymentMethods/Base/BaseTokenizationPaymentMethod.php:69
+msgid "Error processing the order using a registered payment method"
+msgstr ""
+
+#: src/PaymentMethods/Base/BasePaymentMethod.php:317
 msgid "Error:"
 msgstr "Fout:"
 
-#: src/Settings/SettingsFields.php:360
+#: src/Settings/SettingsFields.php:349
 msgid "Expired"
 msgstr "Verlopen"
 
@@ -506,7 +553,7 @@ msgstr ""
 msgid "For developers:"
 msgstr "Voor ontwikkelaars:"
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:229
+#: src/PaymentMethods/Base/BasePaymentMethod.php:230
 msgid ""
 "For most operating system and configurations, you must hold Ctrl or Cmd in "
 "your keyboard, while you click in the options to select more than one value."
@@ -526,13 +573,21 @@ msgstr ""
 "betalingen in Belgie. <br/>Lees meer over <a href=\"%1$s\" target=\"_blank\">"
 "%2$s</a> in het Documentatiecentrum van MultiSafepay."
 
+#: src/PaymentMethods/PaymentMethods/Generic.php:99
+msgid "Gateway code"
+msgstr ""
+
 #: templates/multisafepay-checkout-fields-display.php:59
 msgid "Gender"
 msgstr "Geslacht"
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:408
+#: src/PaymentMethods/Base/BasePaymentMethod.php:395
 msgid "Gender is a required field"
 msgstr "Geslacht is een verplicht veld"
+
+#: src/PaymentMethods/PaymentMethods/Generic.php:65
+msgid "Generic Gateway"
+msgstr "Generic Gateway"
 
 #: src/PaymentMethods/Giftcards/Gezondheidsbon.php:55
 msgid "Gezondheidsbon"
@@ -554,15 +609,15 @@ msgstr ""
 msgid "Goodcard"
 msgstr ""
 
-#: src/Settings/SettingsFields.php:141 src/Settings/SettingsFields.php:145
+#: src/Settings/SettingsFields.php:137 src/Settings/SettingsFields.php:141
 msgid "Google Analytics"
 msgstr ""
 
-#: src/Settings/SettingsFields.php:142
+#: src/Settings/SettingsFields.php:138
 msgid "Google Analytics Universal Account ID. Format: UA-XXXXXXXXX"
 msgstr "Google Analytics Universeel Account ID. Formaat: UA-XXXXXXXXX"
 
-#: src/Settings/SettingsFields.php:170
+#: src/Settings/SettingsFields.php:214
 msgid "Hours"
 msgstr "Uren"
 
@@ -574,14 +629,18 @@ msgstr ""
 msgid "https://www.multisafepay.com"
 msgstr ""
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:421
-#: src/PaymentMethods/Base/BasePaymentMethod.php:435
+#: src/PaymentMethods/Base/BasePaymentMethod.php:408
+#: src/PaymentMethods/Base/BasePaymentMethod.php:422
 msgid "IBAN does not seems valid"
 msgstr "IBAN is ongeldig"
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:430
+#: src/PaymentMethods/Base/BasePaymentMethod.php:417
 msgid "IBAN is a required field"
 msgstr "IBAN is een verplicht veld"
+
+#: src/PaymentMethods/PaymentMethods/Generic.php:111
+msgid "Icon"
+msgstr "Icoon"
 
 #: src/PaymentMethods/PaymentMethods/Ideal.php:58
 msgid "iDEAL"
@@ -591,11 +650,35 @@ msgstr ""
 msgid "iDEAL QR"
 msgstr ""
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:228
+#: src/PaymentMethods/PaymentMethods/Einvoicing.php:91
+#: src/PaymentMethods/PaymentMethods/In3.php:98
+#: src/PaymentMethods/PaymentMethods/Santander.php:91
+#: src/PaymentMethods/PaymentMethods/Ideal.php:92
+#: src/PaymentMethods/PaymentMethods/PayAfterDelivery.php:91
+#: src/PaymentMethods/PaymentMethods/Afterpay.php:89
+#: src/PaymentMethods/PaymentMethods/Dirdeb.php:92
 msgid ""
-"If you select one or more countries, this payment method won't show in the "
-"checkout page, if the payment address`s country of the customer match with "
-"the selected values. Leave blank for no restrictions."
+"If enabled, additional information can be entered during WooCommerce "
+"checkout. If disabled, additional information will be requested on the "
+"MultiSafepay payment page."
+msgstr ""
+
+#: src/PaymentMethods/PaymentMethods/BankTrans.php:70
+msgid ""
+"If enabled, the consumer receives an e-mail with payment details, and no "
+"extra information is required during checkout."
+msgstr ""
+
+#: src/PaymentMethods/Base/BasePaymentMethod.php:229
+#, fuzzy
+#| msgid ""
+#| "If you select one or more countries, this payment method won't show in "
+#| "the checkout page, if the payment address`s country of the customer match "
+#| "with the selected values. Leave blank for no restrictions."
+msgid ""
+"If you select one or more countries, this payment method will be shown in "
+"the checkout page, if the payment address`s country of the customer match "
+"with the selected values. Leave blank for no restrictions."
 msgstr ""
 "Indien een of meer landen worden geselecteerd, wordt deze betalingsmethode "
 "niet getoond bij het afrekenen als het land van het betalingsadres van de "
@@ -617,7 +700,7 @@ msgstr ""
 "Als u een live account wilt aanmaken, neem dan contact op met de "
 "verkoopafdeling van MultiSafepay:"
 
-#: src/PaymentMethods/PaymentMethods/In3.php:55
+#: src/PaymentMethods/PaymentMethods/In3.php:62
 msgid "in3"
 msgstr ""
 
@@ -637,21 +720,23 @@ msgstr ""
 msgid "ING Home'Pay"
 msgstr ""
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:207
+#: src/PaymentMethods/Base/BasePaymentMethod.php:208
 msgid "Initial Order Status"
 msgstr "Initiële order status"
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:210
+#: src/PaymentMethods/Base/BasePaymentMethod.php:211
 msgid "Initial order status for this payment method."
 msgstr "Initiële order status voor deze betaalmethode."
 
-#: src/Settings/SettingsFields.php:336
+#: src/Settings/SettingsFields.php:325
 msgid "Initialized"
 msgstr "geïnitialiseerd"
 
-#: src/PaymentMethods/PaymentMethodCallback.php:95
-#: src/PaymentMethods/Base/BasePaymentMethod.php:345
-#: src/PaymentMethods/Base/BasePaymentMethod.php:345
+#: src/PaymentMethods/PaymentMethodCallback.php:114
+#: src/PaymentMethods/PaymentMethodsController.php:171
+#: src/PaymentMethods/PaymentMethodsController.php:171
+#: src/PaymentMethods/PaymentMethodsController.php:189
+#: src/PaymentMethods/PaymentMethodsController.php:189
 msgid "Invalid request"
 msgstr "Foutief verzoek"
 
@@ -660,7 +745,7 @@ msgid "Issuer"
 msgstr "Banken"
 
 #. %1$: The payment method title
-#: src/PaymentMethods/Base/BasePaymentMethod.php:372
+#: src/PaymentMethods/Base/BasePaymentMethod.php:360
 #, php-format
 msgid ""
 "It seems %1$s is not available for your MultiSafepay account. <a "
@@ -668,14 +753,6 @@ msgid ""
 msgstr ""
 "Het lijkt erop dat %1$s niet beschikbaar is voor uw MultiSafepay-account. <a "
 "href=\"%2$s\"> Neem contact op met de helpdesk</a>"
-
-#: src/Settings/SettingsFields.php:268
-msgid "It seems the API Key is not valid on the live environment"
-msgstr "Dit is geen geldige API Key voor de live omgeving"
-
-#: src/Settings/SettingsFields.php:305
-msgid "It seems the Test API Key is not valid on the test environment"
-msgstr "Dit is geen geldige API Key voor de test omgeving"
 
 #: src/Utils/Activator.php:47
 msgid "It seems you don't have permission to activate plugins"
@@ -693,7 +770,7 @@ msgstr ""
 msgid "Klarna - Pay in 30 days"
 msgstr "Klarna - Betaal later in 14 dagen"
 
-#: src/Settings/SettingsFields.php:134
+#: src/Settings/SettingsFields.php:118
 msgid "Logs additional information to the system log"
 msgstr "Schrijf aanvullende informatie naar het systeemlogboek"
 
@@ -713,11 +790,11 @@ msgstr "Handleiding"
 msgid "Mastercard"
 msgstr ""
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:220
+#: src/PaymentMethods/Base/BasePaymentMethod.php:221
 msgid "Max Amount"
 msgstr "Maximaal bedrag"
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:214
+#: src/PaymentMethods/Base/BasePaymentMethod.php:215
 msgid "Min Amount"
 msgstr "Minimaal bedrag"
 
@@ -737,7 +814,7 @@ msgstr ""
 "Ontbrekende afhankelijkheden: %s <br/>Installeer deze extensies om de "
 "Multisafepay WooCommerce plugin te kunnen gebruiken."
 
-#: src/Settings/SettingsFields.php:183
+#: src/Settings/SettingsFields.php:227
 msgid ""
 "More information about Second Chance on <a href=\"https://docs.multisafepay."
 "com/tools/second-chance/?utm_source=woocommerce&utm_medium=woocommerce-"
@@ -748,6 +825,14 @@ msgstr ""
 "multisafepay.com/tools/second-chance/?"
 "utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-"
 "cms\" target=\"_blank\"> MultiSafepay's documentatiecentrum</a>."
+
+#: src/Settings/SettingsFields.php:240
+msgid ""
+"More information about Tokenization on <a href=\"https://docs.multisafepay."
+"com/tools/tokenization/?utm_source=woocommerce&utm_medium=woocommerce-"
+"cms&utm_campaign=woocommerce-cms\" target=\"_blank\">MultiSafepay's "
+"Documentation Center</a>."
+msgstr ""
 
 #: templates/multisafepay-checkout-fields-display.php:50
 msgid "Mr"
@@ -771,16 +856,16 @@ msgstr ""
 msgid "MultiSafepay Payment Plugin"
 msgstr "MultiSafepay Betaal Plugin"
 
-#: src/Settings/SettingsController.php:155
+#: src/Settings/SettingsController.php:146
 msgid "MultiSafepay Settings"
 msgstr "MultiSafepay Instellingen"
 
-#: src/Settings/SettingsController.php:151
+#: src/Settings/SettingsController.php:142
 #, php-format
 msgid "MultiSafepay Settings v. %s"
 msgstr "MultiSafepay Instellingen v. %s"
 
-#: src/Settings/SettingsFields.php:187
+#: src/Settings/SettingsFields.php:231
 msgid ""
 "MultiSafepay will send two Second Chance reminder emails. In the emails, "
 "MultiSafepay will include a link to allow the consumer to finalize the "
@@ -825,6 +910,14 @@ msgstr ""
 msgid "Options"
 msgstr "Opties"
 
+#: src/Settings/SettingsFields.php:125
+msgid "Order Description"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:129
+msgid "Order Description."
+msgstr ""
+
 #: templates/multisafepay-settings-display.php:32
 msgid "Order Status"
 msgstr "Bestelstatus"
@@ -833,20 +926,16 @@ msgstr "Bestelstatus"
 msgid "Parfumcadeaukaart"
 msgstr ""
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:302
+#: src/PaymentMethods/Base/BasePaymentMethod.php:300
 msgid "Partial refund is not possible with billing suite payment methods"
 msgstr "Gedeeltelijke refund is niet mogelijk bij de gebruikte betaalmethode"
-
-#: src/Settings/SettingsFields.php:372
-msgid "Partial refunded"
-msgstr "Deels terugbetaald"
 
 #: src/PaymentMethods/PaymentMethods/PayAfterDelivery.php:55
 msgid "Pay After Delivery"
 msgstr "Betaal Na Ontvangst"
 
 #. %s: order id
-#: src/Services/OrderService.php:89
+#: src/Services/OrderService.php:146
 #, php-format
 msgid "Payment for order: %s"
 msgstr "Betaling voor order: %s"
@@ -865,6 +954,10 @@ msgstr ""
 
 #: src/PaymentMethods/Giftcards/Podium.php:55
 msgid "Podium"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:153 src/Settings/SettingsFields.php:169
+msgid "Processing"
 msgstr ""
 
 #. %2$: The payment method title
@@ -907,19 +1000,19 @@ msgstr ""
 "de slag kunt:"
 
 #. %1$: The order ID. %2$ The PSP transaction ID
-#: src/PaymentMethods/Base/BasePaymentMethod.php:328
+#: src/PaymentMethods/Base/BasePaymentMethod.php:332
 #, php-format
 msgid "Refund for Order ID: %1$s with transactionId: %2$s gives message: %3$s."
 msgstr ""
 "Terugbetaling van order: %1$s met transactie-id: %2$s geeft de melding: %3$s."
 
 #. %1$: The currency code. %2$ The transaction amount
-#: src/PaymentMethods/Base/BasePaymentMethod.php:320
+#: src/PaymentMethods/Base/BasePaymentMethod.php:325
 #, php-format
 msgid "Refund of %1$s%2$s has been processed successfully."
 msgstr "Terugbetaling van %1$s%2$s is gelukt."
 
-#: src/Settings/SettingsFields.php:368
+#: src/Settings/SettingsFields.php:357
 msgid "Refunded"
 msgstr "Terugbetaald"
 
@@ -927,7 +1020,15 @@ msgstr "Terugbetaald"
 msgid "Request to Pay powered by Deutsche Bank"
 msgstr ""
 
-#: src/Settings/SettingsFields.php:348
+#: src/PaymentMethods/PaymentMethods/Generic.php:104
+msgid "Require shopping cart"
+msgstr "Verzend winkelwagen informatie"
+
+#: src/PaymentMethods/PaymentMethods/Generic.php:105
+msgid "Require shopping cart for this payment method."
+msgstr "Verzend winkelwagen informatie voor deze betaalmethode."
+
+#: src/Settings/SettingsFields.php:337
 msgid "Reserved"
 msgstr "Gereserveerd"
 
@@ -935,7 +1036,7 @@ msgstr "Gereserveerd"
 msgid "Salutation"
 msgstr "Aanhef"
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:404
+#: src/PaymentMethods/Base/BasePaymentMethod.php:391
 msgid "Salutation is a required field"
 msgstr "Aanhef is een vereist veld"
 
@@ -943,11 +1044,23 @@ msgstr "Aanhef is een vereist veld"
 msgid "Santander Consumer Finance | Pay per month"
 msgstr "Santander Consumer Finance Betaal per Maand"
 
-#: src/Settings/SettingsFields.php:182 src/Settings/SettingsFields.php:186
+#: src/PaymentMethods/PaymentMethods/Generic.php:112
+msgid ""
+"Save the icon url in this field. Icons can be uploaded in: Media -> Library -"
+"> Add new."
+msgstr ""
+"Sla hier de url van het icoon op. Iconen kunnen geupload worden in: Media -> "
+"Voeg nieuwe toe."
+
+#: src/PaymentMethods/TokenizationMethodsController.php:141
+msgid "Save your credit card for the next purchase"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:226 src/Settings/SettingsFields.php:230
 msgid "Second Chance"
 msgstr "Betaalherinnering"
 
-#: src/Settings/SettingsFields.php:171
+#: src/Settings/SettingsFields.php:215
 msgid "Seconds"
 msgstr "Seconden"
 
@@ -960,7 +1073,7 @@ msgstr "Selecteer een bank"
 msgid "Select an option"
 msgstr "Selecteer een optie"
 
-#: src/Settings/SettingsFields.php:226
+#: src/Settings/SettingsFields.php:287
 msgid "Select order status"
 msgstr "Selecteer een orderstatus"
 
@@ -968,15 +1081,23 @@ msgstr "Selecteer een orderstatus"
 msgid "SEPA Direct Debit"
 msgstr "SEPA Automatische incasso"
 
+#: src/Settings/SettingsFields.php:149 src/Settings/SettingsFields.php:157
+msgid "Set transaction as invoiced"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:165 src/Settings/SettingsFields.php:173
+msgid "Set transaction as shipped"
+msgstr ""
+
 #: src/Utils/CustomLinks.php:44
 msgid "Settings"
 msgstr "Instellingen"
 
-#: src/Settings/SettingsFields.php:364
+#: src/Settings/SettingsFields.php:353
 msgid "Shipped"
 msgstr "Verzonden"
 
-#: src/Services/ShoppingCartService.php:131
+#: src/Services/ShoppingCartService.php:138
 msgid "Shipping"
 msgstr "Verzendmethode"
 
@@ -1035,11 +1156,11 @@ msgstr "Telefoon:"
 msgid "test account"
 msgstr ""
 
-#: src/Settings/SettingsFields.php:91 src/Settings/SettingsFields.php:96
+#: src/Settings/SettingsFields.php:75 src/Settings/SettingsFields.php:80
 msgid "Test API Key"
 msgstr ""
 
-#: src/Settings/SettingsFields.php:79 src/Settings/SettingsFields.php:83
+#: src/Settings/SettingsFields.php:63 src/Settings/SettingsFields.php:67
 msgid "Test Mode"
 msgstr "Test modus"
 
@@ -1057,6 +1178,11 @@ msgstr ""
 "href=\"%1$s\" target=\"_blank\">%2$s</a> in het documentatiecentrum van "
 "MultiSafepay."
 
+#: src/PaymentMethods/PaymentMethods/Generic.php:100
+msgid ""
+"The gateway code of the payment method or gift card you would like to use."
+msgstr ""
+
 #. %2$: The payment method title
 #: src/PaymentMethods/PaymentMethods/Ideal.php:67
 #, php-format
@@ -1069,7 +1195,7 @@ msgstr ""
 "Nederlandse banken met elkaar verbindt. <br/>Lees meer over <a href=\"%1$s\" "
 "target=\"_blank\">%2$s</a> in het documentatiecentrum van MultiSafepay."
 
-#: src/Settings/SettingsFields.php:166
+#: src/Settings/SettingsFields.php:210
 msgid ""
 "The lifetime of a payment link by default is 30 days. This means that the "
 "customer has 30 days to complete the transaction using the payment link"
@@ -1078,16 +1204,25 @@ msgstr ""
 "de consument 30 dagen de tijd heeft om de transactie af te ronden via de "
 "betaallink"
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:203
+#: src/PaymentMethods/Base/BasePaymentMethod.php:204
 msgid "This controls the description which the user sees during checkout."
 msgstr ""
 "Vul hier de omschrijving in die de consument ziet tijdens het afrekenen."
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:197
+#: src/PaymentMethods/Base/BasePaymentMethod.php:198
 msgid "This controls the title which the user sees during checkout."
 msgstr "Vul hier de titel in die de consument ziet tijdens het afrekenen."
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:222
+#. %2$: The payment method title
+#: src/PaymentMethods/PaymentMethods/Generic.php:127
+msgid ""
+"This generic payment method gives you the option to add your own "
+"MultiSafepay supported payment method."
+msgstr ""
+"Deze generieke betaalmethode geeft u de optie om zelf door MultiSafepay "
+"ondersteunde betaalmethodes toe te voegen. "
+
+#: src/PaymentMethods/Base/BasePaymentMethod.php:223
 msgid ""
 "This payment method is not shown in the checkout if the order total exceeds "
 "a certain amount. Leave blank for no restrictions."
@@ -1095,7 +1230,7 @@ msgstr ""
 "Indien gevuld, wordt deze betaalmethode niet getoond bij het afrekenen als "
 "het ordertotaal hoger is dan het gedefinieerde bedrag."
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:216
+#: src/PaymentMethods/Base/BasePaymentMethod.php:217
 msgid ""
 "This payment method is not shown in the checkout if the order total is lower "
 "than the defined amount. Leave blank for no restrictions."
@@ -1103,32 +1238,57 @@ msgstr ""
 "Indien gevuld, wordt deze betaalmethode niet getoond bij het afrekenen als "
 "het ordertotaal lager is dan het gedefinieerde bedrag."
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:195
+#: src/PaymentMethods/Base/BasePaymentMethod.php:196
 msgid "Title"
 msgstr "Titel"
+
+#: src/PaymentMethods/Base/BaseTokenizationPaymentMethod.php:125
+msgid ""
+"To save a credit card you must process an order with products and pass by "
+"checkout page, selecting  the checkbox \"Save your credit card for the next "
+"purchase\""
+msgstr ""
 
 #: templates/partials/multisafepay-settings-support-display.php:50
 msgid "To use this plugin you need a MultiSafepay account."
 msgstr "Om deze plugin te gebruiken heeft u een MultiSafepay account nodig."
 
-#: src/PaymentMethods/Base/BasePaymentMethod.php:253
-#: src/PaymentMethods/Base/BasePaymentMethod.php:257
+#: src/Settings/SettingsFields.php:238 src/Settings/SettingsFields.php:239
+msgid "Tokenization"
+msgstr ""
+
+#: src/PaymentMethods/PaymentMethodCallback.php:200
+#: src/PaymentMethods/Base/BasePaymentMethod.php:259
+#: src/PaymentMethods/Base/BasePaymentMethod.php:263
+#: src/PaymentMethods/Base/BaseTokenizationPaymentMethod.php:79
+#: src/PaymentMethods/Base/BaseTokenizationPaymentMethod.php:82
 msgid "Transaction has been initialized."
 msgstr "De transactie is geïnitialiseerd."
+
+#: src/PaymentMethods/PaymentMethods/BankTrans.php:65
+#: src/PaymentMethods/PaymentMethods/Einvoicing.php:86
+#: src/PaymentMethods/PaymentMethods/In3.php:93
+#: src/PaymentMethods/PaymentMethods/Santander.php:86
+#: src/PaymentMethods/PaymentMethods/Ideal.php:87
+#: src/PaymentMethods/PaymentMethods/PayAfterDelivery.php:86
+#: src/PaymentMethods/PaymentMethods/Afterpay.php:84
+#: src/PaymentMethods/PaymentMethods/Dirdeb.php:87
+msgid "Transaction Type"
+msgstr ""
 
 #: src/PaymentMethods/PaymentMethods/Trustly.php:55
 msgid "Trustly"
 msgstr ""
 
-#: src/Settings/SettingsFields.php:344
+#: src/Settings/SettingsFields.php:333
 msgid "Uncleared"
 msgstr ""
 
-#: src/Settings/SettingsFields.php:165 src/Settings/SettingsFields.php:174
+#: src/Settings/SettingsFields.php:209 src/Settings/SettingsFields.php:218
 msgid "Unit lifetime of payment link"
 msgstr "Eenheid verlooptijd van de betaallink"
 
-#: src/Settings/SettingsFields.php:153 src/Settings/SettingsFields.php:157
+#: src/Settings/SettingsFields.php:197 src/Settings/SettingsFields.php:201
 msgid "Value lifetime of payment link"
 msgstr "Waarde verlooptijd van de betaallink"
 
@@ -1136,7 +1296,7 @@ msgstr "Waarde verlooptijd van de betaallink"
 msgid "Visa"
 msgstr ""
 
-#: src/Settings/SettingsFields.php:352
+#: src/Settings/SettingsFields.php:341
 msgid "Void"
 msgstr "Ongeldig"
 
@@ -1152,6 +1312,23 @@ msgstr ""
 msgid "Wellness gift card"
 msgstr ""
 
+#: src/Settings/SettingsFields.php:182
+msgid ""
+"When the order is cancelled by the customer, redirect the customer to the "
+"selected page"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:166
+msgid ""
+"When the order reaches this status, a notification will be sent to "
+"MultiSafepay to set the transaction status as shipped"
+msgstr ""
+
+#: src/Settings/SettingsFields.php:150
+msgid ""
+"When the order reaches this status, we send the invoice id to MultiSafepay"
+msgstr ""
+
 #: src/PaymentMethods/Giftcards/Wijncadeau.php:55
 msgid "Wijncadeau"
 msgstr ""
@@ -1160,15 +1337,11 @@ msgstr ""
 msgid "Winkelcheque"
 msgstr ""
 
-#: src/Settings/SettingsFields.php:256
-msgid "You need to fill the API Key"
-msgstr "API Key is een verplicht veld"
+#: src/Settings/SettingsFields.php:130
+msgid "You can include the order number using {order_number}"
+msgstr ""
 
-#: src/Settings/SettingsFields.php:293
-msgid "You need to fill the Test API Key"
-msgstr "Test API Key is een verplicht veld"
-
-#: src/Settings/SettingsController.php:196
+#: src/Settings/SettingsController.php:187
 msgid ""
 "You need to fill these settings, to be able to enable a MultiSafepay payment "
 "method"

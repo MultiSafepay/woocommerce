@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare( strict_types=1 );
 
 /**
  *
@@ -23,8 +23,8 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods\Base;
 
-use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfo\Meta;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfo\Meta;
 use MultiSafepay\ValueObject\BankAccount;
 use MultiSafepay\ValueObject\Customer\EmailAddress;
 use MultiSafepay\ValueObject\Customer\PhoneNumber;
@@ -42,6 +42,7 @@ abstract class BaseBillingSuitePaymentMethod extends BasePaymentMethod {
 
     /**
      * @param array|null $data
+     *
      * @return Meta
      */
     public function get_gateway_info( array $data = null ): GatewayInfoInterface {
@@ -73,5 +74,6 @@ abstract class BaseBillingSuitePaymentMethod extends BasePaymentMethod {
         return $gateway_info;
 
     }
+
 
 }

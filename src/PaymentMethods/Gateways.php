@@ -58,6 +58,7 @@ use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Dirdeb;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Dotpay;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Einvoicing;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Eps;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Generic;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Giropay;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Ideal;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\IdealQr;
@@ -99,6 +100,7 @@ class Gateways {
         'multisafepay_dotpay'            => Dotpay::class,
         'multisafepay_einvoice'          => Einvoicing::class,
         'multisafepay_eps'               => Eps::class,
+        'multisafepay_generic'           => Generic::class,
         'multisafepay_giropay'           => Giropay::class,
         'multisafepay_ideal'             => Ideal::class,
         'multisafepay_idealqr'           => IdealQr::class,

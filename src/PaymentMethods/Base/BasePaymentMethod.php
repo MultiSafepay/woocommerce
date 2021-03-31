@@ -25,16 +25,14 @@ namespace MultiSafepay\WooCommerce\PaymentMethods\Base;
 
 use Exception;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
+use MultiSafepay\Exception\InvalidArgumentException;
 use MultiSafepay\ValueObject\IbanNumber;
-use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\BaseGatewayInfo;
-use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodCallback;
 use MultiSafepay\WooCommerce\Services\OrderService;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
 use WC_Countries;
 use WC_Payment_Gateway;
-use MultiSafepay\Exception\InvalidArgumentException;
 use WP_Error;
 
 abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMethodInterface {
@@ -148,10 +146,8 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * @return array
      */
     private function get_countries(): array {
-        $countries         = new WC_Countries();
-        $allowed_countries = $countries->get_allowed_countries();
-
-        return $allowed_countries;
+        $countries = new WC_Countries();
+        return $countries->get_allowed_countries();
     }
 
     /**
@@ -189,7 +185,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * @return  array
      */
     public function add_form_fields(): array {
-        $form_fields = array(
+        return array(
             'enabled'              => array(
                 'title'   => __( 'Enable/Disable', 'multisafepay' ),
                 'label'   => 'Enable ' . $this->get_method_title() . ' Gateway',
@@ -236,7 +232,6 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
                 'default'     => $this->get_option( 'countries', array() ),
             ),
         );
-        return $form_fields;
     }
 
     /**
@@ -278,13 +273,14 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * Process the refund.
      *
      * @param integer $order_id Order ID.
-     * @param float   $amount     Amount to be refunded.
-     * @param string  $reason    Reason description.
+     * @param float   $amount Amount to be refunded.
+     * @param string  $reason Reason description.
      *
      * @return  mixed boolean|WP_Error
      */
     public function process_refund( $order_id, $amount = null, $reason = '' ) {
 
+        // Refund amount can not be 0
         if ( 0.00 === (float) $amount ) {
             return new WP_Error( '400', __( 'Amount of refund should be higher than 0', 'multisafepay' ) );
         }
@@ -298,15 +294,15 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $refund_request = $transaction_manager->createRefundRequest( $multisafepay_transaction );
         $refund_request->addDescriptionText( $reason );
 
-        // If the used gateway is a billing suite gateway, create the refund based on items
-        if ( $multisafepay_transaction->requiresShoppingCart() ) {
+        // If the used gateway is a billing suite gateway, or the generic requiring shopping cart, create the refund based on items
+        if ( (bool) get_post_meta( $order->get_id(), 'order_require_shopping_cart', 'true' ) || $multisafepay_transaction->requiresShoppingCart() ) {
             if ( $amount !== $order->get_total() ) {
                 return new WP_Error( '400', __( 'Partial refund is not possible with billing suite payment methods', 'multisafepay' ) );
             }
 
             $refund_items = $multisafepay_transaction->getShoppingCart()->getItems();
             foreach ( $refund_items as $item ) {
-                $refund_request->getCheckoutData()->refundByMerchantItemId( (string) $item->getMerchantItemId(), (int) -$item->getQuantity() );
+                $refund_request->getCheckoutData()->refundByMerchantItemId( (string) $item->getMerchantItemId(), (int) $item->getQuantity() );
             }
 		}
 
@@ -315,14 +311,16 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         }
 
         try {
-            $msg = null;
+            $error = null;
             $transaction_manager->refund( $multisafepay_transaction, $refund_request );
         } catch ( Exception $exception ) {
-            $msg = __( 'Error:', 'multisafepay' ) . htmlspecialchars( $exception->getMessage() );
-            wc_add_notice( $msg, 'error' );
+            $error  = __( 'Error:', 'multisafepay' ) . htmlspecialchars( $exception->getMessage() );
+            $logger = wc_get_logger();
+            $logger->log( 'error', $error );
+            wc_add_notice( $error, 'error' );
         }
 
-        if ( ! $msg ) {
+        if ( ! $error ) {
             /* translators: %1$: The currency code. %2$ The transaction amount */
             $order->add_order_note( sprintf( __( 'Refund of %1$s%2$s has been processed successfully.', 'multisafepay' ), get_woocommerce_currency_symbol( $order->get_currency() ), $amount ) );
             return true;
@@ -331,7 +329,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         if ( get_option( 'multisafepay_debugmode', false ) ) {
             $logger = wc_get_logger();
             /* translators: %1$: The order ID. %2$ The PSP transaction ID */
-            $message = sprintf( __( 'Refund for Order ID: %1$s with transactionId: %2$s gives message: %3$s.', 'multisafepay' ), $order_id, $multisafepay_transaction->getTransactionId(), $msg );
+            $message = sprintf( __( 'Refund for Order ID: %1$s with transactionId: %2$s gives message: %3$s.', 'multisafepay' ), $order_id, $multisafepay_transaction->getTransactionId(), $error );
             $logger->log( 'info', $message );
         }
 
@@ -476,7 +474,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
     }
 
     /**
-     * @param \WC_Order $order
+     * @param WC_Order $order
      *
      * @return bool
      */
