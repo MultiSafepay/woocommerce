@@ -31,7 +31,7 @@ class Winkelcheque extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_id(): string {
-        return 'winkelcheque';
+        return 'multisafepay_winkelcheque';
     }
 
     /**

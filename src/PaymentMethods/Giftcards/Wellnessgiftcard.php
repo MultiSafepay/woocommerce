@@ -31,7 +31,7 @@ class Wellnessgiftcard extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_id(): string {
-        return 'wellnessgiftcard';
+        return 'multisafepay_wellnessgiftcard';
     }
 
     /**

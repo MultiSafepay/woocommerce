@@ -37,4 +37,10 @@ class Test_Gateways extends WP_UnitTestCase {
         $this->assertIsArray($gateways_ids);
     }
 
+    public function test_get_payment_method_id_is_equal_to_payment_method_key() {
+        foreach (Gateways::GATEWAYS as $key => $gateway) {
+            $this->assertSame($key, (new $gateway)->get_payment_method_id());
+        }
+    }
+
 }
