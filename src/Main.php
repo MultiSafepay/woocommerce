@@ -211,6 +211,8 @@ class Main {
         }
         // One new notification URL for all payment methods
         $this->loader->add_action( 'woocommerce_api_multisafepay', $payment_methods, 'callback' );
+        // Allow cancel orders for on-hold status
+        $this->loader->add_filter( 'woocommerce_valid_order_statuses_for_cancel', $payment_methods, 'allow_cancel_multisafepay_orders_with_on_hold_status', 10, 2 );
 	}
 
 	/**

@@ -24,11 +24,9 @@
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
 use MultiSafepay\Api\Transactions\UpdateRequest;
-use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
 use MultiSafepay\WooCommerce\Services\OrderService;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use WC_Order;
-use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodCallback;
 
 /**
  * The payment methods controller.
@@ -266,6 +264,27 @@ class PaymentMethodsController {
             return (int) wc_sequential_order_numbers()->find_order_by_order_number( $transactionid );
         }
         return (int) $transactionid;
+    }
+
+    /**
+     * Filter used to introduce the on-hold status as valid order status to cancel
+     * an order via cancel_url
+     *
+     * @param array    $order_status
+     * @param WC_Order $order
+     *
+     * @return array
+     */
+    public function allow_cancel_multisafepay_orders_with_on_hold_status( array $order_status, WC_Order $order ): array {
+        if ( strpos( $order->get_payment_method(), 'multisafepay_' ) !== false ) {
+            $gateway              = Gateways::GATEWAYS[ $order->get_payment_method() ];
+            $initial_order_status = ( new $gateway() )->initial_order_status;
+            // If the MultiSafepay gateway initial order status is wc-on-hold
+            if ( 'wc-on-hold' === $initial_order_status ) {
+                array_push( $order_status, 'on-hold' );
+            }
+        }
+        return $order_status;
     }
 
 }
