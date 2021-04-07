@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.5.1
+Release date: Apr 7th, 2021
+
+### Fixed
++ PLGWOOS-661: Fix payment methods ids to match list of gateway lists keys, which was producing an error to process notification for Sofort payments
++ PLGWOOS-663: Fix stock decreasing error, in relation with Bank Transfer gateway and notification flows
+
+***
+
 ## 4.5.0
 Release date: Mar 31th, 2021
 
