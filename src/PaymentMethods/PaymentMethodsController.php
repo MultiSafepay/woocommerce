@@ -71,7 +71,7 @@ class PaymentMethodsController {
 	 */
 	public function enqueue_styles(): void {
 	    if ( is_checkout() ) {
-            wp_enqueue_style( 'multisafepay', $this->plugin_dir_url . 'assets/public/css/multisafepay-public.css', array(), $this->version, 'all' );
+            wp_enqueue_style( 'multisafepay-public-css', $this->plugin_dir_url . 'assets/public/css/multisafepay-public.css', array(), $this->version, 'all' );
         }
 	}
 

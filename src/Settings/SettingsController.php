@@ -108,7 +108,7 @@ class SettingsController {
      * @return void
 	 */
 	public function enqueue_styles(): void {
-		wp_enqueue_style( 'multisafepay', $this->plugin_dir_url . 'assets/admin/css/multisafepay-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( 'multisafepay-admin-css', $this->plugin_dir_url . 'assets/admin/css/multisafepay-admin.css', array(), $this->version, 'all' );
 	}
 
     /**
