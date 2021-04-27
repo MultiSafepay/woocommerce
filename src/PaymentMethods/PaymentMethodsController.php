@@ -37,31 +37,6 @@ use WC_Order;
  */
 class PaymentMethodsController {
 
-    /**
-     * The version of this plugin.
-     *
-     * @var      string    The current version of this plugin.
-     */
-	private $version;
-
-    /**
-     * The plugin dir url
-     *
-     * @var      string    The plugin directory url
-     */
-    private $plugin_dir_url;
-
-    /**
-     * Initialize the class and set its properties.
-     *
-     * @param      string $version           The version of this plugin.
-     * @param      string $plugin_dir_url    The plugin dir url of this plugin.
-     */
-	public function __construct( string $version, string $plugin_dir_url ) {
-		$this->version        = $version;
-		$this->plugin_dir_url = $plugin_dir_url;
-	}
-
 	/**
 	 * Register the stylesheets related with the payment methods
 	 *
@@ -71,7 +46,7 @@ class PaymentMethodsController {
 	 */
 	public function enqueue_styles(): void {
 	    if ( is_checkout() ) {
-            wp_enqueue_style( 'multisafepay-public-css', $this->plugin_dir_url . 'assets/public/css/multisafepay-public.css', array(), $this->version, 'all' );
+            wp_enqueue_style( 'multisafepay-public-css', MULTISAFEPAY_PLUGIN_URL . '/assets/public/css/multisafepay-public.css', array(), MULTISAFEPAY_PLUGIN_VERSION, 'all' );
         }
 	}
 

@@ -49,40 +49,14 @@ class Main {
 	 */
 	private $loader;
 
-
-	/**
-	 * The current version of the plugin.
-	 *
-	 * @var      string     The current version of the plugin.
-	 */
-    private $version;
-
-    /**
-     * The plugin dir url
-     *
-     * @var      string     The plugin directory url
-     */
-    private $plugin_dir_url;
-
-    /**
-     * The plugin dir path
-     *
-     * @var      string     The plugin directory path
-     */
-    private $plugin_dir_path;
-
 	/**
 	 * Define the core functionality of the plugin.
 	 *
-	 * Set the plugin name and the plugin version that can be used throughout the plugin.
 	 * Load the dependencies, define the locale, and set the hooks for the admin area and
 	 * the public face of the site.
 	 */
 	public function __construct() {
-		$this->version         = MULTISAFEPAY_PLUGIN_VERSION;
-		$this->plugin_dir_url  = plugin_dir_url( __DIR__ );
-        $this->plugin_dir_path = plugin_dir_path( __DIR__ );
-		$this->loader          = new Loader();
+		$this->loader = new Loader();
 		$this->set_locale();
         $this->add_custom_links_in_plugin_list();
         $this->define_settings_hooks();
@@ -147,7 +121,7 @@ class Main {
 	 */
 	private function define_settings_hooks(): void {
         // Settings controller
-	    $plugin_settings = new SettingsController( $this->get_version(), $this->plugin_dir_url, $this->plugin_dir_path );
+	    $plugin_settings = new SettingsController();
         // Filter get_option for some option names.
         $this->loader->add_filter( 'option_multisafepay_testmode', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
         $this->loader->add_filter( 'option_multisafepay_debugmode', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
@@ -182,7 +156,7 @@ class Main {
 	 */
 	private function define_payment_methods_hooks(): void {
         // Payment controller
-		$payment_methods = new PaymentMethodsController( $this->get_version(), $this->plugin_dir_url );
+		$payment_methods = new PaymentMethodsController();
         // Enqueue styles in payment methods
 		$this->loader->add_action( 'wp_enqueue_scripts', $payment_methods, 'enqueue_styles' );
         // Register the MultiSafepay payment gateways in WooCommerce.
@@ -222,33 +196,6 @@ class Main {
 	 */
 	public function init() {
 		$this->loader->init();
-	}
-
-    /**
-     * The plugin directory url used to call styles and scripts
-     *
-     * @return    string    The plugin dir url
-     */
-    public function get_plugin_dir_url(): string {
-        return $this->plugin_dir_url;
-    }
-
-    /**
-     * The plugin directory path used to require partials
-     *
-     * @return    string    The plugin dir path
-     */
-    public function get_plugin_dir_path(): string {
-        return $this->plugin_dir_path;
-    }
-
-	/**
-	 * Retrieve the version number of the plugin.
-     *
-	 * @return    string    The version number of the plugin.
-	 */
-	public function get_version(): string {
-		return $this->version;
 	}
 
     /**

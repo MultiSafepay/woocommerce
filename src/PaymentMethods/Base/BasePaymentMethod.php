@@ -79,13 +79,6 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
     public $initial_order_status;
 
     /**
-     * The plugin directory path
-     *
-     * @var string
-     */
-    protected $plugin_dir_path;
-
-    /**
      * Construct for Core class.
      */
     public function __construct() {
@@ -109,7 +102,6 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $this->min_amount           = $this->get_option( 'min_amount' );
         $this->countries            = $this->get_option( 'countries' );
         $this->initial_order_status = $this->get_option( 'initial_order_status', false );
-        $this->plugin_dir_path      = plugin_dir_path( dirname( __DIR__, 2 ) );
         $this->errors               = array();
 
         add_action(
@@ -133,11 +125,11 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $icon = $this->get_payment_method_icon();
 
         $icon_locale = substr_replace( $icon, "-$language", - 4, - 4 );
-        if ( file_exists( WP_PLUGIN_DIR . '/multisafepay/assets/public/img/' . $icon_locale ) ) {
+        if ( file_exists( MULTISAFEPAY_PLUGIN_DIR_PATH . 'assets/public/img/' . $icon_locale ) ) {
             $icon = $icon_locale;
         }
 
-        return esc_url( plugins_url( '/assets/public/img/' . $icon, dirname( __DIR__, 2 ) ) );
+        return esc_url( MULTISAFEPAY_PLUGIN_URL . '/assets/public/img/' . $icon );
     }
 
     /**
@@ -365,7 +357,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * @return  mixed
      */
     public function payment_fields() {
-        require $this->plugin_dir_path . 'templates/multisafepay-checkout-fields-display.php';
+        require MULTISAFEPAY_PLUGIN_DIR_PATH . 'templates/multisafepay-checkout-fields-display.php';
     }
 
     /**

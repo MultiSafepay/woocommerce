@@ -35,40 +35,6 @@ use MultiSafepay\WooCommerce\Services\SdkService;
  */
 class SettingsController {
 
-	/**
-	 * The version of this plugin.
-	 *
-	 * @var      string
-	 */
-	private $version;
-
-    /**
-     * The plugin dir url
-     *
-     * @var      string
-     */
-    private $plugin_dir_url;
-
-    /**
-     * The plugin dir path
-     *
-     * @var      string
-     */
-    private $plugin_dir_path;
-
-	/**
-	 * Initialize the class and set its properties.
-	 *
-	 * @param   string $version           The version of this plugin.
-     * @param   string $plugin_dir_url    The plugin dir url.
-     * @param   string $plugin_dir_path   The plugin dir path.
-	 */
-	public function __construct( string $version, string $plugin_dir_url, string $plugin_dir_path ) {
-		$this->version         = $version;
-		$this->plugin_dir_url  = $plugin_dir_url;
-        $this->plugin_dir_path = $plugin_dir_path;
-	}
-
     /**
      * In plugin version < 4.0.0 the options multisafepay_testmode, and multisafepay_debugmode
      * had been stored as strings and returns yes - no.
@@ -108,7 +74,7 @@ class SettingsController {
      * @return void
 	 */
 	public function enqueue_styles(): void {
-		wp_enqueue_style( 'multisafepay-admin-css', $this->plugin_dir_url . 'assets/admin/css/multisafepay-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( 'multisafepay-admin-css', MULTISAFEPAY_PLUGIN_URL . '/assets/admin/css/multisafepay-admin.css', array(), MULTISAFEPAY_PLUGIN_VERSION, 'all' );
 	}
 
     /**
@@ -127,7 +93,7 @@ class SettingsController {
                 'multisafepay_gateway_toggle' => wp_create_nonce( 'multisafepay-toggle-payment-gateway-enabled' ),
             ),
         );
-        wp_register_script( 'multisafepay-admin-js', $this->plugin_dir_url . 'assets/admin/js/multisafepay-admin.js', array( 'jquery' ), $this->version, false );
+        wp_register_script( 'multisafepay-admin-js', MULTISAFEPAY_PLUGIN_URL . '/assets/admin/js/multisafepay-admin.js', array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, false );
         wp_localize_script( 'multisafepay-admin-js', 'multisafepay', $multisafepay_vars );
         wp_enqueue_script( 'multisafepay-admin-js' );
     }
@@ -139,7 +105,7 @@ class SettingsController {
      * @return void
      */
 	public function register_common_settings_page(): void {
-        $title = sprintf( __( 'MultiSafepay Settings v. %s', 'multisafepay' ), $this->version ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
+        $title = sprintf( __( 'MultiSafepay Settings v. %s', 'multisafepay' ), MULTISAFEPAY_PLUGIN_VERSION ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
         add_submenu_page(
             'woocommerce',
             esc_html( $title ),
@@ -159,7 +125,7 @@ class SettingsController {
         $tab_active   = $this->get_tab_active();
         $needs_update = $this->needs_update();
         remove_query_arg( 'needs-setup' );
-        require_once $this->plugin_dir_path . 'templates/multisafepay-settings-display.php';
+        require_once MULTISAFEPAY_PLUGIN_DIR_PATH . 'templates/multisafepay-settings-display.php';
     }
 
     /**
@@ -168,7 +134,7 @@ class SettingsController {
      * @return void
      */
     public function display_multisafepay_support_section(): void {
-        require_once $this->plugin_dir_path . 'templates/partials/multisafepay-settings-support-display.php';
+        require_once MULTISAFEPAY_PLUGIN_DIR_PATH . 'templates/partials/multisafepay-settings-support-display.php';
     }
 
     /**

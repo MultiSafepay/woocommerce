@@ -48,11 +48,22 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 define( 'MULTISAFEPAY_PLUGIN_VERSION', '4.5.1' );
 
+/**
+ * Plugin URL
+ * Do not include a trailing slash. Should be include it in the string with which is concatenated
+ */
+define( 'MULTISAFEPAY_PLUGIN_URL', plugins_url( '', __FILE__ ) );
+
+/**
+ * Plugin dir path
+ * Include a trailing slash. Should not be include it in the string with which is concatenated
+ */
+define( 'MULTISAFEPAY_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
 
 /**
  * Composer's autoload file.
  */
-require_once plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
+require_once MULTISAFEPAY_PLUGIN_DIR_PATH . 'vendor/autoload.php';
 
 use MultiSafepay\WooCommerce\Utils\Activator;
 use MultiSafepay\WooCommerce\Main;

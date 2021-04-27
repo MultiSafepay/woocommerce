@@ -116,7 +116,7 @@ class Ideal extends BasePaymentMethod {
     public function payment_fields(): void {
         $issuer_service = new IssuerService();
         $issuers        = $issuer_service->get_issuers( $this->get_payment_method_code() );
-        require $this->plugin_dir_path . 'templates/multisafepay-checkout-fields-display.php';
+        require MULTISAFEPAY_PLUGIN_DIR_PATH . 'templates/multisafepay-checkout-fields-display.php';
     }
 
     /**
