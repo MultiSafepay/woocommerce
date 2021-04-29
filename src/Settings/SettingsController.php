@@ -360,11 +360,12 @@ class SettingsController {
     /**
      * Return if gateway is enable in the merchant account
      *
-     * @param string $gateway_id
+     * @param string $gateway_id The payment method id
      * @return boolean
      */
     private function is_gateway_enable( string $gateway_id ): bool {
-        $gateway_code       = Gateways::get_gateway_code_by_gateway_id( $gateway_id );
+        $gateway_object     = Gateways::get_payment_method_object_by_payment_method_id( $gateway_id );
+        $gateway_code       = $gateway_object->get_payment_method_code();
         $gateways           = ( new SdkService() )->get_gateways();
         $available_gateways = array();
         foreach ( $gateways as $gateway ) {

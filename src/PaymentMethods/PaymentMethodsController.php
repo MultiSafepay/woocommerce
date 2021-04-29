@@ -191,8 +191,9 @@ class PaymentMethodsController {
         $sdk                 = new SdkService();
         $transaction_manager = $sdk->get_transaction_manager();
         $order_service       = new OrderService();
-        $gateway_code        = Gateways::get_gateway_code_by_gateway_id( $order->get_payment_method() );
-        $gateway_info        = Gateways::get_gateway_info_by_gateway_id( $order->get_payment_method() );
+        $gateway_object      = Gateways::get_payment_method_object_by_payment_method_id( $order->get_payment_method() );
+        $gateway_code        = $gateway_object->get_payment_method_code();
+        $gateway_info        = $gateway_object->get_gateway_info();
         $order_request       = $order_service->create_order_request( $order, $gateway_code, 'paymentlink', $gateway_info );
         $transaction         = $transaction_manager->create( $order_request );
 

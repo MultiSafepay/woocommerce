@@ -150,77 +150,37 @@ class Gateways {
         foreach ( self::GATEWAYS as $gateway_id => $gateway ) {
             $gateways_ids[] = $gateway_id;
         }
-
         return $gateways_ids;
     }
 
     /**
-     * Return the payment method code needed by WooCommerce
+     * Return the WooCommerce payment method object by MultiSafepay gateway code.
      *
      * @param string $code
-     *
-     * @return mixed string|false
+     * @return mixed
      */
-    public static function get_payment_method_id_by_gateway_code( string $code ) {
+    public static function get_payment_method_object_by_gateway_code( string $code ) {
         foreach ( self::GATEWAYS as $gateway ) {
             $gateway = new $gateway();
             if ( $gateway->get_payment_method_code() === $code ) {
-                return $gateway->get_payment_method_id();
+                return $gateway;
             }
         }
         return false;
     }
 
     /**
-     * Return the payment method title needed by WooCommerce
+     * Return the WooCommerce payment method object by WooCommerce payment method id.
      *
-     * @param string $code
-     *
-     * @return mixed string|false
+     * @param string $payment_method_id
+     * @return mixed
      */
-    public static function get_payment_method_name_by_gateway_code( string $code ) {
-        foreach ( self::GATEWAYS as $gateway ) {
-            $gateway = new $gateway();
-            if ( $gateway->get_payment_method_code() === $code ) {
-                return $gateway->get_payment_method_title();
-            }
+    public static function get_payment_method_object_by_payment_method_id( string $payment_method_id ) {
+        if ( ! isset( self::GATEWAYS[ $payment_method_id ] ) ) {
+            return false;
         }
-        return false;
-    }
-
-    /**
-     * Return the gateway code for the given gateway_id
-     *
-     * @param string $gateway_id
-     *
-     * @return string
-     */
-    public static function get_gateway_code_by_gateway_id( string $gateway_id ): string {
-        $gateway = self::GATEWAYS[ $gateway_id ];
-        return ( new $gateway() )->get_payment_method_code();
-    }
-
-    /**
-     * Return the gateway initial order status for the given gateway_id
-     *
-     * @param string $gateway_id
-     *
-     * @return string
-     */
-    public static function get_initial_order_status_by_gateway_id( string $gateway_id ): string {
-        $gateway = self::GATEWAYS[ $gateway_id ];
-        return ( new $gateway() )->initial_order_status;
-    }
-
-    /**
-     * Return the gateway info for the given gateway_id
-     *
-     * @param string $gateway_id
-     * @return GatewayInfoInterface
-     */
-    public static function get_gateway_info_by_gateway_id( string $gateway_id ): GatewayInfoInterface {
-        $gateway = self::GATEWAYS[ $gateway_id ];
-        return ( new $gateway() )->get_gateway_info();
+        $gateway = self::GATEWAYS[ $payment_method_id ];
+        return new $gateway();
     }
 
 }

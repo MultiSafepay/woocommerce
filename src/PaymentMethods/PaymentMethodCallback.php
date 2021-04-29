@@ -172,12 +172,14 @@ class PaymentMethodCallback {
             die( 'OK' );
         }
 
-        $payment_method_id_registered_by_multisafepay    = Gateways::get_payment_method_id_by_gateway_code( $this->get_multisafepay_transaction_gateway_code() );
-        $payment_method_id_registered_by_wc              = $this->order->get_payment_method();
-        $payment_method_title_registered_by_multisafepay = Gateways::get_payment_method_name_by_gateway_code( $this->get_multisafepay_transaction_gateway_code() );
-        $payment_method_title_registered_by_wc           = $this->order->get_payment_method_title();
-        $default_order_status                            = SettingsFields::get_multisafepay_order_statuses();
-        $initial_order_status                            = Gateways::get_initial_order_status_by_gateway_id( $payment_method_id_registered_by_multisafepay );
+        $registered_by_multisafepay_payment_method_object = Gateways::get_payment_method_object_by_gateway_code( $this->get_multisafepay_transaction_gateway_code() );
+        $payment_method_id_registered_by_multisafepay     = $registered_by_multisafepay_payment_method_object ? $registered_by_multisafepay_payment_method_object->get_payment_method_id() : false;
+        $payment_method_title_registered_by_multisafepay  = $registered_by_multisafepay_payment_method_object ? $registered_by_multisafepay_payment_method_object->get_payment_method_title() : false;
+        $payment_method_id_registered_by_wc               = $this->order->get_payment_method();
+        $payment_method_title_registered_by_wc            = $this->order->get_payment_method_title();
+        $registered_by_woocommerce_payment_method_object  = Gateways::get_payment_method_object_by_payment_method_id( $payment_method_id_registered_by_wc );
+        $initial_order_status                             = $registered_by_woocommerce_payment_method_object ? $registered_by_woocommerce_payment_method_object->initial_order_status : false;
+        $default_order_status                             = SettingsFields::get_multisafepay_order_statuses();
 
         // If the payment method changed in MultiSafepay payment page, after leave WooCommerce checkout page
         if ( $payment_method_id_registered_by_multisafepay && $payment_method_id_registered_by_wc !== $payment_method_id_registered_by_multisafepay ) {
