@@ -28,6 +28,7 @@ use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GoogleAnalytics;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\PaymentOptions;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\PluginDetails;
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\SecondChance;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
 use WC_Order;
 
@@ -89,6 +90,7 @@ class OrderService {
             ->addPaymentOptions( $this->create_payment_options( $order ) )
             ->addShoppingCart( $this->shopping_cart_service->create_shopping_cart( $order, $order->get_currency() ) )
             ->addSecondsActive( $time_active )
+            ->addSecondChance( ( new SecondChance() )->addSendEmail( (bool) get_option( 'multisafepay_second_chance', false ) ) )
             ->addData( array( 'var2' => $order->get_id() ) );
 
         if ( $order->needs_shipping_address() ) {
