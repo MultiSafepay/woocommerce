@@ -62,6 +62,12 @@
     <!-- Exclude non used parameters warnings, since most of the filters requires skip this rule -->
     <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter.FoundBeforeLastUsed">
         <exclude-pattern>*/src/PaymentMethods/TokenizationMethodsController.php</exclude-pattern>
+        <exclude-pattern>*/src/Utils/UpgradeNotices.php</exclude-pattern>
+    </rule>
+
+    <!-- Exclude restriction to output non esc html -->
+    <rule ref="WordPress.Security.EscapeOutput.OutputNotEscaped">
+        <exclude-pattern>*/src/Utils/UpgradeNotices.php</exclude-pattern>
     </rule>
 
     <!-- Exclude nonce verification recomendation -->
