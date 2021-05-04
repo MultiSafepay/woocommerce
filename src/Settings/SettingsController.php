@@ -318,8 +318,8 @@ class SettingsController {
             if ( ! $has_api_key ) {
                 wp_die();
             }
-            $is_gateway_enable = $this->is_gateway_enable( $_POST['gateway_id'] );
-            if ( ! $is_gateway_enable ) {
+            $is_gateway_enabled = $this->is_gateway_enabled( $_POST['gateway_id'] );
+            if ( ! $is_gateway_enabled ) {
                 wp_die();
             }
         }
@@ -346,8 +346,8 @@ class SettingsController {
                 wp_send_json_error( 'needs_setup' );
                 wp_die();
             }
-            $is_gateway_enable = $this->is_gateway_enable( $_POST['gateway_id'] );
-            if ( ! $is_gateway_enable ) {
+            $is_gateway_enabled = $this->is_gateway_enabled( $_POST['gateway_id'] );
+            if ( ! $is_gateway_enabled ) {
                 wp_send_json_error( 'not_available' );
                 wp_die();
             }
@@ -363,7 +363,7 @@ class SettingsController {
      * @param string $gateway_id The payment method id
      * @return boolean
      */
-    private function is_gateway_enable( string $gateway_id ): bool {
+    private function is_gateway_enabled( string $gateway_id ): bool {
         $gateway_object     = Gateways::get_payment_method_object_by_payment_method_id( $gateway_id );
         $gateway_code       = $gateway_object->get_payment_method_code();
         $gateways           = ( new SdkService() )->get_gateways();
