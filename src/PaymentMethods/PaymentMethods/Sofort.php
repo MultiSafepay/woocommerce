@@ -52,7 +52,7 @@ class Sofort extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_title(): string {
-        return __( 'SOFORT Banking', 'multisafepay' );
+        return 'SOFORT Banking';
     }
 
     /**

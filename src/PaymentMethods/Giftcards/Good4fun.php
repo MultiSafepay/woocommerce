@@ -52,7 +52,7 @@ class Good4fun extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_title(): string {
-        return __( 'Good4fun', 'multisafepay' );
+        return 'Good4fun';
     }
 
     /**

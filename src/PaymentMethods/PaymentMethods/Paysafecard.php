@@ -52,7 +52,7 @@ class Paysafecard extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_title(): string {
-        return __( 'Paysafecard', 'multisafepay' );
+        return 'Paysafecard';
     }
 
     /**

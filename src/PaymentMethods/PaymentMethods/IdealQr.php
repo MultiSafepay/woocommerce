@@ -54,7 +54,7 @@ class IdealQr extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_title(): string {
-        return __( 'iDEAL QR', 'multisafepay' );
+        return 'iDEAL QR';
     }
 
     /**

@@ -59,7 +59,7 @@ class In3 extends BaseBillingSuitePaymentMethod {
      * @return string
      */
     public function get_payment_method_title(): string {
-        return __( 'in3', 'multisafepay' );
+        return 'in3';
     }
 
     /**

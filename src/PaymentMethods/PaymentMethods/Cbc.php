@@ -52,7 +52,7 @@ class Cbc extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_title(): string {
-        return __( 'CBC', 'multisafepay' );
+        return 'CBC';
     }
 
     /**

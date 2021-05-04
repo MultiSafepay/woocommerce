@@ -52,7 +52,7 @@ class Parfumcadeaukaart extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_title(): string {
-        return __( 'Parfumcadeaukaart', 'multisafepay' );
+        return 'Parfumcadeaukaart';
     }
 
     /**
