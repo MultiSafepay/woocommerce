@@ -128,6 +128,7 @@
             <property name="maxLength" value="500"/>
         </properties>
         <exclude-pattern>*/src/PaymentMethods/Base/BasePaymentMethod.php</exclude-pattern>
+        <exclude-pattern>*/src/Settings/SystemReport.php</exclude-pattern>
     </rule>
     <rule ref="ObjectCalisthenics.Files.FunctionLength">
         <properties>

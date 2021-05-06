@@ -129,12 +129,22 @@ class SettingsController {
     }
 
     /**
-     * Display the common settings page view.
+     * Display the support settings page view.
      *
      * @return void
      */
     public function display_multisafepay_support_section(): void {
         require_once MULTISAFEPAY_PLUGIN_DIR_PATH . 'templates/partials/multisafepay-settings-support-display.php';
+    }
+
+    /**
+     * Display the status tab.
+     *
+     * @return void
+     */
+    public function display_multisafepay_status_section(): void {
+        $status_controller = new StatusController();
+        $status_controller->display();
     }
 
     /**

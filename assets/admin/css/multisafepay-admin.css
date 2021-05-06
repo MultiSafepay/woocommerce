@@ -76,3 +76,59 @@
 #multisafepay-support .multisafepay-sales-contact-list li ul li:first-child {
     padding-top: 0;
 }
+#multisafepay-system-status .multisafepay_status_table {
+    margin-bottom: 1em;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    box-shadow: 0 1px 1px rgb(0 0 0 / 4%);
+    width: 100%;
+}
+#multisafepay-system-status .multisafepay_status_table th {
+    padding: 9px;
+}
+#multisafepay-system-status .multisafepay_status_table th h2 {
+    font-size: 15px;
+    margin: 0;
+    text-align: left;
+}
+#multisafepay-system-status .multisafepay_status_table tr:nth-child(2n) {
+    background: #fcfcfc;
+}
+#multisafepay-system-status .multisafepay_status_table th, #multisafepay-system-status .multisafepay_status_table td {
+    font-size: 1.1em;
+    font-weight: 400;
+    padding: 9px;
+}
+#multisafepay-system-status .multisafepay_status_table td:first-child {
+    width: 33%;
+}
+#multisafepay-system-status .multisafepay_status_table td h4 {
+    margin: 0;
+}
+
+#multisafepay-system-status .system-status-section {
+    margin: 5px 0 15px;
+    border-left-color: #008dcb !important;
+    background: #FFF;
+    border: 1px solid #c3c4c7;
+    border-left-width: 4px;
+    padding: 1px 12px;
+}
+
+#multisafepay-system-status #multisafepay-system-report {
+    display: none;
+}
+
+#multisafepay-system-status #multisafepay-system-report textarea {
+    font-family: monospace;
+    width: 100%;
+    margin: 0;
+    height: 300px;
+    padding: 20px;
+    border-radius: 0;
+    resize: none;
+    font-size: 12px;
+    line-height: 20px;
+    outline: 0;
+    background: #f0f0f1;
+}
