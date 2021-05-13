@@ -33,6 +33,7 @@ use MultiSafepay\Sdk;
 use Buzz\Client\Curl;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use WP_Error;
+use MultiSafepay\WooCommerce\Utils\Logger;
 
 /**
  * This class returns the SDK object.
@@ -71,10 +72,7 @@ class SdkService {
         try {
             $this->sdk = new Sdk( $this->api_key, ( $this->test_mode ) ? false : true, $client, $psr_factory, $psr_factory );
         } catch ( InvalidApiKeyException $invalid_api_key_exception ) {
-            if ( get_option( 'multisafepay_debugmode', false ) ) {
-                $logger = wc_get_logger();
-                $logger->log( 'error', $invalid_api_key_exception->getMessage() );
-            }
+            Logger::log_error( $invalid_api_key_exception->getMessage() );
         }
     }
 
@@ -111,10 +109,7 @@ class SdkService {
             $gateway_manager = $this->sdk->getGatewayManager();
             return $gateway_manager;
         } catch ( ApiException $api_exception ) {
-            if ( get_option( 'multisafepay_debugmode', false ) ) {
-                $logger = wc_get_logger();
-                $logger->log( 'error', $api_exception->getMessage() );
-            }
+            Logger::log_error( $api_exception->getMessage() );
             return new WP_Error( 'multisafepay-warning', $api_exception->getMessage() );
         }
     }
@@ -130,10 +125,7 @@ class SdkService {
             $gateways = $this->get_gateway_manager()->getGateways( true );
             return $gateways;
         } catch ( ApiException $api_exception ) {
-            if ( get_option( 'multisafepay_debugmode', false ) ) {
-                $logger = wc_get_logger();
-                $logger->log( 'error', $api_exception->getMessage() );
-            }
+            Logger::log_error( $api_exception->getMessage() );
             return new WP_Error( 'multisafepay-warning', $api_exception->getMessage() );
         }
     }

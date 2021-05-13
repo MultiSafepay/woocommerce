@@ -31,6 +31,7 @@
         <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout' ) ); ?>" class="nav-tab"><?php echo esc_html__( 'Payment Methods', 'multisafepay' ); ?></a>
         <a href="<?php echo esc_url( admin_url( 'admin.php?page=multisafepay-settings&tab=order_status' ) ); ?>" class="nav-tab <?php if ( 'order_status' === $tab_active ) { ?> nav-tab-active<?php } ?>"><?php echo esc_html__( 'Order Status', 'multisafepay' ); ?></a>
         <a href="<?php echo esc_url( admin_url( 'admin.php?page=multisafepay-settings&tab=options' ) ); ?>" class="nav-tab <?php if ( 'options' === $tab_active ) { ?> nav-tab-active<?php } ?>"><?php echo esc_html__( 'Options', 'multisafepay' ); ?></a>
+        <a href="<?php echo esc_url( admin_url( 'admin.php?page=multisafepay-settings&tab=logs' ) ); ?>" class="nav-tab <?php if ( 'logs' === $tab_active ) { ?> nav-tab-active<?php } ?>"><?php echo esc_html__( 'Logs', 'multisafepay' ); ?></a>
         <a href="<?php echo esc_url( admin_url( 'admin.php?page=multisafepay-settings&tab=status' ) ); ?>" class="nav-tab <?php if ( 'status' === $tab_active ) { ?> nav-tab-active<?php } ?>"><?php echo esc_html__( 'MultiSafepay System Report', 'multisafepay' ); ?></a>
         <a href="<?php echo esc_url( admin_url( 'admin.php?page=multisafepay-settings&tab=support' ) ); ?>" class="nav-tab <?php if ( 'support' === $tab_active ) { ?> nav-tab-active<?php } ?>"><?php echo esc_html__( 'Support', 'multisafepay' ); ?></a>
         <?php // phpcs:enable ?>
@@ -50,6 +51,9 @@
                 do_settings_sections( 'multisafepay-settings-options' );
                 submit_button();
                 echo '</form>';
+                break;
+            case 'logs':
+                $this->display_multisafepay_logs_section();
                 break;
             case 'support':
                 $this->display_multisafepay_support_section();

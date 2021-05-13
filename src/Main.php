@@ -147,8 +147,11 @@ class Main {
             $this->loader->add_action( 'wp_ajax_woocommerce_toggle_gateway_enabled', $plugin_settings, 'before_ajax_toggle_gateway_enabled' );
             // Filter and return ordered the results of the fields
             $this->loader->add_filter( 'multisafepay_common_settings_fields', $plugin_settings, 'filter_multisafepay_common_settings_fields', 10, 1 );
+            // Handle the download error.log file
+            $this->loader->add_action( 'admin_init', $plugin_settings, 'download_multisafepay_logs' );
         }
 	}
+
 
 	/**
 	 * Register all of the hooks related to the payment methods

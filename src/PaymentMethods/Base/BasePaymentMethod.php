@@ -25,11 +25,13 @@ namespace MultiSafepay\WooCommerce\PaymentMethods\Base;
 
 use Exception;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
+use MultiSafepay\Exception\ApiException;
 use MultiSafepay\Exception\InvalidArgumentException;
 use MultiSafepay\ValueObject\IbanNumber;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\BaseGatewayInfo;
 use MultiSafepay\WooCommerce\Services\OrderService;
 use MultiSafepay\WooCommerce\Services\SdkService;
+use MultiSafepay\WooCommerce\Utils\Logger;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
 use WC_Countries;
 use WC_Payment_Gateway;
@@ -245,7 +247,14 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
 
         $order         = wc_get_order( $order_id );
         $order_request = $order_service->create_order_request( $order, $this->gateway_code, $this->type, $gateway_info );
-        $transaction   = $transaction_manager->create( $order_request );
+
+        try {
+            $transaction = $transaction_manager->create( $order_request );
+        } catch ( ApiException $api_exception ) {
+            Logger::log_error( $api_exception->getMessage() );
+        }
+
+        Logger::log_info( 'Start MultiSafepay transaction for the order ID ' . $order_id . ' on ' . date( 'd/m/Y H:i:s' ) . ' with payment URL ' . $transaction->getPaymentUrl() );
 
         return array(
             'result'   => 'success',
@@ -298,15 +307,16 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
             $error = null;
             $transaction_manager->refund( $multisafepay_transaction, $refund_request );
         } catch ( Exception $exception ) {
-            $error  = __( 'Error:', 'multisafepay' ) . htmlspecialchars( $exception->getMessage() );
-            $logger = wc_get_logger();
-            $logger->log( 'error', $error );
+            $error = __( 'Error:', 'multisafepay' ) . htmlspecialchars( $exception->getMessage() );
+            Logger::log_error( $error );
             wc_add_notice( $error, 'error' );
         }
 
         if ( ! $error ) {
             /* translators: %1$: The currency code. %2$ The transaction amount */
-            $order->add_order_note( sprintf( __( 'Refund of %1$s%2$s has been processed successfully.', 'multisafepay' ), get_woocommerce_currency_symbol( $order->get_currency() ), $amount ) );
+            $note = sprintf( __( 'Refund of %1$s%2$s has been processed successfully.', 'multisafepay' ), get_woocommerce_currency_symbol( $order->get_currency() ), $amount );
+            Logger::log_info( $note );
+            $order->add_order_note( $note );
             return true;
         }
 
@@ -425,7 +435,6 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
     public function validate_iban( $iban ): bool {
         try {
             $iban = new IbanNumber( $iban );
-
             return true;
         } catch ( InvalidArgumentException $invalid_argument_exception ) {
             return false;
@@ -442,7 +451,6 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
     private function get_order_statuses(): array {
         $order_statuses               = wc_get_order_statuses();
         $order_statuses['wc-default'] = __( 'Default value set in common settings', 'multisafepay' );
-
         return $order_statuses;
     }
 

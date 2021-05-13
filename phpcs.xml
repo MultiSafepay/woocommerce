@@ -81,6 +81,12 @@
         <exclude-pattern>*/src/PaymentMethods/BasePaymentMethod.php</exclude-pattern>
     </rule>
 
+    <!-- -->
+    <rule ref="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents">
+        <exclude-pattern>*/templates/partials/multisafepay-settings-logs-display.php</exclude-pattern>
+    </rule>
+
+
     <!-- Let's also check that everything is properly documented. -->
     <rule ref="WordPress-Docs"/>
 
