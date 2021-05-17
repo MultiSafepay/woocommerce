@@ -23,7 +23,6 @@
  */
 
 use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
-use WC_Payment_Gateway;
 
 class Test_Gateways extends WP_UnitTestCase {
 
