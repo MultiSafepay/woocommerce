@@ -23,13 +23,13 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods\Base;
 
-use MultiSafepay\WooCommerce\PaymentMethods\Base\BasePaymentMethod;
 use MultiSafepay\WooCommerce\Services\CustomerService;
 use MultiSafepay\WooCommerce\Services\OrderService;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use WC_Payment_Tokens;
 
 abstract class BaseTokenizationPaymentMethod extends BasePaymentMethod {
+
 
     /**
      * TokenizationPaymentMethod constructor.
@@ -38,8 +38,8 @@ abstract class BaseTokenizationPaymentMethod extends BasePaymentMethod {
         parent::__construct();
         if ( is_user_logged_in() && (bool) get_option( 'multisafepay_tokenization', false ) ) {
             $this->supports[] = 'tokenization';
+            add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
         }
-        add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
     }
 
     /**
@@ -124,7 +124,7 @@ abstract class BaseTokenizationPaymentMethod extends BasePaymentMethod {
             $this->save_payment_method_checkbox();
         }
 
-        if ( wc_get_customer_saved_methods_list( get_current_user_id() ) && is_checkout() ) {
+        if ( ! empty( $this->get_tokens() ) && is_checkout() ) {
             $this->saved_payment_methods();
         }
 

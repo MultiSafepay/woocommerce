@@ -29,6 +29,7 @@ use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use WC_Payment_Token;
 use WC_Payment_Token_CC;
+use WC_Payment_Tokens;
 
 class TokenizationMethodsController {
 
@@ -40,23 +41,43 @@ class TokenizationMethodsController {
      * @param string $gateway_id
      *
      * @return WC_Payment_Token_CC[]
-     * @throws \Psr\Http\Client\ClientExceptionInterface
      */
     public function multisafepay_get_customer_payment_tokens( array $tokens, int $customer_id, string $gateway_id ): array {
         if ( is_user_logged_in() && class_exists( 'WC_Payment_Token_CC' ) ) {
             $stored_tokens = array();
             foreach ( $tokens as $token ) {
-                $stored_tokens[] = $token->get_token();
+                $stored_tokens[ $token->get_token() ] = $token;
             }
-            $multisafepay_tokens = $this->get_multisafepay_tokens_by_customer_id();
-            foreach ( $multisafepay_tokens as $multisafepay_token ) {
-                if ( ! in_array( $multisafepay_token->getToken(), $stored_tokens, true ) ) {
-                    $wc_payment_token_cc                      = $this->create_wc_payment_token_cc( $multisafepay_token, $gateway_id );
-                    $tokens[ $wc_payment_token_cc->get_id() ] = $wc_payment_token_cc;
+
+            // Account payment method page templates use wc_get_customer_saved_methods_list at the header
+            // which generates a loop in combination with the method $token->save(), used in this filter: woocommerce_get_customer_payment_tokens
+            if ( is_account_page() ) {
+                remove_filter( 'woocommerce_get_customer_payment_tokens', array( $this, 'multisafepay_get_customer_payment_tokens' ), 10 );
+            }
+
+            if ( is_checkout() && 'multisafepay_creditcard' === $gateway_id || is_account_page() ) {
+                $multisafepay_tokens = $this->get_multisafepay_tokens_by_customer_id();
+                foreach ( $multisafepay_tokens as $multisafepay_token ) {
+                    // If the token has not been registered
+                    if ( ! isset( $stored_tokens[ $multisafepay_token->getToken() ] ) ) {
+                        $token                      = $this->save_wc_payment_token_cc( $multisafepay_token, $customer_id );
+                        $tokens[ $token->get_id() ] = $token;
+                    }
+                    // Since 4.1.0, the tokens has been saving without register the gateway_id
+                    if ( isset( $stored_tokens[ $multisafepay_token->getToken() ] ) ) {
+                        $token                      = $this->update_wc_payment_token_cc( $multisafepay_token, $stored_tokens[ $multisafepay_token->getToken() ]->get_id() );
+                        $tokens[ $token->get_id() ] = $token;
+                    }
                 }
             }
-            return $tokens;
-        }
+
+            // Account payment method page calls wc_get_customer_saved_methods_list
+            // Which generated a loop over the hook used in this filter: woocommerce_get_customer_payment_tokens
+            if ( is_account_page() ) {
+                add_filter( 'woocommerce_get_customer_payment_tokens', array( $this, 'multisafepay_get_customer_payment_tokens' ), 10, 3 );
+            }
+		}
+        return $tokens;
     }
 
     /**
@@ -64,23 +85,68 @@ class TokenizationMethodsController {
      *
      * @see https://woocommerce.github.io/code-reference/classes/WC-Payment-Token-CC.html
      *
-     * @param Token  $multisafepay_token
-     * @param string $gateway_id
+     * @param Token $multisafepay_token
+     * @param int   $customer_id
      *
      * @return WC_Payment_Token_CC
      */
-    private function create_wc_payment_token_cc( Token $multisafepay_token, string $gateway_id ): WC_Payment_Token_CC {
+    private function save_wc_payment_token_cc( Token $multisafepay_token, int $customer_id ): WC_Payment_Token_CC {
         $token = new WC_Payment_Token_CC();
-        $token->set_user_id( get_current_user_id() );
+        $token->set_user_id( $customer_id );
         $token->set_token( $multisafepay_token->getToken() );
-        $token->set_gateway_id( $gateway_id );
-        $token->set_card_type( strtolower( $multisafepay_token->getGatewayCode() ) );
+        $token->set_gateway_id( 'multisafepay_creditcard' );
+        $token->set_card_type( $this->get_wc_payment_token_allowed_card_type( $multisafepay_token->getGatewayCode() ) );
         $token->set_last4( $multisafepay_token->getLastFour() );
         $token->set_expiry_month( $multisafepay_token->getExpiryMonth() );
         $token->set_expiry_year( '20' . $multisafepay_token->getExpiryYear() );
         $token->save();
         return $token;
     }
+
+    /**
+     * Returns an updated WC_Payment_Token_CC object with the given MultiSafepay Token object
+     *
+     * @see https://woocommerce.github.io/code-reference/classes/WC-Payment-Token-CC.html
+     *
+     * @param Token $multisafepay_token
+     * @param int   $token_id
+     *
+     * @return WC_Payment_Token_CC
+     */
+    private function update_wc_payment_token_cc( Token $multisafepay_token, int $token_id ): WC_Payment_Token_CC {
+        $token = WC_Payment_Tokens::get( $token_id );
+        $token->set_gateway_id( 'multisafepay_creditcard' );
+        $card_type = $this->get_wc_payment_token_allowed_card_type( $multisafepay_token->getGatewayCode() );
+        if ( ! empty( $card_type ) ) {
+            $token->set_card_type( $card_type );
+        }
+        $token->save();
+        return $token;
+    }
+
+    /**
+     * Return the allowed string to define the card_type of a WC_Payment_Token_CC object
+     *
+     * @see https://github.com/woocommerce/woocommerce/wiki/Payment-Token-API#set_card_type-type-
+     *
+     * @param string $multisafepay_token_gateway_code
+     *
+     * @return string
+     */
+    private function get_wc_payment_token_allowed_card_type( string $multisafepay_token_gateway_code ): string {
+        $allowed_card_types_by_woocommerce = array(
+            'MASTERCARD' => 'mastercard',
+            'VISA'       => 'visa',
+            'AMEX'       => 'american express',
+        );
+
+        if ( ! isset( $allowed_card_types_by_woocommerce[ $multisafepay_token_gateway_code ] ) ) {
+            return '';
+        }
+
+        return $allowed_card_types_by_woocommerce[ $multisafepay_token_gateway_code ];
+    }
+
 
     /**
      * Return MultiSafepay tokens by customer id
@@ -122,7 +188,6 @@ class TokenizationMethodsController {
         $sdk = new SdkService();
         try {
             $remove = $sdk->get_sdk()->getTokenManager()->delete( $token->get_token(), (string) $token->get_user_id() );
-            $token->delete( true );
         } catch ( ApiException $api_exception ) {
             Logger::log_error( $api_exception->getMessage() );
         }
