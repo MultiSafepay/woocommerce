@@ -254,7 +254,9 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
             Logger::log_error( $api_exception->getMessage() );
         }
 
-        Logger::log_info( 'Start MultiSafepay transaction for the order ID ' . $order_id . ' on ' . date( 'd/m/Y H:i:s' ) . ' with payment URL ' . $transaction->getPaymentUrl() );
+        if ( get_option( 'multisafepay_debugmode', false ) ) {
+            Logger::log_info( 'Start MultiSafepay transaction for the order ID ' . $order_id . ' on ' . date( 'd/m/Y H:i:s' ) . ' with payment URL ' . $transaction->getPaymentUrl() );
+        }
 
         return array(
             'result'   => 'success',
@@ -321,10 +323,9 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         }
 
         if ( get_option( 'multisafepay_debugmode', false ) ) {
-            $logger = wc_get_logger();
             /* translators: %1$: The order ID. %2$ The PSP transaction ID */
             $message = sprintf( __( 'Refund for Order ID: %1$s with transactionId: %2$s gives message: %3$s.', 'multisafepay' ), $order_id, $multisafepay_transaction->getTransactionId(), $error );
-            $logger->log( 'info', $message );
+            Logger::log_warning( $message );
         }
 
         return false;

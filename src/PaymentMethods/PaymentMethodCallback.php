@@ -28,6 +28,7 @@ use MultiSafepay\Api\Transactions\TransactionResponse;
 use MultiSafepay\Exception\ApiException;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Settings\SettingsFields;
+use MultiSafepay\WooCommerce\Utils\Logger;
 use WC_Order;
 
 /**
@@ -107,10 +108,7 @@ class PaymentMethodCallback {
         try {
             return $transaction_manager->get( $this->multisafepay_order_id );
         } catch ( ApiException $api_exception ) {
-            if ( get_option( 'multisafepay_debugmode', false ) ) {
-                $logger = wc_get_logger();
-                $logger->log( 'error', $api_exception->getMessage() );
-            }
+            Logger::log_error( $api_exception->getMessage() );
             wp_die( esc_html__( 'Invalid request', 'multisafepay' ), esc_html__( 'Invalid request', 'multisafepay' ), 400 );
         }
     }
@@ -189,9 +187,8 @@ class PaymentMethodCallback {
         // If the payment method changed in MultiSafepay payment page, after leave WooCommerce checkout page
         if ( $payment_method_id_registered_by_multisafepay && $payment_method_id_registered_by_wc !== $payment_method_id_registered_by_multisafepay ) {
             if ( get_option( 'multisafepay_debugmode', false ) ) {
-                $logger  = wc_get_logger();
                 $message = 'Callback received with a different payment method for Order ID: ' . $this->woocommerce_order_id . ' and Order Number: ' . $this->multisafepay_order_id . ' on ' . $this->time_stamp . '. Payment method changed from ' . $payment_method_title_registered_by_wc . ' to ' . $payment_method_title_registered_by_multisafepay . '.';
-                $logger->log( 'info', $message );
+                Logger::log_info( $message );
                 $this->order->add_order_note( $message );
             }
             update_post_meta( $this->woocommerce_order_id, '_payment_method', $payment_method_id_registered_by_multisafepay );
@@ -226,9 +223,8 @@ class PaymentMethodCallback {
             }
 
             if ( get_option( 'multisafepay_debugmode', false ) ) {
-                $logger  = wc_get_logger();
                 $message = 'Callback received for Order ID: ' . $this->woocommerce_order_id . ' and Order Number: ' . $this->multisafepay_order_id . ' on ' . $this->time_stamp . ' with status: ' . $this->get_multisafepay_transaction_status() . ' and PSP ID: ' . $this->get_multisafepay_transaction_id() . '.';
-                $logger->log( 'info', $message );
+                Logger::log_info( $message );
                 $this->order->add_order_note( $message );
             }
         }

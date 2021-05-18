@@ -27,6 +27,7 @@ use MultiSafepay\Api\Transactions\UpdateRequest;
 use MultiSafepay\WooCommerce\Services\OrderService;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use WC_Order;
+use MultiSafepay\WooCommerce\Utils\Logger;
 
 /**
  * The payment methods controller.
@@ -202,11 +203,9 @@ class PaymentMethodsController {
             update_post_meta( $order_id, 'payment_url', $transaction->getPaymentUrl() );
             update_post_meta( $order_id, 'send_payment_link', '1' );
 
-            // Log information
             if ( get_option( 'multisafepay_debugmode', false ) ) {
-                $logger  = wc_get_logger();
                 $message = 'Order details has been registered in MultiSafepay and a payment link has been generated: ' . esc_url( $transaction->getPaymentUrl() );
-                $logger->log( 'info', $message );
+                Logger::log_info( $message );
                 $order->add_order_note( $message );
             }
         }

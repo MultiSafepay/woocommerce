@@ -23,9 +23,10 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
+use MultiSafepay\Api\Tokens\Token;
 use MultiSafepay\Exception\ApiException;
 use MultiSafepay\WooCommerce\Services\SdkService;
-use MultiSafepay\Api\Tokens\Token;
+use MultiSafepay\WooCommerce\Utils\Logger;
 use WC_Payment_Token;
 use WC_Payment_Token_CC;
 
@@ -123,10 +124,7 @@ class TokenizationMethodsController {
             $remove = $sdk->get_sdk()->getTokenManager()->delete( $token->get_token(), (string) $token->get_user_id() );
             $token->delete( true );
         } catch ( ApiException $api_exception ) {
-            if ( get_option( 'multisafepay_debugmode', false ) ) {
-                $logger = wc_get_logger();
-                $logger->log( 'warning', $api_exception->getMessage() );
-            }
+            Logger::log_error( $api_exception->getMessage() );
         }
     }
 
