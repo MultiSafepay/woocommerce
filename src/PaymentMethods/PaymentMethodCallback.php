@@ -130,7 +130,12 @@ class PaymentMethodCallback {
      * @return string
      */
     private function get_multisafepay_transaction_gateway_code(): string {
-        return $this->multisafepay_transaction->getPaymentDetails()->getType();
+        $code = $this->multisafepay_transaction->getPaymentDetails()->getType();
+        if ( strpos( $code, 'Coupon::' ) !== false ) {
+            $data = $this->multisafepay_transaction->getPaymentDetails()->getData();
+            return $data['coupon_brand'];
+        }
+        return $code;
     }
 
     /**

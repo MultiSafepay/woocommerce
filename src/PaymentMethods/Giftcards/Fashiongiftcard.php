@@ -23,9 +23,9 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods\Giftcards;
 
-use MultiSafepay\WooCommerce\PaymentMethods\Base\BasePaymentMethod;
+use MultiSafepay\WooCommerce\PaymentMethods\Base\BaseGiftCardPaymentMethod as MultiSafepayPaymentMethod;
 
-class Fashiongiftcard extends BasePaymentMethod {
+class Fashiongiftcard extends MultiSafepayPaymentMethod {
 
     /**
      * @return string
@@ -44,28 +44,8 @@ class Fashiongiftcard extends BasePaymentMethod {
     /**
      * @return string
      */
-    public function get_payment_method_type(): string {
-        return 'redirect';
-    }
-
-    /**
-     * @return string
-     */
     public function get_payment_method_title(): string {
         return 'Fashiongiftcard';
-    }
-
-    /**
-     * @return string
-     */
-    public function get_payment_method_description(): string {
-        $method_description = sprintf(
-            /* translators: %2$: The payment method title */
-            __( 'Read more about <a href="%1$s" target="_blank">%2$s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay' ),
-            'https://docs.multisafepay.com/payment-methods/prepaid-cards/gift-cards/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
-            $this->get_payment_method_title()
-        );
-        return $method_description;
     }
 
     /**
