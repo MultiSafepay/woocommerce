@@ -2,9 +2,9 @@
 Contributors: multisafepayplugin
 Tags: multisafepay, credit card, credit cards, gateway, payments, woocommerce, ideal, bancontact, klarna, sofort, giropay, sepa direct debit
 Requires at least: 5.0
-Tested up to: 5.7
+Tested up to: 5.7.2
 Requires PHP: 7.2
-Stable tag: 4.5.1
+Stable tag: 4.6.0
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -129,7 +129,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 
 == Upgrade Notice ==
 
-= 4.5.1 =
+= 4.6.0 =
 4.x.x is a major upgrade from 3.x.x, a complete rewrite of the plugin. After upgrade, please navigate to MultiSafepay settings page and confirm the settings.
 
 == Screenshots ==
@@ -142,6 +142,19 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 6. Checkout page with MultiSafepay payment methods
 
 == Changelog ==
+
+= Release Notes - WooCommerce 4.6.0 (May 19th, 2021) =
+
+### Added
++ PLGWOOS-625: Add log section in MultiSafepay settings page
++ PLGWOOS-666: Add MultiSafepay system status section in settings page
++ PLGWOOS-376: Add support to show upgrade notices in plugin list
++ PLGWOOS-657: Add nl_BE language
+
+### Fixed
++ PLGWOOS-694: Fix notification for orders fully paid with gift cards
++ PLGWOOS-692: Fix Second Chance within the orderRequest object
++ PLGWOOS-654: Fix the gateway_id assigned to the properties of each token
 
 = Release Notes - WooCommerce 4.5.1 (Apr 7th, 2021) =
 

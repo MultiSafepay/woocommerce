@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.6.0
+Release date: May 19th, 2021
+
+### Added
++ PLGWOOS-625: Add log section in MultiSafepay settings page
++ PLGWOOS-666: Add MultiSafepay system status section in settings page
++ PLGWOOS-376: Add support to show upgrade notices in plugin list
++ PLGWOOS-657: Add nl_BE language
+
+### Fixed
++ PLGWOOS-694: Fix notifications for order fully paid with gift cards
++ PLGWOOS-692: Fix Second Chance within the orderRequest object
++ PLGWOOS-654: Fix the gateway_id assigned to the properties of each token
+
+***
+
 ## 4.5.1
 Release date: Apr 7th, 2021
 
