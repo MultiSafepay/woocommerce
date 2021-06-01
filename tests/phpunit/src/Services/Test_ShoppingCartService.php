@@ -29,6 +29,7 @@ use MultiSafepay\WooCommerce\Tests\Fixtures\WC_Order_Item_Product_Fixture;
 use MultiSafepay\WooCommerce\Tests\Fixtures\WC_Order_Item_Shipping_Fixture;
 use MultiSafepay\WooCommerce\Tests\Fixtures\WC_Order_Item_Fee_Fixture;
 use MultiSafepay\WooCommerce\Tests\Fixtures\WC_Order_Fixture;
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\ShoppingCart\ShippingItem;
 
 class Test_ShoppingCartService extends WP_UnitTestCase {
     
@@ -138,7 +139,7 @@ class Test_ShoppingCartService extends WP_UnitTestCase {
         $this->assertEquals( '4.9900000000', $product_shipping['unit_price'] );
         $this->assertEquals( 'EUR', $product_shipping['currency'] );
         $this->assertEquals( '1', $product_shipping['quantity'] );
-        $this->assertEquals( ShoppingCartService::MULTISAFEPAY_SHIPPING_ITEM_CODE, $product_shipping['merchant_item_id'] );
+        $this->assertEquals( ShippingItem::MULTISAFEPAY_SHIPPING_ITEM_CODE, $product_shipping['merchant_item_id'] );
         $this->assertEquals( '21', $product_shipping['tax_table_selector'] );
         $this->assertEquals( '', $product_shipping['weight']['unit'] );
         $this->assertEquals( '', $product_shipping['weight']['value'] );
@@ -288,7 +289,7 @@ class Test_ShoppingCartService extends WP_UnitTestCase {
         $this->assertEquals( '4.9900000000', $product_shipping['unit_price'] );
         $this->assertEquals( 'EUR', $product_shipping['currency'] );
         $this->assertEquals( '1', $product_shipping['quantity'] );
-        $this->assertEquals( ShoppingCartService::MULTISAFEPAY_SHIPPING_ITEM_CODE, $product_shipping['merchant_item_id'] );
+        $this->assertEquals( ShippingItem::MULTISAFEPAY_SHIPPING_ITEM_CODE, $product_shipping['merchant_item_id'] );
         $this->assertEquals( '21', $product_shipping['tax_table_selector'] );
         $this->assertEquals( '', $product_shipping['weight']['unit'] );
         $this->assertEquals( '', $product_shipping['weight']['value'] );

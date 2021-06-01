@@ -24,7 +24,8 @@
 namespace MultiSafepay\WooCommerce\Services;
 
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\ShoppingCart;
-use MultiSafepay\ValueObject\CartItem;
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\ShoppingCart\Item as CartItem;
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\ShoppingCart\ShippingItem;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
 use WC_Order;
 use WC_Order_Item_Fee;
@@ -39,8 +40,6 @@ use WC_Tax;
  * @package MultiSafepay\WooCommerce\Services
  */
 class ShoppingCartService {
-
-    public const MULTISAFEPAY_SHIPPING_ITEM_CODE = 'msp-shipping';
 
     /**
      * @param WC_Order $order
@@ -133,11 +132,10 @@ class ShoppingCartService {
      * @param string                 $currency
      * @return CartItem
      */
-    private function create_shipping_cart_item( WC_Order_Item_Shipping $item, string $currency ): CartItem {
-        $cart_item = new CartItem();
+    private function create_shipping_cart_item( WC_Order_Item_Shipping $item, string $currency ): ShippingItem {
+        $cart_item = new ShippingItem();
         return $cart_item->addName( __( 'Shipping', 'multisafepay' ) )
             ->addQuantity( 1 )
-            ->addMerchantItemId( self::MULTISAFEPAY_SHIPPING_ITEM_CODE )
             ->addUnitPrice( MoneyUtil::create_money( (float) $item->get_total(), $currency ) )
             ->addTaxRate( $this->get_shipping_tax_rate( $item ) );
     }
