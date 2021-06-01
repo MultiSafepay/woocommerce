@@ -23,11 +23,15 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
+use MultiSafepay\Api\Transactions\TransactionResponse;
 use MultiSafepay\Api\Transactions\UpdateRequest;
+use MultiSafepay\Util\Notification;
 use MultiSafepay\WooCommerce\Services\OrderService;
 use MultiSafepay\WooCommerce\Services\SdkService;
-use WC_Order;
 use MultiSafepay\WooCommerce\Utils\Logger;
+use WC_Order;
+use WP_REST_Request;
+use WP_REST_Response;
 
 /**
  * The payment methods controller.
@@ -165,6 +169,52 @@ class PaymentMethodsController {
         }
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         ( new PaymentMethodCallback( (string) $_GET['transactionid'] ) )->process_callback();
+    }
+
+
+    /**
+     * Process the POST notification
+     *
+     * @param WP_REST_Request $request
+     * @return void
+     */
+    public function process_post_notification( WP_REST_Request $request ): void {
+        $timestamp           = $request->get_param( 'timestamp' );
+        $transactionid       = $request->get_param( 'transactionid' );
+        $auth                = $request->get_header( 'auth' );
+        $body                = $request->get_body();
+        $api_key             = ( new SdkService() )->get_api_key();
+        $verify_notification = Notification::verifyNotification( $body, $auth, $api_key );
+
+        if ( ! $verify_notification ) {
+            $logger = wc_get_logger();
+            $logger->log( 'info', 'Notification for transactionid . ' . $transactionid . ' has been received but is not validated' );
+            header( 'Content-type: text/plain' );
+            die( 'OK' );
+        }
+
+        $logger = wc_get_logger();
+        $logger->log( 'info', 'Notification has been received and validated' );
+        $multisafepay_transaction = new TransactionResponse( $request->get_json_params(), $body );
+        ( new PaymentMethodCallback( (string) $transactionid, $multisafepay_transaction ) )->process_callback();
+
+    }
+
+    /**
+     * Register the endpoint to handle the POST notification
+     */
+    public function multisafepay_register_rest_route() {
+        $arguments = array(
+            'methods'             => 'POST',
+            'callback'            => array( $this, 'process_post_notification' ),
+            'permission_callback' => function() {
+				return ''; },
+        );
+        register_rest_route(
+            'multisafepay/v1',
+            'notification',
+            $arguments
+        );
     }
 
 

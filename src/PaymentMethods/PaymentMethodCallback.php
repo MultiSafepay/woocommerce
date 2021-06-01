@@ -78,11 +78,17 @@ class PaymentMethodCallback {
     /**
      * PaymentMethodCallback constructor
      *
-     * @param string $multisafepay_order_id
+     * @param string              $multisafepay_order_id
+     * @param TransactionResponse $multisafepay_transaction
      */
-    public function __construct( string $multisafepay_order_id ) {
-        $this->multisafepay_order_id    = $multisafepay_order_id;
-        $this->multisafepay_transaction = $this->get_transaction();
+    public function __construct( string $multisafepay_order_id, $multisafepay_transaction = '' ) {
+        $this->multisafepay_order_id = $multisafepay_order_id;
+
+        $this->multisafepay_transaction = $multisafepay_transaction;
+
+        if ( empty( $this->multisafepay_transaction ) ) {
+            $this->multisafepay_transaction = $this->get_transaction();
+        }
 
         // For most transactions var2 contains the order id; since the order request is being register using order number
         if ( ! empty( $this->multisafepay_transaction->getVar2() ) ) {
