@@ -187,14 +187,12 @@ class PaymentMethodsController {
         $verify_notification = Notification::verifyNotification( $body, $auth, $api_key );
 
         if ( ! $verify_notification ) {
-            $logger = wc_get_logger();
-            $logger->log( 'info', 'Notification for transactionid . ' . $transactionid . ' has been received but is not validated' );
+            Logger::log_info( 'Notification for transactionid . ' . $transactionid . ' has been received but is not validated' );
             header( 'Content-type: text/plain' );
             die( 'OK' );
         }
 
-        $logger = wc_get_logger();
-        $logger->log( 'info', 'Notification has been received and validated' );
+        Logger::log_info( 'Notification has been received and validated' );
         $multisafepay_transaction = new TransactionResponse( $request->get_json_params(), $body );
         ( new PaymentMethodCallback( (string) $transactionid, $multisafepay_transaction ) )->process_callback();
 
