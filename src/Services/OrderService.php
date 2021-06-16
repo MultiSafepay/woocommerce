@@ -67,18 +67,7 @@ class OrderService {
      */
     public function create_order_request( WC_Order $order, string $gateway_code, string $type, GatewayInfoInterface $gateway_info = null ): OrderRequest {
 
-        $time_active      = get_option( 'multisafepay_time_active', '30' );
-        $time_active_unit = get_option( 'multisafepay_time_unit', 'days' );
-
-        if ( 'days' === $time_active_unit ) {
-            $time_active = $time_active * 24 * 60 * 60;
-        }
-        if ( 'hours' === $time_active_unit ) {
-            $time_active = $time_active * 60 * 60;
-        }
-
         $order_request = new OrderRequest();
-
         $order_request
             ->addOrderId( $order->get_order_number() )
             ->addMoney( MoneyUtil::create_money( (float) ( $order->get_total() ), $order->get_currency() ) )
@@ -89,7 +78,7 @@ class OrderService {
             ->addCustomer( $this->customer_service->create_customer_details( $order ) )
             ->addPaymentOptions( $this->create_payment_options( $order ) )
             ->addShoppingCart( $this->shopping_cart_service->create_shopping_cart( $order, $order->get_currency() ) )
-            ->addSecondsActive( $time_active )
+            ->addSecondsActive( $this->get_seconds_active() )
             ->addSecondChance( ( new SecondChance() )->addSendEmail( (bool) get_option( 'multisafepay_second_chance', false ) ) )
             ->addData( array( 'var2' => $order->get_id() ) );
 
@@ -149,6 +138,23 @@ class OrderService {
             $order_description = str_replace( '{order_number}', $order_number, get_option( 'multisafepay_order_request_description', false ) );
         }
         return $order_description;
+    }
+
+    /**
+     * Return the time active in seconds defined in the plugin settings page
+     *
+     * @return int
+     */
+    private function get_seconds_active(): int {
+        $time_active      = get_option( 'multisafepay_time_active', '30' );
+        $time_active_unit = get_option( 'multisafepay_time_unit', 'days' );
+        if ( 'days' === $time_active_unit ) {
+            $time_active = $time_active * 24 * 60 * 60;
+        }
+        if ( 'hours' === $time_active_unit ) {
+            $time_active = $time_active * 60 * 60;
+        }
+        return $time_active;
     }
 
 }
