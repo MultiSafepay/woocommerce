@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.7.0
+Release date: Jun 23th, 2021
+
+### Added
++ PLGWOOS-706: Declare support for WooCommerce 5.4.1
+
+### Changed
++ PLGWOOS-672: Change notification method from GET to [POST](https://docs.multisafepay.com/faq/api/notification-url/#get-vs-post-notification) by default
+
+### Fixed
++ PLGWOOS-704: Log errors in the MultiSafepay log file, when processing notifications.
+
+***
+
 ## 4.6.0
 Release date: May 19th, 2021
 
