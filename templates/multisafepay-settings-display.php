@@ -39,18 +39,24 @@
         <?php
         switch ( $tab_active ) {
             case 'order_status':
+                echo '<div id="multisafepay-order-status" class="multisafepay-order-status">';
+                echo '<h2 id="multisafepay-title">' . esc_html__( 'Order Status', 'multisafepay' ) . '</h2>';
                 echo '<form method="POST" action="' . esc_url( admin_url( 'options.php' ) ) . '">';
                 settings_fields( 'multisafepay-settings-order_status' );
                 do_settings_sections( 'multisafepay-settings-order_status' );
                 submit_button();
                 echo '</form>';
+                echo '</div>';
                 break;
             case 'options':
+                echo '<div id="multisafepay-options" class="multisafepay-options">';
+                echo '<h2 id="multisafepay-title">' . esc_html__( 'Options', 'multisafepay' ) . '</h2>';
                 echo '<form method="POST" action="' . esc_url( admin_url( 'options.php' ) ) . '">';
                 settings_fields( 'multisafepay-settings-options' );
                 do_settings_sections( 'multisafepay-settings-options' );
                 submit_button();
                 echo '</form>';
+                echo '</div>';
                 break;
             case 'logs':
                 $this->display_multisafepay_logs_section();
@@ -63,11 +69,14 @@
                 break;
             case 'general':
             default:
+                echo '<div id="multisafepay-account" class="multisafepay-account">';
+                echo '<h2 id="multisafepay-title">' . esc_html__( 'Account', 'multisafepay' ) . '</h2>';
                 echo '<form method="POST" action="' . esc_url( admin_url( 'options.php' ) ) . '">';
                 settings_fields( 'multisafepay-settings-general' );
                 do_settings_sections( 'multisafepay-settings-general' );
                 submit_button();
                 echo '</form>';
+                echo '</div>';
                 break;
         }
         ?>

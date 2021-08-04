@@ -23,7 +23,7 @@
 
 ?>
 <div id="multisafepay-system-status" class="multisafepay-system-status">
-    <h2 id="multisafepay-title"><?php echo esc_html__( 'MultiSafepay Status', 'multisafepay' ); ?></h2>
+    <h2 id="multisafepay-title"><?php echo esc_html__( 'MultiSafepay System Report', 'multisafepay' ); ?></h2>
     <div class="system-status-section">
         <p><?php echo esc_html__( 'Please copy and paste this information in your ticket when contacting support.', 'multisafepay' ); ?></p>
         <p class="submit">
