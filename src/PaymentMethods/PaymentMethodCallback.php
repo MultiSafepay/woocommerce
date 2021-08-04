@@ -220,7 +220,7 @@ class PaymentMethodCallback {
 
             // If MultiSafepay transaction status is completed, payment_complete function will handle the order status change
             if ( $this->get_multisafepay_transaction_status() === Transaction::COMPLETED ) {
-                $this->order->payment_complete( 'PSP ID: ' . $this->get_multisafepay_transaction_id() );
+                $this->order->payment_complete( $this->get_multisafepay_transaction_id() );
             }
 
             // If MultiSafepay transaction status is not completed and not initialized, process the notification according order status settings
