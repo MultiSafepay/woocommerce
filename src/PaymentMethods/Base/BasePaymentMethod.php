@@ -252,6 +252,8 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
             $transaction = $transaction_manager->create( $order_request );
         } catch ( ApiException $api_exception ) {
             Logger::log_error( $api_exception->getMessage() );
+            wc_add_notice( $api_exception->getMessage(), 'error' );
+            return;
         }
 
         if ( get_option( 'multisafepay_debugmode', false ) ) {

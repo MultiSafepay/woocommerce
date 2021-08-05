@@ -23,9 +23,11 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods\Base;
 
+use MultiSafepay\Exception\ApiException;
 use MultiSafepay\WooCommerce\Services\CustomerService;
 use MultiSafepay\WooCommerce\Services\OrderService;
 use MultiSafepay\WooCommerce\Services\SdkService;
+use MultiSafepay\WooCommerce\Utils\Logger;
 use WC_Payment_Tokens;
 
 abstract class BaseTokenizationPaymentMethod extends BasePaymentMethod {
@@ -73,7 +75,13 @@ abstract class BaseTokenizationPaymentMethod extends BasePaymentMethod {
             $order_request->addRecurringId( $wc_token->get_token() );
         }
 
-        $transaction = $transaction_manager->create( $order_request );
+        try {
+            $transaction = $transaction_manager->create( $order_request );
+        } catch ( ApiException $api_exception ) {
+            Logger::log_error( $api_exception->getMessage() );
+            wc_add_notice( $api_exception->getMessage(), 'error' );
+            return;
+        }
 
         return array(
             'result'   => 'success',
