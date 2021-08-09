@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.8.1
+Release date: Aug 9th, 2021
+
+### Fixed
++ PLGWOOS-727: Show error message from the API in the checkout page, when there is an error on direct transactions
+
+***
+
 ## 4.8.0
 Release date: Aug 4th, 2021
 
