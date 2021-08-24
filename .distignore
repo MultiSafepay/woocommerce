@@ -20,3 +20,9 @@
 /CHANGELOG.md
 /CODE_OF_CONDUCT.md
 /.codecov.yml
+/docker
+/.env
+/.env.example
+/docker-compose.yml
+/DEVELOPMENT.md
+/Makefile

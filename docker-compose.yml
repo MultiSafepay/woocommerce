@@ -1,0 +1,45 @@
+version: '3.3'
+
+services:
+  app:
+    depends_on:
+      - db
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    sysctls:
+      - net.ipv4.ip_unprivileged_port_start=0
+    user: '1000:1000'
+    volumes:
+      - ./:/var/www/html/wp-content/plugins/multisafepay
+    ports:
+      - "80:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DEBUG: 1
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_DEBUG_LOG', true );
+        define('WP_DEBUG_DISPLAY', true);
+    extra_hosts:
+      host.docker.internal: host-gateway
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: somewordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+  mailhog:
+    image: 'mailhog/mailhog'
+    ports:
+      - 8025:8025
+  expose:
+    depends_on:
+      - app
+    build: https://github.com/beyondcode/expose.git
+    entrypoint: ["/bin/sh", "-c" , "/src/expose token ${EXPOSE_TOKEN} && sed -i -E \"s/'dns'\\s?=>\\s?'.*'/'dns' => true/g\" /root/.expose/config.php  && /src/expose share app --server-host=${EXPOSE_HOST} --subdomain=${APP_SUBDOMAIN}"]
+    ports:
+      - 4040:4040

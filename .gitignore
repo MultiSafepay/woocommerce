@@ -6,3 +6,4 @@
 /phpunit.xml
 /composer.lock
 /coverage-report/*
+/.env
