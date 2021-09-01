@@ -137,9 +137,11 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 1. MultiSafepay Settings Page - Account section
 2. MultiSafepay Settings Page - Order status section
 3. MultiSafepay Settings Page - Options section
-4. MultiSafepay Settings Page - Support section
-5. List of MultiSafepay payment methods in WooCommerce settings
-6. Checkout page with MultiSafepay payment methods
+4. MultiSafepay Settings Page - Logs section
+5. MultiSafepay Settings Page - System report section
+6. MultiSafepay Settings Page - Support section
+7. List of MultiSafepay payment methods in WooCommerce settings
+8. Checkout page with MultiSafepay payment methods
 
 == Changelog ==
 
