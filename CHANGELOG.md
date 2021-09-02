@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.8.2
+Release date: Sep 2nd, 2021
+
+### Added
++ PLGWOOS-730: Declare support for WooCommerce 5.6.0
+
+***
+
 ## 4.8.1
 Release date: Aug 9th, 2021
 
