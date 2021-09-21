@@ -82,11 +82,7 @@ class IdealQr extends BasePaymentMethod {
      * @return GatewayInfoInterface
      */
     public function get_gateway_info( array $data = null ): GatewayInfoInterface {
-        $order        = wc_get_order( $data['order_id'] );
-        $gateway_info = new QrCode();
-        return $gateway_info
-            ->addMaxAmount( $order->get_amount() )
-            ->addMinAmount( $order->get_amount() );
+        return new QrCode();
     }
 
 }

@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## UNRELEASED
+
+### Fixed
++ PLGWOOS-739: Fix fatal error related with undefined method when processing orders using iDEAL QR
+
+***
+
 ## 4.8.3
 Release date: Sep 6th, 2021
 
