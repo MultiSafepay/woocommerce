@@ -59,6 +59,8 @@ use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Dotpay;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Einvoicing;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Eps;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Generic;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Generic2;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Generic3;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Giropay;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Ideal;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\IdealQr;
@@ -101,6 +103,8 @@ class Gateways {
         'multisafepay_einvoice'          => Einvoicing::class,
         'multisafepay_eps'               => Eps::class,
         'multisafepay_generic'           => Generic::class,
+        'multisafepay_generic_2'         => Generic2::class,
+        'multisafepay_generic_3'         => Generic3::class,
         'multisafepay_giropay'           => Giropay::class,
         'multisafepay_ideal'             => Ideal::class,
         'multisafepay_idealqr'           => IdealQr::class,
