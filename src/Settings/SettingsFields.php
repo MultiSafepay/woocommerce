@@ -224,7 +224,7 @@ class SettingsFields {
                 array(
                     'id'           => 'multisafepay_second_chance',
                     'label'        => __( 'Second Chance', 'multisafepay' ),
-                    'description'  => __( 'More information about Second Chance on <a href="https://docs.multisafepay.com/tools/second-chance/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
+                    'description'  => __( 'More information about Second Chance on <a href="https://docs.multisafepay.com/features/second-chance/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
                     'type'         => 'checkbox',
                     'default'      => false,
                     'placeholder'  => __( 'Second Chance', 'multisafepay' ),
@@ -237,7 +237,7 @@ class SettingsFields {
                     'id'           => 'multisafepay_tokenization',
                     'label'        => __( 'Tokenization', 'multisafepay' ),
                     'placeholder'  => __( 'Tokenization', 'multisafepay' ),
-                    'description'  => __( 'More information about Tokenization on <a href="https://docs.multisafepay.com/tools/tokenization/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
+                    'description'  => __( 'More information about Tokenization on <a href="https://docs.multisafepay.com/features/recurring-payments/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
                     'type'         => 'checkbox',
                     'default'      => false,
                     'tooltip'      => '',
