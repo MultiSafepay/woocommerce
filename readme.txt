@@ -2,7 +2,7 @@
 Contributors: multisafepayplugin
 Tags: multisafepay, credit card, credit cards, gateway, payments, woocommerce, ideal, bancontact, klarna, sofort, giropay, sepa direct debit
 Requires at least: 5.0
-Tested up to: 5.8.0
+Tested up to: 5.8.1
 Requires PHP: 7.2
 Stable tag: 4.8.3
 License: MIT
