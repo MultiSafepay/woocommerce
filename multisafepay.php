@@ -75,9 +75,9 @@ use MultiSafepay\WooCommerce\Main;
  * @since   4.0.0
  * @see     https://developer.wordpress.org/reference/functions/register_activation_hook/
  *
- * @param   bool $network_wide
+ * @param   null|bool $network_wide
  */
-function activate_multisafepay( bool $network_wide ): void {
+function activate_multisafepay( ?bool $network_wide ): void {
     $activator = new Activator();
     $activator->activate( $network_wide );
 }
