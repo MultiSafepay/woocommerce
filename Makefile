@@ -48,7 +48,7 @@ initialize-woocommerce:
 
 .PHONY: install-woocommerce-default-pages
 install-woocommerce-default-pages:
-	docker-compose exec app wp wc --user=admin tool run install_pages
+	docker-compose exec app wp wc --user=1 tool run install_pages
 
 .PHONY: import-sample-products
 import-sample-products:
@@ -66,4 +66,4 @@ install-dev-plugins:
 .PHONY: install-multisafepay
 install-multisafepay:
 	docker-compose exec --workdir /var/www/html/wp-content/plugins/multisafepay app composer install
-	docker-compose exec app wp plugin activate multisafepay
+	docker-compose exec app wp plugin activate multisafepay --user=1
