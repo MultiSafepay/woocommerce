@@ -76,7 +76,7 @@ class SettingsFields {
                     'description'  => '',
                     'type'         => 'text',
                     'default'      => '',
-                    'placeholder'  => '',
+                    'placeholder'  => __( 'Test API Key ', 'multisafepay' ),
                     'tooltip'      => __( 'Test API Key', 'multisafepay' ),
                     'callback'     => '',
                     'setting_type' => 'string',
