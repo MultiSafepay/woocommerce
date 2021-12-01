@@ -42,6 +42,7 @@ jobs:
       - name: Install WooCommerce
         uses: actions/checkout@v2
         with:
+          ref: '5.9.0'
           repository: 'woocommerce/woocommerce'
           path: woocommerce
       - name: Install composer for plugin
