@@ -23,6 +23,7 @@
 
 namespace MultiSafepay\WooCommerce\Settings;
 
+use MultiSafepay\Util\Version;
 use WC_API;
 use WC_Countries;
 use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
@@ -286,6 +287,10 @@ class SystemReport {
         $multisafepay_settings = array(
             'title'    => __( 'MultiSafepay Settings', 'multisafepay' ),
             'settings' => array(
+                'sdk_version'                     => array(
+                    'label' => __( 'SDK version', 'multisafepay' ),
+                    'value' => Version::SDK_VERSION,
+                ),
                 'test_mode'                       => array(
                     'label' => __( 'Test mode', 'multisafepay' ),
                     'value' => get_option( 'multisafepay_testmode', false ) ? __( 'Enabled', 'multisafepay' ) : __( 'Disabled', 'multisafepay' ),
