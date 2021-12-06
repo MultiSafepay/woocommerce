@@ -109,7 +109,6 @@ class Gateways {
         'multisafepay_ideal'             => Ideal::class,
         'multisafepay_idealqr'           => IdealQr::class,
         'multisafepay_in3'               => In3::class,
-        'multisafepay_inghome'           => IngHomePay::class,
         'multisafepay_kbc'               => Kbc::class,
         'multisafepay_klarna'            => Klarna::class,
         'multisafepay_maestro'           => Maestro::class,
