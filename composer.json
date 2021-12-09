@@ -7,8 +7,11 @@
     "keywords" : [ "wordpress", "multisafepay" ],
     "require": {
         "multisafepay/php-sdk": "^5.1",
-        "kriswallsmith/buzz": "^1.1",
-        "nyholm/psr7": "^1.3"
+        "nyholm/psr7": "^1.4",
+        "psr/http-client": "^1.0"
+    },
+    "provide": {
+        "psr/http-client-implementation": "1.0"
     },
     "require-dev": {
         "phpunit/phpunit" : "7.5.20",
