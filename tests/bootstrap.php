@@ -1,9 +1,4 @@
 <?php
-/**
- * PHPUnit bootstrap file
- *
- * @package Multisafepay
- */
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 
