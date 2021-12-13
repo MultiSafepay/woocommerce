@@ -2,9 +2,9 @@
 Contributors: multisafepayplugin
 Tags: multisafepay, credit card, credit cards, gateway, payments, woocommerce, ideal, bancontact, klarna, sofort, giropay, sepa direct debit
 Requires at least: 5.0
-Tested up to: 5.8.1
+Tested up to: 5.8.2
 Requires PHP: 7.2
-Stable tag: 4.9.0
+Stable tag: 4.10.0
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -129,7 +129,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 
 == Upgrade Notice ==
 
-= 4.9.0 =
+= 4.10.0 =
 4.x.x is a major upgrade from 3.x.x, a complete rewrite of the plugin. After upgrade, please navigate to MultiSafepay settings page and confirm the settings.
 
 == Screenshots ==
@@ -144,6 +144,22 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 8. Checkout page with MultiSafepay payment methods
 
 == Changelog ==
+
+= Release Notes - WooCommerce 4.10.0 (Dec 13th, 2021) =
+
+### Added
++ PLGWOOS-748: Add PHP-SDK version to system report
++ PLGWOOS-758: Add filter to turn notifications to GET method
+
+### Removed
++ DAVAMS-460: Remove ING Home’Pay
+
+### Changed
++ PLGWOOS-695: Replace HTTP Client, use WP_HTTP instead kriswallsmith/buzz
++ PLGWOOS-749: Replace logo of Bancontact for new one
+
+### Fixed
++ PLGWOOS-752: Fix missing placeholder for Test API Key input field in settings page
 
 = Release Notes - WooCommerce 4.9.0 (Oct 18th, 2021) =
 

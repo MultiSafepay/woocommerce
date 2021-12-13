@@ -6,6 +6,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.10.0
+Release date: Dec 13th, 2021
+
+### Added
++ PLGWOOS-748: Add PHP-SDK version to system report
++ PLGWOOS-758: Add filter to turn notifications to GET method
+
+### Removed
++ DAVAMS-460: Remove ING Home’Pay
+
+### Changed
++ PLGWOOS-695: Replace HTTP Client, use WP_HTTP instead kriswallsmith/buzz
++ PLGWOOS-749: Replace logo of Bancontact for new one
+
+### Fixed
++ PLGWOOS-752: Fix missing placeholder for Test API Key input field in settings page
+
+***
+
 ## 4.9.0
 Release date: Oct 18th, 2021
 
