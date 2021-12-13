@@ -18,7 +18,6 @@ use WC_Order;
  */
 class OrderService {
 
-
     /**
      * @var CustomerService
      */
@@ -98,10 +97,14 @@ class OrderService {
     private function create_payment_options( WC_Order $order ): PaymentOptions {
         $url_redirect_on_cancel = ( get_option( 'multisafepay_redirect_after_cancel', 'cart' ) === 'cart' ? '' : wc_get_checkout_url() );
         $payment_options        = new PaymentOptions();
-        return $payment_options
-            ->addNotificationUrl( get_rest_url( get_current_blog_id(), 'multisafepay/v1/notification' ) )
-            ->addCancelUrl( wp_specialchars_decode( $order->get_cancel_order_url( $url_redirect_on_cancel ) ) )
-            ->addRedirectUrl( $order->get_checkout_order_received_url() );
+        $payment_options->addNotificationUrl( get_rest_url( get_current_blog_id(), 'multisafepay/v1/notification' ) );
+        $payment_options->addCancelUrl( wp_specialchars_decode( $order->get_cancel_order_url( $url_redirect_on_cancel ) ) );
+        $payment_options->addRedirectUrl( $order->get_checkout_order_received_url() );
+        if ( ! apply_filters( 'multisafepay_post_notification', true ) ) {
+            $payment_options->addNotificationUrl( add_query_arg( 'wc-api', 'multisafepay', home_url( '/' ) ) );
+            $payment_options->addNotificationMethod( 'GET' );
+        }
+        return $payment_options;
     }
 
     /**
