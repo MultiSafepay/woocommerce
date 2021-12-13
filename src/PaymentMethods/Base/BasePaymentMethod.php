@@ -4,6 +4,7 @@ namespace MultiSafepay\WooCommerce\PaymentMethods\Base;
 
 use Exception;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfo\Meta;
 use MultiSafepay\Exception\ApiException;
 use MultiSafepay\Exception\InvalidArgumentException;
 use MultiSafepay\ValueObject\IbanNumber;
@@ -458,6 +459,33 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         }
 
         return $order && $this->supports( 'refunds' );
+    }
+
+    /**
+     * @param array|null $data
+     *
+     * @return GatewayInfoInterface
+     */
+    protected function get_gateway_info_meta( ?array $data = null ): GatewayInfoInterface {
+        $gateway_info = new Meta();
+        if ( isset( $_POST[ $this->id . '_gender' ] ) ) {
+            $gateway_info->addGenderAsString( $_POST[ $this->id . '_gender' ] );
+        }
+        if ( isset( $_POST[ $this->id . '_salutation' ] ) ) {
+            $gateway_info->addGenderAsString( $_POST[ $this->id . '_salutation' ] );
+        }
+        if ( isset( $_POST[ $this->id . '_birthday' ] ) ) {
+            $gateway_info->addBirthdayAsString( $_POST[ $this->id . '_birthday' ] );
+        }
+        if ( isset( $_POST[ $this->id . '_bank_account' ] ) ) {
+            $gateway_info->addBankAccountAsString( $_POST[ $this->id . '_bank_account' ] );
+        }
+        if ( isset( $data ) && ! empty( $data['order_id'] ) ) {
+            $order = wc_get_order( $data['order_id'] );
+            $gateway_info->addEmailAddressAsString( $order->get_billing_email() );
+            $gateway_info->addPhoneAsString( $order->get_billing_phone() );
+        }
+        return $gateway_info;
     }
 
 }

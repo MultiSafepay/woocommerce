@@ -2,9 +2,9 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods;
 
-use MultiSafepay\WooCommerce\PaymentMethods\Base\BaseBillingSuitePaymentMethod;
+use MultiSafepay\WooCommerce\PaymentMethods\Base\BasePaymentMethod;
 
-class Klarna extends BaseBillingSuitePaymentMethod {
+class Klarna extends BasePaymentMethod {
 
     /**
      * @return string

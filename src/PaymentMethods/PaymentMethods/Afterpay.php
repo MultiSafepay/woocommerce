@@ -2,9 +2,10 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods;
 
-use MultiSafepay\WooCommerce\PaymentMethods\Base\BaseBillingSuitePaymentMethod;
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
+use MultiSafepay\WooCommerce\PaymentMethods\Base\BasePaymentMethod;
 
-class Afterpay extends BaseBillingSuitePaymentMethod {
+class Afterpay extends BasePaymentMethod {
 
     /**
      * @return string
@@ -82,6 +83,15 @@ class Afterpay extends BaseBillingSuitePaymentMethod {
      */
     public function get_payment_method_icon(): string {
         return 'afterpay.png';
+    }
+
+    /**
+     * @param array|null $data
+     *
+     * @return GatewayInfoInterface
+     */
+    public function get_gateway_info( array $data = null ): GatewayInfoInterface {
+        return $this->get_gateway_info_meta( $data );
     }
 
 }
