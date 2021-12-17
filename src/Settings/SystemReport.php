@@ -250,6 +250,10 @@ class SystemReport {
                 if ( ! empty( $multisafepay_gateway->countries ) ) {
                     $multisafepay_gateway_settings_value .= __( 'Countries: ', 'multisafepay' ) . $multisafepay_gateway->countries . '. ';
                 }
+                if ( $multisafepay_gateway->get_option( 'tokenization', 'no' ) === 'yes' ) {
+                    $multisafepay_gateway_settings_value .= __( 'Tokenization: Enabled', 'multisafepay' ) . '. ';
+                }
+
                 $multisafepay_gateway_settings['settings'][ $multisafepay_gateway->id ]['label'] = $multisafepay_gateway->get_payment_method_title();
                 $multisafepay_gateway_settings['settings'][ $multisafepay_gateway->id ]['value'] = $multisafepay_gateway_settings_value;
             }
@@ -297,10 +301,6 @@ class SystemReport {
                 'second_chance'                   => array(
                     'label' => __( 'Second chance', 'multisafepay' ),
                     'value' => (bool) get_option( 'multisafepay_second_chance', false ) ? __( 'Enabled', 'multisafepay' ) : __( 'Disabled', 'multisafepay' ),
-                ),
-                'tokenization'                    => array(
-                    'label' => __( 'Tokenization', 'multisafepay' ),
-                    'value' => (bool) get_option( 'multisafepay_tokenization', false ) ? __( 'Enabled', 'multisafepay' ) : __( 'Disabled', 'multisafepay' ),
                 ),
                 'delete_settings'                 => array(
                     'label' => __( 'Delete settings if uninstall', 'multisafepay' ),

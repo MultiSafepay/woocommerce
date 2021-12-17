@@ -17,7 +17,7 @@ abstract class BaseTokenizationPaymentMethod extends BasePaymentMethod {
      */
     public function __construct() {
         parent::__construct();
-        if ( is_user_logged_in() && (bool) get_option( 'multisafepay_tokenization', false ) ) {
+        if ( is_user_logged_in() && (bool) ( $this->get_option( 'tokenization', 'no' ) === 'yes' ) ) {
             $this->supports[] = 'tokenization';
             add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
         }
@@ -85,7 +85,8 @@ abstract class BaseTokenizationPaymentMethod extends BasePaymentMethod {
      * @return boolean
      */
     public function has_fields(): bool {
-        return is_user_logged_in() && (bool) get_option( 'multisafepay_tokenization', false );
+
+        return is_user_logged_in() && (bool) ( $this->get_option( 'tokenization', 'no' ) === 'yes' );
     }
 
     /**

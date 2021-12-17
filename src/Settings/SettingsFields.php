@@ -213,18 +213,6 @@ class SettingsFields {
                     'sort_order'   => 45,
                 ),
                 array(
-                    'id'           => 'multisafepay_tokenization',
-                    'label'        => __( 'Tokenization', 'multisafepay' ),
-                    'placeholder'  => __( 'Tokenization', 'multisafepay' ),
-                    'description'  => __( 'More information about Tokenization on <a href="https://docs.multisafepay.com/features/recurring-payments/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
-                    'type'         => 'checkbox',
-                    'default'      => false,
-                    'tooltip'      => '',
-                    'callback'     => '',
-                    'setting_type' => 'boolean',
-                    'sort_order'   => 50,
-                ),
-                array(
                     'id'           => 'multisafepay_remove_all_settings',
                     'label'        => __( 'Delete settings if uninstall', 'multisafepay' ),
                     'description'  => '',

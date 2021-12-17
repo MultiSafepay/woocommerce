@@ -54,4 +54,21 @@ class CreditCard extends BaseTokenizationPaymentMethod {
         return 'creditcard.png';
     }
 
+    /**
+     * @return mixed
+     */
+    public function add_form_fields(): array {
+        $form_fields        = parent::add_form_fields();
+        $tokenization_field = array(
+            'tokenization' => array(
+                'title'       => __( 'Tokenization', 'multisafepay' ),
+                'label'       => 'Enable Tokenization in ' . $this->get_method_title() . ' Gateway',
+                'type'        => 'checkbox',
+                'description' => __( 'More information about Tokenization on <a href="https://docs.multisafepay.com/features/recurring-payments/" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
+                'default'     => get_option( 'multisafepay_tokenization', 'no' ),
+            ),
+        );
+        return array_merge( $form_fields, $tokenization_field );
+    }
+
 }

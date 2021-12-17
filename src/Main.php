@@ -41,9 +41,7 @@ class Main {
         $this->add_custom_links_in_plugin_list();
         $this->define_settings_hooks();
 		$this->define_payment_methods_hooks();
-        if ( (bool) get_option( 'multisafepay_tokenization', false ) ) {
-            $this->define_tokenization_hooks();
-        }
+        $this->define_tokenization_hooks();
         $this->set_upgrade_notice_messages();
 	}
 
@@ -64,7 +62,6 @@ class Main {
         $this->loader->add_action( 'woocommerce_payment_token_set_default', $tokenization_methods, 'woocommerce_payment_token_set_default', 10, 2 );
         // Customize save payment method checkbox
         $this->loader->add_filter( 'woocommerce_payment_gateway_save_new_payment_method_option_html', $tokenization_methods, 'multisafepay_payment_gateway_save_new_payment_method_option_html', 10, 1 );
-
     }
 
 	/**
