@@ -14,7 +14,7 @@ class UpgradeNotices {
      * @param array  $plugin
      */
     public function show_multisite_upgrade_notice( $file, $plugin ) {
-        if ( version_compare( $plugin['Version'], $plugin['new_version'], '<' ) ) {
+        if ( isset( $plugin['new_version'] ) && isset( $plugin['Version'] ) && version_compare( $plugin['Version'], $plugin['new_version'], '<' ) ) {
             $wp_list_table = _get_list_table( 'WP_Plugins_List_Table' );
             printf(
                 '<tr class="plugin-update-tr"><td colspan="%s" class="plugin-update update-message notice inline notice-warning notice-alt"><div class="update-message"><h4 style="margin: 0; font-size: 14px;">%s</h4>%s</div></td></tr>',
