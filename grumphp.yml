@@ -9,9 +9,6 @@ grumphp:
   tasks:
     phpcs:
       standard: phpcs.xml
-    phpunit:
-      config_file: 'phpunit.xml'
-      testsuite: 'multisafepay'
   testsuites:
     git_pre_commit:
-      tasks: ['phpcs', 'phpunit']
+      tasks: ['phpcs']
