@@ -199,14 +199,15 @@ class PaymentMethodsController {
      * Action added to woocommerce_new_order hook.
      * Takes an order generated in admin and pass the data to MultiSafepay to process the order request.
      *
-     * @param   int      $order_id
-     * @param   WC_Order $order
+     * @param   int $order_id
      * @return  void
      */
-    public function generate_orders_from_backend( int $order_id, WC_Order $order ): void {
+    public function generate_orders_from_backend( int $order_id ): void {
+
+        $order = wc_get_order( $order_id );
 
         // Check if the order is created in admin
-        if ( ! $order->is_created_via( 'admin' ) ) {
+        if ( ! $order || ! $order->is_created_via( 'admin' ) ) {
             return;
         }
 
