@@ -11,6 +11,7 @@ use MultiSafepay\WooCommerce\Utils\Logger;
 use WC_Order;
 use WP_REST_Request;
 use WP_REST_Response;
+use MultiSafepay\WooCommerce\Services\CustomerService;
 
 /**
  * The payment methods controller.
@@ -288,6 +289,47 @@ class PaymentMethodsController {
             }
         }
         return $order_status;
+    }
+
+    /**
+     * Return the credit card component arguments require to process a pre-order
+     *
+     * @return void
+     */
+    public function get_credit_card_payment_component_arguments(): void {
+        if ( wp_verify_nonce( $_POST['nonce'], 'credit_card_payment_component_arguments_nonce' ) ) {
+            $locale      = strtoupper( substr( ( new CustomerService() )->get_locale(), 0, 2 ) );
+            $sdk_service = new SdkService();
+
+            $credit_card_payment_component_arguments = array(
+                'debug'      => (bool) get_option( 'multisafepay_debugmode', false ),
+                'env'        => $sdk_service->get_test_mode() ? 'test' : 'live',
+                'api_token'  => $sdk_service->get_api_token(),
+                'orderData'  => array(
+                    'currency'  => get_woocommerce_currency(),
+                    'amount'    => ( WC()->cart ) ? ( WC()->cart->total * 100 ) : null,
+                    'customer'  => array(
+                        'locale'    => ( new CustomerService() )->get_locale(),
+                        'country'   => ( WC()->customer )->get_billing_country(),
+                        'reference' => null,
+                    ),
+                    'template'  => array(
+                        'settings' => array(
+                            'embed_mode' => true,
+                        ),
+                    ),
+                    'recurring' => array(
+                        'model' => null,
+                    ),
+                ),
+                'ajax_url'   => admin_url( 'admin-ajax.php' ),
+                'nonce'      => wp_create_nonce( 'credit_card_payment_component_arguments_nonce' ),
+                'gateway_id' => $_POST['gateway_id'],
+                'gateway'    => $_POST['gateway'],
+
+            );
+            wp_send_json( $credit_card_payment_component_arguments );
+        }
     }
 
 }

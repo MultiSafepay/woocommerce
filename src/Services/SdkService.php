@@ -2,6 +2,7 @@
 
 namespace MultiSafepay\WooCommerce\Services;
 
+use MultiSafepay\Api\ApiTokenManager;
 use MultiSafepay\Api\GatewayManager;
 use MultiSafepay\Api\Gateways\Gateway;
 use MultiSafepay\Api\IssuerManager;
@@ -10,9 +11,9 @@ use MultiSafepay\Exception\ApiException;
 use MultiSafepay\Exception\InvalidApiKeyException;
 use MultiSafepay\Sdk;
 use MultiSafepay\WooCommerce\Client\MultiSafepayClient;
+use MultiSafepay\WooCommerce\Utils\Logger;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use WP_Error;
-use MultiSafepay\WooCommerce\Utils\Logger;
 
 /**
  * This class returns the SDK object.
@@ -132,5 +133,24 @@ class SdkService {
      */
     public function get_sdk(): Sdk {
         return $this->sdk;
+    }
+
+    /**
+     * Returns api token manager
+     *
+     * @return  ApiTokenManager
+     */
+    public function get_api_token_manager(): ApiTokenManager {
+        return $this->sdk->getApiTokenManager();
+    }
+
+    /**
+     * Returns api token
+     *
+     * @return  string
+     */
+    public function get_api_token(): string {
+        $api_token_manager = $this->get_api_token_manager();
+        return $api_token_manager->get()->getApiToken();
     }
 }

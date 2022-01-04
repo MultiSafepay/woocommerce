@@ -16,9 +16,13 @@ use MultiSafepay\WooCommerce\Utils\MoneyUtil;
 use WC_Countries;
 use WC_Payment_Gateway;
 use WP_Error;
+use MultiSafepay\WooCommerce\Services\CustomerService;
+use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
 
 abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMethodInterface {
 
+    const MULTISAFEPAY_COMPONENT_JS_URL   = 'https://pay.multisafepay.com/sdk/components/v2/components.js';
+    const MULTISAFEPAY_COMPONENT_CSS_URL  = 'https://pay.multisafepay.com/sdk/components/v2/components.css';
     const NOT_ALLOW_REFUND_ORDER_STATUSES = array(
         'pending',
         'on-hold',
@@ -60,12 +64,43 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      */
     public $initial_order_status;
 
+
+    /**
+     * If supports payment component
+     *
+     * @var string
+     */
+    public $payment_component = false;
+
+    /**
+     * Defines if the payment method is tokenizable
+     *
+     * @var bool
+     */
+    protected $has_configurable_tokenization = false;
+
+    /**
+     * Defines if the payment method will use the Payment Component
+     *
+     * @var bool
+     */
+    protected $has_configurable_payment_component = false;
+
     /**
      * Construct for Core class.
      */
     public function __construct() {
-        $this->supports            = array( 'products', 'refunds' );
-        $this->id                  = $this->get_payment_method_id();
+        $this->supports = array( 'products', 'refunds' );
+        $this->id       = $this->get_payment_method_id();
+        if ( $this->is_payment_component_enable() ) {
+            $this->supports[] = 'multisafepay_payment_component';
+            if ( $this->is_tokenization_enable() ) {
+                $this->supports[] = 'multisafepay_tokenization';
+            }
+            add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_payment_component_styles' ) );
+            add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_payment_component_scripts' ) );
+        }
+
         $this->type                = $this->get_payment_method_type();
         $this->method_title        = $this->get_payment_method_title();
         $this->method_description  = $this->get_payment_method_description();
@@ -84,6 +119,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $this->min_amount           = $this->get_option( 'min_amount' );
         $this->countries            = $this->get_option( 'countries' );
         $this->initial_order_status = $this->get_option( 'initial_order_status', false );
+        $this->payment_component    = $this->get_option( 'payment_component', false );
         $this->errors               = array();
 
         add_action(
@@ -130,6 +166,9 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * @return boolean
      */
     public function has_fields(): bool {
+        if ( $this->is_payment_component_enable() ) {
+            return true;
+        }
         return false;
     }
 
@@ -159,7 +198,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * @return  array
      */
     public function add_form_fields(): array {
-        return array(
+        $form_fields = array(
             'enabled'              => array(
                 'title'   => __( 'Enable/Disable', 'multisafepay' ),
                 'label'   => 'Enable ' . $this->get_method_title() . ' Gateway',
@@ -206,6 +245,28 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
                 'default'     => $this->get_option( 'countries', array() ),
             ),
         );
+
+        if ( $this->has_configurable_payment_component ) {
+            $form_fields['payment_component'] = array(
+                'title'       => __( 'Payment Components', 'multisafepay' ),
+                'label'       => 'Enable Payment Component in ' . $this->get_method_title() . ' Gateway',
+                'type'        => 'checkbox',
+                'description' => __( 'More information about Payment Components on <a href="https://docs.multisafepay.com/payment-components/" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
+                'default'     => 'no',
+            );
+        }
+
+        if ( $this->has_configurable_tokenization && $this->is_payment_component_enable() ) {
+            $form_fields['tokenization'] = array(
+                'title'       => __( 'Tokenization', 'multisafepay' ),
+                'label'       => 'Enable Tokenization in ' . $this->get_method_title() . ' Gateway within the Payment Component',
+                'type'        => 'checkbox',
+                'description' => __( 'Tokenization only applies when payment component is enabled. More information about Tokenization on <a href="https://docs.multisafepay.com/features/recurring-payments/" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
+                'default'     => get_option( 'multisafepay_tokenization', 'no' ),
+            );
+        }
+
+        return $form_fields;
     }
 
     /**
@@ -400,6 +461,12 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
             }
         }
 
+        if ( isset( $_POST[ $this->id . '_payment_component_errors' ] ) && '' !== $_POST[ $this->id . '_payment_component_errors' ] ) {
+            foreach ( $_POST[ $this->id . '_payment_component_errors' ] as $payment_component_error ) {
+                wc_add_notice( $payment_component_error, 'error' );
+            }
+        }
+
         if ( wc_get_notices( 'error' ) ) {
             return false;
         }
@@ -486,6 +553,109 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
             $gateway_info->addPhoneAsString( $order->get_billing_phone() );
         }
         return $gateway_info;
+    }
+
+    /**
+     * This method use get_option instead $this->get_option;
+     * because in the place where is called, settings are not being initialized yet.
+     *
+     * @return bool
+     */
+    public function is_payment_component_enable(): bool {
+        $settings = get_option( 'woocommerce_' . $this->id . '_settings', array( 'payment_component' => 'no' ) );
+        if ( ! isset( $settings['payment_component'] ) ) {
+            return false;
+        }
+        return 'yes' === $settings['payment_component'];
+    }
+
+    /**
+     * This method use get_option instead $this->get_option;
+     * because in the place where is called, settings are not being initialized yet.
+     *
+     * @return bool
+     */
+    public function is_tokenization_enable(): bool {
+        $settings = get_option( 'woocommerce_' . $this->id . '_settings', array( 'tokenization' => 'no' ) );
+        if ( ! isset( $settings['tokenization'] ) ) {
+            return false;
+        }
+        return 'yes' === $settings['tokenization'];
+    }
+
+
+    /**
+     * Enqueue CSS styles related with Payment Component.
+     *
+     * @return void
+     */
+    public function enqueue_payment_component_styles() {
+        if ( ( is_checkout() || is_wc_endpoint_url( 'order-pay' ) ) && $this->supports( 'multisafepay_payment_component' ) ) {
+            wp_enqueue_style(
+                'multisafepay-payment-component-style',
+                self::MULTISAFEPAY_COMPONENT_CSS_URL,
+                array(),
+                MULTISAFEPAY_PLUGIN_VERSION,
+                'all'
+            );
+        }
+    }
+
+    /**
+     * Enqueue Javascript related with Payment Component.
+     *
+     * @return void
+     */
+    public function enqueue_payment_component_scripts() {
+        if ( ( is_checkout() || is_wc_endpoint_url( 'order-pay' ) ) && $this->supports( 'multisafepay_payment_component' ) ) {
+
+            wp_enqueue_script( 'multisafepay-payment-component-script', self::MULTISAFEPAY_COMPONENT_JS_URL, array(), MULTISAFEPAY_PLUGIN_VERSION, true );
+
+            $multisafepay_payment_component_config = $this->get_credit_card_payment_component_arguments();
+            $gateways_with_payment_component       = Gateways::get_gateways_with_payment_component();
+
+            $route = MULTISAFEPAY_PLUGIN_URL . '/assets/public/js/multisafepay-payment-component.js';
+            wp_enqueue_script( 'multisafepay-payment-component-js', $route, array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
+            wp_localize_script( 'multisafepay-payment-component-js', 'payment_component_config_' . $this->id, $multisafepay_payment_component_config );
+            wp_localize_script( 'multisafepay-payment-component-js', 'multisafepay_payment_component_gateways', $gateways_with_payment_component );
+            wp_enqueue_script( 'multisafepay-payment-component-js' );
+
+        }
+    }
+
+    /**
+     * Return the arguments required to initialize the payment component library
+     *
+     * @return array
+     */
+    private function get_credit_card_payment_component_arguments(): array {
+        $sdk_service = new SdkService();
+        return array(
+			'debug'      => (bool) get_option( 'multisafepay_debugmode', false ),
+			'env'        => $sdk_service->get_test_mode() ? 'test' : 'live',
+			'api_token'  => $sdk_service->get_api_token(),
+			'orderData'  => array(
+				'currency'  => get_woocommerce_currency(),
+				'amount'    => ( WC()->cart ) ? ( WC()->cart->total * 100 ) : null,
+				'customer'  => array(
+					'locale'    => ( new CustomerService() )->get_locale(),
+					'country'   => ( WC()->customer )->get_billing_country(),
+					'reference' => $this->is_tokenization_enable() ? get_current_user_id() : null,
+				),
+				'template'  => array(
+					'settings' => array(
+						'embed_mode' => true,
+					),
+				),
+				'recurring' => array(
+					'model' => $this->is_tokenization_enable() ? 'cardOnFile' : null,
+				),
+			),
+			'ajax_url'   => admin_url( 'admin-ajax.php' ),
+			'nonce'      => wp_create_nonce( 'credit_card_payment_component_arguments_nonce' ),
+			'gateway_id' => $this->id,
+			'gateway'    => $this->get_payment_method_code(),
+        );
     }
 
 }

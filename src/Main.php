@@ -7,7 +7,6 @@ use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodsController;
 use MultiSafepay\WooCommerce\Settings\SettingsController;
 use MultiSafepay\WooCommerce\Utils\CustomLinks;
 use MultiSafepay\WooCommerce\Utils\Internationalization;
-use MultiSafepay\WooCommerce\PaymentMethods\TokenizationMethodsController;
 use MultiSafepay\WooCommerce\Utils\Loader;
 use MultiSafepay\WooCommerce\Utils\UpgradeNotices;
 
@@ -41,28 +40,8 @@ class Main {
         $this->add_custom_links_in_plugin_list();
         $this->define_settings_hooks();
 		$this->define_payment_methods_hooks();
-        $this->define_tokenization_hooks();
         $this->set_upgrade_notice_messages();
 	}
-
-    /**
-     * Register all of the hooks related to the tokenization methods
-     * of the plugin.
-     *
-     * @return  void
-     */
-    private function define_tokenization_hooks(): void {
-        // Tokenization controller
-        $tokenization_methods = new TokenizationMethodsController();
-        // Add tokens to user account
-        $this->loader->add_filter( 'woocommerce_get_customer_payment_tokens', $tokenization_methods, 'multisafepay_get_customer_payment_tokens', 10, 3 );
-        // Delete token action
-        $this->loader->add_action( 'woocommerce_payment_token_deleted', $tokenization_methods, 'woocommerce_payment_token_deleted', 10, 2 );
-        // Set token as default
-        $this->loader->add_action( 'woocommerce_payment_token_set_default', $tokenization_methods, 'woocommerce_payment_token_set_default', 10, 2 );
-        // Customize save payment method checkbox
-        $this->loader->add_filter( 'woocommerce_payment_gateway_save_new_payment_method_option_html', $tokenization_methods, 'multisafepay_payment_gateway_save_new_payment_method_option_html', 10, 1 );
-    }
 
 	/**
 	 * Define the locale for this plugin for internationalization.
@@ -170,6 +149,12 @@ class Main {
         $this->loader->add_action( 'rest_api_init', $payment_methods, 'multisafepay_register_rest_route' );
         // Allow cancel orders for on-hold status
         $this->loader->add_filter( 'woocommerce_valid_order_statuses_for_cancel', $payment_methods, 'allow_cancel_multisafepay_orders_with_on_hold_status', 10, 2 );
+        // Ajax related to update the order information of a credit card component
+        foreach ( Gateways::get_gateways_ids() as $gateway_id ) {
+            $this->loader->add_action( 'wp_ajax_' . $gateway_id . '_component_arguments', $payment_methods, 'get_credit_card_payment_component_arguments' );
+            $this->loader->add_action( 'wp_ajax_nopriv_' . $gateway_id . '_component_arguments', $payment_methods, 'get_credit_card_payment_component_arguments' );
+        }
+
 	}
 
 	/**

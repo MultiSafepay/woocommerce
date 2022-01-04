@@ -165,4 +165,21 @@ class Gateways {
         return new $gateway();
     }
 
+
+    /**
+     * Get all active MultiSafepay payment options
+     *
+     * @return array
+     */
+    public static function get_gateways_with_payment_component(): array {
+        $gateways_with_payment_component = array();
+        foreach ( self::GATEWAYS as $gateway ) {
+            $gateway = new $gateway();
+            if ( $gateway->is_payment_component_enable() ) {
+                $gateways_with_payment_component[] = $gateway->id;
+            }
+        }
+        return $gateways_with_payment_component;
+    }
+
 }

@@ -9,6 +9,7 @@ use MultiSafepay\Api\Transactions\OrderRequest\Arguments\PaymentOptions;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\PluginDetails;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\SecondChance;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
+use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
 use WC_Order;
 
 /**
@@ -62,6 +63,11 @@ class OrderService {
 
         if ( $order->needs_shipping_address() ) {
             $order_request->addDelivery( $this->customer_service->create_delivery_details( $order ) );
+        }
+
+        if ( ! empty( $_POST[ ( Gateways::get_payment_method_object_by_gateway_code( $gateway_code ) )->get_payment_method_id() . '_payment_component_payload' ] ) ) {
+            $order_request->addType( 'direct' );
+            $order_request->addData( array( 'payment_data' => array( 'payload' => $_POST[ ( Gateways::get_payment_method_object_by_gateway_code( $gateway_code ) )->get_payment_method_id() . '_payment_component_payload' ] ) ) );
         }
 
         $ga_code = get_option( 'multisafepay_ga', false );

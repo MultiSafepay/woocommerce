@@ -250,9 +250,6 @@ class SystemReport {
                 if ( ! empty( $multisafepay_gateway->countries ) ) {
                     $multisafepay_gateway_settings_value .= __( 'Countries: ', 'multisafepay' ) . $multisafepay_gateway->countries . '. ';
                 }
-                if ( $multisafepay_gateway->get_option( 'tokenization', 'no' ) === 'yes' ) {
-                    $multisafepay_gateway_settings_value .= __( 'Tokenization: Enabled', 'multisafepay' ) . '. ';
-                }
 
                 $multisafepay_gateway_settings['settings'][ $multisafepay_gateway->id ]['label'] = $multisafepay_gateway->get_payment_method_title();
                 $multisafepay_gateway_settings['settings'][ $multisafepay_gateway->id ]['value'] = $multisafepay_gateway_settings_value;

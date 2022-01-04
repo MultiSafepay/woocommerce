@@ -4,6 +4,15 @@
     <p><?php echo esc_html( $this->description ); ?></p>
 <?php } ?>
 
+<?php if ( $this->payment_component ) { ?>
+    <div id="<?php echo esc_attr( $this->id ); ?>_payment_component_container" class="multisafepay-payment-component"></div>
+    <p class="form-row form-row-wide" id="<?php echo esc_attr( $this->id ); ?>_payment_component_field" style="display: none">
+        <span class="woocommerce-input-wrapper">
+            <input type="hidden" name="<?php echo esc_attr( $this->id ); ?>_payment_component_payload" id="<?php echo esc_attr( $this->id ); ?>_payment_component_payload" />
+        </span>
+    </p>
+<?php } ?>
+
 <?php if ( isset( $issuers ) && 'direct' === $this->type ) { ?>
     <p class="form-row form-row-wide" id="<?php echo esc_attr( $this->id ); ?>_issuer_id_field">
         <label for="<?php echo esc_attr( $this->id ); ?>_issuer_id" class=""><?php echo esc_html__( 'Issuer', 'multisafepay' ); ?></label>

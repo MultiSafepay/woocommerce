@@ -7,3 +7,31 @@
     padding: 0;
     max-height: 1.618em;
 }
+#payment .payment_methods .wc_payment_method .multisafepay-payment-component .loader-wrapper {
+    min-width: 100%;
+    min-height: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(248, 248, 248, 0.93);
+    position: absolute;
+    z-index: 300;
+}
+#payment .payment_methods .wc_payment_method .multisafepay-payment-component .loader-wrapper .loader {
+    margin: 0;
+    display: block;
+    position: absolute;
+    left: 45%;
+    top: 40%;
+    border: 25px solid rgba(100, 100, 100, 0.2);
+    width: 1px;
+    height: 1px;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    -webkit-animation: msp-spin 1.5s infinite;
+    -moz-animation: msp-spin 1.5s infinite;
+    animation: msp-spin 1.5s infinite;
+}
