@@ -4,7 +4,7 @@ Tags: multisafepay, credit card, credit cards, gateway, payments, woocommerce, i
 Requires at least: 5.0
 Tested up to: 5.8.2
 Requires PHP: 7.2
-Stable tag: 4.10.0
+Stable tag: 4.11.0
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -33,7 +33,6 @@ Payment methods:
 * Giropay
 * iDEAL
 * in3
-* ING Home'Pay
 * KBC/CBC
 * Klarna
 * Maestro
@@ -129,7 +128,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 
 == Upgrade Notice ==
 
-= 4.10.0 =
+= 4.11.0 =
 4.x.x is a major upgrade from 3.x.x, a complete rewrite of the plugin. After upgrade, please navigate to MultiSafepay settings page and confirm the settings.
 
 == Screenshots ==
@@ -144,6 +143,18 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 8. Checkout page with MultiSafepay payment methods
 
 == Changelog ==
+
+= Release Notes - WooCommerce 4.11.0 (Jan 4th, 2022) =
+
+### Added
++ PLGWOOS-745: Add Payment Component
+
+### Changed
++ PLGWOOS-765: Refactor PaymentMethodsController::generate_orders_from_backend() to work only with one argument and avoiding conflicts with third party plugins
++ PLGWOOS-745: Tokenization now works through the Payment Component
+
+### Fixed
++ PLGWOOS-763: Fix error on plugin list when application can not connect with wordpress network
 
 = Release Notes - WooCommerce 4.10.0 (Dec 13th, 2021) =
 

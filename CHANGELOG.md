@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.11.0
+Release date: Jan 4th, 2022
+
+### Added
++ PLGWOOS-745: Add Payment Component
+
+### Changed
++ PLGWOOS-765: Refactor PaymentMethodsController::generate_orders_from_backend() to work only with one argument and avoiding conflicts with third party plugins
++ PLGWOOS-745: Tokenization now works through the Payment Component
+
+### Fixed
++ PLGWOOS-763: Fix error on plugin list when application can not connect with wordpress network
+
+***
+
 ## 4.10.0
 Release date: Dec 13th, 2021
 
