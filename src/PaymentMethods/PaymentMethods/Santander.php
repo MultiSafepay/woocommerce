@@ -61,7 +61,7 @@ class Santander extends BasePaymentMethod {
     public function add_form_fields(): array {
         $form_fields                          = parent::add_form_fields();
         $form_fields['min_amount']['default'] = '250';
-        $form_fields['max_amount']['default'] = '1000';
+        $form_fields['max_amount']['default'] = '8000';
         $form_fields['direct']                = array(
             'title'    => __( 'Transaction Type', 'multisafepay' ),
             /* translators: %1$: The payment method title */
