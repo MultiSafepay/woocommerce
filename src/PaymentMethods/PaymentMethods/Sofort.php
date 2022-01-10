@@ -31,7 +31,7 @@ class Sofort extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_title(): string {
-        return 'SOFORT Banking';
+        return 'Sofort';
     }
 
     /**
@@ -51,7 +51,7 @@ class Sofort extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_icon(): string {
-        return 'directbank.png';
+        return 'sofort.png';
     }
 
 }
