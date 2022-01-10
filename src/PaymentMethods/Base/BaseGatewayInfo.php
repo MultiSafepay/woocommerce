@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods;
+namespace MultiSafepay\WooCommerce\PaymentMethods\Base;
 
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
 

@@ -8,7 +8,7 @@ use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfo\Meta;
 use MultiSafepay\Exception\ApiException;
 use MultiSafepay\Exception\InvalidArgumentException;
 use MultiSafepay\ValueObject\IbanNumber;
-use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\BaseGatewayInfo;
+use MultiSafepay\WooCommerce\PaymentMethods\Base\BaseGatewayInfo;
 use MultiSafepay\WooCommerce\Services\OrderService;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Utils\Logger;
