@@ -2,9 +2,9 @@
 Contributors: multisafepayplugin
 Tags: multisafepay, credit card, credit cards, gateway, payments, woocommerce, ideal, bancontact, klarna, sofort, giropay, sepa direct debit
 Requires at least: 5.0
-Tested up to: 5.8.2
+Tested up to: 5.8.3
 Requires PHP: 7.2
-Stable tag: 4.11.0
+Stable tag: 4.12.0
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -128,7 +128,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 
 == Upgrade Notice ==
 
-= 4.11.0 =
+= 4.12.0 =
 4.x.x is a major upgrade from 3.x.x, a complete rewrite of the plugin. After upgrade, please navigate to MultiSafepay settings page and confirm the settings.
 
 == Screenshots ==
@@ -143,6 +143,15 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 8. Checkout page with MultiSafepay payment methods
 
 == Changelog ==
+
+= Release Notes - WooCommerce 4.12.0 (Jan 13th, 2022) =
+
+### Added
++ PLGWOOS-769: Add new filter 'multisafepay_merchant_item_id' to allow third party developers overwrite the merchant_item_id property within the ShoppingCart object
+
+### Changed
++ PLGWOOS-744: Update 'Betaal per Maand' default max_amount value, according with new product rules
++ PLGWOOS-759: Rebrand Sofort payment method
 
 = Release Notes - WooCommerce 4.11.0 (Jan 4th, 2022) =
 

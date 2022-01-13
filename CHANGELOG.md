@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.12.0
+Release date: Jan 13th, 2022
+
+### Added
++ PLGWOOS-769: Add new filter 'multisafepay_merchant_item_id' to allow third party developers overwrite the merchant_item_id property within the ShoppingCart object 
+
+### Changed
++ PLGWOOS-744: Update 'Betaal per Maand' default max_amount value, according with new product rules
++ PLGWOOS-759: Rebrand Sofort payment method
+
+***
+
 ## 4.11.0
 Release date: Jan 4th, 2022
 
