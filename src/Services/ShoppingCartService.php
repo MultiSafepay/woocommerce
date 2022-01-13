@@ -50,7 +50,7 @@ class ShoppingCartService {
      * @return CartItem
      */
     private function create_cart_item( WC_Order_Item_Product $item, string $currency ): CartItem {
-        $merchant_item_id = $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id();
+        $merchant_item_id = apply_filters( 'multisafepay_merchant_item_id', (string) $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id(), $item );
         $product_name     = $item->get_name();
         $product_price    = (float) $item->get_subtotal() / (int) $item->get_quantity();
 
