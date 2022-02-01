@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.13.0
+Release date: Feb 1st, 2022
+
+### Added
++ PLGWOOS-770: Add payment component support for payment methods: Visa, Mastercard, Maestro and American Express
++ PLGWOOS-774: Add support to process 'smart_coupon' coupons from [Smart Coupons](https://woocommerce.com/products/smart-coupons/) third party plugin
++ PLGWOOS-775: Log shopping cart content when debug mode is enabled
+
+***
+
 ## 4.12.0
 Release date: Jan 13th, 2022
 
