@@ -10,7 +10,9 @@ use WC_Order;
 use WC_Order_Item_Fee;
 use WC_Order_Item_Product;
 use WC_Order_Item_Shipping;
+use WC_Order_Item_Coupon;
 use WC_Tax;
+use WC_Coupon;
 
 
 /**
@@ -26,6 +28,12 @@ class ShoppingCartService {
      * @return ShoppingCart
      */
     public function create_shopping_cart( WC_Order $order, string $currency ): ShoppingCart {
+
+        // If coupon type is percentage, fixed_product type, or fixed_cart, which comes by default in WooCommerce,
+        // then discounted amount is being included at product item level to avoid miscalculations in the tax rates, since WooCommerce is rounding the
+        // taxes related to the discount items according with decimal values defined in WooCommerce settings.
+        $types_of_coupons_not_applied_at_item_level = apply_filters( 'multisafepay_types_of_coupons_not_applied_at_item_level', array( 'smart_coupon' ) );
+
         $cart_items = array();
 
         foreach ( $order->get_items() as $item ) {
@@ -38,6 +46,17 @@ class ShoppingCartService {
 
         foreach ( $order->get_items( 'fee' ) as $item ) {
             $cart_items[] = $this->create_fee_cart_item( $item, $currency );
+        }
+
+        foreach ( $order->get_items( 'coupon' ) as $item ) {
+            // Only for coupons with discount type not applied at item level
+            // And in specific case of smart_coupons, only when the smart coupon is not being applied before tax calculations
+            if (
+                in_array( ( new WC_Coupon( $item->get_code() ) )->get_discount_type(), $types_of_coupons_not_applied_at_item_level, true ) &&
+                ( get_option( 'woocommerce_smart_coupon_apply_before_tax', 'no' ) !== 'yes' )
+            ) {
+                $cart_items[] = $this->create_coupon_cart_item( $item, $currency );
+            }
         }
 
         return new ShoppingCart( $cart_items );
@@ -202,6 +221,21 @@ class ShoppingCartService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * @param WC_Order_Item_Coupon $item
+     * @param string               $currency
+     *
+     * @return CartItem
+     */
+    public function create_coupon_cart_item( WC_Order_Item_Coupon $item, string $currency ): CartItem {
+        $cart_item = new CartItem();
+        return $cart_item->addName( $item->get_name() )
+            ->addQuantity( $item->get_quantity() )
+            ->addMerchantItemId( (string) $item->get_id() )
+            ->addUnitPrice( MoneyUtil::create_money( (float) -$item->get_discount(), $currency ) )
+            ->addTaxRate( 0 );
     }
 
 }

@@ -39,8 +39,8 @@ class Test_ShoppingCartService extends WP_UnitTestCase {
         $wc_order = (new WC_Order_Fixture( $shipping_total, $shipping_tax_rate ))->get_wc_order_mock();
 
         // Consecutive calls for WC_Order->get_items()
-        $wc_order->method( 'get_items' )->withConsecutive( array('line_item'),  array('shipping'), array('fee') )
-                       ->willReturnOnConsecutiveCalls( array( $wc_order_item_product ), array($wc_order_item_shipping), array($wc_order_item_fee) );
+        $wc_order->method( 'get_items' )->withConsecutive( array('line_item'),  array('shipping'), array('fee'), array('coupon') )
+                       ->willReturnOnConsecutiveCalls( array( $wc_order_item_product ), array($wc_order_item_shipping), array($wc_order_item_fee), array() );
 
 
         $shopping_cart_service = new ShoppingCartService();
@@ -90,8 +90,8 @@ class Test_ShoppingCartService extends WP_UnitTestCase {
         $wc_order = (new WC_Order_Fixture( $shipping_total, $shipping_tax_rate ))->get_wc_order_mock();
 
         // Consecutive calls for WC_Order->get_items()
-        $wc_order->method( 'get_items' )->withConsecutive( array('line_item'),  array('shipping'), array('fee') )
-                 ->willReturnOnConsecutiveCalls( array( $wc_order_item_product ), array($wc_order_item_shipping), array($wc_order_item_fee) );
+        $wc_order->method( 'get_items' )->withConsecutive( array('line_item'),  array('shipping'), array('fee'), array('coupon') )
+                 ->willReturnOnConsecutiveCalls( array( $wc_order_item_product ), array($wc_order_item_shipping), array($wc_order_item_fee), array() );
 
 
         $shopping_cart_service = new ShoppingCartService();
@@ -156,8 +156,8 @@ class Test_ShoppingCartService extends WP_UnitTestCase {
         $wc_order = (new WC_Order_Fixture( $shipping_total, $shipping_tax_rate ))->get_wc_order_mock();
 
         // Consecutive calls for WC_Order->get_items()
-        $wc_order->method( 'get_items' )->withConsecutive( array('line_item'), array('shipping'), array('fee') )
-                 ->willReturnOnConsecutiveCalls( array( $wc_order_item_product ), array(), array($wc_order_item_fee) );
+        $wc_order->method( 'get_items' )->withConsecutive( array('line_item'), array('shipping'), array('fee'), array('coupon') )
+                 ->willReturnOnConsecutiveCalls( array( $wc_order_item_product ), array(), array($wc_order_item_fee), array() );
 
 
         $shopping_cart_service = new ShoppingCartService();
@@ -230,8 +230,8 @@ class Test_ShoppingCartService extends WP_UnitTestCase {
         $wc_order = (new WC_Order_Fixture( $shipping_total, $shipping_tax_rate ))->get_wc_order_mock();
 
         // Consecutive calls for WC_Order->get_items()
-        $wc_order->method( 'get_items' )->withConsecutive( array('line_item'), array('shipping'), array('fee') )
-                 ->willReturnOnConsecutiveCalls( $items, array( $wc_order_item_shipping ), array($wc_order_item_fee) );
+        $wc_order->method( 'get_items' )->withConsecutive( array('line_item'), array('shipping'), array('fee'), array('coupon') )
+                 ->willReturnOnConsecutiveCalls( $items, array( $wc_order_item_shipping ), array($wc_order_item_fee), array() );
 
 
         $shopping_cart_service = new ShoppingCartService();
@@ -302,8 +302,8 @@ class Test_ShoppingCartService extends WP_UnitTestCase {
         $wc_order = (new WC_Order_Fixture( $shipping_total, $shipping_tax_rate ))->get_wc_order_mock();
 
         // Consecutive calls for WC_Order->get_items()
-        $wc_order->method( 'get_items' )->withConsecutive( array('line_item'), array('shipping'), array('fee') )
-                 ->willReturnOnConsecutiveCalls( array( $wc_order_item_product ), array(), array($wc_order_item_fee) );
+        $wc_order->method( 'get_items' )->withConsecutive( array('line_item'), array('shipping'), array('fee'), array('coupon') )
+                 ->willReturnOnConsecutiveCalls( array( $wc_order_item_product ), array(), array($wc_order_item_fee), array() );
 
 
         $shopping_cart_service = new ShoppingCartService();
