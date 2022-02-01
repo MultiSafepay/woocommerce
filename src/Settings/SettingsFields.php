@@ -90,7 +90,7 @@ class SettingsFields {
                 array(
                     'id'           => 'multisafepay_debugmode',
                     'label'        => __( 'Debug Mode', 'multisafepay' ),
-                    'description'  => '',
+                    'description'  => 'Is recommended to keep debug mode disabled in live environment',
                     'type'         => 'checkbox',
                     'default'      => false,
                     'placeholder'  => __( 'Debug Mode', 'multisafepay' ),

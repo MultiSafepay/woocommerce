@@ -5,6 +5,7 @@ namespace MultiSafepay\WooCommerce\Services;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\ShoppingCart;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\ShoppingCart\Item as CartItem;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\ShoppingCart\ShippingItem;
+use MultiSafepay\WooCommerce\Utils\Logger;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
 use WC_Order;
 use WC_Order_Item_Fee;
@@ -36,6 +37,10 @@ class ShoppingCartService {
 
         $cart_items = array();
 
+        if ( get_option( 'multisafepay_debugmode', false ) ) {
+            Logger::log_info( wc_print_r( $order->get_items(), true ) );
+        }
+
         foreach ( $order->get_items() as $item ) {
             $cart_items[] = $this->create_cart_item( $item, $currency );
         }
@@ -59,7 +64,13 @@ class ShoppingCartService {
             }
         }
 
-        return new ShoppingCart( $cart_items );
+        $shopping_cart = new ShoppingCart( $cart_items );
+
+        if ( get_option( 'multisafepay_debugmode', false ) ) {
+            Logger::log_info( wp_json_encode( $shopping_cart->getData() ) );
+        }
+
+        return $shopping_cart;
 
     }
 
