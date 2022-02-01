@@ -7,6 +7,16 @@ use MultiSafepay\WooCommerce\PaymentMethods\Base\BasePaymentMethod;
 class Visa extends BasePaymentMethod {
 
     /**
+     * @var bool
+     */
+    protected $has_configurable_tokenization = true;
+
+    /**
+     * @var bool
+     */
+    protected $has_configurable_payment_component = true;
+
+    /**
      * @return string
      */
     public function get_payment_method_id(): string {
