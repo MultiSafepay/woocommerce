@@ -2,24 +2,23 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods\Base;
 
-use Exception;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfo\Meta;
 use MultiSafepay\Exception\ApiException;
 use MultiSafepay\Exception\InvalidArgumentException;
 use MultiSafepay\ValueObject\IbanNumber;
-use MultiSafepay\WooCommerce\PaymentMethods\Base\BaseGatewayInfo;
+use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
+use MultiSafepay\WooCommerce\Services\CustomerService;
 use MultiSafepay\WooCommerce\Services\OrderService;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Utils\Logger;
-use MultiSafepay\WooCommerce\Utils\MoneyUtil;
 use WC_Countries;
 use WC_Payment_Gateway;
 use WP_Error;
-use MultiSafepay\WooCommerce\Services\CustomerService;
-use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
 
 abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMethodInterface {
+
+    use BaseRefunds;
 
     const MULTISAFEPAY_COMPONENT_JS_URL   = 'https://pay.multisafepay.com/sdk/components/v2/components.js';
     const MULTISAFEPAY_COMPONENT_CSS_URL  = 'https://pay.multisafepay.com/sdk/components/v2/components.css';
@@ -305,73 +304,6 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
             'result'   => 'success',
             'redirect' => esc_url_raw( $transaction->getPaymentUrl() ),
         );
-    }
-
-    /**
-     * Process the refund.
-     *
-     * @param integer $order_id Order ID.
-     * @param float   $amount Amount to be refunded.
-     * @param string  $reason Reason description.
-     *
-     * @return  mixed boolean|WP_Error
-     */
-    public function process_refund( $order_id, $amount = null, $reason = '' ) {
-
-        // Refund amount can not be 0
-        if ( 0.00 === (float) $amount ) {
-            return new WP_Error( '400', __( 'Amount of refund should be higher than 0', 'multisafepay' ) );
-        }
-
-        $sdk                 = new SdkService();
-        $transaction_manager = $sdk->get_transaction_manager();
-
-        $order                    = wc_get_order( $order_id );
-        $multisafepay_transaction = $transaction_manager->get( $order->get_order_number() );
-
-        $refund_request = $transaction_manager->createRefundRequest( $multisafepay_transaction );
-        $refund_request->addDescriptionText( $reason );
-
-        // If the used gateway is a billing suite gateway, or the generic requiring shopping cart, create the refund based on items
-        if ( (bool) get_post_meta( $order->get_id(), 'order_require_shopping_cart', 'true' ) || $multisafepay_transaction->requiresShoppingCart() ) {
-            if ( $amount !== $order->get_total() ) {
-                return new WP_Error( '400', __( 'Partial refund is not possible with billing suite payment methods', 'multisafepay' ) );
-            }
-
-            $refund_items = $multisafepay_transaction->getShoppingCart()->getItems();
-            foreach ( $refund_items as $item ) {
-                $refund_request->getCheckoutData()->refundByMerchantItemId( (string) $item->getMerchantItemId(), (int) $item->getQuantity() );
-            }
-		}
-
-        if ( ! $multisafepay_transaction->requiresShoppingCart() ) {
-            $refund_request->addMoney( MoneyUtil::create_money( (float) $amount, $order->get_currency() ) );
-        }
-
-        try {
-            $error = null;
-            $transaction_manager->refund( $multisafepay_transaction, $refund_request );
-        } catch ( Exception $exception ) {
-            $error = __( 'Error:', 'multisafepay' ) . htmlspecialchars( $exception->getMessage() );
-            Logger::log_error( $error );
-            wc_add_notice( $error, 'error' );
-        }
-
-        if ( ! $error ) {
-            /* translators: %1$: The currency code. %2$ The transaction amount */
-            $note = sprintf( __( 'Refund of %1$s%2$s has been processed successfully.', 'multisafepay' ), get_woocommerce_currency_symbol( $order->get_currency() ), $amount );
-            Logger::log_info( $note );
-            $order->add_order_note( $note );
-            return true;
-        }
-
-        if ( get_option( 'multisafepay_debugmode', false ) ) {
-            /* translators: %1$: The order ID. %2$ The PSP transaction ID */
-            $message = sprintf( __( 'Refund for Order ID: %1$s with transactionId: %2$s gives message: %3$s.', 'multisafepay' ), $order_id, $multisafepay_transaction->getTransactionId(), $error );
-            Logger::log_warning( $message );
-        }
-
-        return false;
     }
 
     /**
