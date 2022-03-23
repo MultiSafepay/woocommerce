@@ -172,7 +172,14 @@ class PaymentMethodsController {
             die( 'OK' );
         }
 
-        Logger::log_info( 'Notification has been received and validated' );
+        if ( get_option( 'multisafepay_debugmode', false ) ) {
+            Logger::log_info( 'Notification has been received and validated for transaction id ' . $transactionid );
+
+            if ( ! empty( $body ) ) {
+                Logger::log_info( 'Body of the POST notification: ' . wc_print_r( $body, true ) );
+            }
+        }
+
         $multisafepay_transaction = new TransactionResponse( $request->get_json_params(), $body );
         ( new PaymentMethodCallback( (string) $transactionid, $multisafepay_transaction ) )->process_callback();
 
