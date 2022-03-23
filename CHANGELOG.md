@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.13.1
+Release date: Mar 23th, 2022
+
+### Added
++ PLGWOOS-792: Declare support for Wordpress 5.9.2 and WooCommerce 6.3.1
++ PLGWOOS-790: Improvement on debug mode, logging the body of the POST notification request
+
+### Fixed
++ PLGWOOS-791: Fix error when WooCommerce order is not found after receive a valid POST notification
+
+***
+
 ## 4.13.0
 Release date: Feb 1st, 2022
 

@@ -4,7 +4,7 @@ Tags: multisafepay, credit card, credit cards, gateway, payments, woocommerce, i
 Requires at least: 5.0
 Tested up to: 5.9.2
 Requires PHP: 7.2
-Stable tag: 4.13.0
+Stable tag: 4.13.1
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -128,7 +128,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 
 == Upgrade Notice ==
 
-= 4.13.0 =
+= 4.13.1 =
 4.x.x is a major upgrade from 3.x.x, a complete rewrite of the plugin. After upgrade, please navigate to MultiSafepay settings page and confirm the settings.
 
 == Screenshots ==
@@ -143,6 +143,15 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 8. Checkout page with MultiSafepay payment methods
 
 == Changelog ==
+
+= Release Notes - WooCommerce 4.13.1 (Mar 23th, 2022) =
+
+### Added
++ PLGWOOS-792: Declare support for Wordpress 5.9.2 and WooCommerce 6.3.1
++ PLGWOOS-790: Improvement on debug mode, logging the body of the POST notification request
+
+### Fixed
++ PLGWOOS-791: Fix error when WooCommerce order is not found after receive a valid POST notification
 
 = Release Notes - WooCommerce 4.13.0 (Feb 1st, 2022) =
 
