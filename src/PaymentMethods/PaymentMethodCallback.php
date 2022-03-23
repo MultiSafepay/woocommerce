@@ -146,6 +146,15 @@ class PaymentMethodCallback {
      */
     public function process_callback(): void {
 
+        // On pre transactions notification, and using sequential order numbers plugins, var 2 is not received in the notification, then order doesn't exist
+        if ( ! $this->order ) {
+            if ( get_option( 'multisafepay_debugmode', false ) ) {
+                Logger::log_info( 'Notification has been received for the transaction ID ' . $this->multisafepay_order_id . ' but WooCommerce order object has not been found' );
+            }
+            header( 'Content-type: text/plain' );
+            die( 'OK' );
+        }
+
         // If payment method of the order do not belong to MultiSafepay
         if ( strpos( $this->order->get_payment_method(), 'multisafepay_' ) === false ) {
             header( 'Content-type: text/plain' );
