@@ -25,6 +25,7 @@ use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Winkelcheque;
 use MultiSafepay\WooCommerce\PaymentMethods\Giftcards\Yourgift;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Afterpay;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Alipay;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\AlipayPlus;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Amex;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\ApplePay;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Bancontact;
@@ -69,6 +70,7 @@ class Gateways {
         'multisafepay_multisafepay'      => MultiSafepay::class,
         'multisafepay_afterpay'          => Afterpay::class,
         'multisafepay_alipay'            => Alipay::class,
+        'multisafepay_alipay_plus'       => AlipayPlus::class,
         'multisafepay_amex'              => Amex::class,
         'multisafepay_applepay'          => ApplePay::class,
         'multisafepay_bancontact'        => Bancontact::class,
