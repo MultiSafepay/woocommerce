@@ -17,7 +17,7 @@ use WC_Order;
  * @package MultiSafepay\WooCommerce\Services
  */
 class CustomerService {
-
+    public const DEFAULT_LOCALE = 'en_US';
 
     /**
      * @param WC_Order $order
@@ -156,7 +156,8 @@ class CustomerService {
      * @return string
      */
     public function get_locale(): string {
-        return apply_filters( 'multisafepay_customer_locale', get_locale() );
+        $locale = get_locale() ?? self::DEFAULT_LOCALE;
+        return apply_filters( 'multisafepay_customer_locale', $locale );
     }
 
 }

@@ -137,7 +137,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * @return string
      */
     private function get_logo(): string {
-        $language = substr( get_locale(), 0, 2 );
+        $language = substr( ( new CustomerService() )->get_locale(), 0, 2 );
 
         $icon = $this->get_payment_method_icon();
 
