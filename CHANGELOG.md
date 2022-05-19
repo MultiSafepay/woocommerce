@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.14.0
+Release date: May 19th, 2022
+
+### Added
++ DAVAMS-476: Add Alipay+
+
+### Changed
++ PLGWOOS-804: Use default locale if get_locale returns null to prevent third party plugin errors
++ PHPSDK-93: Upgrade the [PHP-SDK](https://github.com/MultiSafepay/php-sdk) dependency to 5.5.0
+
+***
+
 ## 4.13.1
 Release date: Mar 23th, 2022
 

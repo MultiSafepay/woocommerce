@@ -2,9 +2,9 @@
 Contributors: multisafepayplugin
 Tags: multisafepay, credit card, credit cards, gateway, payments, woocommerce, ideal, bancontact, klarna, sofort, giropay, sepa direct debit
 Requires at least: 5.0
-Tested up to: 5.9.2
+Tested up to: 5.9.3
 Requires PHP: 7.2
-Stable tag: 4.13.1
+Stable tag: 4.14.0
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -128,7 +128,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 
 == Upgrade Notice ==
 
-= 4.13.1 =
+= 4.14.0 =
 4.x.x is a major upgrade from 3.x.x, a complete rewrite of the plugin. After upgrade, please navigate to MultiSafepay settings page and confirm the settings.
 
 == Screenshots ==
@@ -143,6 +143,15 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 8. Checkout page with MultiSafepay payment methods
 
 == Changelog ==
+
+= Release Notes - WooCommerce 4.14.0 (May 19th, 2022) =
+
+### Added
++ DAVAMS-476: Add Alipay+
+
+### Changed
++ PLGWOOS-804: Use default locale if get_locale returns null to prevent third party plugin errors
++ PHPSDK-93: Upgrade the [PHP-SDK](https://github.com/MultiSafepay/php-sdk) dependency to 5.5.0
 
 = Release Notes - WooCommerce 4.13.1 (Mar 23th, 2022) =
 
