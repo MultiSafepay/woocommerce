@@ -53,6 +53,7 @@
         <exclude-pattern>uninstall.php</exclude-pattern>
         <exclude-pattern>*/src/PaymentMethods/Base/BasePaymentMethod.php</exclude-pattern>
         <exclude-pattern>*/src/PaymentMethods/PaymentMethods/Dirdeb.php</exclude-pattern>
+        <exclude-pattern>*/src/PaymentMethods/PaymentMethods/Afterpay.php</exclude-pattern>
         <exclude-pattern>*/src/PaymentMethods/PaymentMethods/Ideal.php</exclude-pattern>
         <exclude-pattern>*/src/Services/OrderService.php</exclude-pattern>
     </rule>

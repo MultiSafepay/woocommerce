@@ -93,4 +93,14 @@
             </span>
         </p>
     <?php } ?>
+    <?php if ( isset( $terms_and_conditions_url ) && in_array( 'afterpay-terms-conditions', $this->checkout_fields_ids, true ) ) { ?>
+        <p class="form-row form-row-wide validate-required" id="<?php echo esc_attr( $this->id ); ?>_afterpay_terms_conditions_field">
+            <span class="woocommerce-input-wrapper">
+                <label>
+                    <input type="checkbox" name="<?php echo esc_attr( $this->id ); ?>_afterpay_terms_conditions" id="<?php echo esc_attr( $this->id ); ?>_afterpay_terms_conditions">
+                    <a href="<?php echo esc_url( $terms_and_conditions_url ); ?>" target="_blank"> <?php echo esc_html__( 'I have read and agreed to the AfterPay payment terms.', 'multisafepay' ); ?></a>
+                </label>
+            </span>
+        </p>
+    <?php } ?>
 <?php } ?>
