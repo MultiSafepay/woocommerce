@@ -141,6 +141,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 6. MultiSafepay Settings Page - Support section
 7. List of MultiSafepay payment methods in WooCommerce settings
 8. Checkout page with MultiSafepay payment methods
+9. Embedded Credit Card form using MultiSafepay Payment Component
 
 == Changelog ==
 
