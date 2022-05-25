@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.15.0
+Release date: May 25th, 2022
+
+### Added
++ DAVAMS-470: Add terms and conditions checkbox to AfterPay
+
+### Changed
++ PLGWOOS-805: Declare support for WordPress 6.0
+
+***
+
 ## 4.14.0
 Release date: May 19th, 2022
 
@@ -22,7 +33,7 @@ Release date: May 19th, 2022
 Release date: Mar 23th, 2022
 
 ### Added
-+ PLGWOOS-792: Declare support for Wordpress 5.9.2 and WooCommerce 6.3.1
++ PLGWOOS-792: Declare support for WordPress 5.9.2 and WooCommerce 6.3.1
 + PLGWOOS-790: Improvement on debug mode, logging the body of the POST notification request
 
 ### Fixed
@@ -91,7 +102,7 @@ Release date: Oct 18th, 2021
 
 ### Added
 + PLGWOOS-715: Add 2 "Generic Gateways" which include a flexible gateway code that allow any merchant to connect to almost every payment method we offer.
-+ PLGWOOS-746: Declare support for Wordpress 5.8.1 and WooCommerce 5.8.0 
++ PLGWOOS-746: Declare support for WordPress 5.8.1 and WooCommerce 5.8.0 
 
 ### Changed
 + PLGWOOS-740: Improve the helper text of the Google Analytics ID setting field, adding a link to Documentation Center
@@ -131,7 +142,7 @@ Release date: Aug 9th, 2021
 Release date: Aug 4th, 2021
 
 ### Added
-+ PLGWOOS-723: Declare support for WooCommerce 5.5.2 and Wordpress 5.8
++ PLGWOOS-723: Declare support for WooCommerce 5.5.2 and WordPress 5.8
 + PLGWOOS-711: Add missing titles in setting pages
 
 ### Changed
@@ -246,7 +257,7 @@ Release date: Mar 11th, 2021
 + PLGWOOS-613: Fix error related with multiple forwarded IPs by updating the PHP-SDK to 5.0.1
 
 ### Added
-+ PLGWOOS-398: Add support to change the data in the OrderRequest using Wordpress filters
++ PLGWOOS-398: Add support to change the data in the OrderRequest using WordPress filters
 
 ### Changed
 + PLGWOOS-614: Avoid changing order status if transaction is partially refunded
@@ -651,7 +662,7 @@ Release date: April 5th, 2017
 ## Improvements ##
 
 + Compatible with PHP-7
-+ Installation by standard Wordpress method
++ Installation by standard WordPress method
 + Added Dutch language file
 + Added configuration option Karna Merchant-EID (for future use.)
 + Added Terms and Conditions for Klarna, Pay After Delivery and E-Invoicing.
