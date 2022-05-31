@@ -13,6 +13,7 @@ use MultiSafepay\WooCommerce\Services\OrderService;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use WC_Countries;
+use WC_Order;
 use WC_Payment_Gateway;
 use WP_Error;
 
@@ -67,7 +68,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
     /**
      * If supports payment component
      *
-     * @var string
+     * @var bool
      */
     public $payment_component = false;
 
@@ -114,11 +115,11 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $this->enabled              = $this->get_option( 'enabled', 'no' );
         $this->title                = $this->get_option( 'title', $this->get_method_title() );
         $this->description          = $this->get_option( 'description' );
-        $this->max_amount           = $this->get_option( 'max_amount' );
+        $this->max_amount           = (int) $this->get_option( 'max_amount' );
         $this->min_amount           = $this->get_option( 'min_amount' );
-        $this->countries            = $this->get_option( 'countries' );
+        $this->countries            = (array) $this->get_option( 'countries' );
         $this->initial_order_status = $this->get_option( 'initial_order_status', false );
-        $this->payment_component    = $this->get_option( 'payment_component', false );
+        $this->payment_component    = (bool) $this->get_option( 'payment_component', false );
         $this->errors               = array();
 
         add_action(
@@ -568,7 +569,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
 			'api_token'  => $sdk_service->get_api_token(),
 			'orderData'  => array(
 				'currency'  => get_woocommerce_currency(),
-				'amount'    => ( WC()->cart ) ? ( WC()->cart->total * 100 ) : null,
+				'amount'    => ( WC()->cart ) ? ( WC()->cart->get_total( '' ) * 100 ) : null,
 				'customer'  => array(
 					'locale'    => ( new CustomerService() )->get_locale(),
 					'country'   => ( WC()->customer )->get_billing_country(),

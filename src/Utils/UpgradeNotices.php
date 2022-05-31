@@ -2,6 +2,8 @@
 
 namespace MultiSafepay\WooCommerce\Utils;
 
+use stdClass;
+
 /**
  * Define the upgrade notices.
  */

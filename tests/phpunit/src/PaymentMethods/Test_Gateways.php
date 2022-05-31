@@ -4,8 +4,8 @@ use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
 
 class Test_Gateways extends WP_UnitTestCase {
 
-    public function setUp() {
-        parent::setUp();
+    public function set_up() {
+        parent::set_up();
     }
 
     public function test_get_gateways_ids_returns_an_array() {

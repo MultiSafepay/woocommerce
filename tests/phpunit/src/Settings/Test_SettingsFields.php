@@ -4,8 +4,8 @@ use MultiSafepay\WooCommerce\Settings\SettingsFields;
 
 class Test_SettingsFields extends WP_UnitTestCase {
 
-    public function setUp() {
-        parent::setUp();
+    public function set_up() {
+        parent::set_up();
         $settings_fields = new SettingsFields();
         $this->settings_fields = $settings_fields->get_settings();
     }

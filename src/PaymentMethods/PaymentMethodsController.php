@@ -68,7 +68,7 @@ class PaymentMethodsController {
      * @return  array
      */
     public function filter_gateway_per_min_amount( array $payment_gateways ): array {
-        $total_amount = ( WC()->cart ) ? WC()->cart->total : false;
+        $total_amount = ( WC()->cart ) ? WC()->cart->get_total( '' ) : false;
         foreach ( $payment_gateways as $gateway_id => $gateway ) {
             if ( ! empty( $gateway->min_amount ) && $total_amount < $gateway->min_amount ) {
                 unset( $payment_gateways[ $gateway_id ] );
@@ -314,7 +314,7 @@ class PaymentMethodsController {
                 'api_token'  => $sdk_service->get_api_token(),
                 'orderData'  => array(
                     'currency'  => get_woocommerce_currency(),
-                    'amount'    => ( WC()->cart ) ? ( WC()->cart->total * 100 ) : null,
+                    'amount'    => ( WC()->cart ) ? ( WC()->cart->get_total( '' ) * 100 ) : null,
                     'customer'  => array(
                         'locale'    => ( new CustomerService() )->get_locale(),
                         'country'   => ( WC()->customer )->get_billing_country(),

@@ -28,7 +28,7 @@ class Activator {
         if ( ( ! is_multisite() ) || ( is_multisite() && ! $network_wide ) ) {
             $this->activate_plugin_single_site();
         }
-        if ( is_multisite() && $network_wide ) {
+        if ( $network_wide ) {
             $this->activate_plugin_all_sites();
         }
     }

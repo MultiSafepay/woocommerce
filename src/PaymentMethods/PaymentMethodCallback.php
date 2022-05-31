@@ -57,21 +57,21 @@ class PaymentMethodCallback {
     /**
      * PaymentMethodCallback constructor
      *
-     * @param string              $multisafepay_order_id
-     * @param TransactionResponse $multisafepay_transaction
+     * @param string               $multisafepay_order_id
+     * @param ?TransactionResponse $multisafepay_transaction
      */
-    public function __construct( string $multisafepay_order_id, $multisafepay_transaction = '' ) {
+    public function __construct( string $multisafepay_order_id, $multisafepay_transaction = null ) {
         $this->multisafepay_order_id = $multisafepay_order_id;
+
+        if ( ! isset( $multisafepay_transaction ) ) {
+            $multisafepay_transaction = $this->get_transaction();
+        }
 
         $this->multisafepay_transaction = $multisafepay_transaction;
 
-        if ( empty( $this->multisafepay_transaction ) ) {
-            $this->multisafepay_transaction = $this->get_transaction();
-        }
-
         // For most transactions var2 contains the order id; since the order request is being register using order number
         if ( ! empty( $this->multisafepay_transaction->getVar2() ) ) {
-            $this->woocommerce_order_id = $this->multisafepay_transaction->getVar2();
+            $this->woocommerce_order_id = (int) $this->multisafepay_transaction->getVar2();
         }
 
         // In case we need it, a filter to set the right order id, based on order number
@@ -91,11 +91,13 @@ class PaymentMethodCallback {
     private function get_transaction(): TransactionResponse {
         $transaction_manager = ( new SdkService() )->get_transaction_manager();
         try {
-            return $transaction_manager->get( $this->multisafepay_order_id );
+            $transaction = $transaction_manager->get( $this->multisafepay_order_id );
         } catch ( ApiException $api_exception ) {
             Logger::log_error( $api_exception->getMessage() );
             wp_die( esc_html__( 'Invalid request', 'multisafepay' ), esc_html__( 'Invalid request', 'multisafepay' ), 400 );
         }
+
+        return $transaction;
     }
 
     /**

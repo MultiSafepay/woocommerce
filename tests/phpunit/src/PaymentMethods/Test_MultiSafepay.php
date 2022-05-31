@@ -4,8 +4,8 @@ use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\MultiSafepay;
 
 class Test_MultiSafepay extends WP_UnitTestCase {
 
-    public function setUp() {
-        parent::setUp();
+    public function set_up() {
+        parent::set_up();
         $this->multisafepay = new MultiSafepay();
     }
 

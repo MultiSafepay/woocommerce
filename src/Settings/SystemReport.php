@@ -21,7 +21,7 @@ class SystemReport {
     /**
      * The WC Report
      *
-     * @var string
+     * @var array
      */
     private $report;
 
@@ -248,7 +248,7 @@ class SystemReport {
                     $multisafepay_gateway_settings_value .= __( 'Max Amount: ', 'multisafepay' ) . $multisafepay_gateway->max_amount . '. ';
                 }
                 if ( ! empty( $multisafepay_gateway->countries ) ) {
-                    $multisafepay_gateway_settings_value .= __( 'Countries: ', 'multisafepay' ) . $multisafepay_gateway->countries . '. ';
+                    $multisafepay_gateway_settings_value .= __( 'Countries: ', 'multisafepay' ) . implode( ', ', $multisafepay_gateway->countries ) . '. ';
                 }
 
                 $multisafepay_gateway_settings['settings'][ $multisafepay_gateway->id ]['label'] = $multisafepay_gateway->get_payment_method_title();

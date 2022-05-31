@@ -5,8 +5,8 @@ use MultiSafepay\WooCommerce\Exceptions\MissingDependencyException;
 
 class Multisite_Test_Activator extends WP_UnitTestCase {
 
-    public function setUp() {
-        parent::setUp();
+    public function set_up() {
+        parent::set_up();
         $username = 'user-' . rand( 1, 2000 );
         $password = wp_generate_password(12, false);
         $email = $username . '@example.org';

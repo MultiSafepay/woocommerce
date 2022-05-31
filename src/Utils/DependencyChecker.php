@@ -48,9 +48,8 @@ class DependencyChecker {
         if ( ! is_plugin_active( $plugin_path ) ) {
             return true;
         }
-        if ( is_plugin_active( $plugin_path ) ) {
-            return false;
-        }
+
+        return false;
     }
 
 }

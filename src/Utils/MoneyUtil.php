@@ -25,7 +25,7 @@ class MoneyUtil {
 
     /**
      * @param float $price
-     * @return float|integer
+     * @return float
      */
     private static function price_to_cents( float $price ) {
         return $price * 100;

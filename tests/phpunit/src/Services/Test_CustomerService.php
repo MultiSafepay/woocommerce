@@ -4,8 +4,8 @@ use MultiSafepay\WooCommerce\Services\CustomerService;
 
 class Test_CustomerService extends WP_UnitTestCase {
 
-    public function setUp() {
-        parent::setUp();
+    public function set_up() {
+        parent::set_up();
         $this->mock = $this->getMockBuilder(WC_Order::class)
             ->disableOriginalConstructor()
             ->setMethods(

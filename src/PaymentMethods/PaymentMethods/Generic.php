@@ -60,7 +60,7 @@ class Generic extends BasePaymentMethod {
      *
      * @return  array|mixed|void
      */
-    public function process_payment( $order_id ): array {
+    public function process_payment( $order_id ) {
         update_post_meta( $order_id, 'order_require_shopping_cart', $this->require_shopping_cart );
         return parent::process_payment( $order_id );
     }

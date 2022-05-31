@@ -2,6 +2,8 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods\Base;
 
+use WC_Order;
+
 abstract class BaseGiftCardPaymentMethod extends BasePaymentMethod {
 
     /**

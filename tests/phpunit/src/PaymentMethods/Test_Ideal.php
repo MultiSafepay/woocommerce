@@ -4,8 +4,8 @@ use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Ideal;
 
 class Test_Ideal extends WP_UnitTestCase {
 
-    public function setUp() {
-        parent::setUp();
+    public function set_up() {
+        parent::set_up();
         $this->ideal = new Ideal();
     }
 

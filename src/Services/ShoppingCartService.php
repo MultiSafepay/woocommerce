@@ -41,18 +41,22 @@ class ShoppingCartService {
             Logger::log_info( wc_print_r( $order->get_items(), true ) );
         }
 
+        /** @var WC_Order_Item_Product $item */
         foreach ( $order->get_items() as $item ) {
             $cart_items[] = $this->create_cart_item( $item, $currency );
         }
 
+        /** @var WC_Order_Item_Shipping $item */
         foreach ( $order->get_items( 'shipping' ) as $item ) {
             $cart_items[] = $this->create_shipping_cart_item( $item, $currency );
         }
 
+        /** @var WC_Order_Item_Fee $item */
         foreach ( $order->get_items( 'fee' ) as $item ) {
             $cart_items[] = $this->create_fee_cart_item( $item, $currency );
         }
 
+        /** @var WC_Order_Item_Coupon $item */
         foreach ( $order->get_items( 'coupon' ) as $item ) {
             // Only for coupons with discount type not applied at item level
             // And in specific case of smart_coupons, only when the smart coupon is not being applied before tax calculations
@@ -139,7 +143,7 @@ class ShoppingCartService {
     /**
      * @param WC_Order_Item_Shipping $item
      * @param string                 $currency
-     * @return CartItem
+     * @return ShippingItem
      */
     private function create_shipping_cart_item( WC_Order_Item_Shipping $item, string $currency ): ShippingItem {
         $cart_item = new ShippingItem();

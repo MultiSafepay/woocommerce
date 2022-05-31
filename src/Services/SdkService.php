@@ -82,12 +82,11 @@ class SdkService {
     /**
      * Returns gateway manager
      *
-     * @return  GatewayManager
+     * @return GatewayManager|WP_Error
      */
-    public function get_gateway_manager(): GatewayManager {
+    public function get_gateway_manager() {
         try {
-            $gateway_manager = $this->sdk->getGatewayManager();
-            return $gateway_manager;
+            return $this->sdk->getGatewayManager();
         } catch ( ApiException $api_exception ) {
             Logger::log_error( $api_exception->getMessage() );
             return new WP_Error( 'multisafepay-warning', $api_exception->getMessage() );
@@ -98,12 +97,11 @@ class SdkService {
     /**
      * Returns an array of the gateways available on the merchant account
      *
-     * @return Gateway[]
+     * @return Gateway[]|WP_Error
      */
     public function get_gateways() {
         try {
-            $gateways = $this->get_gateway_manager()->getGateways( true );
-            return $gateways;
+            return $this->get_gateway_manager()->getGateways( true );
         } catch ( ApiException $api_exception ) {
             Logger::log_error( $api_exception->getMessage() );
             return new WP_Error( 'multisafepay-warning', $api_exception->getMessage() );

@@ -7,8 +7,8 @@ use MultiSafepay\WooCommerce\Exceptions\MissingDependencyException;
 class Test_DependencyChecker extends WP_UnitTestCase {
 
 
-    public function setUp() {
-        parent::setUp();
+    public function set_up() {
+        parent::set_up();
     }
 
     public function test_dependency_checker_missing_dependency_exception() {

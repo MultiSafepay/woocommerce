@@ -35,7 +35,7 @@ class Loader {
 	 * Add a new action to the collection to be registered with WordPress.
 	 *
 	 * @param      string $hook             The name of the WordPress action that is being registered.
-	 * @param      class  $component        A reference to the instance of the object on which the action is defined.
+	 * @param      object $component        A reference to the instance of the object on which the action is defined.
 	 * @param      string $callback         The name of the function defined on the $component.
 	 * @param      int    $priority         The priority at which the function should be fired.
 	 * @param      int    $accepted_args    The number of arguments that should be passed to the $callback.
@@ -49,7 +49,7 @@ class Loader {
 	 * Add a new filter to the collection to be registered with WordPress.
 	 *
 	 * @param      string $hook             The name of the WordPress filter that is being registered.
-	 * @param      class  $component        A reference to the instance of the object on which the filter is defined.
+	 * @param      object $component        A reference to the instance of the object on which the filter is defined.
 	 * @param      string $callback         The name of the function defined on the $component.
 	 * @param      int    $priority         The priority at which the function should be fired.
 	 * @param      int    $accepted_args    The number of arguments that should be passed to the $callback.

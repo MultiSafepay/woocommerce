@@ -11,7 +11,7 @@ use MultiSafepay\Api\Transactions\OrderRequest\Arguments\ShoppingCart\ShippingIt
 
 class Test_ShoppingCartService extends WP_UnitTestCase {
 
-    public function setUp() {
+    public function set_up() {
         update_option( 'woocommerce_calc_taxes', 'yes');
     }
 
@@ -335,7 +335,7 @@ class Test_ShoppingCartService extends WP_UnitTestCase {
         $this->assertEquals( '', $product_fee['weight']['value'] );
     }
 
-    public function tearDown() {
+    public function tear_down() {
         TaxesFixture::delete_tax_classes();
     }
 

@@ -101,8 +101,8 @@ class SettingsController {
      * @return void
      */
 	public function display_multisafepay_settings(): void {
-        $tab_active   = $this->get_tab_active();
-        $needs_update = $this->needs_update();
+        $tab_active = $this->get_tab_active();
+        $this->needs_update();
         remove_query_arg( 'needs-setup' );
         require_once MULTISAFEPAY_PLUGIN_DIR_PATH . 'templates/multisafepay-settings-display.php';
     }
@@ -181,13 +181,10 @@ class SettingsController {
      * @return  string
      */
     private function get_tab_active(): string {
-	    if ( ! isset( $_GET['tab'] ) || '' === $_GET['tab'] ) {
-	        $tab_active = 'general';
-        }
         if ( isset( $_GET['tab'] ) && '' !== $_GET['tab'] ) {
-            $tab_active = $_GET['tab'];
+            return $_GET['tab'];
         }
-        return $tab_active;
+        return 'general';
     }
 
     /**
@@ -302,7 +299,7 @@ class SettingsController {
         $settings_fields = new SettingsFields();
         $settings        = $settings_fields->get_settings();
         if ( ! empty( $settings[ $args['id'] ]['intro'] ) ) {
-            esc_html( printf( '<p>%s</p>', $settings[ $args['id'] ]['intro'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            esc_html( (string) printf( '<p>%s</p>', $settings[ $args['id'] ]['intro'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         }
     }
 
