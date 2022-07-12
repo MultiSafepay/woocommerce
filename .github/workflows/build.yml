@@ -29,12 +29,6 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
-      - name: Setup WP CLI
-        run: |
-          curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-          php wp-cli.phar --info
-          chmod +x wp-cli.phar
-          sudo mv wp-cli.phar /usr/local/bin/wp
       - name: Checkout code
         uses: actions/checkout@v2
         with:
@@ -43,22 +37,18 @@ jobs:
         id: latestrelease
         run: |
           echo "::set-output name=releasetag::$(curl -s https://api.github.com/repos/woocommerce/woocommerce/releases/latest | jq '.tag_name' | sed 's/\"//g')"
-      - name: Install WooCommerce
-        uses: actions/checkout@v2
+      - name: Download WooCommerce
+        uses: dsaltares/fetch-gh-release-asset@master
         with:
-          ref: ${{ steps.latestrelease.outputs.releasetag }}
-          repository: 'woocommerce/woocommerce'
-          path: woocommerce-tmp
-      - name: Move WooCommerce plugin files to the right directory
-        run: mv woocommerce-tmp/plugins/woocommerce woocommerce
-      - name: Remove tmp directory
-        run: rm -rf woocommerce-tmp
+          repo: 'woocommerce/woocommerce'
+          version: 'tags/${{ steps.latestrelease.outputs.releasetag }}'
+          file: 'woocommerce.zip'
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Unzip WooCommerce
+        run: unzip woocommerce.zip
       - name: Install composer for plugin
         working-directory: multisafepay
         run: composer install --dev
-      - name: install composer for woocommerce
-        working-directory: woocommerce
-        run: composer install --no-dev
       - name: Setup test environment
         working-directory: multisafepay
         shell: bash
