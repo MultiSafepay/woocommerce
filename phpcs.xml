@@ -48,13 +48,14 @@
         <exclude-pattern>*/src/PaymentMethods/*</exclude-pattern>
     </rule>
 
-    <!-- Exclude nonce verification for uninstall.php file. According with documentation this is not required. -->
+    <!-- Exclude nonce verification, which according with documentation is not required when submit an order -->
     <rule ref="WordPress.Security.NonceVerification.Missing">
         <exclude-pattern>uninstall.php</exclude-pattern>
         <exclude-pattern>*/src/PaymentMethods/Base/BasePaymentMethod.php</exclude-pattern>
         <exclude-pattern>*/src/PaymentMethods/PaymentMethods/Dirdeb.php</exclude-pattern>
         <exclude-pattern>*/src/PaymentMethods/PaymentMethods/Afterpay.php</exclude-pattern>
         <exclude-pattern>*/src/PaymentMethods/PaymentMethods/Ideal.php</exclude-pattern>
+        <exclude-pattern>*/src/PaymentMethods/PaymentMethods/MyBank.php</exclude-pattern>
         <exclude-pattern>*/src/Services/OrderService.php</exclude-pattern>
     </rule>
 

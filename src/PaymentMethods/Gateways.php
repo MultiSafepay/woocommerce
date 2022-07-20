@@ -51,6 +51,7 @@ use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Klarna;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Maestro;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\MasterCard;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\MultiSafepay;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\MyBank;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\PayAfterDelivery;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\PayPal;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Paysafecard;
@@ -94,6 +95,7 @@ class Gateways {
         'multisafepay_klarna'            => Klarna::class,
         'multisafepay_maestro'           => Maestro::class,
         'multisafepay_mastercard'        => MasterCard::class,
+        'multisafepay_mybank'            => MyBank::class,
         'multisafepay_payafter'          => PayAfterDelivery::class,
         'multisafepay_paypal'            => PayPal::class,
         'multisafepay_paysafecard'       => Paysafecard::class,
