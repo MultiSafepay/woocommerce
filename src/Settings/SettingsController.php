@@ -137,26 +137,6 @@ class SettingsController {
     }
 
     /**
-     * Download MultiSafepay logs
-     */
-    public function download_multisafepay_logs() {
-        if ( ! empty( $_GET['log_filename'] ) ) {
-            $file = WC_LOG_DIR . $_GET['log_filename'];
-            if ( file_exists( $file ) && filesize( $file ) > 0 && is_admin() ) {
-                header( 'Pragma: public' );
-                header( 'Expires: 0' );
-                header( 'Content-Description: File Transfer' );
-                header( 'Content-Type: application/octet-stream' );
-                header( 'Content-Disposition: attachment; filename="' . $_GET['log_filename'] );
-                header( 'Content-Transfer-Encoding: binary' );
-                // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_readfile
-                readfile( $file, true );
-                exit();
-            }
-        }
-    }
-
-    /**
      * Returns if the request has been redirected after
      * try to enable the payment method using the toggle button.
      *

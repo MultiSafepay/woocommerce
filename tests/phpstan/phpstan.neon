@@ -10,9 +10,7 @@ parameters:
     ignoreErrors:
         - '#Constant MULTISAFEPAY_PLUGIN_DIR_PATH not found.#'
         - '#Constant MULTISAFEPAY_PLUGIN_URL not found.#'
-        - '#Constant WC_LOG_DIR not found.#'
         - '#Unary operation "-" on string results in an error.#'
         - '#Method [a-zA-Z0-9\\_]+::create_[a-zA-Z0-9\\_]+_item\(\) should return [a-zA-Z0-9\\_]+Item but returns [a-zA-Z0-9\\_]+CartItem.#'
-        - '#Function apply_filters invoked with 3 parameters, 2 required.#'
         - '#Call to an undefined method [a-zA-Z0-9\\_]+::addLocale\(\).#'
         - '#Variable \$transaction might not be defined.#'

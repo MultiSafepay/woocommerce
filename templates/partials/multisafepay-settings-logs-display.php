@@ -25,7 +25,6 @@
                 <?php } ?>
             </select>
             <button type="submit" class="button" value="<?php esc_attr_e( 'View', 'multisafepay' ); ?>"><?php esc_html_e( 'View', 'multisafepay' ); ?></button>
-            <a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=multisafepay-settings&tab=logs&log_filename=' . $current_log ) ); ?>" target="_blank">Download</a>
         </form>
         <?php if ( $current_log ) { ?>
             <h3><?php echo esc_html( $current_log ); ?></h3>
