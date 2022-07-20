@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.16.0
+Release date: Jul 20th, 2022
+
+### Added
++ DAVAMS-490: Add MyBank payment method
+
+### Removed
++ PLGWOOS-811: Remove download plugin logs button and related methods
+
+***
+
 ## 4.15.0
 Release date: May 25th, 2022
 
