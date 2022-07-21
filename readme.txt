@@ -125,12 +125,6 @@ Please follow these steps:
 Yes, you can fully or partially refund transactions directly from your WooCommerce backend for all payment methods, except for [Billing Suite](https://docs.multisafepay.com/payment-methods/billing-suite) payment methods in which it is only possible to process full refunds.
 You can also refund from your [MultiSafepay Control](https://merchant.multisafepay.com)
 
-
-== Upgrade Notice ==
-
-= 4.16.0 =
-4.x.x is a major upgrade from 3.x.x, a complete rewrite of the plugin. After upgrade, please navigate to MultiSafepay settings page and confirm the settings.
-
 == Screenshots ==
 
 1. MultiSafepay Settings Page - Account section
