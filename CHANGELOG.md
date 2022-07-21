@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.17.0
+Release date: Jul 21st, 2022
+
+### Changed
++ PLGWOOS-817: Improvement in sanitization and validation of the inputs, and escaping the outputs
+
+### Removed
++ PLGWOOS-816: Remove validation to check if a gateway is enabled in the merchant account, before activate the WooCommerce payment method
++ PLGWOOS-818: Remove upgrade notice functionality in plugin list page
+
+***
+
 ## 4.16.0
 Release date: Jul 20th, 2022
 
