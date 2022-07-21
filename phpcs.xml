@@ -71,7 +71,6 @@
 
     <!-- Exclude nonce verification recomendation -->
     <rule ref="WordPress.Security.NonceVerification.Recommended">
-        <exclude-pattern>*/src/PaymentMethods/Base/BasePaymentMethod.php</exclude-pattern>
         <exclude-pattern>*/src/Settings/SettingsController.php</exclude-pattern>
     </rule>
 
