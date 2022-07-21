@@ -87,17 +87,12 @@ class Main {
         if ( is_admin() ) {
             // Enqueue styles in controller settings page
             $this->loader->add_action( 'admin_enqueue_scripts', $plugin_settings, 'enqueue_styles', 1 );
-            // Enqueue scripts in controller settings page
-            $this->loader->add_action( 'admin_enqueue_scripts', $plugin_settings, 'enqueue_scripts' );
             // Add menu page for common settings page
             $this->loader->add_action( 'admin_menu', $plugin_settings, 'register_common_settings_page', 60 );
             // Add the new settings page the WooCommerce screen options
             $this->loader->add_filter( 'woocommerce_screen_ids', $plugin_settings, 'set_wc_screen_options_in_common_settings_page' );
             // Register settings
             $this->loader->add_action( 'admin_init', $plugin_settings, 'register_common_settings' );
-            // Intervene woocommerce_toggle_gateway_enabled admin_ajax call and validate if required settings has been setup
-            $this->loader->add_action( 'wp_ajax_woocommerce_multisafepay_toggle_gateway_enabled', $plugin_settings, 'multisafepay_ajax_toggle_gateway_enabled' );
-            $this->loader->add_action( 'wp_ajax_woocommerce_toggle_gateway_enabled', $plugin_settings, 'before_ajax_toggle_gateway_enabled' );
             // Filter and return ordered the results of the fields
             $this->loader->add_filter( 'multisafepay_common_settings_fields', $plugin_settings, 'filter_multisafepay_common_settings_fields', 10, 1 );
         }
