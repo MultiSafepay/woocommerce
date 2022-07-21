@@ -113,7 +113,7 @@ class MyBank extends BasePaymentMethod {
     public function get_gateway_info( array $data = null ): GatewayInfoInterface {
         $gateway_info = new MyBankGatewayInfo();
         if ( isset( $_POST[ $this->id . '_issuer_id' ] ) ) {
-            $gateway_info->addIssuerId( $_POST[ $this->id . '_issuer_id' ] );
+            $gateway_info->addIssuerId( sanitize_key( $_POST[ $this->id . '_issuer_id' ] ) );
         }
         return $gateway_info;
     }

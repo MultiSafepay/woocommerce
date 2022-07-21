@@ -396,7 +396,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
 
         if ( isset( $_POST[ $this->id . '_payment_component_errors' ] ) && '' !== $_POST[ $this->id . '_payment_component_errors' ] ) {
             foreach ( $_POST[ $this->id . '_payment_component_errors' ] as $payment_component_error ) {
-                wc_add_notice( $payment_component_error, 'error' );
+                wc_add_notice( sanitize_text_field( $payment_component_error ), 'error' );
             }
         }
 

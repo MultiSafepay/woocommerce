@@ -314,7 +314,7 @@ class SettingsController {
             if ( ! $has_api_key ) {
                 wp_die();
             }
-            $is_gateway_enabled = $this->is_gateway_enabled( $_POST['gateway_id'] );
+            $is_gateway_enabled = $this->is_gateway_enabled( sanitize_key( $_POST['gateway_id'] ) );
             if ( ! $is_gateway_enabled ) {
                 wp_die();
             }
@@ -342,7 +342,7 @@ class SettingsController {
                 wp_send_json_error( 'needs_setup' );
                 wp_die();
             }
-            $is_gateway_enabled = $this->is_gateway_enabled( $_POST['gateway_id'] );
+            $is_gateway_enabled = $this->is_gateway_enabled( sanitize_key( $_POST['gateway_id'] ) );
             if ( ! $is_gateway_enabled ) {
                 wp_send_json_error( 'not_available' );
                 wp_die();

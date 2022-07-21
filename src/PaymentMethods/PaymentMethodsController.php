@@ -130,7 +130,7 @@ class PaymentMethodsController {
                 }
             }
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-            ( new PaymentMethodCallback( (string) $_GET['transactionid'] ) )->process_callback();
+            ( new PaymentMethodCallback( sanitize_text_field( (string) $_GET['transactionid'] ) ) )->process_callback();
         }
     }
 
@@ -148,7 +148,7 @@ class PaymentMethodsController {
             }
         }
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        ( new PaymentMethodCallback( (string) $_GET['transactionid'] ) )->process_callback();
+        ( new PaymentMethodCallback( sanitize_text_field( (string) $_GET['transactionid'] ) ) )->process_callback();
     }
 
 
@@ -159,8 +159,15 @@ class PaymentMethodsController {
      * @return void
      */
     public function process_post_notification( WP_REST_Request $request ): void {
+        $transactionid = $request->get_param( 'transactionid' );
+
+        if ( ! $request->sanitize_params() ) {
+            Logger::log_info( 'Notification for transactionid . ' . $transactionid . ' has been received but could not be sanitized' );
+            header( 'Content-type: text/plain' );
+            die( 'OK' );
+        }
+
         $timestamp           = $request->get_param( 'timestamp' );
-        $transactionid       = $request->get_param( 'transactionid' );
         $auth                = $request->get_header( 'auth' );
         $body                = $request->get_body();
         $api_key             = ( new SdkService() )->get_api_key();
@@ -331,8 +338,8 @@ class PaymentMethodsController {
                 ),
                 'ajax_url'   => admin_url( 'admin-ajax.php' ),
                 'nonce'      => wp_create_nonce( 'credit_card_payment_component_arguments_nonce' ),
-                'gateway_id' => $_POST['gateway_id'],
-                'gateway'    => $_POST['gateway'],
+                'gateway_id' => sanitize_key( $_POST['gateway_id'] ),
+                'gateway'    => sanitize_text_field( $_POST['gateway'] ),
 
             );
             wp_send_json( $credit_card_payment_component_arguments );

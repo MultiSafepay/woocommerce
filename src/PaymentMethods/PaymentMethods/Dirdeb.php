@@ -96,19 +96,19 @@ class Dirdeb extends BasePaymentMethod {
         $gateway_info = new Account();
 
         if ( isset( $_POST[ $this->id . '_account_holder_iban' ] ) ) {
-            $gateway_info->addAccountId( new IbanNumber( $_POST[ $this->id . '_account_holder_iban' ] ) );
+            $gateway_info->addAccountId( new IbanNumber( sanitize_text_field( $_POST[ $this->id . '_account_holder_iban' ] ) ) );
         }
 
         if ( isset( $_POST[ $this->id . '_account_holder_iban' ] ) ) {
-            $gateway_info->addAccountHolderIban( new IbanNumber( $_POST[ $this->id . '_account_holder_iban' ] ) );
+            $gateway_info->addAccountHolderIban( new IbanNumber( sanitize_text_field( $_POST[ $this->id . '_account_holder_iban' ] ) ) );
         }
 
         if ( isset( $_POST[ $this->id . '_emandate' ] ) ) {
-            $gateway_info->addEmanDate( $_POST[ $this->id . '_emandate' ] );
+            $gateway_info->addEmanDate( sanitize_text_field( $_POST[ $this->id . '_emandate' ] ) );
         }
 
         if ( isset( $_POST[ $this->id . '_account_holder_name' ] ) ) {
-            $gateway_info->addAccountHolderName( $_POST[ $this->id . '_account_holder_name' ] );
+            $gateway_info->addAccountHolderName( sanitize_text_field( $_POST[ $this->id . '_account_holder_name' ] ) );
         }
 
         return $gateway_info;

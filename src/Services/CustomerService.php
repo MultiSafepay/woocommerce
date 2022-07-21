@@ -107,7 +107,7 @@ class CustomerService {
         }
 
         if ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-            $customer_details->addForwardedIp( new IpAddress( $_SERVER['HTTP_X_FORWARDED_FOR'] ) );
+            $customer_details->addForwardedIp( new IpAddress( sanitize_text_field( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) );
         }
 
         if ( ! empty( $user_agent ) ) {
