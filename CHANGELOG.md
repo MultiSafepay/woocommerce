@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.17.1
+Release date: Jul 22nd, 2022
+
+### Changed
++ PLGWOOS-817: Improvement in the escaping of the outputs of the settings page
+
+***
+
 ## 4.17.0
 Release date: Jul 21st, 2022
 
