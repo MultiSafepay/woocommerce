@@ -39,7 +39,7 @@ class SettingsFieldsDisplay {
         if ( ! $value ) {
             return $field['default'];
         }
-        return $value;
+        return esc_html( $value );
     }
 
     /**

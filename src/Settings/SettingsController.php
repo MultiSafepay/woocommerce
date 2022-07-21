@@ -279,7 +279,7 @@ class SettingsController {
         $settings_fields = new SettingsFields();
         $settings        = $settings_fields->get_settings();
         if ( ! empty( $settings[ $args['id'] ]['intro'] ) ) {
-            esc_html( (string) printf( '<p>%s</p>', $settings[ $args['id'] ]['intro'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            esc_html( (string) printf( '<p>%s</p>', esc_html( $settings[ $args['id'] ]['intro'] ) ) );
         }
     }
 
