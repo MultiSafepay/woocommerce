@@ -8,7 +8,6 @@ use MultiSafepay\WooCommerce\Settings\SettingsController;
 use MultiSafepay\WooCommerce\Utils\CustomLinks;
 use MultiSafepay\WooCommerce\Utils\Internationalization;
 use MultiSafepay\WooCommerce\Utils\Loader;
-use MultiSafepay\WooCommerce\Utils\UpgradeNotices;
 
 /**
  * This class is the core of the plugin.
@@ -40,7 +39,6 @@ class Main {
         $this->add_custom_links_in_plugin_list();
         $this->define_settings_hooks();
 		$this->define_payment_methods_hooks();
-        $this->set_upgrade_notice_messages();
 	}
 
 	/**
@@ -170,20 +168,6 @@ class Main {
      */
     public function get_loader(): Loader {
         return $this->loader;
-    }
-
-    /**
-     * Show the upgrade notice message in plugin list
-     *
-     * phpcs:disable ObjectCalisthenics.ControlStructures.NoElse.ObjectCalisthenics\Sniffs\ControlStructures\NoElseSniff
-     */
-    public function set_upgrade_notice_messages() {
-        $upgrade_notices = new UpgradeNotices();
-        if ( is_multisite() ) {
-            $this->loader->add_action( 'after_plugin_row_multisafepay/multisafepay.php', $upgrade_notices, 'show_multisite_upgrade_notice', 10, 2 );
-        } else {
-            $this->loader->add_action( 'in_plugin_update_message-multisafepay/multisafepay.php', $upgrade_notices, 'show_non_multisite_upgrade_notice', 10, 2 );
-        }
     }
 
 }
