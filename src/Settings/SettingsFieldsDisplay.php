@@ -2,6 +2,8 @@
 
 namespace MultiSafepay\WooCommerce\Settings;
 
+use MultiSafepay\WooCommerce\Utils\EscapeUtil;
+
 /**
  * The display fields settings fields
  *
@@ -119,7 +121,8 @@ class SettingsFieldsDisplay {
                 $html .= $this->render_checkbox_field( $this->field );
                 break;
         }
-        echo $html; // phpcs:ignore Standard.Category.SniffName.ErrorCode, WordPress.Security.EscapeOutput.OutputNotEscaped
+
+        echo wp_kses( $html, EscapeUtil::get_allowed_html_tags() );
     }
 
 }
