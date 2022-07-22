@@ -14,3 +14,6 @@ parameters:
         - '#Method [a-zA-Z0-9\\_]+::create_[a-zA-Z0-9\\_]+_item\(\) should return [a-zA-Z0-9\\_]+Item but returns [a-zA-Z0-9\\_]+CartItem.#'
         - '#Call to an undefined method [a-zA-Z0-9\\_]+::addLocale\(\).#'
         - '#Variable \$transaction might not be defined.#'
+        - '#Property WC_Payment_Gateway::\$max_amount \(int\) does not accept string.#'
+        - '#Property WC_Payment_Gateway::\$countries \(array\) does not accept string.#'
+        - '#Property [a-zA-Z0-9\\_]+::\$payment_component \(bool\) does not accept string.#'

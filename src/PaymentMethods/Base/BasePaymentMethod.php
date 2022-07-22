@@ -115,11 +115,11 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         $this->enabled              = $this->get_option( 'enabled', 'no' );
         $this->title                = $this->get_option( 'title', $this->get_method_title() );
         $this->description          = $this->get_option( 'description' );
-        $this->max_amount           = (int) $this->get_option( 'max_amount' );
+        $this->max_amount           = $this->get_option( 'max_amount' );
         $this->min_amount           = $this->get_option( 'min_amount' );
-        $this->countries            = (array) $this->get_option( 'countries' );
+        $this->countries            = $this->get_option( 'countries' );
         $this->initial_order_status = $this->get_option( 'initial_order_status', false );
-        $this->payment_component    = (bool) $this->get_option( 'payment_component', false );
+        $this->payment_component    = $this->get_option( 'payment_component', false );
         $this->errors               = array();
 
         add_action(
