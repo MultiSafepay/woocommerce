@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 4.17.2
+Release date: Jul 22nd, 2022
+
+### Fixed
++ PLGWOOS-825: Fix an issue in which some payment methods are not being shown in the checkout, because of the setting field country selector is assuming the wrong value in some cases
+
+***
+
 ## 4.17.1
 Release date: Jul 22nd, 2022
 
