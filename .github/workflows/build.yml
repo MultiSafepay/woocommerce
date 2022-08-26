@@ -42,10 +42,10 @@ jobs:
         with:
           repo: 'woocommerce/woocommerce'
           version: 'tags/${{ steps.latestrelease.outputs.releasetag }}'
-          file: 'woocommerce.${{ steps.latestrelease.outputs.releasetag }}.zip'
+          file: 'woocommerce.zip'
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Unzip WooCommerce
-        run: unzip woocommerce.${{ steps.latestrelease.outputs.releasetag }}.zip
+        run: unzip woocommerce.zip
       - name: Install composer for plugin
         working-directory: multisafepay
         run: composer install --dev
