@@ -1,13 +1,12 @@
 # Changelog
-All notable changes to this project will be documented in this file.
+All notable changes to this project are documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic versioning](https://semver.org/spec/v2.0.0.html).
 
 ***
 
 ## 4.17.2
-Release date: Jul 22nd, 2022
+Release date: Jul 22, 2022
 
 ### Fixed
 + PLGWOOS-825: Fix an issue in which some payment methods are not being shown in the checkout, because of the setting field country selector is assuming the wrong value in some cases
@@ -15,7 +14,7 @@ Release date: Jul 22nd, 2022
 ***
 
 ## 4.17.1
-Release date: Jul 22nd, 2022
+Release date: Jul 22, 2022
 
 ### Changed
 + PLGWOOS-817: Improvement in the escaping of the outputs of the settings page
@@ -23,7 +22,7 @@ Release date: Jul 22nd, 2022
 ***
 
 ## 4.17.0
-Release date: Jul 21st, 2022
+Release date: Jul 21, 2022
 
 ### Changed
 + PLGWOOS-817: Improvement in sanitization and validation of the inputs, and escaping the outputs
@@ -35,7 +34,7 @@ Release date: Jul 21st, 2022
 ***
 
 ## 4.16.0
-Release date: Jul 20th, 2022
+Release date: Jul 20, 2022
 
 ### Added
 + DAVAMS-490: Add MyBank payment method
@@ -46,7 +45,7 @@ Release date: Jul 20th, 2022
 ***
 
 ## 4.15.0
-Release date: May 25th, 2022
+Release date: May 25, 2022
 
 ### Added
 + DAVAMS-470: Add terms and conditions checkbox to AfterPay
@@ -57,7 +56,7 @@ Release date: May 25th, 2022
 ***
 
 ## 4.14.0
-Release date: May 19th, 2022
+Release date: May 19, 2022
 
 ### Added
 + DAVAMS-476: Add Alipay+
@@ -69,7 +68,7 @@ Release date: May 19th, 2022
 ***
 
 ## 4.13.1
-Release date: Mar 23th, 2022
+Release date: Mar 23, 2022
 
 ### Added
 + PLGWOOS-792: Declare support for WordPress 5.9.2 and WooCommerce 6.3.1
@@ -81,7 +80,7 @@ Release date: Mar 23th, 2022
 ***
 
 ## 4.13.0
-Release date: Feb 1st, 2022
+Release date: Feb 1, 2022
 
 ### Added
 + PLGWOOS-770: Add payment component support for payment methods: Visa, Mastercard, Maestro and American Express
@@ -91,7 +90,7 @@ Release date: Feb 1st, 2022
 ***
 
 ## 4.12.0
-Release date: Jan 13th, 2022
+Release date: Jan 13, 2022
 
 ### Added
 + PLGWOOS-769: Add new filter 'multisafepay_merchant_item_id' to allow third party developers overwrite the merchant_item_id property within the ShoppingCart object 
@@ -103,7 +102,7 @@ Release date: Jan 13th, 2022
 ***
 
 ## 4.11.0
-Release date: Jan 4th, 2022
+Release date: Jan 4, 2022
 
 ### Added
 + PLGWOOS-745: Add Payment Component
@@ -118,7 +117,7 @@ Release date: Jan 4th, 2022
 ***
 
 ## 4.10.0
-Release date: Dec 13th, 2021
+Release date: Dec 13, 2021
 
 ### Added
 + PLGWOOS-748: Add PHP-SDK version to system report
@@ -137,7 +136,7 @@ Release date: Dec 13th, 2021
 ***
 
 ## 4.9.0
-Release date: Oct 18th, 2021
+Release date: Oct 18, 2021
 
 ### Added
 + PLGWOOS-715: Add 2 "Generic Gateways" which include a flexible gateway code that allow any merchant to connect to almost every payment method we offer.
@@ -154,7 +153,7 @@ Release date: Oct 18th, 2021
 ***
 
 ## 4.8.3
-Release date: Sep 6th, 2021
+Release date: Sep 6, 2021
 
 ### Fixed
 + PLGWOOS-737: Fix error related with refunds by updating the PHP-SDK to 5.2.1
@@ -162,7 +161,7 @@ Release date: Sep 6th, 2021
 ***
 
 ## 4.8.2
-Release date: Sep 2nd, 2021
+Release date: Sep 2, 2021
 
 ### Added
 + PLGWOOS-730: Declare support for WooCommerce 5.6.0
@@ -178,7 +177,7 @@ Release date: Aug 9th, 2021
 ***
 
 ## 4.8.0
-Release date: Aug 4th, 2021
+Release date: Aug 4, 2021
 
 ### Added
 + PLGWOOS-723: Declare support for WooCommerce 5.5.2 and WordPress 5.8
@@ -190,13 +189,13 @@ Release date: Aug 4th, 2021
 ***
 
 ## 4.7.0
-Release date: Jun 23th, 2021
+Release date: Jun 23, 2021
 
 ### Added
 + PLGWOOS-706: Declare support for WooCommerce 5.4.1
 
 ### Changed
-+ PLGWOOS-672: Change notification method from GET to [POST](https://docs.multisafepay.com/faq/api/notification-url/#get-vs-post-notification) by default
++ PLGWOOS-672: Change notification method from GET to [POST](https://docs.multisafepay.com/docs/handle-notifications) by default
 
 ### Fixed
 + PLGWOOS-704: Log errors in the MultiSafepay log file, when processing notifications.
@@ -204,7 +203,7 @@ Release date: Jun 23th, 2021
 ***
 
 ## 4.6.0
-Release date: May 19th, 2021
+Release date: May 19, 2021
 
 ### Added
 + PLGWOOS-625: Add log section in MultiSafepay settings page
@@ -220,7 +219,7 @@ Release date: May 19th, 2021
 ***
 
 ## 4.5.1
-Release date: Apr 7th, 2021
+Release date: Apr 7, 2021
 
 ### Fixed
 + PLGWOOS-661: Fix payment methods ids to match list of gateway lists keys, which was producing an error to process notification for Sofort payments
@@ -229,7 +228,7 @@ Release date: Apr 7th, 2021
 ***
 
 ## 4.5.0
-Release date: Mar 31th, 2021
+Release date: Mar 31, 2021
 
 ### Fixed
 + PLGWOOS-659: Fix initialization of the plugin on multisite environments in which WooCommerce has been activate network wide
@@ -240,7 +239,7 @@ Release date: Mar 31th, 2021
 ***
 
 ## 4.4.1
-Release date: Mar 25th, 2021
+Release date: Mar 25, 2021
 
 ### Fixed
 + PLGWOOS-653: Fix overwriting initial order status when transaction is initialized
@@ -248,7 +247,7 @@ Release date: Mar 25th, 2021
 ***
 
 ## 4.4.0
-Release date: Mar 23th, 2021
+Release date: Mar 23, 2021
 
 ### Fixed
 + PLGWOOS-648: Return 0 as tax rate, if WooCommerce taxes are disabled but tax rules are registered
@@ -262,7 +261,7 @@ Release date: Mar 23th, 2021
 ***
 
 ## 4.3.0
-Release date: Mar 18th, 2021
+Release date: Mar 18, 2021
 
 ### Fixed
 + PLGWOOS-626: Fix order not being cancelled when customer cancels the order
@@ -281,7 +280,7 @@ Release date: Mar 18th, 2021
 ***
 
 ## 4.2.2
-Release date: Mar 16th, 2021
+Release date: Mar 16, 2021
 
 ### Fixed
 + PLGWOOS-632: Fix undefined method get_the_user_ip
@@ -290,7 +289,7 @@ Release date: Mar 16th, 2021
 ***
 
 ## 4.2.1
-Release date: Mar 11th, 2021
+Release date: Mar 11, 2021
 
 ### Fixed
 + PLGWOOS-613: Fix error related with multiple forwarded IPs by updating the PHP-SDK to 5.0.1
@@ -304,7 +303,7 @@ Release date: Mar 11th, 2021
 ***
 
 ## 4.2.0
-Release date: Mar 9th, 2021
+Release date: Mar 9, 2021
 
 ### Changed
 + PLGWOOS-602: Move invoice and shipped settings field from order status tab to options tab
@@ -325,7 +324,7 @@ Release date: Mar 9th, 2021
 ***
 
 ## 4.1.8
-Release date: Mar 5th, 2021
+Release date: Mar 5, 2021
 
 ### Changed
 + PLGWOOS-593: Register PSP ID in WooCommerce order using order complete payment method 
@@ -337,7 +336,7 @@ Release date: Mar 5th, 2021
 ***
 
 ## 4.1.7
-Release date: Mar 3th, 2021
+Release date: Mar 3, 2021
 
 ### Changed
 + PLGWOOS-579: Remove warning message on validation, when enabling CREDITCARD gateway
@@ -349,7 +348,7 @@ Release date: Mar 3th, 2021
 ***
 
 ## 4.1.6
-Release date: Mar 2nd, 2021
+Release date: Mar 2, 2021
 
 ### Added
 + PLGWOOS-574: Add locale support
@@ -364,7 +363,7 @@ Release date: Mar 2nd, 2021
 ***
 
 ## 4.1.5
-Release date: Feb 24th, 2021
+Release date: Feb 24, 2021
 
 ### Fixed
 + PLGWOOS-552: Fix product item price with discounts introduced by third party plugins (#252)
@@ -372,7 +371,7 @@ Release date: Feb 24th, 2021
 ***
 
 ## 4.1.4
-Release date: Feb 23th, 2021
+Release date: Feb 23, 2021
 
 ### Fixed
 + PLGWOOS-563: Remove some nonce validations to support custom checkouts forms (#249)
@@ -385,7 +384,7 @@ Release date: Feb 23th, 2021
 ***
 
 ## 4.1.3
-Release date: Feb 23th, 2021
+Release date: Feb 23, 2021
 
 ### Fixed
 + PLGWOOS-549: Support custom order numbers generated by third party plugins in notification method
@@ -394,7 +393,7 @@ Release date: Feb 23th, 2021
 ***
 
 ## 4.1.2
-Release date: Feb 19th, 2021
+Release date: Feb 19, 2021
 
 ### Fixed
 + PLGWOOS-548: Fix iDEAL gateway if no issuer selected in checkout
@@ -402,7 +401,7 @@ Release date: Feb 19th, 2021
 ***
 
 ## 4.1.1
-Release date: Feb 18th, 2021
+Release date: Feb 18, 2021
 
 ### Changed
 + PLGWOOS-545: Remove API Key validation
@@ -410,7 +409,7 @@ Release date: Feb 18th, 2021
 ***
 
 ## 4.1.0
-Release date: Feb 17th, 2021
+Release date: Feb 17, 2021
 
 ### Added
 + PLGWOOS-512: Add support for tokenization.
@@ -437,7 +436,7 @@ Release date: Feb 17th, 2021
 ***
 
 ## 4.0.0 [internal release]
-Release date: Feb 12th, 2021
+Release date: Feb 12, 2021
 
 ### Added
 + Full and partial refunds for non billing suite payment methods
@@ -461,7 +460,7 @@ Release date: Feb 12th, 2021
 ***
 
 ## 3.8.0
-Release date: Oct 29th, 2020
+Release date: Oct 29, 2020
 
 ### Added
 + PLGWOOS-421: Add Good4fun Giftcard
@@ -474,7 +473,7 @@ Release date: Oct 29th, 2020
 ***
 
 ## 3.7.0
-Release date: Aug 14th, 2020
+Release date: Aug 14, 2020
 
 ### Added
 + DAVAMS-237: Add in3 payment method
@@ -482,7 +481,7 @@ Release date: Aug 14th, 2020
 ***
 
 ## 3.6.1
-Release date: Aug 5th, 2020
+Release date: Aug 5, 2020
 
 ### Fixed
 + PLGWOOS-404: Fix setting order to shipped when DHL is used
@@ -490,7 +489,7 @@ Release date: Aug 5th, 2020
 ***
 
 ## 3.6.0
-Release date: Jul 22nd, 2020
+Release date: Jul 22, 2020
 
 ### Added
 + DAVAMS-266: Add CBC payment method
@@ -502,7 +501,7 @@ Release date: Jul 22nd, 2020
 ***
 
 ## 3.5.2
-Release date: Jun 25th, 2020
+Release date: Jun 25, 2020
 
 ### Fixed
 + PLGWOOS-401: Fix rounding issues in shopping cart
@@ -512,7 +511,7 @@ Release date: Jun 25th, 2020
 ***
 
 ## 3.5.1
-Release date: Apr 24th, 2020
+Release date: Apr 24, 2020
 
 ### Fixed
 + PLGWOOS-395: Javascript error when Apple Pay is disabled
@@ -531,7 +530,7 @@ Release date: Apr 24th, 2020
 ***
 
 ## 3.5.0
-Release date: Mar 30th, 2020
+Release date: Mar 30, 2020
 
 ### Added
 + PLGWOOS-363: Add Apple Pay
@@ -540,7 +539,7 @@ Release date: Mar 30th, 2020
 ***
 
 ## 3.4.0
-Release date: Jan 6th, 2020
+Release date: Jan 6, 2020
 
 ### Added
 + PLGWOOS-287: Add maximum amount restriction for credit cards
@@ -556,7 +555,7 @@ Release date: Jan 6th, 2020
 ***
 
 ## 3.3.0
-Release date: Dec 13th, 2019
+Release date: Dec 13, 2019
 
 ### Added
 + PLGWOOS-291: Add IP validation when WooCommerce returns multiple IP addresses
@@ -581,7 +580,7 @@ Release date: Dec 13th, 2019
 ***
 
 ## 3.2.0
-Release date: Jul 6th, 2018
+Release date: Jul 6, 2018
 
 ## Improvements ##
 
@@ -609,7 +608,7 @@ Release date: Jul 6th, 2018
 ***
 
 ## 3.1.0
-Release date: Jun 15th, 2018
+Release date: Jun 15, 2018
 
 ## Improvements ##
 
@@ -626,7 +625,7 @@ Release date: Jun 15th, 2018
 ***
 
 ## 3.0.4
-Release date: Feb 2nd, 2018
+Release date: Feb 2, 2018
 
 ## Improvements ##
 
@@ -659,7 +658,7 @@ Release date: Feb 2nd, 2018
 ***
 
 ## 3.0.3
-Release date: Okt 10th, 2017
+Release date: Oct 10, 2017
 
 ## Fixes ##
 
@@ -669,7 +668,7 @@ Release date: Okt 10th, 2017
 ***
 
 ## 3.0.2
-Release date: Okt 10th, 2017
+Release date: Oct 10, 2017
 
 ## Improvements ##
 
@@ -696,7 +695,7 @@ Release date: Okt 10th, 2017
 ***
 
 ## 3.0.0
-Release date: April 5th, 2017
+Release date: April 5, 2017
 
 ## Improvements ##
 
@@ -751,7 +750,7 @@ Release date: July 14th, 2016
 ***
 
 ## 2.2.5
-Release date: June 24th, 2016
+Release date: June 24, 2016
 
 ## Improvements ##
 
@@ -769,7 +768,7 @@ Release date: June 24th, 2016
 ***
 
 ## 2.2.4
-Release date: March 8th, 2016
+Release date: March 8, 2016
 
 ## Improvements ##
 
