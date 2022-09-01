@@ -4,35 +4,56 @@
 
 # MultiSafepay plugin for WooCommerce
 
-Easily integrate MultiSafepay payment solutions into your WooCommerce webshop with the free and completely new MultiSafepay WooCommerce plugin.
+Easily integrate MultiSafepay payment solutions into your WooCommerce webshop with our free plugin.
 
-[![Latest Stable Version](https://img.shields.io/github/release/multisafepay/woocommerce.svg)](https://github.com/MultiSafepay/WooCommerce)
+[![Latest stable version](https://img.shields.io/github/release/multisafepay/woocommerce.svg)](https://github.com/MultiSafepay/WooCommerce)
 
-## About MultiSafepay ##
-MultiSafepay is a collecting payment service provider which means we take care of the agreements, technical details and payment collection required for each payment method. You can start selling online today and manage all your transactions from one place.
-## Supported Payment Methods ##
-The supported Payment Methods & Giftcards for this plugin can be found over here: [Payment Methods & Giftcards](https://docs.multisafepay.com/integrations/plugins/woocommerce/faq/available-payment-methods-woocommerce/)
+## About MultiSafepay
 
-## Requirements
-- To use the plugin you need a MultiSafepay account. You can create a test account on https://testmerchant.multisafepay.com/signup
-- WooCommerce 5.0.0
-- PHP 7.2
+MultiSafepay is a collecting payment service provider, which means we take care of electronic contracts, technical details, and payment collection for each payment method. You can start selling online today and manage all your transactions in one place.
 
-## Installation through Wordpress backend
-1. Navigate to the backend of your webshop and navigate to _Plugins_ -> _Add New_.
-2. Enter MultiSafepay in the search field and then click on _Install Now_.
-3. After installation finish, click on _Activate_.
+## Supported payment methods
 
-## Configuration
-1. Navigate to _WooCommerce_ -> _MultiSafepay Settings_
-2. Navigate to _Account_ tab, set the API key. Information about the API key can be found on our [API key page](/tools/multisafepay-control/get-your-api-key)
-3. Navigate to _Order Status_ tab and confirm the match between WooCommerce order statuses and MultiSafepay order statuses clicking on "Save Changes" button.
-4. Navigate to _Options_ tab and confirm the settings clicking on "Save Changes" button.
-5. Navigate to _WooCommerce_ -> _Settings_ -> _Payments_. Enable the payment methods you would like to offer, check and confirm the settings for those been enable.
+See MultiSafepay Docs – [WooCommerce](https://docs.multisafepay.com/docs/woocommerce).
 
+## Prerequisites
+
+- You will need a [MultiSafepay account](https://testmerchant.multisafepay.com/signup). Consider a test account first.
+- WooCommerce 5.0.0 or higher
+- PHP 7.3 or 7.4
+
+## How to install
+
+### Wordpress installation
+
+1. Sign in to your WooCommerce backend.
+2. Go to **Plugins** > **Add new**.
+3. Search for **MultiSafepay**.
+4. For the **MultiSafepay plugin for WooCommerce**, click **Install now**.
+
+### Manual installation
+
+1. Click the **Download** button above.
+2. Sign in to your WooCommerce backend.
+3. Go to **Plugins** > **Add new**.
+4. Click **Browse file**.
+5. Upload the Plugin_WooCommerce_x.x.x.zip file.
+
+## How to configure
+
+1. Sign in to your WooCommerce backend.
+2. Go to **WooCommerce** > **MultiSafepay settings**.
+3. On the **Account** tab, enter your [API key](https://docs.multisafepay.com/docs/sites#site-id-api-key-and-security-code).
+4. On the **Order status** tab, confirm the match between WooCommerce order statuses and MultiSafepay order statuses, and then click Save changes.
+5. On the Options tab, confirm your settings, and then click **Save changes**.
+6. Go to **WooCommerce** > **Settings** > **Payments**.
+7. Enable the relevant payment methods and confirm the settings.
 
 ## Support
-You can create issues on our repository. If you need any additional help or support, please contact <a href="mailto:integration@multisafepay.com">integration@multisafepay.com</a>
+
+- Create an issue on this repository.
+- Email <a href="mailto:integration@multisafepay.com">integration@multisafepay.com</a>
 
 ## Want to be part of the team?
-Are you a developer interested in working at MultiSafepay? [View](https://www.multisafepay.com/careers/#jobopenings) our job openings and feel free to get in touch with us.
+
+Are you a developer interested in working at MultiSafepay? Check out our [job openings](https://www.multisafepay.com/careers/#jobopenings) and feel free to get in touch!
