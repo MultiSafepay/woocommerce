@@ -2,11 +2,12 @@
 
 namespace MultiSafepay\WooCommerce\Client;
 
+use MultiSafepay\WooCommerce\Utils\Logger;
 use Nyholm\Psr7\Response;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 
 /**
  * Class MultiSafepayClient
@@ -19,13 +20,24 @@ class MultiSafepayClient implements ClientInterface {
      *
      * @param RequestInterface $request
      * @return ResponseInterface
+     * @throws \Exception
      */
     public function sendRequest( RequestInterface $request ): ResponseInterface {
         $request->getBody()->rewind();
-        $args          = $this->get_headers_from_request_interface( $request );
-        $response_data = wp_remote_request( $request->getUri(), $args );
-        $body          = wp_remote_retrieve_body( $response_data );
-        $response      = new Response( $response_data['response']['code'], $response_data['headers']->getAll(), $body, '1.1', null );
+        $args = $this->get_headers_from_request_interface( $request );
+
+        try {
+            $response_data = wp_remote_request( $request->getUri(), $args );
+            if ( is_wp_error( $response_data ) ) {
+                throw new \Exception( $response_data->get_error_message() );
+            }
+        } catch ( \Exception $exception ) {
+            Logger::log_error( 'Error when process request via MultiSafepayClient: ' . $exception->getMessage() );
+            throw new \Exception( $exception->getMessage() );
+        }
+
+        $body     = wp_remote_retrieve_body( $response_data );
+        $response = new Response( $response_data['response']['code'], $response_data['headers']->getAll(), $body, '1.1', null );
         $response->getBody()->rewind();
         return $response;
     }
