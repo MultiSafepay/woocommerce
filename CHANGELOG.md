@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 5.0.0
+Release Date: Sep 1st, 2022
+
+### Added
++ PLGWOOS-829: Improvement over the error handling in MultiSafepayClient
+
+### Changed
++ PLGWOOS-827: Drop support for PHP 7.2
+
+***
+
 ## 4.17.2
 Release date: Jul 22nd, 2022
 
