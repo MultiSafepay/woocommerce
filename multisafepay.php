@@ -13,8 +13,8 @@
  * Requires at least:       5.0
  * Tested up to:            6.0.1
  * WC requires at least:    4.2.0
- * WC tested up to:         6.7.0
- * Requires PHP:            7.2
+ * WC tested up to:         6.8.2
+ * Requires PHP:            7.3
  * Text Domain:             multisafepay
  * Domain Path:             /languages
  */
