@@ -43,6 +43,7 @@ use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Generic;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Generic2;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Generic3;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Giropay;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\GooglePay;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Ideal;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\IdealQr;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\In3;
@@ -90,6 +91,7 @@ class Gateways {
         'multisafepay_generic_2'         => Generic2::class,
         'multisafepay_generic_3'         => Generic3::class,
         'multisafepay_giropay'           => Giropay::class,
+        'multisafepay_googlepay'         => GooglePay::class,
         'multisafepay_ideal'             => Ideal::class,
         'multisafepay_idealqr'           => IdealQr::class,
         'multisafepay_in3'               => In3::class,

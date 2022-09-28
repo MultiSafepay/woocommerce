@@ -69,6 +69,11 @@
         <exclude-pattern>*/src/PaymentMethods/BasePaymentMethod.php</exclude-pattern>
     </rule>
 
+    <!-- Exclude multisafepay-google-pay.js -->
+    <rule ref="PEAR.Functions.FunctionCallSignature.Indent">
+        <exclude-pattern>*/assets/public/js/multisafepay-google-pay.js</exclude-pattern>
+    </rule>
+
     <!-- -->
     <rule ref="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents">
         <exclude-pattern>*/templates/partials/multisafepay-settings-logs-display.php</exclude-pattern>
