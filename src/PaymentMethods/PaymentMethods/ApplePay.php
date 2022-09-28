@@ -49,7 +49,7 @@ class ApplePay extends BasePaymentMethod {
         $method_description = sprintf(
             /* translators: %2$: The payment method title */
             __( 'Apple Pay is a digital wallet service allowing seamless NFC payments for consumers worldwide. <br />Read more about <a href="%1$s" target="_blank">%2$s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay' ),
-            'https://docs.multisafepay.com/payment-methods/wallet/applepay/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
+            'https://docs.multisafepay.com',
             $this->get_payment_method_title()
         );
         return $method_description;

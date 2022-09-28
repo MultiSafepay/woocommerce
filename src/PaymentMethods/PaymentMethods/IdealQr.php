@@ -43,7 +43,7 @@ class IdealQr extends BasePaymentMethod {
         $method_description = sprintf(
             /* translators: %2$: The payment method title */
             __( 'Easily receive payments with a simple scan of an iDEAL QR code. <br />Read more about <a href="%1$s" target="_blank">%2$s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay' ),
-            'https://docs.multisafepay.com/payment-methods/ideal/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
+            'https://docs.multisafepay.com',
             $this->get_payment_method_title()
         );
         return $method_description;

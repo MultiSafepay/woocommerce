@@ -52,7 +52,7 @@ class MyBank extends BasePaymentMethod {
         $method_description = sprintf(
         /* translators: %2$: The payment method title */
             __( 'Leading e-authorization solution in Italy for instant bank transfers. <br />Read more about <a href="%1$s" target="_blank">%2$s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay' ),
-            'https://docs.multisafepay.com/docs/mybank',
+            'https://docs.multisafepay.com',
             $this->get_payment_method_title()
         );
         return $method_description;

@@ -21,8 +21,8 @@ class CustomLinks {
     public function get_links( array $links ): array {
         $custom_links = array(
             '<a href="' . admin_url( 'admin.php?page=multisafepay-settings' ) . '">' . __( 'Settings', 'multisafepay' ) . '</a>',
-            '<a target="_blank" href="https://docs.multisafepay.com/integrations/plugins/woocommerce/">' . __( 'Docs', 'multisafepay' ) . '</a>',
-            '<a target="_blank" href="https://docs.multisafepay.com/integrations/plugins/woocommerce/#introduction">' . __( 'Support', 'multisafepay' ) . '</a>',
+            '<a target="_blank" href="https://docs.multisafepay.com/docs/woocommerce">' . __( 'Docs', 'multisafepay' ) . '</a>',
+            '<a target="_blank" href="https://docs.multisafepay.com/docs/woocommerce">' . __( 'Support', 'multisafepay' ) . '</a>',
         );
         return array_merge( $custom_links, $links );
     }

@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name:             MultiSafepay
- * Plugin URI:              https://docs.multisafepay.com/integrations/woocommerce/
+ * Plugin URI:              https://docs.multisafepay.com/docs/woocommerce
  * Description:             MultiSafepay Payment Plugin
  * Version:                 5.0.0
  * Author:                  MultiSafepay

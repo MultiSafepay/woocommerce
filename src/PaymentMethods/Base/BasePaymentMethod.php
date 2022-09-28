@@ -251,7 +251,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
                 'title'       => __( 'Payment Components', 'multisafepay' ),
                 'label'       => 'Enable Payment Component in ' . $this->get_method_title() . ' Gateway',
                 'type'        => 'checkbox',
-                'description' => __( 'More information about Payment Components on <a href="https://docs.multisafepay.com/payment-components/" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
+                'description' => __( 'More information about Payment Components on <a href="https://docs.multisafepay.com/docs/payment-components" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
                 'default'     => 'no',
             );
         }
@@ -261,7 +261,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
                 'title'       => __( 'Tokenization', 'multisafepay' ),
                 'label'       => 'Enable Tokenization in ' . $this->get_method_title() . ' Gateway within the Payment Component',
                 'type'        => 'checkbox',
-                'description' => __( 'Tokenization only applies when payment component is enabled. More information about Tokenization on <a href="https://docs.multisafepay.com/features/recurring-payments/" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
+                'description' => __( 'Tokenization only applies when payment component is enabled. More information about Tokenization on <a href="https://docs.multisafepay.com/docs/recurring-payments" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
                 'default'     => get_option( 'multisafepay_tokenization', 'no' ),
             );
         }

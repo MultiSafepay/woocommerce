@@ -114,7 +114,7 @@ class SettingsFields {
                 array(
                     'id'           => 'multisafepay_ga',
                     'label'        => __( 'Google Analytics', 'multisafepay' ),
-                    'description'  => __( 'Google Analytics Universal Account ID. Format: UA-XXXXXXXXX. More information about Google Analytics tracking via our API on <a href="https://docs.multisafepay.com/developer/api/google-analytics-tracking/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
+                    'description'  => __( 'Google Analytics Universal Account ID. Format: UA-XXXXXXXXX. More information about Google Analytics tracking via our API on <a href="https://docs.multisafepay.com/docs/google-analytics" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
                     'type'         => 'text',
                     'default'      => '',
                     'placeholder'  => __( 'Google Analytics', 'multisafepay' ),
@@ -203,7 +203,7 @@ class SettingsFields {
                 array(
                     'id'           => 'multisafepay_second_chance',
                     'label'        => __( 'Second Chance', 'multisafepay' ),
-                    'description'  => __( 'More information about Second Chance on <a href="https://docs.multisafepay.com/features/second-chance/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
+                    'description'  => __( 'More information about Second Chance on <a href="https://docs.multisafepay.com/docs/second-chance" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
                     'type'         => 'checkbox',
                     'default'      => false,
                     'placeholder'  => __( 'Second Chance', 'multisafepay' ),

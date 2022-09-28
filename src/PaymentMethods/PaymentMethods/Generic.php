@@ -107,7 +107,7 @@ class Generic extends BasePaymentMethod {
                 'This generic payment method gives you the option to add your own MultiSafepay supported payment method. <br />Read more about <a href="%1$s" target="_blank">%2$s</a> on MultiSafepay\'s Documentation Center.',
                 'multisafepay'
             ),
-            'https://docs.multisafepay.com/integrations/ecommerce-integrations/woocommerce/faq/generic-gateways/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
+            'https://docs.multisafepay.com',
             $this->get_payment_method_title()
         );
 

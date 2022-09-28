@@ -51,7 +51,7 @@ class Visa extends BasePaymentMethod {
         $method_description = sprintf(
             /* translators: %2$: The payment method title */
             __( 'Increase conversions by accepting Visa payments with a worldwide reach. <br />Read more about <a href="%1$s" target="_blank">%2$s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay' ),
-            'https://docs.multisafepay.com/payment-methods/credit-and-debit-cards/visa/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
+            'https://docs.multisafepay.com',
             $this->get_payment_method_title()
         );
         return $method_description;

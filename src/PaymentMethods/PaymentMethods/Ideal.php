@@ -44,7 +44,7 @@ class Ideal extends BasePaymentMethod {
         $method_description = sprintf(
             /* translators: %2$: The payment method title */
             __( 'The leading ecommerce payment method in the Netherlands connecting all major Dutch banks. <br />Read more about <a href="%1$s" target="_blank">%2$s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay' ),
-            'https://docs.multisafepay.com/payment-methods/banks/ideal/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms',
+            'https://docs.multisafepay.com',
             $this->get_payment_method_title()
         );
         return $method_description;

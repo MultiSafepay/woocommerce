@@ -4,19 +4,19 @@
     <p><?php echo esc_html__( 'Read our documentation for more information about MultiSafepay and how to get started:', 'multisafepay' ); ?></p>
     <ul class="docs-list">
         <li>
-            <a target="_blank" href="https://docs.multisafepay.com/integrations/plugins/woocommerce/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms" target="_blank"><?php echo esc_html__( 'Manual', 'multisafepay' ); ?>
+            <a target="_blank" href="https://docs.multisafepay.com/docs/second-chance" target="_blank"><?php echo esc_html__( 'Manual', 'multisafepay' ); ?>
         </li>
         <li>
             <a target="_blank" href="https://github.com/MultiSafepay/WooCommerce/blob/master/CHANGELOG.md" target="_blank"><?php echo esc_html__( 'Changelog', 'multisafepay' ); ?></a>
         </li>
         <li>
-            <a target="_blank" href="https://docs.multisafepay.com/integrations/plugins/woocommerce/faq/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms" target="_blank"><?php echo esc_html__( 'FAQ', 'multisafepay' ); ?></a>
+            <a target="_blank" href="https://docs.multisafepay.com/docs/second-chance#user-guide" target="_blank"><?php echo esc_html__( 'FAQ', 'multisafepay' ); ?></a>
         </li>
     </ul>
     <p><?php echo esc_html__( 'For developers:', 'multisafepay' ); ?></p>
     <ul class="docs-list">
         <li>
-            <a target="_blank" href="https://docs.multisafepay.com/api/?utm_source=woocommerce&utm_medium=woocommerce-cms&utm_campaign=woocommerce-cms" target="_blank"><?php echo esc_html__( 'API Documentation', 'multisafepay' ); ?></a>
+            <a target="_blank" href="https://docs.multisafepay.com/reference/introduction" target="_blank"><?php echo esc_html__( 'API Documentation', 'multisafepay' ); ?></a>
         </li>
         <li>
             <a target="_blank" href="https://github.com/MultiSafepay/WooCommerce" target="_blank"><?php echo esc_html__( 'MultiSafepay Github', 'multisafepay' ); ?></a>
