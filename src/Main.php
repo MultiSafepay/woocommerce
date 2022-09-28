@@ -3,6 +3,7 @@
 namespace MultiSafepay\WooCommerce;
 
 use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodsBlocksController;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodsController;
 use MultiSafepay\WooCommerce\Settings\SettingsController;
 use MultiSafepay\WooCommerce\Utils\CustomLinks;
@@ -143,6 +144,11 @@ class Main {
         foreach ( Gateways::get_gateways_ids() as $gateway_id ) {
             $this->loader->add_action( 'wp_ajax_' . $gateway_id . '_component_arguments', $payment_methods, 'get_credit_card_payment_component_arguments' );
             $this->loader->add_action( 'wp_ajax_nopriv_' . $gateway_id . '_component_arguments', $payment_methods, 'get_credit_card_payment_component_arguments' );
+        }
+
+        $blocks_controller = new PaymentMethodsBlocksController();
+        if ( $blocks_controller->is_blocks_plugin_active() ) {
+            $this->loader->add_action( 'wp_enqueue_scripts', $blocks_controller, 'enqueue_woocommerce_blocks_script' );
         }
 
 	}
