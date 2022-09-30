@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 5.1.0
+Release Date: Sep 30th, 2022
+
+### Added
++ PLGWOOS-828: Add Google Pay
++ PLGWOOS-516: Add Amazon Pay
++ PLGWOOS-516: Add support for [WooCommerce Blocks](https://wordpress.org/plugins/woo-gutenberg-products-block/) for redirect payment methods
+
+### Fixed
++ PLGWOOS-553: Fix deprecated docs links
+
+***
+
 ## 5.0.0
 Release Date: Sep 1st, 2022
 
