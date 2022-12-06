@@ -4,7 +4,7 @@ Tags: multisafepay, credit card, credit cards, gateway, payments, woocommerce, i
 Requires at least: 5.0
 Tested up to: 6.1.1
 Requires PHP: 7.3
-Stable tag: 5.1.0
+Stable tag: 5.1.1
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -138,6 +138,12 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 9. Embedded Credit Card form using MultiSafepay Payment Component
 
 == Changelog ==
+= Release Notes - WooCommerce 5.1.1 (Dec 6th, 2022) =
+
+### Changed
++ DAVAMS-547: AfterPay -> Riverty rebrand
++ PLGWOOS-837: Declare support for Wordpress version 6.1 and WooCommerce version 7.1
+
 = Release Notes - WooCommerce 5.1.0 (Sep 30th, 2022) =
 
 ### Added

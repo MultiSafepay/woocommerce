@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 5.1.1
+Release Date: Dec 6th, 2022
+
+### Changed
++ DAVAMS-547: AfterPay -> Riverty rebrand
++ PLGWOOS-837: Declare support for Wordpress version 6.1 and WooCommerce version 7.1
+
+***
+
 ## 5.1.0
 Release Date: Sep 30th, 2022
 
