@@ -98,7 +98,7 @@
             <span class="woocommerce-input-wrapper">
                 <label>
                     <input type="checkbox" name="<?php echo esc_attr( $this->id ); ?>_afterpay_terms_conditions" id="<?php echo esc_attr( $this->id ); ?>_afterpay_terms_conditions">
-                    <a href="<?php echo esc_url( $terms_and_conditions_url ); ?>" target="_blank"> <?php echo esc_html__( 'I have read and agreed to the AfterPay payment terms.', 'multisafepay' ); ?></a>
+                    <a href="<?php echo esc_url( $terms_and_conditions_url ); ?>" target="_blank"> <?php echo esc_html__( 'I have read and agreed to the Riverty payment terms.', 'multisafepay' ); ?></a>
                 </label>
             </span>
         </p>

@@ -7,10 +7,19 @@ use MultiSafepay\WooCommerce\PaymentMethods\Base\BasePaymentMethod;
 use MultiSafepay\WooCommerce\Services\CustomerService;
 
 class Afterpay extends BasePaymentMethod {
-    public const DEFAULT_TERMS_AND_CONDITIONS = 'https://www.afterpay.nl/en/about/pay-with-afterpay/payment-conditions';
-    public const NL_TERMS_AND_CONDITIONS      = 'https://www.afterpay.nl/nl/algemeen/betalen-met-afterpay/betalingsvoorwaarden';
-    public const BE_NL_TERMS_AND_CONDITIONS   = 'https://www.afterpay.be/be/footer/betalen-met-afterpay/betalingsvoorwaarden';
-    public const BE_FR_TERMS_AND_CONDITIONS   = 'https://www.afterpay.be/fr/footer/payer-avec-afterpay/conditions-de-paiement';
+    public const DEFAULT_TERMS_URL                      = 'https://documents.riverty.com/terms_conditions/payment_methods/invoice/nl_en/default';
+    public const BILLING_ADDRESS_DE_LOCALE_EN_TERMS_URL = 'https://documents.riverty.com/terms_conditions/payment_methods/invoice/de_en/default';
+    public const BILLING_ADDRESS_DE_LOCALE_DE_TERMS_URL = 'https://documents.riverty.com/terms_conditions/payment_methods/invoice/de_de/default';
+    public const BILLING_ADDRESS_AT_LOCALE_EN_TERMS_URL = 'https://documents.riverty.com/terms_conditions/payment_methods/invoice/at_en/default';
+    public const BILLING_ADDRESS_AT_LOCALE_DE_TERMS_URL = 'https://documents.riverty.com/terms_conditions/payment_methods/invoice/at_de/default';
+    public const BILLING_ADDRESS_CH_LOCALE_EN_TERMS_URL = 'https://documents.riverty.com/terms_conditions/payment_methods/invoice/ch_en/default';
+    public const BILLING_ADDRESS_CH_LOCALE_DE_TERMS_URL = 'https://documents.riverty.com/terms_conditions/payment_methods/invoice/ch_de/default';
+    public const BILLING_ADDRESS_CH_LOCALE_FR_TERMS_URL = 'https://documents.riverty.com/terms_conditions/payment_methods/invoice/ch_fr/default';
+    public const BILLING_ADDRESS_NL_LOCALE_EN_TERMS_URL = 'https://documents.riverty.com/terms_conditions/payment_methods/invoice/nl_en/default';
+    public const BILLING_ADDRESS_NL_LOCALE_NL_TERMS_URL = 'https://documents.riverty.com/terms_conditions/payment_methods/invoice/nl_nl/default';
+    public const BILLING_ADDRESS_BE_LOCALE_EN_TERMS_URL = 'https://documents.riverty.com/terms_conditions/payment_methods/invoice/be_en/default';
+    public const BILLING_ADDRESS_BE_LOCALE_NL_TERMS_URL = 'https://documents.riverty.com/terms_conditions/payment_methods/invoice/be_nl/default';
+    public const BILLING_ADDRESS_BE_LOCALE_FR_TERMS_URL = 'https://documents.riverty.com/terms_conditions/payment_methods/invoice/be_fr/default';
 
     /**
      * @return string
@@ -37,7 +46,7 @@ class Afterpay extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_title(): string {
-        return 'AfterPay';
+        return 'Riverty';
     }
 
     /**
@@ -99,7 +108,7 @@ class Afterpay extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_icon(): string {
-        return 'afterpay.png';
+        return 'riverty.png';
     }
 
     /**
@@ -117,7 +126,7 @@ class Afterpay extends BasePaymentMethod {
     public function validate_fields(): bool {
 
         if ( ! isset( $_POST[ $this->id . '_afterpay_terms_conditions' ] ) ) {
-            wc_add_notice( __( 'AfterPay terms and conditions is a required field', 'multisafepay' ), 'error' );
+            wc_add_notice( __( 'Riverty terms and conditions is a required field', 'multisafepay' ), 'error' );
         }
 
         return parent::validate_fields();
@@ -129,19 +138,54 @@ class Afterpay extends BasePaymentMethod {
      * @return string
      */
     private function get_terms_and_conditions_url( string $locale ): string {
-        if ( 'nl_NL' === $locale || 'nl_NL_formal' === $locale ) {
-            return self::NL_TERMS_AND_CONDITIONS;
+        $billing_country = WC()->cart->get_customer()->get_billing_country();
+
+        if ( 'AT' === $billing_country ) {
+            if ( stripos( $locale, 'de' ) !== false ) {
+                return self::BILLING_ADDRESS_AT_LOCALE_DE_TERMS_URL;
+            }
+
+            return self::BILLING_ADDRESS_AT_LOCALE_EN_TERMS_URL;
         }
 
-        if ( 'be_NL' === $locale ) {
-            return self::BE_NL_TERMS_AND_CONDITIONS;
+        if ( 'BE' === $billing_country ) {
+            if ( stripos( $locale, 'nl' ) !== false ) {
+                return self::BILLING_ADDRESS_BE_LOCALE_NL_TERMS_URL;
+            }
+            if ( stripos( $locale, 'fr' ) !== false ) {
+                return self::BILLING_ADDRESS_BE_LOCALE_FR_TERMS_URL;
+            }
+            return self::BILLING_ADDRESS_BE_LOCALE_EN_TERMS_URL;
         }
 
-        if ( 'be_FR' === $locale ) {
-            return self::BE_FR_TERMS_AND_CONDITIONS;
+        if ( 'CH' === $billing_country ) {
+            if ( stripos( $locale, 'de' ) !== false ) {
+                return self::BILLING_ADDRESS_CH_LOCALE_DE_TERMS_URL;
+            }
+
+            if ( stripos( $locale, 'fr' ) !== false ) {
+                return self::BILLING_ADDRESS_CH_LOCALE_FR_TERMS_URL;
+            }
+
+            return self::BILLING_ADDRESS_CH_LOCALE_EN_TERMS_URL;
         }
 
-        return self::DEFAULT_TERMS_AND_CONDITIONS;
+        if ( 'DE' === $billing_country ) {
+            if ( stripos( $locale, 'de' ) !== false ) {
+                return self::BILLING_ADDRESS_DE_LOCALE_DE_TERMS_URL;
+            }
+
+            return self::BILLING_ADDRESS_DE_LOCALE_EN_TERMS_URL;
+        }
+
+        if ( 'NL' === $billing_country ) {
+            if ( stripos( $locale, 'nl' ) !== false ) {
+                return self::BILLING_ADDRESS_NL_LOCALE_NL_TERMS_URL;
+            }
+            return self::BILLING_ADDRESS_NL_LOCALE_EN_TERMS_URL;
+        }
+
+        return self::DEFAULT_TERMS_URL;
     }
 
 }
