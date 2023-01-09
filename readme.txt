@@ -86,7 +86,7 @@ To use the plugin you need a MultiSafepay account.
 = Configuration =
 * Activate the 'MultiSafepay' plugin via 'Plugin' from the WordPress menu
 * Navigate to _WooCommerce_ -> _MultiSafepay Settings_
-* In _Account_ tab, set the API key. Information about the API key can be found on our [API key page](https://docs.multisafepay.com/tools/multisafepay-control/get-your-api-key/). Click on _Save changes_ button.
+* In _Account_ tab, set the API key. Information about the API key can be found on our [API key page](https://docs.multisafepay.com/docs/sites#site-id-api-key-and-security-code). Click on _Save changes_ button.
 * Go to _Order Status_ tab and confirm the match between WooCommerce order statuses and MultiSafepay order statuses. Click on _Save changes_ button.
 * Go to _Options_ tab and confirm the settings for each field. Click on _Save changes_ button.
 * Navigate to _WooCommerce_ -> _Settings_ -> _Payments_. Click on the payment methods you would like to offer, check and set or confirm the settings for those been enable. Click on _Save changes_ button.
@@ -96,7 +96,7 @@ To use the plugin you need a MultiSafepay account.
 
 = How can I install the plugin for WooCommerce? =
 
-* Installation instruction can be found in our [Manual](https://docs.multisafepay.com/integrations/plugins/woocommerce/manual/) page.
+* Installation instruction can be found in our [Manual](https://docs.multisafepay.com/docs/woocommerce) page.
 
 = How can I update the plugin for WooCommerce? =
 
@@ -104,7 +104,7 @@ Before you update the plugin, we strongly recommend you the following:
 
 * Make sure you have a backup of your production environment
 * Test the plugin in a staging environment.
-* Go to our [Manual](https://docs.multisafepay.com/integrations/plugins/woocommerce/manual) page, download the plugin and follow the instructions from step 2.
+* Go to our [Manual](https://docs.multisafepay.com/docs/woocommerce) page, download the plugin and follow the instructions from step 2.
 
 = How can I generate a payment link in the backend of WooCommerce? =
 
@@ -122,7 +122,7 @@ Please follow these steps:
 
 = Can I refund orders? =
 
-Yes, you can fully or partially refund transactions directly from your WooCommerce backend for all payment methods, except for [Billing Suite](https://docs.multisafepay.com/payment-methods/billing-suite) payment methods in which it is only possible to process full refunds.
+Yes, you can fully or partially refund transactions directly from your WooCommerce backend for all payment methods, except for [Buy now pay later](https://docs.multisafepay.com/docs/bnpl) payment methods in which it is only possible to process full refunds.
 You can also refund from your [MultiSafepay Control](https://merchant.multisafepay.com)
 
 == Screenshots ==
