@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Plugin version
  */
-define( 'MULTISAFEPAY_PLUGIN_VERSION', '5.1.1' );
+define( 'MULTISAFEPAY_PLUGIN_VERSION', '5.1.2' );
 
 /**
  * Plugin URL

@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 5.1.2
+Release Date: Jan 10th, 2023
+
+### Fixed
++ PLGWOOS-842: Fix Riverty terms and conditions field validation when payment method is set as redirect type
+
+### Changed
++ PLGWOOS-840: Update Dutch and Belgian translations
+
+***
+
 ## 5.1.1
 Release Date: Dec 6th, 2022
 
