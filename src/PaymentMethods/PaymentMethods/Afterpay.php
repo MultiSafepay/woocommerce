@@ -125,7 +125,7 @@ class Afterpay extends BasePaymentMethod {
      */
     public function validate_fields(): bool {
 
-        if ( ! isset( $_POST[ $this->id . '_afterpay_terms_conditions' ] ) ) {
+        if ( 'direct' === $this->type && ! isset( $_POST[ $this->id . '_afterpay_terms_conditions' ] ) ) {
             wc_add_notice( __( 'Riverty terms and conditions is a required field', 'multisafepay' ), 'error' );
         }
 
