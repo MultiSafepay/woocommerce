@@ -112,18 +112,6 @@ class SettingsFields {
                     'sort_order'   => 10,
                 ),
                 array(
-                    'id'           => 'multisafepay_ga',
-                    'label'        => __( 'Google Analytics', 'multisafepay' ),
-                    'description'  => __( 'Google Analytics Universal Account ID. Format: UA-XXXXXXXXX. More information about Google Analytics tracking via our API on <a href="https://docs.multisafepay.com/docs/google-analytics" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
-                    'type'         => 'text',
-                    'default'      => '',
-                    'placeholder'  => __( 'Google Analytics', 'multisafepay' ),
-                    'tooltip'      => '',
-                    'callback'     => '',
-                    'setting_type' => 'string',
-                    'sort_order'   => 15,
-                ),
-                array(
                     'id'           => 'multisafepay_trigger_transaction_to_invoiced',
                     'label'        => __( 'Set transaction as invoiced', 'multisafepay' ),
                     'description'  => __( 'When the order reaches this status, we send the invoice id to MultiSafepay', 'multisafepay' ),

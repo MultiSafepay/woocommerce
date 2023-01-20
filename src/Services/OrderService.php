@@ -4,7 +4,6 @@ namespace MultiSafepay\WooCommerce\Services;
 
 use MultiSafepay\Api\Transactions\OrderRequest;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
-use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GoogleAnalytics;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\PaymentOptions;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\PluginDetails;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\SecondChance;
@@ -68,11 +67,6 @@ class OrderService {
         if ( ! empty( $_POST[ ( Gateways::get_payment_method_object_by_gateway_code( $gateway_code ) )->get_payment_method_id() . '_payment_component_payload' ] ) ) {
             $order_request->addType( 'direct' );
             $order_request->addData( array( 'payment_data' => array( 'payload' => $_POST[ ( Gateways::get_payment_method_object_by_gateway_code( $gateway_code ) )->get_payment_method_id() . '_payment_component_payload' ] ) ) );
-        }
-
-        $ga_code = get_option( 'multisafepay_ga', false );
-        if ( $ga_code ) {
-            $order_request->addGoogleAnalytics( ( new GoogleAnalytics() )->addAccountId( $ga_code ) );
         }
 
         if ( $gateway_info ) {
