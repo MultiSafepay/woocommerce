@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 + DAVAMS-571: Remove Google Analytics tracking ID within the OrderRequest object
 
+### Changed
++ DAVAMS-581: Rebrand Pay After Delivery with new logos
+
 ***
 
 ## 5.1.2
