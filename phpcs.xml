@@ -50,7 +50,6 @@
 
     <!-- Exclude nonce verification, which according with documentation is not required when submit an order -->
     <rule ref="WordPress.Security.NonceVerification.Missing">
-        <exclude-pattern>uninstall.php</exclude-pattern>
         <exclude-pattern>*/src/PaymentMethods/Base/BasePaymentMethod.php</exclude-pattern>
         <exclude-pattern>*/src/PaymentMethods/PaymentMethods/Dirdeb.php</exclude-pattern>
         <exclude-pattern>*/src/PaymentMethods/PaymentMethods/Afterpay.php</exclude-pattern>

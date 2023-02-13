@@ -19,7 +19,7 @@ class SettingsController {
      * had been stored as strings and returns yes - no.
      *
      * This function also works to returns booleans instead of strings for
-     * multisafepay_second_chance and multisafepay_remove_all_settings options
+     * multisafepay_second_chance, multisafepay_testmode, multisafepay_debugmode options
      *
      * @since 4.0.0
      * @see https://developer.wordpress.org/reference/hooks/option_option/

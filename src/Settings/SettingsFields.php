@@ -200,18 +200,6 @@ class SettingsFields {
                     'setting_type' => 'boolean',
                     'sort_order'   => 45,
                 ),
-                array(
-                    'id'           => 'multisafepay_remove_all_settings',
-                    'label'        => __( 'Delete settings if uninstall', 'multisafepay' ),
-                    'description'  => '',
-                    'type'         => 'checkbox',
-                    'default'      => false,
-                    'placeholder'  => __( 'Delete settings if uninstall', 'multisafepay' ),
-                    'tooltip'      => __( 'Delete all settings of this plugin if you uninstall', 'multisafepay' ),
-                    'callback'     => '',
-                    'setting_type' => 'boolean',
-                    'sort_order'   => 55,
-                ),
             ),
         );
     }

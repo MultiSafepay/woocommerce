@@ -299,10 +299,6 @@ class SystemReport {
                     'label' => __( 'Second chance', 'multisafepay' ),
                     'value' => (bool) get_option( 'multisafepay_second_chance', false ) ? __( 'Enabled', 'multisafepay' ) : __( 'Disabled', 'multisafepay' ),
                 ),
-                'delete_settings'                 => array(
-                    'label' => __( 'Delete settings if uninstall', 'multisafepay' ),
-                    'value' => (bool) get_option( 'multisafepay_remove_all_settings', false ) ? __( 'Enabled', 'multisafepay' ) : __( 'Disabled', 'multisafepay' ),
-                ),
 
             ),
         );
