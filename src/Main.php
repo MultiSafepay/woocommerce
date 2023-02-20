@@ -82,6 +82,7 @@ class Main {
         $this->loader->add_filter( 'option_multisafepay_testmode', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
         $this->loader->add_filter( 'option_multisafepay_debugmode', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
         $this->loader->add_filter( 'option_multisafepay_second_chance', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
+        $this->loader->add_filter( 'option_multisafepay_disable_shopping_cart', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
         $this->loader->add_filter( 'option_multisafepay_time_active', $plugin_settings, 'filter_multisafepay_settings_as_int' );
 
         if ( is_admin() ) {

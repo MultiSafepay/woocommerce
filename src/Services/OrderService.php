@@ -2,13 +2,14 @@
 
 namespace MultiSafepay\WooCommerce\Services;
 
+use MultiSafepay\Api\Transactions\Gateways as GatewaysSdk;
 use MultiSafepay\Api\Transactions\OrderRequest;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\PaymentOptions;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\PluginDetails;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\SecondChance;
-use MultiSafepay\WooCommerce\Utils\MoneyUtil;
 use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
+use MultiSafepay\WooCommerce\Utils\MoneyUtil;
 use WC_Order;
 
 /**
@@ -55,13 +56,16 @@ class OrderService {
             ->addDescriptionText( $this->get_order_description_text( $order->get_order_number() ) )
             ->addCustomer( $this->customer_service->create_customer_details( $order ) )
             ->addPaymentOptions( $this->create_payment_options( $order ) )
-            ->addShoppingCart( $this->shopping_cart_service->create_shopping_cart( $order, $order->get_currency() ) )
             ->addSecondsActive( $this->get_seconds_active() )
             ->addSecondChance( ( new SecondChance() )->addSendEmail( (bool) get_option( 'multisafepay_second_chance', false ) ) )
             ->addData( array( 'var2' => $order->get_id() ) );
 
         if ( $order->needs_shipping_address() ) {
             $order_request->addDelivery( $this->customer_service->create_delivery_details( $order ) );
+        }
+
+        if ( ! get_option( 'multisafepay_disable_shopping_cart', false ) || in_array( $gateway_code, GatewaysSdk::SHOPPING_CART_REQUIRED_GATEWAYS, true ) ) {
+            $order_request->addShoppingCart( $this->shopping_cart_service->create_shopping_cart( $order, $order->get_currency() ) );
         }
 
         if ( ! empty( $_POST[ ( Gateways::get_payment_method_object_by_gateway_code( $gateway_code ) )->get_payment_method_id() . '_payment_component_payload' ] ) ) {

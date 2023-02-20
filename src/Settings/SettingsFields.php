@@ -100,6 +100,18 @@ class SettingsFields {
                     'sort_order'   => 5,
                 ),
                 array(
+                    'id'           => 'multisafepay_disable_shopping_cart',
+                    'label'        => __( 'Disable Shopping Cart on the MultiSafepay payment page', 'multisafepay' ),
+                    'description'  => 'Enable this option to hide the cart items on the MultiSafepay payment page, leaving only the total order amount. Note: This behavior won\'t be adopted by the the payment methods which require shopping cart like Riverty, E-Invoicing, in3, Klarna and Pay After Delivery.',
+                    'type'         => 'checkbox',
+                    'default'      => false,
+                    'placeholder'  => __( 'Disable Shopping Cart', 'multisafepay' ),
+                    'tooltip'      => '',
+                    'callback'     => '',
+                    'setting_type' => 'boolean',
+                    'sort_order'   => 7,
+                ),
+                array(
                     'id'           => 'multisafepay_order_request_description',
                     'label'        => __( 'Order Description', 'multisafepay' ),
                     'description'  => __( 'A text which will be shown with the order in MultiSafepay Control. If the customer’s bank supports it this description will also be shown on the customer’s bank statement', 'multisafepay' ),
