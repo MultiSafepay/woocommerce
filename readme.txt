@@ -4,7 +4,7 @@ Tags: multisafepay, credit card, credit cards, gateway, payments, woocommerce, i
 Requires at least: 5.0
 Tested up to: 6.1.1
 Requires PHP: 7.3
-Stable tag: 5.2.0
+Stable tag: 5.2.1
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -138,7 +138,12 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 9. Embedded Credit Card form using MultiSafepay Payment Component
 
 == Changelog ==
-= Release Notes - WooCommerce 5.2.0 (Feb 20th, 2023) =
+= Release Notes - WooCommerce 5.2.1 (Feb 22nd, 2023) =
+
+### Fixed
++ PLGWOOS-850: Fix 'Tested up to' value in readme.txt file to reflect the latest WordPress version tested, instead of the latest WooCommerce set by mistake
+
+= Release Notes - WooCommerce 5.2.0 (Feb 22nd, 2023) =
 
 ### Added
 + DAVAMS-599: Add new setting field to disable the shopping cart within the order request

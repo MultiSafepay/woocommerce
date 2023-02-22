@@ -6,10 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 5.2.1
+Release Date: Feb 22nd, 2023
+
+### Fixed
++ PLGWOOS-850: Fix 'Tested up to' value in readme.txt file to reflect the latest WordPress version tested, instead of the latest WooCommerce set by mistake
+
 ***
 
 ## 5.2.0
-Release Date: Feb 20th, 2023
+Release Date: Feb 22th, 2023
 
 ### Added
 + DAVAMS-599: Add new setting field to disable the shopping cart within the order request
