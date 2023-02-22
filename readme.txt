@@ -2,9 +2,9 @@
 Contributors: multisafepayplugin
 Tags: multisafepay, credit card, credit cards, gateway, payments, woocommerce, ideal, bancontact, klarna, sofort, giropay, sepa direct debit
 Requires at least: 5.0
-Tested up to: 7.2.2
+Tested up to: 7.4.0
 Requires PHP: 7.3
-Stable tag: 5.1.2
+Stable tag: 5.2.0
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -138,6 +138,19 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 9. Embedded Credit Card form using MultiSafepay Payment Component
 
 == Changelog ==
+= Release Notes - WooCommerce 5.2.0 (Feb 20th, 2023) =
+
+### Added
++ DAVAMS-599: Add new setting field to disable the shopping cart within the order request
++ DAVAMS-573: Add Pay After Delivery Installments payment method
+
+### Removed
++ DAVAMS-571: Remove Google Analytics tracking ID within the OrderRequest object
++ PLGWOOS-815: Remove uninstall script
+
+### Changed
++ DAVAMS-581: Rebrand Pay After Delivery with new logos
+
 = Release Notes - WooCommerce 5.1.2 (Jan 10th, 2022) =
 
 ### Fixed

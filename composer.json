@@ -6,7 +6,7 @@
     "minimum-stability": "RC",
     "keywords" : [ "wordpress", "multisafepay" ],
     "require": {
-        "multisafepay/php-sdk": "^5.6",
+        "multisafepay/php-sdk": "^5.9",
         "nyholm/psr7": "^1.4",
         "psr/http-client": "^1.0"
     },

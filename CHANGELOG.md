@@ -5,8 +5,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+***
+
+## 5.2.0
+Release Date: Feb 20th, 2023
+
+### Added
++ DAVAMS-599: Add new setting field to disable the shopping cart within the order request
++ DAVAMS-573: Add Pay After Delivery Installments payment method
+
 ### Removed
 + DAVAMS-571: Remove Google Analytics tracking ID within the OrderRequest object
++ PLGWOOS-815: Remove uninstall script
 
 ### Changed
 + DAVAMS-581: Rebrand Pay After Delivery with new logos
