@@ -45,7 +45,7 @@ class PayAfterDeliveryInstallments extends BasePaymentMethod {
     public function get_payment_method_description(): string {
         $method_description = sprintf(
         /* translators: %2$: The payment method title */
-            __( 'Pay After Delivery - Instalments (Betaal in Termijnen) is MultiSafepay\'s own BNPL method for increasing customer confidence and conversion. MultiSafepay prefinances you, bears the risk, and guarantees settlement. Pay After Delivery allows customers to pay for orders in 3 equal installments. <br />Read more about <a href="%1$s" target="_blank">%2$s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay' ),
+            __( 'Pay After Delivery - Installments (Betaal in Termijnen) is MultiSafepay\'s own BNPL method for increasing customer confidence and conversion. MultiSafepay prefinances you, bears the risk, and guarantees settlement. Pay After Delivery allows customers to pay for orders in 3 equal installments. <br />Read more about <a href="%1$s" target="_blank">%2$s</a> on MultiSafepay\'s Documentation Center.', 'multisafepay' ),
             'https://docs.multisafepay.com',
             $this->get_payment_method_title()
         );
