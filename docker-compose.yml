@@ -26,26 +26,26 @@ services:
     extra_hosts:
       host.docker.internal: host-gateway
   db:
-    image: mysql:5.7
+    image: mysql:8.0.32
     environment:
       MYSQL_ROOT_PASSWORD: somewordpress
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: wordpress
-  mailhog:
-    image: 'mailhog/mailhog'
+  mailcatcher:
+    image: sj26/mailcatcher
     ports:
-      - 8025:8025
+      - "1080:1080"
   expose:
     depends_on:
       - app
     build: https://github.com/beyondcode/expose.git
     entrypoint: ["/bin/sh", "-c" , "/src/expose token ${EXPOSE_TOKEN} && sed -i -E \"s/'dns'\\s?=>\\s?'.*'/'dns' => true/g\" /root/.expose/config.php  && /src/expose share app --server-host=${EXPOSE_HOST} --subdomain=${APP_SUBDOMAIN}"]
     ports:
-      - 4040:4040
+      - "4040:4040"
   adminer:
     image: adminer
     ports:
-      - 8080:8080
+      - "8080:8080"
     links:
       - db

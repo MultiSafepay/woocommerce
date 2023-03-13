@@ -8,7 +8,6 @@ install: install-wordpress \
 		install-woocommerce-default-pages \
 		import-sample-products \
 		install-storefront-theme \
-		install-dev-plugins \
 		install-multisafepay
 
 .PHONY: install-wordpress
@@ -58,10 +57,6 @@ import-sample-products:
 .PHONY: install-storefront-theme
 install-storefront-theme:
 	docker-compose exec app wp theme install storefront --activate
-
-.PHONY: install-dev-plugins
-install-dev-plugins:
-	docker-compose exec app wp plugin install debug-bar debug-bar-console query-monitor --activate
 
 .PHONY: install-multisafepay
 install-multisafepay:
