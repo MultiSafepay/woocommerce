@@ -104,6 +104,24 @@ class SettingsFieldsDisplay {
     }
 
     /**
+     * Render the html for a password type input
+     *
+     * @param array $field
+     * @return string
+     */
+    private function render_password_field( array $field ): string {
+        $value       = $this->get_option_by_field( $field );
+        $field_id    = esc_attr( $field['id'] );
+        $placeholder = esc_attr( $field['placeholder'] );
+        $html        = '<input id="' . $field_id . '" type="' . $field['type'] . '" name="' . $field_id . '" placeholder="' . $placeholder . '" value="' . $value . '"/>';
+        if ( ! empty( $field['description'] ) ) {
+            $html .= '<p class="description">' . $field['description'] . '</p>';
+        }
+        return $html;
+    }
+
+
+    /**
      * Render the html for each type of the registered setting field
      *
      * @return void
@@ -119,6 +137,9 @@ class SettingsFieldsDisplay {
                 break;
             case 'checkbox':
                 $html .= $this->render_checkbox_field( $this->field );
+                break;
+            case 'password':
+                $html .= $this->render_password_field( $this->field );
                 break;
         }
 
