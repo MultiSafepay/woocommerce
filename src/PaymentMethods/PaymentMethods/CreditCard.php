@@ -41,7 +41,7 @@ class CreditCard extends BasePaymentMethod {
      * @return string
      */
     public function get_payment_method_title(): string {
-        return __( 'Credit Card', 'multisafepay' );
+        return __( 'Card payment', 'multisafepay' );
     }
 
     /**
