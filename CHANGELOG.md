@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 5.2.2
+Release Date: Jun 19th, 2023
+
+### Fixed
++ PLGWOOS-852: Fix typo in description of Pay After Delivery Installments
+
+### Changed
++ DAVAMS-621: Rename "Credit Card" payment method as "Card payment"
++ PLGWOOS-844: Change API Keys settings field to password type
+
 ## 5.2.1
 Release Date: Feb 22nd, 2023
 
