@@ -62,6 +62,7 @@ use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Santander;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Sofort;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Trustly;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Visa;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods\Zinia;
 
 /**
  * Define the Gateways.
@@ -109,6 +110,8 @@ class Gateways {
         'multisafepay_sofort'                        => Sofort::class,
         'multisafepay_trustly'                       => Trustly::class,
         'multisafepay_visa'                          => Visa::class,
+        'multisafepay_zinia'                         => Zinia::class,
+
 
         'multisafepay_babycadeaubon'                 => Babycadeaubon::class,
         'multisafepay_beautyandwellness'             => Beautywellness::class,
