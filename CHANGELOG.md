@@ -4,7 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## 5.3.0
+Release Date: Aug 10th, 2023
+
+### Added
++ DAVAMS-636: Add Zinia payment method
+
+### Changed
++ DAVAMS-640: Refactor of the Payment Component
+
+***
 
 ## 5.2.2
 Release Date: Jun 19th, 2023
@@ -15,6 +24,8 @@ Release Date: Jun 19th, 2023
 ### Changed
 + DAVAMS-621: Rename "Credit Card" payment method as "Card payment"
 + PLGWOOS-844: Change API Keys settings field to password type
+
+***
 
 ## 5.2.1
 Release Date: Feb 22nd, 2023

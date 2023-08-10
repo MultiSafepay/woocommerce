@@ -2,9 +2,9 @@
 Contributors: multisafepayplugin
 Tags: multisafepay, credit card, credit cards, gateway, payments, woocommerce, ideal, bancontact, klarna, sofort, giropay, sepa direct debit
 Requires at least: 5.0
-Tested up to: 6.2.2
+Tested up to: 6.3
 Requires PHP: 7.3
-Stable tag: 5.2.2
+Stable tag: 5.3.0
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -138,6 +138,14 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 9. Embedded Credit Card form using MultiSafepay Payment Component
 
 == Changelog ==
+= Release Notes - WooCommerce 5.3.0 (Aug 10th, 2023) =
+
+### Added
++ DAVAMS-636: Add Zinia payment method
+
+### Changed
++ DAVAMS-640: Refactor of the Payment Component
+
 = Release Notes - WooCommerce 5.2.2 (Jun 19th, 2023) =
 
 ### Fixed
