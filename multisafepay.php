@@ -78,4 +78,14 @@ function init_multisafepay() {
         $plugin->init();
     }
 }
-init_multisafepay();
+
+/**
+ * Load plugin when WooCommerce is loaded
+ *
+ * @return void
+ */
+function action_woocommerce_loaded() {
+    init_multisafepay();
+}
+
+add_action( 'woocommerce_loaded', 'action_woocommerce_loaded', 10, 1 );

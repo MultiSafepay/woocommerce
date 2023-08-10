@@ -141,7 +141,7 @@ class Main {
         // Allow cancel orders for on-hold status
         $this->loader->add_filter( 'woocommerce_valid_order_statuses_for_cancel', $payment_methods, 'allow_cancel_multisafepay_orders_with_on_hold_status', 10, 2 );
         // Ajax related to update the order information of a credit card component
-        foreach ( Gateways::get_gateways_ids() as $gateway_id ) {
+        foreach ( Gateways::get_gateways_with_payment_component() as $gateway_id ) {
             $this->loader->add_action( 'wp_ajax_' . $gateway_id . '_component_arguments', $payment_methods, 'get_credit_card_payment_component_arguments' );
             $this->loader->add_action( 'wp_ajax_nopriv_' . $gateway_id . '_component_arguments', $payment_methods, 'get_credit_card_payment_component_arguments' );
         }

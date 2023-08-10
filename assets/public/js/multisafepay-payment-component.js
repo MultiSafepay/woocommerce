@@ -82,10 +82,11 @@
                     this.logger( this.get_payment_component().getErrors() );
                     this.insert_errors( this.get_payment_component().getErrors() );
                 } else {
-                    this.remove_payload();
+                    this.remove_payload_and_tokenize();
                     this.logger( this.get_payment_component().getOrderData() );
-                    var payload = this.get_payment_component().getPaymentData().payload;
-                    this.insert_payload( payload );
+                    var payload  = this.get_payment_component().getPaymentData().payload;
+                    var tokenize = this.get_payment_component().getPaymentData().tokenize ? this.get_payment_component().getPaymentData().tokenize : '0';
+                    this.insert_payload_and_tokenize( payload, tokenize );
                 }
                 $( '.woocommerce-checkout' ).submit();
             }
@@ -111,7 +112,8 @@
                 {
                     env: this.config.env,
                     apiToken: this.config.api_token,
-                    order: this.config.orderData
+                    order: this.config.orderData,
+                    recurring: this.config.recurring,
                 }
             );
         }
@@ -148,21 +150,23 @@
         }
 
         show_loader() {
-            $( '#' + this.gateway + '_payment_component_container' ).html( '<div class="loader-wrapper"><span class="loader"></span></span></div>' );
+            $( this.payment_component_container_selector ).html( '<div class="loader-wrapper"><span class="loader"></span></span></div>' );
             $( FORM_BUTTON_SELECTOR ).prop( 'disabled', true );
         }
 
         hide_loader() {
-            $( '#' + this.gateway + '_payment_component_container .loader-wrapper' ).remove();
+            $( this.payment_component_container_selector + ' .loader-wrapper' ).remove();
             $( FORM_BUTTON_SELECTOR ).prop( 'disabled', false );
         }
 
-        insert_payload( payload ) {
+        insert_payload_and_tokenize( payload, tokenize ) {
             $( '#' + this.gateway + '_payment_component_payload' ).val( payload );
+            $( '#' + this.gateway + '_payment_component_tokenize' ).val( tokenize );
         }
 
-        remove_payload() {
+        remove_payload_and_tokenize() {
             $( '#' + this.gateway + '_payment_component_payload' ).val( '' );
+            $( '#' + this.gateway + '_payment_component_tokenize' ).val( '' );
         }
 
         insert_errors( errors ) {
@@ -188,15 +192,28 @@
                     type: 'POST',
                     data: {
                         'nonce': this.config.nonce,
-                        'action': 'multisafepay_creditcard_component_arguments',
+                        'action': this.gateway + '_component_arguments',
                         'gateway_id': this.config.gateway_id,
                         'gateway': this.config.gateway,
                     },
+                    beforeSend: function() {
+                        $( this.payment_component_container_selector ).html( '' );
+                        this.show_loader();
+                    }.bind( this ),
+                    complete: function () {
+                        this.payment_component = null;
+                        this.reinit_payment_component();
+                        this.hide_loader();
+                    }.bind( this ),
                     success: function (response) {
-                        this.config = response;
+                        this.config.orderData = response.orderData;
                     }.bind( this )
                 }
             );
+        }
+
+        reinit_payment_component() {
+            this.init_payment_component();
         }
 
         logger( argument ) {

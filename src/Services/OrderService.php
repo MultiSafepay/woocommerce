@@ -45,7 +45,6 @@ class OrderService {
      * @return OrderRequest
      */
     public function create_order_request( WC_Order $order, string $gateway_code, string $type, GatewayInfoInterface $gateway_info = null ): OrderRequest {
-
         $order_request = new OrderRequest();
         $order_request
             ->addOrderId( $order->get_order_number() )

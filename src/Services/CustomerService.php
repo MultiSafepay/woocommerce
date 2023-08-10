@@ -41,7 +41,8 @@ class CustomerService {
             $order->get_billing_last_name(),
             $order->get_customer_ip_address() ? $order->get_customer_ip_address() : '',
             $order->get_customer_user_agent() ? $order->get_customer_user_agent() : '',
-            $order->get_billing_company()
+            $order->get_billing_company(),
+            $this->should_send_customer_reference( $order->get_payment_method() ) ? (string) $order->get_customer_id() : null
         );
     }
 
@@ -72,14 +73,15 @@ class CustomerService {
     }
 
     /**
-     * @param Address $address
-     * @param string  $email_address
-     * @param string  $phone_number
-     * @param string  $first_name
-     * @param string  $last_name
-     * @param string  $ip_address
-     * @param string  $user_agent
-     * @param string  $company_name
+     * @param Address     $address
+     * @param string      $email_address
+     * @param string      $phone_number
+     * @param string      $first_name
+     * @param string      $last_name
+     * @param string      $ip_address
+     * @param string      $user_agent
+     * @param string      $company_name
+     * @param null|string $customer_id
      * @return CustomerDetails
      */
     private function create_customer(
@@ -90,7 +92,8 @@ class CustomerService {
         string $last_name,
         string $ip_address,
         string $user_agent,
-        string $company_name = null
+        string $company_name = null,
+        string $customer_id = null
     ): CustomerDetails {
         $customer_details = new CustomerDetails();
         $customer_details
@@ -112,6 +115,10 @@ class CustomerService {
 
         if ( ! empty( $user_agent ) ) {
             $customer_details->addUserAgent( $user_agent );
+        }
+
+        if ( ! empty( $customer_id ) ) {
+            $customer_details->addReference( $customer_id );
         }
 
         return $customer_details;
@@ -160,4 +167,22 @@ class CustomerService {
         return apply_filters( 'multisafepay_customer_locale', $locale );
     }
 
+    /**
+     * Customer reference only needs to be sent when a payment token is being used, or
+     * when a payment tokens needs to be created.
+     *
+     * @param string $payment_method_id
+     * @return bool
+     */
+    private function should_send_customer_reference( string $payment_method_id ): bool {
+        if ( ! isset( $_POST[ $payment_method_id . '_payment_component_tokenize' ] ) ) {
+            return false;
+        }
+
+        if ( ! (bool) $_POST[ $payment_method_id . '_payment_component_tokenize' ] ) {
+            return false;
+        }
+
+        return true;
+    }
 }

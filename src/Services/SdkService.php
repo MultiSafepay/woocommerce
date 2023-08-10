@@ -2,6 +2,7 @@
 
 namespace MultiSafepay\WooCommerce\Services;
 
+use Exception;
 use MultiSafepay\Api\ApiTokenManager;
 use MultiSafepay\Api\GatewayManager;
 use MultiSafepay\Api\Gateways\Gateway;
@@ -13,6 +14,7 @@ use MultiSafepay\Sdk;
 use MultiSafepay\WooCommerce\Client\MultiSafepayClient;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use Nyholm\Psr7\Factory\Psr17Factory;
+use Psr\Http\Client\ClientExceptionInterface;
 use WP_Error;
 
 /**
@@ -150,5 +152,30 @@ class SdkService {
     public function get_api_token(): string {
         $api_token_manager = $this->get_api_token_manager();
         return $api_token_manager->get()->getApiToken();
+    }
+
+
+    /**
+     * Returns an array of tokens for the given customer reference and gateway code
+     *
+     * @param string $customer_reference
+     * @param string $gateway_code
+     * @return array
+     */
+    public function get_payment_tokens( string $customer_reference, string $gateway_code ): array {
+        try {
+            $tokens = $this->sdk->getTokenManager()->getListByGatewayCodeAsArray( $customer_reference, $gateway_code );
+        } catch ( ApiException $api_exception ) {
+            Logger::log_error( $api_exception->getMessage() );
+            return array();
+        } catch ( ClientExceptionInterface $client_exception ) {
+            Logger::log_error( $client_exception->getMessage() );
+            return array();
+        } catch ( Exception $exception ) {
+            Logger::log_error( $exception->getMessage() );
+            return array();
+        }
+
+        return $tokens;
     }
 }

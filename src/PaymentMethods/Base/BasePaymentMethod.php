@@ -15,7 +15,6 @@ use MultiSafepay\WooCommerce\Utils\Logger;
 use WC_Countries;
 use WC_Order;
 use WC_Payment_Gateway;
-use WP_Error;
 
 abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMethodInterface {
 
@@ -562,33 +561,42 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      * @return array
      */
     private function get_credit_card_payment_component_arguments(): array {
-        $sdk_service = new SdkService();
-        return array(
+        $sdk_service                             = new SdkService();
+        $credit_card_payment_component_arguments = array(
 			'debug'      => (bool) get_option( 'multisafepay_debugmode', false ),
 			'env'        => $sdk_service->get_test_mode() ? 'test' : 'live',
 			'api_token'  => $sdk_service->get_api_token(),
 			'orderData'  => array(
-				'currency'  => get_woocommerce_currency(),
-				'amount'    => ( WC()->cart ) ? ( WC()->cart->get_total( '' ) * 100 ) : null,
-				'customer'  => array(
-					'locale'    => ( new CustomerService() )->get_locale(),
-					'country'   => ( WC()->customer )->get_billing_country(),
-					'reference' => $this->is_tokenization_enable() ? get_current_user_id() : null,
+				'currency' => get_woocommerce_currency(),
+				'amount'   => ( WC()->cart ) ? (int) ( WC()->cart->get_total( '' ) * 100 ) : null,
+				'customer' => array(
+					'locale'  => ( new CustomerService() )->get_locale(),
+					'country' => ( WC()->customer )->get_billing_country(),
 				),
-				'template'  => array(
+				'template' => array(
 					'settings' => array(
 						'embed_mode' => true,
 					),
-				),
-				'recurring' => array(
-					'model' => $this->is_tokenization_enable() ? 'cardOnFile' : null,
 				),
 			),
 			'ajax_url'   => admin_url( 'admin-ajax.php' ),
 			'nonce'      => wp_create_nonce( 'credit_card_payment_component_arguments_nonce' ),
 			'gateway_id' => $this->id,
 			'gateway'    => $this->get_payment_method_code(),
+            'recurring'  => null,
         );
+
+        if ( $this->is_tokenization_enable() ) {
+            $credit_card_payment_component_arguments['recurring'] = array(
+                'model'  => 'cardOnFile',
+                'tokens' => $sdk_service->get_payment_tokens(
+                    (string) get_current_user_id(),
+                    $this->get_payment_method_code()
+                ),
+            );
+        }
+
+        return $credit_card_payment_component_arguments;
     }
 
 }

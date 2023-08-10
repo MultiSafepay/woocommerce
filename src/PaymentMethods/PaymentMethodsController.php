@@ -2,6 +2,7 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
+use MultiSafepay\Api\Gateways\Gateway;
 use MultiSafepay\Api\Transactions\TransactionResponse;
 use MultiSafepay\Api\Transactions\UpdateRequest;
 use MultiSafepay\Util\Notification;
@@ -312,7 +313,6 @@ class PaymentMethodsController {
      */
     public function get_credit_card_payment_component_arguments(): void {
         if ( wp_verify_nonce( $_POST['nonce'], 'credit_card_payment_component_arguments_nonce' ) ) {
-            $locale      = strtoupper( substr( ( new CustomerService() )->get_locale(), 0, 2 ) );
             $sdk_service = new SdkService();
 
             $credit_card_payment_component_arguments = array(
@@ -320,28 +320,37 @@ class PaymentMethodsController {
                 'env'        => $sdk_service->get_test_mode() ? 'test' : 'live',
                 'api_token'  => $sdk_service->get_api_token(),
                 'orderData'  => array(
-                    'currency'  => get_woocommerce_currency(),
-                    'amount'    => ( WC()->cart ) ? ( WC()->cart->get_total( '' ) * 100 ) : null,
-                    'customer'  => array(
-                        'locale'    => ( new CustomerService() )->get_locale(),
-                        'country'   => ( WC()->customer )->get_billing_country(),
-                        'reference' => null,
+                    'currency' => get_woocommerce_currency(),
+                    'amount'   => ( WC()->cart ) ? (int) ( WC()->cart->get_total( '' ) * 100 ) : null,
+                    'customer' => array(
+                        'locale'  => ( new CustomerService() )->get_locale(),
+                        'country' => ( WC()->customer )->get_billing_country(),
                     ),
-                    'template'  => array(
+                    'template' => array(
                         'settings' => array(
                             'embed_mode' => true,
                         ),
                     ),
-                    'recurring' => array(
-                        'model' => null,
-                    ),
                 ),
+                'recurring'  => null,
                 'ajax_url'   => admin_url( 'admin-ajax.php' ),
                 'nonce'      => wp_create_nonce( 'credit_card_payment_component_arguments_nonce' ),
                 'gateway_id' => sanitize_key( $_POST['gateway_id'] ),
                 'gateway'    => sanitize_text_field( $_POST['gateway'] ),
 
             );
+
+            $gateway = Gateways::get_payment_method_object_by_gateway_code( sanitize_text_field( $_POST['gateway'] ) );
+            if ( $gateway->is_tokenization_enable() ) {
+                $credit_card_payment_component_arguments['recurring'] = array(
+                    'model'  => 'cardOnFile',
+                    'tokens' => $sdk_service->get_payment_tokens(
+                        (string) get_current_user_id(),
+                        sanitize_text_field( $_POST['gateway'] )
+                    ),
+                );
+            }
+
             wp_send_json( $credit_card_payment_component_arguments );
         }
     }
