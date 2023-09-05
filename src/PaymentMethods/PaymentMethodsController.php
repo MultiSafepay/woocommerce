@@ -70,6 +70,17 @@ class PaymentMethodsController {
      */
     public function filter_gateway_per_min_amount( array $payment_gateways ): array {
         $total_amount = ( WC()->cart ) ? WC()->cart->get_total( '' ) : false;
+
+        if ( is_wc_endpoint_url( 'order-pay' ) ) {
+            $order_id = absint( get_query_var( 'order-pay' ) );
+            if ( 0 < $order_id ) {
+                $order = wc_get_order( $order_id );
+                if ( $order ) {
+                    $total_amount = (float) $order->get_total();
+                }
+            }
+        }
+
         foreach ( $payment_gateways as $gateway_id => $gateway ) {
             if ( ! empty( $gateway->min_amount ) && $total_amount < $gateway->min_amount ) {
                 unset( $payment_gateways[ $gateway_id ] );
