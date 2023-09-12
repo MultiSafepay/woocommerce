@@ -21,7 +21,7 @@ class SettingsFieldsDisplay {
     private $field;
 
     /**
-     * Constructor the the class
+     * Constructor the class
      *
      * @param array $field
      */
@@ -47,7 +47,7 @@ class SettingsFieldsDisplay {
     /**
      * Render the html for a text type input
      *
-     * @param array $field
+     * @param  array $field
      * @return string
      */
     private function render_text_field( array $field ): string {
@@ -119,7 +119,6 @@ class SettingsFieldsDisplay {
         }
         return $html;
     }
-
 
     /**
      * Render the html for each type of the registered setting field

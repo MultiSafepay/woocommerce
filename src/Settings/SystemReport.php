@@ -291,6 +291,10 @@ class SystemReport {
                     'label' => __( 'Trigger to shipped', 'multisafepay' ),
                     'value' => get_option( 'multisafepay_trigger_transaction_to_shipped' ),
                 ),
+                'final_order_status'              => array(
+                    'label' => __( 'Is completed the final order status?', 'multisafepay' ),
+                    'value' => $this->get_final_order_status(),
+                ),
                 'redirect_after_cancel'           => array(
                     'label' => __( 'Redirect after cancel', 'multisafepay' ),
                     'value' => ucfirst( get_option( 'multisafepay_redirect_after_cancel', 'cart' ) ) . ' page',
@@ -299,10 +303,9 @@ class SystemReport {
                     'label' => __( 'Second chance', 'multisafepay' ),
                     'value' => (bool) get_option( 'multisafepay_second_chance', false ) ? __( 'Enabled', 'multisafepay' ) : __( 'Disabled', 'multisafepay' ),
                 ),
-
             ),
         );
-        $order_statuses = SettingsFields::get_multisafepay_order_statuses();
+        $order_statuses        = SettingsFields::get_multisafepay_order_statuses();
         unset( $order_statuses['completed_status'] );
         foreach ( $order_statuses as $key => $order_status ) {
             $multisafepay_settings['settings'][ sanitize_title( $key ) ]['label'] = sprintf( __( 'Default order status for %s', 'multisafepay' ), $order_status['label'] ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
@@ -552,6 +555,16 @@ class SystemReport {
             $templates[] = $template['file'];
         }
         return implode( ', ', $templates );
+    }
+
+    /**
+     * Return the final order status, to be displayed in the system report.
+     *
+     * @return string
+     */
+    private function get_final_order_status(): string {
+        $final_order_statuses = get_option( 'multisafepay_final_order_status', false );
+        return empty( $final_order_statuses ) ? 'No' : 'Yes';
     }
 
     /**

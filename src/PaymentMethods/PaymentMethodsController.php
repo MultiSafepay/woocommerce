@@ -5,6 +5,7 @@ namespace MultiSafepay\WooCommerce\PaymentMethods;
 use MultiSafepay\Api\Gateways\Gateway;
 use MultiSafepay\Api\Transactions\TransactionResponse;
 use MultiSafepay\Api\Transactions\UpdateRequest;
+use MultiSafepay\Exception\ApiException;
 use MultiSafepay\Util\Notification;
 use MultiSafepay\WooCommerce\Services\OrderService;
 use MultiSafepay\WooCommerce\Services\SdkService;
@@ -103,7 +104,12 @@ class PaymentMethodsController {
             $transaction_manager = $sdk->get_transaction_manager();
             $update_order        = new UpdateRequest();
             $update_order->addStatus( 'shipped' );
-            $transaction_manager->update( (string) $order->get_order_number(), $update_order );
+            try {
+                $transaction_manager->update( (string) $order->get_order_number(), $update_order );
+            } catch ( ApiException $api_exception ) {
+                Logger::log_error( $api_exception->getMessage() );
+                return;
+            }
         }
     }
 
@@ -121,7 +127,12 @@ class PaymentMethodsController {
             $transaction_manager = $sdk->get_transaction_manager();
             $update_order        = new UpdateRequest();
             $update_order->addData( array( 'invoice_id' => $order->get_order_number() ) );
-            $transaction_manager->update( (string) $order->get_order_number(), $update_order );
+            try {
+                $transaction_manager->update( (string) $order->get_order_number(), $update_order );
+            } catch ( ApiException $api_exception ) {
+                Logger::log_error( $api_exception->getMessage() );
+                return;
+            }
         }
     }
 

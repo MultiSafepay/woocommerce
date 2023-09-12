@@ -8,6 +8,7 @@ use MultiSafepay\Exception\ApiException;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Settings\SettingsFields;
 use MultiSafepay\WooCommerce\Utils\Logger;
+use Psr\Http\Client\ClientExceptionInterface;
 use WC_Order;
 
 /**
@@ -53,12 +54,12 @@ class PaymentMethodCallback {
      */
     private $multisafepay_transaction;
 
-
     /**
      * PaymentMethodCallback constructor
      *
-     * @param string               $multisafepay_order_id
-     * @param ?TransactionResponse $multisafepay_transaction
+     * @param  string               $multisafepay_order_id
+     * @param  ?TransactionResponse $multisafepay_transaction
+     * @throws ClientExceptionInterface
      */
     public function __construct( string $multisafepay_order_id, $multisafepay_transaction = null ) {
         $this->multisafepay_order_id = $multisafepay_order_id;
@@ -69,7 +70,7 @@ class PaymentMethodCallback {
 
         $this->multisafepay_transaction = $multisafepay_transaction;
 
-        // For most transactions var2 contains the order id; since the order request is being register using order number
+        // For most transactions, var2 contains the order id since the order request is being register using order number
         if ( ! empty( $this->multisafepay_transaction->getVar2() ) ) {
             $this->woocommerce_order_id = (int) $this->multisafepay_transaction->getVar2();
         }
@@ -87,16 +88,19 @@ class PaymentMethodCallback {
      * Return the MultiSafepay Transaction
      *
      * @return TransactionResponse
+     * @throws ClientExceptionInterface
      */
     private function get_transaction(): TransactionResponse {
         $transaction_manager = ( new SdkService() )->get_transaction_manager();
         try {
             $transaction = $transaction_manager->get( $this->multisafepay_order_id );
+        } catch ( ClientExceptionInterface $client_exception ) {
+            Logger::log_error( $client_exception->getMessage() );
+            wp_die( esc_html__( 'Invalid request', 'multisafepay' ), esc_html__( 'Invalid request', 'multisafepay' ), 400 );
         } catch ( ApiException $api_exception ) {
             Logger::log_error( $api_exception->getMessage() );
             wp_die( esc_html__( 'Invalid request', 'multisafepay' ), esc_html__( 'Invalid request', 'multisafepay' ), 400 );
         }
-
         return $transaction;
     }
 
@@ -142,13 +146,43 @@ class PaymentMethodCallback {
     }
 
     /**
+     * Return if the order status is the same as the final
+     * order status configured in the plugin settings
+     *
+     * @param  string $order_status
+     * @return bool
+     */
+    private function is_completed_the_final_status( string $order_status ): bool {
+        $final_order_status = get_option( 'multisafepay_final_order_status', false );
+        return $final_order_status && ( 'completed' === $order_status );
+    }
+
+    /**
+     * Check if the order status should be updated or not
+     *
+     * @return bool
+     */
+    private function should_status_be_updated(): bool {
+        // Check if the WooCommerce completed order status is considered as the final one
+        if ( $this->is_completed_the_final_status( $this->get_wc_order_status() ) ) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $message = 'It seems a notification is trying to process an order which already has defined completed as the final order status. For this reason notification is being ignored. Transaction ID received is ' . sanitize_text_field( (string) $_GET['transactionid'] ) . ' with status ' . $this->get_multisafepay_transaction_status();
+            Logger::log_warning( $message );
+            $this->order->add_order_note( $message );
+            return false;
+        }
+
+        // The order status can be updated
+        return true;
+    }
+
+    /**
      * Process the callback.
      *
      * @return void
      */
     public function process_callback(): void {
-
-        // On pre transactions notification, and using sequential order numbers plugins, var 2 is not received in the notification, then order doesn't exist
+        // On pre-transactions notification, and using sequential order numbers plugins, var 2 is not received in the notification, then order doesn't exist
         if ( ! $this->order ) {
             if ( get_option( 'multisafepay_debugmode', false ) ) {
                 Logger::log_info( 'Notification has been received for the transaction ID ' . $this->multisafepay_order_id . ' but WooCommerce order object has not been found' );
@@ -157,13 +191,27 @@ class PaymentMethodCallback {
             die( 'OK' );
         }
 
-        // If payment method of the order do not belong to MultiSafepay
+        // If payment method of the order does not belong to MultiSafepay
         if ( strpos( $this->order->get_payment_method(), 'multisafepay_' ) === false ) {
+            if ( get_option( 'multisafepay_debugmode', false ) ) {
+                $message = 'It seems a notification is trying to process an order processed by another payment method. Transaction ID received is ' . $this->order->get_id();
+                Logger::log_info( $message );
+            }
             header( 'Content-type: text/plain' );
             die( 'OK' );
         }
 
-        // If transaction status is partial_refunded we just register a new order note.
+        if ( $this->get_wc_order_status() === 'trash' ) {
+            if ( get_option( 'multisafepay_debugmode', false ) ) {
+                $message = 'It seems a notification is trying to change the order status, but the order has been moved to the trash. Transaction ID received is ' . $this->order->get_id() . ' and transaction status is ' . $this->get_multisafepay_transaction_status();
+                Logger::log_info( $message );
+                $this->order->add_order_note( $message );
+            }
+            header( 'Content-type: text/plain' );
+            die( 'OK' );
+        }
+
+        // If the transaction status is partial_refunded, we just register a new order note.
         if ( $this->get_multisafepay_transaction_status() === Transaction::PARTIAL_REFUNDED ) {
             $message = 'A partial refund has been registered within MultiSafepay Control for Order ID: ' . $this->woocommerce_order_id . ' and Order Number: ' . $this->multisafepay_order_id;
             $this->order->add_order_note( $message );
@@ -214,7 +262,11 @@ class PaymentMethodCallback {
             }
 
             // If MultiSafepay transaction status is not completed and not initialized, process the notification according order status settings
-            if ( $this->get_multisafepay_transaction_status() !== 'completed' && $this->get_multisafepay_transaction_status() !== 'initialized' ) {
+            if (
+                $this->get_multisafepay_transaction_status() !== 'completed' &&
+                $this->get_multisafepay_transaction_status() !== 'initialized' &&
+                $this->should_status_be_updated()
+            ) {
                 $this->order->update_status( str_replace( 'wc-', '', get_option( 'multisafepay_' . $this->get_multisafepay_transaction_status() . '_status', $default_order_status[ $this->get_multisafepay_transaction_status() . '_status' ]['default'] ) ) );
             }
 
@@ -227,7 +279,5 @@ class PaymentMethodCallback {
 
         header( 'Content-type: text/plain' );
         die( 'OK' );
-
     }
-
 }

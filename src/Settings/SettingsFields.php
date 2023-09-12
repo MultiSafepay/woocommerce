@@ -172,6 +172,18 @@ class SettingsFields {
                     'sort_order'   => 30,
                 ),
                 array(
+                    'id'           => 'multisafepay_final_order_status',
+                    'label'        => __( 'Is completed the final order status?', 'multisafepay' ),
+                    'description'  => __( 'When the order reaches the completed status, the notification callback from MultiSafepay will not alter it.', 'multisafepay' ),
+                    'type'         => 'checkbox',
+                    'default'      => false,
+                    'placeholder'  => __( 'Is completed the final order status?', 'multisafepay' ),
+                    'tooltip'      => '',
+                    'callback'     => '',
+                    'setting_type' => 'boolean',
+                    'sort_order'   => 35,
+                ),
+                array(
                     'id'           => 'multisafepay_time_active',
                     'label'        => __( 'Value lifetime of payment link', 'multisafepay' ),
                     'description'  => '',
@@ -181,7 +193,7 @@ class SettingsFields {
                     'tooltip'      => '',
                     'callback'     => '',
                     'setting_type' => 'int',
-                    'sort_order'   => 35,
+                    'sort_order'   => 40,
                 ),
                 array(
                     'id'           => 'multisafepay_time_unit',
@@ -198,7 +210,7 @@ class SettingsFields {
                     'tooltip'      => '',
                     'callback'     => '',
                     'setting_type' => 'string',
-                    'sort_order'   => 40,
+                    'sort_order'   => 45,
                 ),
                 array(
                     'id'           => 'multisafepay_second_chance',
@@ -210,7 +222,7 @@ class SettingsFields {
                     'tooltip'      => __( 'MultiSafepay will send two Second Chance reminder emails. In the emails, MultiSafepay will include a link to allow the consumer to finalize the payment. The first Second Chance email is sent 1 hour after the transaction was initiated and the second after 24 hours. To receive second chance emails, this option must also be activated within your MultiSafepay account, otherwise it will not work.', 'multisafepay' ),
                     'callback'     => '',
                     'setting_type' => 'boolean',
-                    'sort_order'   => 45,
+                    'sort_order'   => 50,
                 ),
             ),
         );
@@ -269,7 +281,7 @@ class SettingsFields {
     }
 
     /**
-     * Returns the MultiSafepay order statused to create settings fields
+     * Returns the MultiSafepay order statuses to create settings fields
      * and match them with WooCommerce order statuses
      *
      * @return  array
