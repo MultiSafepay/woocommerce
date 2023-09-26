@@ -2,9 +2,9 @@
 Contributors: multisafepayplugin
 Tags: multisafepay, credit card, credit cards, gateway, payments, woocommerce, ideal, bancontact, klarna, sofort, giropay, sepa direct debit
 Requires at least: 5.0
-Tested up to: 6.3
+Tested up to: 6.3.1
 Requires PHP: 7.3
-Stable tag: 5.3.0
+Stable tag: 5.4.0
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -138,6 +138,17 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 9. Embedded Credit Card form using MultiSafepay Payment Component
 
 == Changelog ==
+= Release Notes - WooCommerce 5.4.0 (Sep 26th, 2023) =
+
+### Added
++ PLGWOOS-870: Add support to define completed as a final order status where notification will not change the order status
+
+### Fixed
++ PLGWOOS-871: Fix the minimum amount filter failing in the order-pay page
+
+### Changed
++ DAVAMS-665 General refactor for better error handling
+
 = Release Notes - WooCommerce 5.3.0 (Aug 10th, 2023) =
 
 ### Added
