@@ -131,10 +131,10 @@
             multisafepay_component.init(
                 'payment',
                 {
-					container: this.payment_component_container_selector,
-					gateway: this.config.gateway,
-					onLoad: state => { this.logger( 'onLoad' ); },
-					onError: state => { this.logger( 'onError' ); }
+                    container: this.payment_component_container_selector,
+                    gateway: this.config.gateway,
+                    onLoad: state => { this.logger( 'onLoad' ); },
+                    onError: state => { this.logger( 'onError' ); }
                 }
             );
             this.hide_loader();
@@ -227,10 +227,13 @@
     $.each(
         multisafepay_payment_component_gateways,
         function ( index, gateway ) {
-			if ( $( '#payment ul.wc_payment_methods li.payment_method_' + gateway ).length > 0 ) {
-				new MultiSafepayPaymentComponent( window['payment_component_config_' + gateway], gateway );
-			}
-		}
+            if (
+                $( '#payment ul.wc_payment_methods li.payment_method_' + gateway ).length > 0 &&
+                ! (window['payment_component_config_' + gateway].api_token !== '')
+            ) {
+                new MultiSafepayPaymentComponent( window['payment_component_config_' + gateway], gateway );
+            }
+        }
     );
 
 })( multisafepay_payment_component_gateways, jQuery );

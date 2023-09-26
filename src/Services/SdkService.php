@@ -150,8 +150,16 @@ class SdkService {
      * @return  string
      */
     public function get_api_token(): string {
-        $api_token_manager = $this->get_api_token_manager();
-        return $api_token_manager->get()->getApiToken();
+        try {
+            $api_token_manager = $this->get_api_token_manager();
+            return $api_token_manager->get()->getApiToken();
+        } catch ( ApiException $api_exception ) {
+            Logger::log_error( $api_exception->getMessage() );
+            return '';
+        } catch ( ClientExceptionInterface $client_exception ) {
+            Logger::log_error( $client_exception->getMessage() );
+            return '';
+        }
     }
 
 

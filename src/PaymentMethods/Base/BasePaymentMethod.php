@@ -292,7 +292,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
             $transaction = $transaction_manager->create( $order_request );
         } catch ( ApiException $api_exception ) {
             Logger::log_error( $api_exception->getMessage() );
-            wc_add_notice( $api_exception->getMessage(), 'error' );
+            wc_add_notice( __( 'There was a problem processing your payment. Please try again later or contact with us.', 'multisafepay' ), 'error' );
             return;
         }
 
@@ -304,37 +304,6 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
             'result'   => 'success',
             'redirect' => esc_url_raw( $transaction->getPaymentUrl() ),
         );
-    }
-
-    /**
-     * This validates that the API Key has been setup properly
-     * check SDK, and check if the gateway is enable for the merchant.
-     *
-     * @param string $key
-     * @param string $value
-     *
-     * @return  string
-     */
-    public function validate_enabled_field( $key, $value ) {
-        if ( null === $value ) {
-            return 'no';
-        }
-        $gateways           = ( new SdkService() )->get_gateways();
-        $available_gateways = array();
-        foreach ( $gateways as $gateway ) {
-            $available_gateways[] = $gateway->getId();
-        }
-        if ( 'CREDITCARD' !== $this->gateway_code && ! in_array( $this->gateway_code, $available_gateways, true ) && ! empty( $this->gateway_code ) ) {
-            $message = sprintf(
-                /* translators: %1$: The payment method title */
-                __( 'It seems %1$s is not available for your MultiSafepay account. <a href="%2$s">Contact support</a>', 'multisafepay' ),
-                $this->get_payment_method_title(),
-                admin_url( 'admin.php?page=multisafepay-settings&tab=support' )
-            );
-            $this->add_error( $message );
-        }
-
-        return 'yes';
     }
 
     /**
