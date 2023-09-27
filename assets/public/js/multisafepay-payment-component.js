@@ -229,7 +229,7 @@
         function ( index, gateway ) {
             if (
                 $( '#payment ul.wc_payment_methods li.payment_method_' + gateway ).length > 0 &&
-                ! (window['payment_component_config_' + gateway].api_token !== '')
+                (window['payment_component_config_' + gateway].api_token !== '')
             ) {
                 new MultiSafepayPaymentComponent( window['payment_component_config_' + gateway], gateway );
             }
