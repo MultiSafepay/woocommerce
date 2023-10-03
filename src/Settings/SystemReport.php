@@ -3,18 +3,19 @@
 namespace MultiSafepay\WooCommerce\Settings;
 
 use MultiSafepay\Util\Version;
+use MultiSafepay\WooCommerce\Services\PaymentMethodService;
 use WC_API;
 use WC_Countries;
-use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods;
 use WC_Tax;
 use WP_Error;
 
 /**
- * The system report.
+ * Defines all the functionalities needed on the system report page
  *
- * Defines all the functionalities needed on the settings page
+ * Class SystemReport
  *
- * @since   4.6.0
+ * @package MultiSafepay\WooCommerce\Settings
  */
 class SystemReport {
 
@@ -233,26 +234,25 @@ class SystemReport {
             'title'    => __( 'MultiSafepay Gateway Settings', 'multisafepay' ),
             'settings' => array(),
         );
-        foreach ( Gateways::GATEWAYS as $gateway ) {
-            $multisafepay_gateway = new $gateway();
-            $is_enable            = $multisafepay_gateway->enabled ? true : false;
+        foreach ( ( new PaymentMethodService() )->get_woocommerce_payment_gateways() as $woocommerce_payment_gateway ) {
+            $is_enable = $woocommerce_payment_gateway->enabled ? true : false;
             if ( $is_enable ) {
                 $multisafepay_gateway_settings_value = '';
-                if ( ! empty( $multisafepay_gateway->initial_order_status ) ) {
-                    $multisafepay_gateway_settings_value .= __( 'Initial Order Status: ', 'multisafepay' ) . $multisafepay_gateway->initial_order_status . '. ';
+                if ( ! empty( $woocommerce_payment_gateway->initial_order_status ) ) {
+                    $multisafepay_gateway_settings_value .= __( 'Initial Order Status: ', 'multisafepay' ) . $woocommerce_payment_gateway->initial_order_status . '. ';
                 }
-                if ( ! empty( $multisafepay_gateway->min_amount ) ) {
-                    $multisafepay_gateway_settings_value .= __( 'Min Amount: ', 'multisafepay' ) . $multisafepay_gateway->min_amount . '. ';
+                if ( ! empty( $woocommerce_payment_gateway->min_amount ) ) {
+                    $multisafepay_gateway_settings_value .= __( 'Min Amount: ', 'multisafepay' ) . $woocommerce_payment_gateway->min_amount . '. ';
                 }
-                if ( ! empty( $multisafepay_gateway->max_amount ) ) {
-                    $multisafepay_gateway_settings_value .= __( 'Max Amount: ', 'multisafepay' ) . $multisafepay_gateway->max_amount . '. ';
+                if ( ! empty( $woocommerce_payment_gateway->max_amount ) ) {
+                    $multisafepay_gateway_settings_value .= __( 'Max Amount: ', 'multisafepay' ) . $woocommerce_payment_gateway->max_amount . '. ';
                 }
-                if ( ! empty( $multisafepay_gateway->countries ) ) {
-                    $multisafepay_gateway_settings_value .= __( 'Countries: ', 'multisafepay' ) . implode( ', ', $multisafepay_gateway->countries ) . '. ';
+                if ( ! empty( $woocommerce_payment_gateway->countries ) ) {
+                    $multisafepay_gateway_settings_value .= __( 'Countries: ', 'multisafepay' ) . implode( ', ', $woocommerce_payment_gateway->countries ) . '. ';
                 }
 
-                $multisafepay_gateway_settings['settings'][ $multisafepay_gateway->id ]['label'] = $multisafepay_gateway->get_payment_method_title();
-                $multisafepay_gateway_settings['settings'][ $multisafepay_gateway->id ]['value'] = $multisafepay_gateway_settings_value;
+                $multisafepay_gateway_settings['settings'][ $woocommerce_payment_gateway->id ]['label'] = $woocommerce_payment_gateway->get_payment_method_title();
+                $multisafepay_gateway_settings['settings'][ $woocommerce_payment_gateway->id ]['value'] = $multisafepay_gateway_settings_value;
             }
         }
         return $multisafepay_gateway_settings;

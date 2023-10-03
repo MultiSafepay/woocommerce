@@ -19,7 +19,7 @@
             // Triggered when change the payment method selected
             $( document ).on( 'payment_method_selected', ( event ) => { this.on_payment_method_selected( event ); } );
 
-            // Triggered when something changes in the and start the process to refresh everything
+            // Triggered when something changes in the checkout and start the process to refresh everything
             $( document ).on( 'update_checkout', ( event ) => { this.on_update_checkout( event ); } );
 
             // Triggered when something changed in the checkout and the process to refresh everything is finished
@@ -60,7 +60,6 @@
             }
 
             this.refresh_payment_component_config();
-            this.maybe_init_payment_component();
         }
 
         on_init_checkout( event ) {
@@ -71,6 +70,33 @@
             }
 
             this.maybe_init_payment_component();
+        }
+
+        refresh_payment_component_config() {
+            $.ajax(
+                {
+                    url: this.config.ajax_url,
+                    type: 'POST',
+                    data: {
+                        'nonce': this.config.nonce,
+                        'action': 'get_payment_component_arguments',
+                        'gateway_id': this.gateway,
+                        'gateway': this.config.gateway,
+                    },
+                    beforeSend: function() {
+                        $( this.payment_component_container_selector ).html( '' );
+                        this.show_loader();
+                    }.bind( this ),
+                    complete: function () {
+                        this.payment_component = null;
+                        this.reinit_payment_component();
+                        this.hide_loader();
+                    }.bind( this ),
+                    success: function ( response ) {
+                        this.config.orderData = response.orderData;
+                    }.bind( this )
+                }
+            );
         }
 
         on_click_place_order( event ) {
@@ -94,7 +120,7 @@
         }
 
         is_selected() {
-            if ( $( PAYMENT_METHOD_SELECTOR + ":checked" ).val() == this.gateway ) {
+            if ( $( PAYMENT_METHOD_SELECTOR + ":checked" ).val() === this.gateway ) {
                 return true;
             }
             return false;
@@ -127,7 +153,7 @@
 
         init_payment_component() {
             this.show_loader();
-            var multisafepay_component = this.get_payment_component();
+            const multisafepay_component = this.get_payment_component();
             multisafepay_component.init(
                 'payment',
                 {
@@ -138,6 +164,10 @@
                 }
             );
             this.hide_loader();
+        }
+
+        reinit_payment_component() {
+            this.init_payment_component();
         }
 
         maybe_init_payment_component() {
@@ -170,7 +200,7 @@
         }
 
         insert_errors( errors ) {
-            var gateway_id = this.gateway;
+            const gateway_id = this.gateway;
             $.each(
                 errors.errors,
                 function( index, value ) {
@@ -185,39 +215,12 @@
             $( 'form.woocommerce-checkout .' + this.gateway + '_payment_component_errors' ).remove();
         }
 
-        refresh_payment_component_config() {
-            $.ajax(
-                {
-                    url: this.config.ajax_url,
-                    type: 'POST',
-                    data: {
-                        'nonce': this.config.nonce,
-                        'action': this.gateway + '_component_arguments',
-                        'gateway_id': this.config.gateway_id,
-                        'gateway': this.config.gateway,
-                    },
-                    beforeSend: function() {
-                        $( this.payment_component_container_selector ).html( '' );
-                        this.show_loader();
-                    }.bind( this ),
-                    complete: function () {
-                        this.payment_component = null;
-                        this.reinit_payment_component();
-                        this.hide_loader();
-                    }.bind( this ),
-                    success: function (response) {
-                        this.config.orderData = response.orderData;
-                    }.bind( this )
-                }
-            );
-        }
-
         reinit_payment_component() {
             this.init_payment_component();
         }
 
         logger( argument ) {
-            if ( this.config.debug ) {
+            if ( this.config && this.config.debug ) {
                 console.log( argument );
             }
         }

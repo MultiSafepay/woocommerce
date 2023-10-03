@@ -4,12 +4,8 @@ namespace MultiSafepay\WooCommerce\Utils;
 
 use MultiSafepay\ValueObject\Money;
 
-
 /**
  * Class MoneyUtil
- *
- * @package MultiSafepay\WooCommerce\Utils
- * @since    4.0.0
  */
 class MoneyUtil {
     public const DEFAULT_CURRENCY_CODE = 'EUR';

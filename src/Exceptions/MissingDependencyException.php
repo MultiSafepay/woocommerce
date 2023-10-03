@@ -34,5 +34,4 @@ class MissingDependencyException extends \Exception {
     public function get_missing_plugin_names(): array {
         return $this->missing_plugin_names;
     }
-
 }

@@ -1,5 +1,7 @@
 grumphp:
   hooks_dir: ~
+  git_hook_variables:
+    EXEC_GRUMPHP_COMMAND: 'docker-compose exec -T --workdir /var/www/html/wp-content/plugins/multisafepay app'
   hooks_preset: local
   process_timeout: 500
   additional_info: "\nTo get full grumphp documentation at: https://github.com/phpro/grumphp/\n"
@@ -9,6 +11,9 @@ grumphp:
   tasks:
     phpcs:
       standard: phpcs.xml
+    phpstan:
+      configuration: "./tests/phpstan/phpstan.neon"
+      memory_limit: "-1"
   testsuites:
     git_pre_commit:
-      tasks: ['phpcs']
+      tasks: ['phpcs', 'phpstan']

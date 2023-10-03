@@ -15,5 +15,4 @@ class Internationalization {
 	public function load_plugin_textdomain(): void {
         load_plugin_textdomain( 'multisafepay', false, dirname( plugin_basename( __FILE__ ), 3 ) . '/languages/' );
 	}
-
 }

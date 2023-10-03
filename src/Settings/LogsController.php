@@ -5,11 +5,11 @@ namespace MultiSafepay\WooCommerce\Settings;
 use MultiSafepay\WooCommerce\Utils\Logger;
 
 /**
- * The status tab controller.
+ * Defines all the functionalities needed on the logs tab on the settings page
  *
- * Defines all the functionalities needed on the settings page
+ * Class LogsController
  *
- * @since   4.0.0
+ * @package MultiSafepay\WooCommerce\Settings
  */
 class LogsController {
 
@@ -31,5 +31,4 @@ class LogsController {
 
         require_once MULTISAFEPAY_PLUGIN_DIR_PATH . 'templates/partials/multisafepay-settings-logs-display.php';
     }
-
 }

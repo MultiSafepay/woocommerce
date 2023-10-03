@@ -2,14 +2,14 @@
 
 namespace MultiSafepay\WooCommerce\Settings;
 
-use MultiSafepay\WooCommerce\Services\SdkService;
+use MultiSafepay\WooCommerce\Services\PaymentMethodService;
 
 /**
- * The settings fields.
+ * Defines the settings fields properties
  *
- * Defines all the settings fields properties
+ * Class SettingsFields
  *
- * @since   4.0.0
+ * @package MultiSafepay\WooCommerce\Settings
  */
 class SettingsFields {
 
@@ -88,6 +88,21 @@ class SettingsFields {
             'intro'  => '',
             'fields' => array(
                 array(
+                    'id'           => 'multisafepay_group_credit_cards',
+                    'label'        => __( 'Group Credit Cards', 'multisafepay' ),
+                    'description'  => __( 'If is enable, payment methods classified as credit cards (Amex, Maestro, Mastercard, and Visa) will shown grouped as a single payment method', 'multisafepay' ),
+                    'type'         => 'checkbox',
+                    'default'      => (bool) get_option(
+                        'multisafepay_group_credit_cards',
+                        PaymentMethodService::is_multisafepay_credit_card_woocommerce_payment_gateway_enabled()
+                    ),
+                    'placeholder'  => __( 'Group Credit Cards', 'multisafepay' ),
+                    'tooltip'      => '',
+                    'callback'     => '',
+                    'setting_type' => 'boolean',
+                    'sort_order'   => 3,
+                ),
+                array(
                     'id'           => 'multisafepay_debugmode',
                     'label'        => __( 'Debug Mode', 'multisafepay' ),
                     'description'  => 'Is recommended to keep debug mode disabled in live environment',
@@ -97,7 +112,7 @@ class SettingsFields {
                     'tooltip'      => __( 'Logs additional information to the system log', 'multisafepay' ),
                     'callback'     => '',
                     'setting_type' => 'boolean',
-                    'sort_order'   => 5,
+                    'sort_order'   => 1,
                 ),
                 array(
                     'id'           => 'multisafepay_disable_shopping_cart',
@@ -109,7 +124,7 @@ class SettingsFields {
                     'tooltip'      => '',
                     'callback'     => '',
                     'setting_type' => 'boolean',
-                    'sort_order'   => 7,
+                    'sort_order'   => 100,
                 ),
                 array(
                     'id'           => 'multisafepay_order_request_description',
@@ -224,6 +239,35 @@ class SettingsFields {
                     'setting_type' => 'boolean',
                     'sort_order'   => 50,
                 ),
+                array(
+                    'id'           => 'multisafepay_time_unit',
+                    'label'        => __( 'Unit lifetime of payment link', 'multisafepay' ),
+                    'description'  => __( 'The lifetime of a payment link by default is 30 days. This means that the customer has 30 days to complete the transaction using the payment link', 'multisafepay' ),
+                    'type'         => 'select',
+                    'options'      => array(
+                        'days'    => __( 'Days', 'multisafepay' ),
+                        'hours'   => __( 'Hours', 'multisafepay' ),
+                        'seconds' => __( 'Seconds', 'multisafepay' ),
+                    ),
+                    'default'      => 'days',
+                    'placeholder'  => __( 'Unit lifetime of payment link', 'multisafepay' ),
+                    'tooltip'      => '',
+                    'callback'     => '',
+                    'setting_type' => 'string',
+                    'sort_order'   => 40,
+                ),
+                array(
+                    'id'           => 'multisafepay_payment_component_template_id',
+                    'label'        => __( 'Payment Component Template ID', 'multisafepay' ),
+                    'description'  => __( 'If empty, the default one will be used', 'multisafepay' ),
+                    'type'         => 'text',
+                    'default'      => '',
+                    'placeholder'  => __( 'Payment Component Template ID', 'multisafepay' ),
+                    'tooltip'      => '',
+                    'callback'     => '',
+                    'setting_type' => 'string',
+                    'sort_order'   => 55,
+                ),
             ),
         );
     }
@@ -334,5 +378,4 @@ class SettingsFields {
             ),
         );
     }
-
 }

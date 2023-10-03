@@ -7,6 +7,11 @@ parameters:
     paths:
         - ../../src/
         - ../../multisafepay.php
+    excludePaths:
+        analyseAndScan:
+            - ../../templates/multisafepay-checkout-fields-display.php
+            - ../../tests/phpunit/*
+            - ../../tests/fixtures/*
     ignoreErrors:
         - '#Constant MULTISAFEPAY_PLUGIN_DIR_PATH not found.#'
         - '#Constant MULTISAFEPAY_PLUGIN_URL not found.#'
@@ -16,4 +21,3 @@ parameters:
         - '#Variable \$transaction might not be defined.#'
         - '#Property WC_Payment_Gateway::\$max_amount \(int\) does not accept string.#'
         - '#Property WC_Payment_Gateway::\$countries \(array\) does not accept string.#'
-        - '#Property [a-zA-Z0-9\\_]+::\$payment_component \(bool\) does not accept string.#'

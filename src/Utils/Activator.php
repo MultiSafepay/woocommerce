@@ -4,13 +4,9 @@ namespace MultiSafepay\WooCommerce\Utils;
 
 use MultiSafepay\WooCommerce\Exceptions\MissingDependencyException;
 
-
 /**
- * Fired during plugin activation.
- *
  * This class defines all code necessary to run during the plugin's activation.
  *
- * @since    4.0.0
  * @see      https://developer.wordpress.org/reference/functions/register_activation_hook/
  */
 class Activator {
@@ -77,5 +73,4 @@ class Activator {
         $blogs_ids = get_sites( $args );
         return $blogs_ids;
 	}
-
 }

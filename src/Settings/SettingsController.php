@@ -2,15 +2,9 @@
 
 namespace MultiSafepay\WooCommerce\Settings;
 
-use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
-use MultiSafepay\WooCommerce\Services\SdkService;
-
 /**
  * The settings page controller.
- *
  * Defines all the functionalities needed on the settings page
- *
- * @since   4.0.0
  */
 class SettingsController {
 
@@ -21,7 +15,6 @@ class SettingsController {
      * This function also works to returns booleans instead of strings for
      * multisafepay_second_chance, multisafepay_testmode, multisafepay_debugmode options
      *
-     * @since 4.0.0
      * @see https://developer.wordpress.org/reference/hooks/option_option/
      *
      * @param   string $value
@@ -50,6 +43,7 @@ class SettingsController {
 	 * Register the stylesheets for the settings page.
      *
      * @see https://developer.wordpress.org/reference/functions/wp_enqueue_style/
+     *
      * @return void
 	 */
 	public function enqueue_styles(): void {
@@ -60,6 +54,7 @@ class SettingsController {
      * Register the common settings page in WooCommerce menu section.
      *
      * @see https://developer.wordpress.org/reference/functions/add_submenu_page/
+     *
      * @return void
      */
 	public function register_common_settings_page(): void {
@@ -146,6 +141,7 @@ class SettingsController {
      * Add settings field
      *
      * @see https://developer.wordpress.org/reference/functions/add_settings_field/
+     *
      * @param   array  $field      The field
      * @param   string $tab_key    The key of the tab
      * @return  void
@@ -180,6 +176,7 @@ class SettingsController {
      * Filter which set the settings page and adds a screen options of WooCommerce
      *
      * @see http://hookr.io/filters/woocommerce_screen_ids/
+     *
      * @param   array $screen
      * @return  array
      */
@@ -192,6 +189,7 @@ class SettingsController {
      * Register setting
      *
      * @see https://developer.wordpress.org/reference/functions/register_setting/
+     *
      * @param   array  $field
      * @param   string $tab_key
      * @return  void
@@ -230,6 +228,7 @@ class SettingsController {
      * Callback to display the title on each settings sections
      *
      * @see https://developer.wordpress.org/reference/functions/add_settings_section/
+     *
      * @param   array $args
      * @return  void
      */
@@ -270,5 +269,4 @@ class SettingsController {
         }
         return $settings;
     }
-
 }

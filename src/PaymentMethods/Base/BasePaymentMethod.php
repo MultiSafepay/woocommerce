@@ -2,31 +2,46 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods\Base;
 
-use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
-use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfo\Meta;
+use Exception;
+use MultiSafepay\Api\PaymentMethods\PaymentMethod;
 use MultiSafepay\Exception\ApiException;
-use MultiSafepay\Exception\InvalidArgumentException;
-use MultiSafepay\ValueObject\IbanNumber;
-use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
-use MultiSafepay\WooCommerce\Services\CustomerService;
 use MultiSafepay\WooCommerce\Services\OrderService;
+use MultiSafepay\WooCommerce\Services\PaymentComponentService;
+use MultiSafepay\WooCommerce\Services\PaymentMethodService;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Utils\Logger;
+use Psr\Http\Client\ClientExceptionInterface;
 use WC_Countries;
 use WC_Order;
 use WC_Payment_Gateway;
 
-abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMethodInterface {
+/**
+ * Class BasePaymentMethod
+ *
+ * @package MultiSafepay\WooCommerce\PaymentMethods\Base
+ */
+class BasePaymentMethod extends WC_Payment_Gateway {
 
     use BaseRefunds;
 
-    const MULTISAFEPAY_COMPONENT_JS_URL   = 'https://pay.multisafepay.com/sdk/components/v2/components.js';
-    const MULTISAFEPAY_COMPONENT_CSS_URL  = 'https://pay.multisafepay.com/sdk/components/v2/components.css';
-    const NOT_ALLOW_REFUND_ORDER_STATUSES = array(
+    public const TRANSACTION_TYPE_DIRECT   = 'direct';
+    public const TRANSACTION_TYPE_REDIRECT = 'redirect';
+
+    public const MULTISAFEPAY_COMPONENT_JS_URL  = 'https://pay.multisafepay.com/sdk/components/v2/components.js';
+    public const MULTISAFEPAY_COMPONENT_CSS_URL = 'https://pay.multisafepay.com/sdk/components/v2/components.css';
+
+    public const NOT_ALLOW_REFUND_ORDER_STATUSES = array(
         'pending',
         'on-hold',
         'failed',
     );
+
+    /**
+     * A PaymentMethod object with the information of the payment method object
+     *
+     * @var PaymentMethod
+     */
+    protected $payment_method;
 
     /**
      * What type of transaction, should be 'direct' or 'redirect'
@@ -43,14 +58,7 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
     protected $gateway_code;
 
     /**
-     * An array with the keys of the required custom fields
-     *
-     * @var array
-     */
-    protected $checkout_fields_ids;
-
-    /**
-     * The minimun amount for the payment method
+     * The minimum amount for the payment method
      *
      * @var string
      */
@@ -63,7 +71,6 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
      */
     public $initial_order_status;
 
-
     /**
      * If supports payment component
      *
@@ -72,53 +79,42 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
     public $payment_component = false;
 
     /**
-     * Defines if the payment method is tokenizable
+     * BasePaymentMethod constructor.
      *
-     * @var bool
+     * @param PaymentMethod $payment_method
      */
-    protected $has_configurable_tokenization = false;
+    public function __construct( PaymentMethod $payment_method ) {
+        $this->payment_method = $payment_method;
+        $this->supports       = array( 'products', 'refunds' );
+        $this->id             = $this->get_payment_method_id();
 
-    /**
-     * Defines if the payment method will use the Payment Component
-     *
-     * @var bool
-     */
-    protected $has_configurable_payment_component = false;
-
-    /**
-     * Construct for Core class.
-     */
-    public function __construct() {
-        $this->supports = array( 'products', 'refunds' );
-        $this->id       = $this->get_payment_method_id();
-        if ( $this->is_payment_component_enable() ) {
-            $this->supports[] = 'multisafepay_payment_component';
-            if ( $this->is_tokenization_enable() ) {
-                $this->supports[] = 'multisafepay_tokenization';
-            }
+        if ( $this->is_payment_component_enabled() ) {
             add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_payment_component_styles' ) );
             add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_payment_component_scripts' ) );
         }
 
-        $this->type                = $this->get_payment_method_type();
-        $this->method_title        = $this->get_payment_method_title();
-        $this->method_description  = $this->get_payment_method_description();
-        $this->gateway_code        = $this->get_payment_method_code();
-        $this->has_fields          = $this->has_fields();
-        $this->checkout_fields_ids = $this->get_checkout_fields_ids();
-        $this->icon                = $this->get_logo();
-        $this->form_fields         = $this->add_form_fields();
+        add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_multisafepay_scripts_by_gateway_code' ) );
+
+        $this->type               = $this->get_payment_method_type();
+        $this->method_title       = $this->get_payment_method_title();
+        $this->method_description = $this->get_payment_method_description();
+        $this->gateway_code       = $this->get_payment_method_gateway_code();
+        $this->has_fields         = $this->has_fields();
+        $this->icon               = $this->get_logo();
+        $this->form_fields        = $this->add_form_fields();
+
+        // Init form fields and load the settings.
         $this->init_form_fields();
         $this->init_settings();
 
-        $this->enabled              = $this->get_option( 'enabled', 'no' );
+        $this->enabled              = $this->get_option( 'enabled', 'yes' );
         $this->title                = $this->get_option( 'title', $this->get_method_title() );
         $this->description          = $this->get_option( 'description' );
         $this->max_amount           = $this->get_option( 'max_amount' );
         $this->min_amount           = $this->get_option( 'min_amount' );
         $this->countries            = $this->get_option( 'countries' );
         $this->initial_order_status = $this->get_option( 'initial_order_status', false );
-        $this->payment_component    = $this->get_option( 'payment_component', false );
+        $this->payment_component    = $this->is_payment_component_enabled();
         $this->errors               = array();
 
         add_action(
@@ -132,69 +128,143 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
     }
 
     /**
-     * Return the full path of the (locale) logo
-     *
      * @return string
      */
-    private function get_logo(): string {
-        $language = substr( ( new CustomerService() )->get_locale(), 0, 2 );
+    public function get_payment_method_id(): string {
+        return PaymentMethodService::get_legacy_woocommerce_payment_gateway_ids( $this->payment_method->getId() );
+    }
 
-        $icon = $this->get_payment_method_icon();
+    /**
+     * @return string
+     */
+    public function get_payment_method_gateway_code(): string {
+        return $this->payment_method->getId();
+    }
 
-        $icon_locale = substr_replace( $icon, "-$language", - 4, - 4 );
-        if ( file_exists( MULTISAFEPAY_PLUGIN_DIR_PATH . 'assets/public/img/' . $icon_locale ) ) {
-            $icon = $icon_locale;
+    /**
+     * @return string
+     */
+    public function get_payment_method_type(): string {
+        if ( $this->is_payment_component_enabled() ) {
+            return self::TRANSACTION_TYPE_DIRECT;
         }
 
-        return esc_url( MULTISAFEPAY_PLUGIN_URL . '/assets/public/img/' . $icon );
+        return self::TRANSACTION_TYPE_REDIRECT;
     }
 
     /**
-     * Return an array of allowed countries defined in WooCommerce Settings.
-     *
-     * @return array
+     * @return string
      */
-    private function get_countries(): array {
-        $countries = new WC_Countries();
-        return $countries->get_allowed_countries();
+    public function get_payment_method_title(): string {
+        return $this->payment_method->getName();
     }
 
     /**
-     * Return if payment methods requires custom checkout fields
-     *
-     * @return boolean
+     * @return string
+     */
+    public function get_payment_method_description(): string {
+        return sprintf(
+        /* translators: %2$: The payment method title */
+            __( 'Read more about %2$s on <a href="%1$s" target="_blank">MultiSafepay\'s Docs</a>.', 'multisafepay' ),
+            'https://docs.multisafepay.com',
+            $this->get_payment_method_title()
+        );
+    }
+
+    /**
+     * @return string
+     */
+    public function get_payment_method_icon(): string {
+        return $this->payment_method->getLargeIconUrl();
+    }
+
+    /**
+     * @return string
+     */
+    protected function get_logo(): string {
+        return $this->get_payment_method_icon();
+    }
+
+    /**
+     * @return bool
      */
     public function has_fields(): bool {
-        if ( $this->is_payment_component_enable() ) {
+        if ( $this->is_payment_component_enabled() ) {
             return true;
         }
+
         return false;
     }
 
     /**
-     * Return the custom checkout fields id`s
+     * Return if tokenization card on file is enabled.
      *
+     * @return bool
+     */
+    public function is_tokenization_enabled(): bool {
+        $settings = get_option( 'woocommerce_' . $this->id . '_settings', array( 'tokenization' => 'no' ) );
+        if ( ! isset( $settings['tokenization'] ) ) {
+            return false;
+        }
+        return 'yes' === $settings['tokenization'];
+    }
+
+    /**
+     * Return if payment component is enabled.
+     *
+     * @return bool
+     */
+    public function is_payment_component_enabled(): bool {
+        $settings = get_option( 'woocommerce_' . $this->id . '_settings', array( 'payment_component' => 'no' ) );
+        if ( ! isset( $settings['payment_component'] ) ) {
+            return false;
+        }
+        return 'yes' === $settings['payment_component'];
+    }
+
+    /**
+     * Enqueue Javascript related with Payment Component.
+     *
+     * @return void
+     */
+    public function enqueue_payment_component_scripts() {
+        if ( is_checkout() || is_wc_endpoint_url( 'order-pay' ) ) {
+
+            wp_enqueue_script( 'multisafepay-payment-component-script', self::MULTISAFEPAY_COMPONENT_JS_URL, array(), MULTISAFEPAY_PLUGIN_VERSION, true );
+
+            $multisafepay_payment_component_config = ( new PaymentComponentService() )->get_payment_component_arguments( $this );
+            $gateways_with_payment_component       = ( new PaymentMethodService() )->get_woocommerce_payment_gateway_ids_with_payment_component_support();
+
+            $route = MULTISAFEPAY_PLUGIN_URL . '/assets/public/js/multisafepay-payment-component.js';
+            wp_enqueue_script( 'multisafepay-payment-component-js', $route, array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
+            wp_localize_script( 'multisafepay-payment-component-js', 'payment_component_config_' . $this->id, $multisafepay_payment_component_config );
+            wp_localize_script( 'multisafepay-payment-component-js', 'multisafepay_payment_component_gateways', $gateways_with_payment_component );
+            wp_enqueue_script( 'multisafepay-payment-component-js' );
+
+        }
+    }
+
+    /**
+     * Enqueue Javascript related with a MultiSafepay Payment Method.
+     *
+     * @return void
+     */
+    public function enqueue_multisafepay_scripts_by_gateway_code() {
+        if ( is_checkout() || is_wc_endpoint_url( 'order-pay' ) ) {
+
+            if ( 'APPLEPAY' === $this->get_payment_method_gateway_code() ) {
+                wp_enqueue_script( 'multisafepay-apple-pay-js', MULTISAFEPAY_PLUGIN_URL . '/assets/public/js/multisafepay-apple-pay.js', array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
+            }
+
+            if ( 'GOOGLEPAY' === $this->get_payment_method_gateway_code() ) {
+                wp_enqueue_script( 'multisafepay-google-pay-js', MULTISAFEPAY_PLUGIN_URL . '/assets/public/js/multisafepay-google-pay.js', array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
+                wp_enqueue_script( 'google-pay-js', 'https://pay.google.com/gp/p/js/pay.js', array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
+            }
+        }
+    }
+
+    /**
      * @return array
-     */
-    public function get_checkout_fields_ids(): array {
-        return array();
-    }
-
-    /**
-     * Return the gateway info
-     *
-     * @param array|null $data
-     *
-     * @return GatewayInfoInterface
-     */
-    public function get_gateway_info( array $data = null ): GatewayInfoInterface {
-        return new BaseGatewayInfo();
-    }
-
-    /**
-     * Define the form option - settings fields.
-     *
-     * @return  array
      */
     public function add_form_fields(): array {
         $form_fields = array(
@@ -227,13 +297,15 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
                 'title'    => __( 'Min Amount', 'multisafepay' ),
                 'type'     => 'decimal',
                 'desc_tip' => __( 'This payment method is not shown in the checkout if the order total is lower than the defined amount. Leave blank for no restrictions.', 'multisafepay' ),
-                'default'  => $this->get_option( 'min_amount', '' ),
+                'default'  => $this->payment_method->getMinAmount(),
+                'value'    => (float) $this->get_option( 'min_amount', $this->payment_method->getMinAmount() ),
             ),
             'max_amount'           => array(
                 'title'    => __( 'Max Amount', 'multisafepay' ),
                 'type'     => 'decimal',
                 'desc_tip' => __( 'This payment method is not shown in the checkout if the order total exceeds a certain amount. Leave blank for no restrictions.', 'multisafepay' ),
-                'default'  => $this->get_option( 'max_amount', '' ),
+                'default'  => $this->payment_method->getMaxAmount(),
+                'value'    => (float) $this->get_option( 'max_amount', $this->payment_method->getMaxAmount() ),
             ),
             'countries'            => array(
                 'title'       => __( 'Country', 'multisafepay' ),
@@ -245,23 +317,25 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
             ),
         );
 
-        if ( $this->has_configurable_payment_component ) {
+        if ( $this->payment_method->supportsPaymentComponent() ) {
             $form_fields['payment_component'] = array(
                 'title'       => __( 'Payment Components', 'multisafepay' ),
                 'label'       => 'Enable Payment Component in ' . $this->get_method_title() . ' Gateway',
                 'type'        => 'checkbox',
                 'description' => __( 'More information about Payment Components on <a href="https://docs.multisafepay.com/docs/payment-components" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
-                'default'     => 'no',
+                'default'     => $this->get_option( 'payment_component', $this->payment_method->supportsPaymentComponent() ? 'yes' : 'no' ),
+                'value'       => $this->get_option( 'payment_component', $this->payment_method->supportsPaymentComponent() ? 'yes' : 'no' ),
             );
         }
 
-        if ( $this->has_configurable_tokenization && $this->is_payment_component_enable() ) {
+        if ( $this->payment_method->supportsTokenization() && $this->payment_method->supportsPaymentComponent() ) {
             $form_fields['tokenization'] = array(
                 'title'       => __( 'Tokenization', 'multisafepay' ),
                 'label'       => 'Enable Tokenization in ' . $this->get_method_title() . ' Gateway within the Payment Component',
                 'type'        => 'checkbox',
                 'description' => __( 'Tokenization only applies when payment component is enabled. More information about Tokenization on <a href="https://docs.multisafepay.com/docs/recurring-payments" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
-                'default'     => get_option( 'multisafepay_tokenization', 'no' ),
+                'default'     => $this->get_option( 'tokenization', $this->payment_method->supportsTokenizationCardOnFile() ? 'yes' : 'no' ),
+                'value'       => $this->get_option( 'tokenization', $this->payment_method->supportsTokenizationCardOnFile() ? 'yes' : 'no' ),
             );
         }
 
@@ -269,29 +343,59 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
     }
 
     /**
-     * Process the payment and return the result.
+     * Enqueue CSS styles related with Payment Component.
      *
-     * @param integer $order_id Order ID.
+     * @return void
+     */
+    public function enqueue_payment_component_styles() {
+        if ( ( is_checkout() || is_wc_endpoint_url( 'order-pay' ) ) ) {
+            wp_enqueue_style(
+                'multisafepay-payment-component-style',
+                self::MULTISAFEPAY_COMPONENT_CSS_URL,
+                array(),
+                MULTISAFEPAY_PLUGIN_VERSION,
+                'all'
+            );
+        }
+    }
+
+    /**
+     * Prints checkout custom fields
      *
-     * @return  array|mixed|void
+     * @return mixed
+     */
+    public function payment_fields() {
+        require MULTISAFEPAY_PLUGIN_DIR_PATH . 'templates/multisafepay-checkout-fields-display.php';
+    }
+
+    /**
+     * @param WC_Order $order
+     * @return bool
+     */
+    public function can_refund_order( $order ) {
+        if ( in_array( $order->get_status(), self::NOT_ALLOW_REFUND_ORDER_STATUSES, true ) ) {
+            return false;
+        }
+
+        return $order && $this->supports( 'refunds' );
+    }
+
+    /**
+     * @param int|string $order_id
+     * @return array|void
      */
     public function process_payment( $order_id ) {
         $sdk                 = new SdkService();
         $transaction_manager = $sdk->get_transaction_manager();
         $order_service       = new OrderService();
 
-        $gateway_info = $this->get_gateway_info( array( 'order_id' => $order_id ) );
-        if ( ! $this->validate_gateway_info( $gateway_info ) ) {
-            $gateway_info = null;
-        }
-
         $order         = wc_get_order( $order_id );
-        $order_request = $order_service->create_order_request( $order, $this->gateway_code, $this->type, $gateway_info );
+        $order_request = $order_service->create_order_request( $order, $this->gateway_code, $this->type );
 
         try {
             $transaction = $transaction_manager->create( $order_request );
-        } catch ( ApiException $api_exception ) {
-            Logger::log_error( $api_exception->getMessage() );
+        } catch ( ApiException | ClientExceptionInterface $exception ) {
+            Logger::log_error( $exception->getMessage() );
             wc_add_notice( __( 'There was a problem processing your payment. Please try again later or contact with us.', 'multisafepay' ), 'error' );
             return;
         }
@@ -307,15 +411,6 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
     }
 
     /**
-     * Prints checkout custom fields
-     *
-     * @return  mixed
-     */
-    public function payment_fields() {
-        require MULTISAFEPAY_PLUGIN_DIR_PATH . 'templates/multisafepay-checkout-fields-display.php';
-    }
-
-    /**
      * Validate_fields
      *
      * @return  boolean
@@ -326,40 +421,14 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
             return false;
         }
 
-        if ( ( isset( $_POST[ $this->id . '_salutation' ] ) ) && '' === $_POST[ $this->id . '_salutation' ] ) {
-            wc_add_notice( __( 'Salutation is a required field', 'multisafepay' ), 'error' );
-        }
-
-        if ( ( isset( $_POST[ $this->id . '_gender' ] ) ) && '' === $_POST[ $this->id . '_gender' ] ) {
-            wc_add_notice( __( 'Gender is a required field', 'multisafepay' ), 'error' );
-        }
-
-        if ( isset( $_POST[ $this->id . '_birthday' ] ) && '' === $_POST[ $this->id . '_birthday' ] ) {
-            wc_add_notice( __( 'Date of birth is a required field', 'multisafepay' ), 'error' );
-        }
-
-        if ( isset( $_POST[ $this->id . '_bank_account' ] ) && '' === $_POST[ $this->id . '_bank_account' ] ) {
-            wc_add_notice( __( 'Bank Account is a required field', 'multisafepay' ), 'error' );
-        }
-
-        if ( isset( $_POST[ $this->id . '_bank_account' ] ) && '' !== $_POST[ $this->id . '_bank_account' ] ) {
-            if ( ! $this->validate_iban( $_POST[ $this->id . '_bank_account' ] ) ) {
-                wc_add_notice( __( 'IBAN does not seems valid', 'multisafepay' ), 'error' );
-            }
-        }
-
-        if ( isset( $_POST[ $this->id . '_account_holder_name' ] ) && '' === $_POST[ $this->id . '_account_holder_name' ] ) {
-            wc_add_notice( __( 'Account holder is a required field', 'multisafepay' ), 'error' );
-        }
-
-        if ( isset( $_POST[ $this->id . '_account_holder_iban' ] ) && '' === $_POST[ $this->id . '_account_holder_iban' ] ) {
-            wc_add_notice( __( 'IBAN is a required field', 'multisafepay' ), 'error' );
-        }
-
-        if ( isset( $_POST[ $this->id . '_account_holder_iban' ] ) && '' !== $_POST[ $this->id . '_account_holder_iban' ] ) {
-            if ( ! $this->validate_iban( $_POST[ $this->id . '_account_holder_iban' ] ) ) {
-                wc_add_notice( __( 'IBAN does not seems valid', 'multisafepay' ), 'error' );
-            }
+        if (
+            $this->is_payment_component_enabled() &&
+            (
+                ! isset( $_POST[ $this->id . '_payment_component_payload' ] ) ||
+                empty( $_POST[ $this->id . '_payment_component_payload' ] )
+            )
+        ) {
+            wc_add_notice( '<strong>' . $this->get_payment_method_title() . ' payment details</strong>  is a required field.', 'error' );
         }
 
         if ( isset( $_POST[ $this->id . '_payment_component_errors' ] ) && '' !== $_POST[ $this->id . '_payment_component_errors' ] ) {
@@ -373,199 +442,27 @@ abstract class BasePaymentMethod extends WC_Payment_Gateway implements PaymentMe
         }
 
         return true;
-
-    }
-
-    /**
-     * Returns bool after validates IBAN format
-     *
-     * @param string $iban
-     *
-     * @return  boolean
-     */
-    public function validate_iban( $iban ): bool {
-        try {
-            $iban = new IbanNumber( $iban );
-            return true;
-        } catch ( InvalidArgumentException $invalid_argument_exception ) {
-            return false;
-        }
     }
 
     /**
      * Returns the WooCommerce registered order statuses
      *
      * @see     http://hookr.io/functions/wc_get_order_statuses/
-     *
      * @return  array
      */
-    private function get_order_statuses(): array {
+    protected function get_order_statuses(): array {
         $order_statuses               = wc_get_order_statuses();
         $order_statuses['wc-default'] = __( 'Default value set in common settings', 'multisafepay' );
         return $order_statuses;
     }
 
     /**
-     * Validate the gatewayinfo, return true if validation is successful
-     *
-     * @param GatewayInfoInterface $gateway_info
-     *
-     * @return boolean
-     */
-    public function validate_gateway_info( GatewayInfoInterface $gateway_info ): bool {
-        return true;
-    }
-
-    /**
-     * @param WC_Order $order
-     *
-     * @return bool
-     */
-    public function can_refund_order( $order ) {
-        if ( in_array( $order->get_status(), self::NOT_ALLOW_REFUND_ORDER_STATUSES, true ) ) {
-            return false;
-        }
-
-        return $order && $this->supports( 'refunds' );
-    }
-
-    /**
-     * @param array|null $data
-     *
-     * @return GatewayInfoInterface
-     */
-    protected function get_gateway_info_meta( ?array $data = null ): GatewayInfoInterface {
-        $gateway_info = new Meta();
-        if ( isset( $_POST[ $this->id . '_gender' ] ) ) {
-            $gateway_info->addGenderAsString( $_POST[ $this->id . '_gender' ] );
-        }
-        if ( isset( $_POST[ $this->id . '_salutation' ] ) ) {
-            $gateway_info->addGenderAsString( $_POST[ $this->id . '_salutation' ] );
-        }
-        if ( isset( $_POST[ $this->id . '_birthday' ] ) ) {
-            $gateway_info->addBirthdayAsString( $_POST[ $this->id . '_birthday' ] );
-        }
-        if ( isset( $_POST[ $this->id . '_bank_account' ] ) ) {
-            $gateway_info->addBankAccountAsString( $_POST[ $this->id . '_bank_account' ] );
-        }
-        if ( isset( $data ) && ! empty( $data['order_id'] ) ) {
-            $order = wc_get_order( $data['order_id'] );
-            $gateway_info->addEmailAddressAsString( $order->get_billing_email() );
-            $gateway_info->addPhoneAsString( $order->get_billing_phone() );
-        }
-        return $gateway_info;
-    }
-
-    /**
-     * This method use get_option instead $this->get_option;
-     * because in the place where is called, settings are not being initialized yet.
-     *
-     * @return bool
-     */
-    public function is_payment_component_enable(): bool {
-        $settings = get_option( 'woocommerce_' . $this->id . '_settings', array( 'payment_component' => 'no' ) );
-        if ( ! isset( $settings['payment_component'] ) ) {
-            return false;
-        }
-        return 'yes' === $settings['payment_component'];
-    }
-
-    /**
-     * This method use get_option instead $this->get_option;
-     * because in the place where is called, settings are not being initialized yet.
-     *
-     * @return bool
-     */
-    public function is_tokenization_enable(): bool {
-        $settings = get_option( 'woocommerce_' . $this->id . '_settings', array( 'tokenization' => 'no' ) );
-        if ( ! isset( $settings['tokenization'] ) ) {
-            return false;
-        }
-        return 'yes' === $settings['tokenization'];
-    }
-
-
-    /**
-     * Enqueue CSS styles related with Payment Component.
-     *
-     * @return void
-     */
-    public function enqueue_payment_component_styles() {
-        if ( ( is_checkout() || is_wc_endpoint_url( 'order-pay' ) ) && $this->supports( 'multisafepay_payment_component' ) ) {
-            wp_enqueue_style(
-                'multisafepay-payment-component-style',
-                self::MULTISAFEPAY_COMPONENT_CSS_URL,
-                array(),
-                MULTISAFEPAY_PLUGIN_VERSION,
-                'all'
-            );
-        }
-    }
-
-    /**
-     * Enqueue Javascript related with Payment Component.
-     *
-     * @return void
-     */
-    public function enqueue_payment_component_scripts() {
-        if ( ( is_checkout() || is_wc_endpoint_url( 'order-pay' ) ) && $this->supports( 'multisafepay_payment_component' ) ) {
-
-            wp_enqueue_script( 'multisafepay-payment-component-script', self::MULTISAFEPAY_COMPONENT_JS_URL, array(), MULTISAFEPAY_PLUGIN_VERSION, true );
-
-            $multisafepay_payment_component_config = $this->get_credit_card_payment_component_arguments();
-            $gateways_with_payment_component       = Gateways::get_gateways_with_payment_component();
-
-            $route = MULTISAFEPAY_PLUGIN_URL . '/assets/public/js/multisafepay-payment-component.js';
-            wp_enqueue_script( 'multisafepay-payment-component-js', $route, array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
-            wp_localize_script( 'multisafepay-payment-component-js', 'payment_component_config_' . $this->id, $multisafepay_payment_component_config );
-            wp_localize_script( 'multisafepay-payment-component-js', 'multisafepay_payment_component_gateways', $gateways_with_payment_component );
-            wp_enqueue_script( 'multisafepay-payment-component-js' );
-
-        }
-    }
-
-    /**
-     * Return the arguments required to initialize the payment component library
+     * Return an array of allowed countries defined in WooCommerce Settings.
      *
      * @return array
      */
-    private function get_credit_card_payment_component_arguments(): array {
-        $sdk_service                             = new SdkService();
-        $credit_card_payment_component_arguments = array(
-			'debug'      => (bool) get_option( 'multisafepay_debugmode', false ),
-			'env'        => $sdk_service->get_test_mode() ? 'test' : 'live',
-			'api_token'  => $sdk_service->get_api_token(),
-			'orderData'  => array(
-				'currency' => get_woocommerce_currency(),
-				'amount'   => ( WC()->cart ) ? (int) ( WC()->cart->get_total( '' ) * 100 ) : null,
-				'customer' => array(
-					'locale'  => ( new CustomerService() )->get_locale(),
-					'country' => ( WC()->customer )->get_billing_country(),
-				),
-				'template' => array(
-					'settings' => array(
-						'embed_mode' => true,
-					),
-				),
-			),
-			'ajax_url'   => admin_url( 'admin-ajax.php' ),
-			'nonce'      => wp_create_nonce( 'credit_card_payment_component_arguments_nonce' ),
-			'gateway_id' => $this->id,
-			'gateway'    => $this->get_payment_method_code(),
-            'recurring'  => null,
-        );
-
-        if ( $this->is_tokenization_enable() ) {
-            $credit_card_payment_component_arguments['recurring'] = array(
-                'model'  => 'cardOnFile',
-                'tokens' => $sdk_service->get_payment_tokens(
-                    (string) get_current_user_id(),
-                    $this->get_payment_method_code()
-                ),
-            );
-        }
-
-        return $credit_card_payment_component_arguments;
+    protected function get_countries(): array {
+        $countries = new WC_Countries();
+        return $countries->get_allowed_countries();
     }
-
 }

@@ -8,8 +8,6 @@ use MultiSafepay\WooCommerce\Utils\EscapeUtil;
  * The display fields settings fields
  *
  * Contains all the functions needed to display each setting field
- *
- * @since   4.0.0
  */
 class SettingsFieldsDisplay {
 

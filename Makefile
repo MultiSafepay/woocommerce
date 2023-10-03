@@ -62,3 +62,19 @@ install-storefront-theme:
 install-multisafepay:
 	docker-compose exec --workdir /var/www/html/wp-content/plugins/multisafepay app composer install
 	docker-compose exec app wp plugin activate multisafepay --user=1
+
+.PHONY: composer-update
+composer-update:
+	docker-compose exec --workdir /var/www/html/wp-content/plugins/multisafepay app composer update
+
+.PHONY: phpcs
+phpcs:
+	docker-compose exec --workdir /var/www/html/wp-content/plugins/multisafepay app composer run-script phpcs
+
+.PHONY: phpcbf
+phpcbf:
+	docker-compose exec --workdir /var/www/html/wp-content/plugins/multisafepay app composer run-script phpcbf
+
+.PHONY: phpstan
+phpstan:
+	docker-compose exec --workdir /var/www/html/wp-content/plugins/multisafepay app composer run-script phpstan

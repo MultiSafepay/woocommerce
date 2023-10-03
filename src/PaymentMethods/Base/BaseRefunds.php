@@ -3,6 +3,7 @@
 namespace MultiSafepay\WooCommerce\PaymentMethods\Base;
 
 use Exception;
+use MultiSafepay\Exception\ApiException;
 use MultiSafepay\Api\TransactionManager;
 use MultiSafepay\Api\Transactions\RefundRequest;
 use MultiSafepay\Api\Transactions\TransactionResponse;
@@ -10,6 +11,7 @@ use MultiSafepay\ValueObject\CartItem;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
+use Psr\Http\Client\ClientExceptionInterface;
 use WC_Order;
 use WP_Error;
 
@@ -49,19 +51,22 @@ trait BaseRefunds {
         $refund_request->addDescriptionText( $reason );
 
         // If the used gateway is a billing suite gateway, or the generic requiring shopping cart, create the refund based on items
-        if ( (bool) get_post_meta( $order->get_id(), 'order_require_shopping_cart', 'true' ) || $multisafepay_transaction->requiresShoppingCart() ) {
+        if (
+            (bool) get_post_meta( $order->get_id(), 'order_require_shopping_cart', true ) ||
+            $multisafepay_transaction->requiresShoppingCart()
+        ) {
 
-            if ( $amount !== $order->get_total() ) {
-                return new WP_Error( '400', __( 'Partial refund is not possible with billing suite payment methods', 'multisafepay' ) );
-            }
+            $refunds                 = $order->get_refunds();
+            $refund_merchant_item_id = reset( $refunds )->id;
 
-            /** @var CartItem[] $refund_items */
-            $refund_items = $multisafepay_transaction->getShoppingCart()->getItems();
+            $cart_item = new CartItem();
+            $cart_item->addName( __( 'Refund', 'multisafepay' ) )
+                ->addQuantity( 1 )
+                ->addUnitPrice( MoneyUtil::create_money( (float) $amount, $order->get_currency() )->negative() )
+                ->addMerchantItemId( 'refund_id_' . $refund_merchant_item_id )
+                ->addTaxRate( 0 );
 
-            /** @var CartItem $item */
-            foreach ( $refund_items as $item ) {
-                $refund_request->getCheckoutData()->refundByMerchantItemId( (string) $item->getMerchantItemId(), (int) $item->getQuantity() );
-            }
+            $refund_request->getCheckoutData()->addItem( $cart_item );
 		}
 
         if ( ! $multisafepay_transaction->requiresShoppingCart() ) {
@@ -71,7 +76,7 @@ trait BaseRefunds {
         try {
             $error = null;
             $transaction_manager->refund( $multisafepay_transaction, $refund_request );
-        } catch ( Exception $exception ) {
+        } catch ( Exception | ClientExceptionInterface | ApiException $exception ) {
             $error = __( 'Error:', 'multisafepay' ) . htmlspecialchars( $exception->getMessage() );
             Logger::log_error( $error );
             wc_add_notice( $error, 'error' );

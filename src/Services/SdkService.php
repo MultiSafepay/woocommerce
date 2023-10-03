@@ -7,11 +7,13 @@ use MultiSafepay\Api\ApiTokenManager;
 use MultiSafepay\Api\GatewayManager;
 use MultiSafepay\Api\Gateways\Gateway;
 use MultiSafepay\Api\IssuerManager;
+use MultiSafepay\Api\PaymentMethodManager;
 use MultiSafepay\Api\TransactionManager;
 use MultiSafepay\Exception\ApiException;
 use MultiSafepay\Exception\InvalidApiKeyException;
 use MultiSafepay\Sdk;
 use MultiSafepay\WooCommerce\Client\MultiSafepayClient;
+use MultiSafepay\WooCommerce\Services\PaymentMethodService;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -20,7 +22,9 @@ use WP_Error;
 /**
  * This class returns the SDK object.
  *
- * @since      4.0.0
+ * Class SdkService
+ *
+ * @package MultiSafepay\WooCommerce\Services
  */
 class SdkService {
 
@@ -54,6 +58,7 @@ class SdkService {
         try {
             $this->sdk = new Sdk( $this->api_key, ( $this->test_mode ) ? false : true, $client, $psr_factory, $psr_factory );
         } catch ( InvalidApiKeyException $invalid_api_key_exception ) {
+            set_transient( 'multisafepay_payment_methods', array() );
             Logger::log_error( $invalid_api_key_exception->getMessage() );
         }
     }
@@ -75,9 +80,9 @@ class SdkService {
      */
     public function get_api_key(): string {
         if ( $this->get_test_mode() ) {
-            return get_option( 'multisafepay_test_api_key', false );
+            return get_option( 'multisafepay_test_api_key', '' );
         }
-        return get_option( 'multisafepay_api_key', false );
+        return get_option( 'multisafepay_api_key', '' );
     }
 
 
@@ -128,6 +133,7 @@ class SdkService {
         return $this->sdk->getIssuerManager();
     }
 
+
     /**
      * @return Sdk
      */
@@ -138,30 +144,33 @@ class SdkService {
     /**
      * Returns api token manager
      *
-     * @return  ApiTokenManager
+     * @return ApiTokenManager
      */
-    public function get_api_token_manager(): ApiTokenManager {
+    public function get_api_token_manager(): ?ApiTokenManager {
+        if ( null === $this->sdk ) {
+            Logger::log_error( 'SDK is not initialized' );
+            return null;
+        }
         return $this->sdk->getApiTokenManager();
     }
 
     /**
-     * Returns api token
+     * Returns a PaymentMethodManager instance
      *
-     * @return  string
+     * @return PaymentMethodManager|null
      */
-    public function get_api_token(): string {
+    public function get_payment_method_manager(): ?PaymentMethodManager {
+        if ( null === $this->sdk ) {
+            Logger::log_error( 'SDK is not initialized' );
+            return null;
+        }
         try {
-            $api_token_manager = $this->get_api_token_manager();
-            return $api_token_manager->get()->getApiToken();
+            return $this->sdk->getPaymentMethodManager();
         } catch ( ApiException $api_exception ) {
             Logger::log_error( $api_exception->getMessage() );
-            return '';
-        } catch ( ClientExceptionInterface $client_exception ) {
-            Logger::log_error( $client_exception->getMessage() );
-            return '';
+            return null;
         }
     }
-
 
     /**
      * Returns an array of tokens for the given customer reference and gateway code

@@ -3,11 +3,11 @@
 namespace MultiSafepay\WooCommerce\Settings;
 
 /**
- * The status tab controller.
+ * Defines all the functionalities needed on the system report tab in the settings page
  *
- * Defines all the functionalities needed on the settings page
+ * Class StatusController
  *
- * @since   4.6.0
+ * @package MultiSafepay\WooCommerce\Settings
  */
 class StatusController {
 
@@ -20,5 +20,4 @@ class StatusController {
         $plain_text_status_report = $system_report->get_plain_text_system_status_report();
         require_once MULTISAFEPAY_PLUGIN_DIR_PATH . 'templates/partials/multisafepay-settings-status-display.php';
     }
-
 }

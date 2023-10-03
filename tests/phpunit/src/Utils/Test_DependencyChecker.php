@@ -3,9 +3,7 @@
 use MultiSafepay\WooCommerce\Utils\DependencyChecker;
 use MultiSafepay\WooCommerce\Exceptions\MissingDependencyException;
 
-
 class Test_DependencyChecker extends WP_UnitTestCase {
-
 
     public function set_up() {
         parent::set_up();
@@ -15,5 +13,4 @@ class Test_DependencyChecker extends WP_UnitTestCase {
         $this->expectException(MissingDependencyException::class);
         (new DependencyChecker())->check();
     }
-
 }

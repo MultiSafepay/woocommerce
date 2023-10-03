@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
++ PLGWOOS-803: Add support to register the payment methods dynamically, via API request.
++ PLGWOOS-859: Trigger checkout validations of the fields related to the payment component on checkout submission.
++ PLGWOOS-857: Add support for partial refunds for [BNPL payment methods](https://docs.multisafepay.com/docs/bnpl)
+
+***
+
 ## 5.4.1
 Release Date: Sep 27th, 2023
 

@@ -42,19 +42,9 @@
         <exclude name="Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClass"/>
     </rule>
 
-
-    <!-- Exclude all gateways and giftcards classes from this rule -->
-    <rule ref="Squiz.Commenting.ClassComment.Missing">
-        <exclude-pattern>*/src/PaymentMethods/*</exclude-pattern>
-    </rule>
-
     <!-- Exclude nonce verification, which according with documentation is not required when submit an order -->
     <rule ref="WordPress.Security.NonceVerification.Missing">
         <exclude-pattern>*/src/PaymentMethods/Base/BasePaymentMethod.php</exclude-pattern>
-        <exclude-pattern>*/src/PaymentMethods/PaymentMethods/Dirdeb.php</exclude-pattern>
-        <exclude-pattern>*/src/PaymentMethods/PaymentMethods/Afterpay.php</exclude-pattern>
-        <exclude-pattern>*/src/PaymentMethods/PaymentMethods/Ideal.php</exclude-pattern>
-        <exclude-pattern>*/src/PaymentMethods/PaymentMethods/MyBank.php</exclude-pattern>
         <exclude-pattern>*/src/Services/OrderService.php</exclude-pattern>
         <exclude-pattern>*/src/Services/CustomerService.php</exclude-pattern>
     </rule>
@@ -79,7 +69,6 @@
         <exclude-pattern>*/templates/partials/multisafepay-settings-logs-display.php</exclude-pattern>
     </rule>
 
-
     <!-- Let's also check that everything is properly documented. -->
     <rule ref="WordPress-Docs"/>
 
@@ -88,7 +77,7 @@
     <rule ref="Generic.Commenting.Todo"/>
 
     <!-- Check for PHP cross-version compatibility. -->
-    <config name="testVersion" value="7.2-"/>
+    <config name="testVersion" value="7.3-"/>
     <rule ref="PHPCompatibilityWP"/>
 
     <!-- Minimum Wordpress version supported -->
@@ -111,7 +100,6 @@
         <properties>
             <property name="maxNestingLevel" value="3"/>
         </properties>
-        <exclude-pattern>*/src/PaymentMethods/TokenizationMethodsController.php</exclude-pattern>
     </rule>
 
     <!-- Minimal length for variables names -->

@@ -7,8 +7,6 @@ use MultiSafepay\WooCommerce\Exceptions\MissingDependencyException;
 /**
  * Fired on bootstrap plugin file.
  * This class defines all code necessary to check if there is a dependency missing to make the plugin work
- *
- * @since    4.0.0
  */
 class DependencyChecker {
 
@@ -51,5 +49,4 @@ class DependencyChecker {
 
         return false;
     }
-
 }

@@ -4,11 +4,11 @@ namespace MultiSafepay\WooCommerce\Services;
 
 use MultiSafepay\Api\Transactions\Gateways as GatewaysSdk;
 use MultiSafepay\Api\Transactions\OrderRequest;
-use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfoInterface;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\PaymentOptions;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\PluginDetails;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\SecondChance;
-use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\TaxTable\TaxRate;
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\TaxTable\TaxRule;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
 use WC_Order;
 
@@ -22,29 +22,34 @@ class OrderService {
     /**
      * @var CustomerService
      */
-    private $customer_service;
+    public $customer_service;
 
     /**
      * @var ShoppingCartService
      */
-    private $shopping_cart_service;
+    public $shopping_cart_service;
+
+    /**
+     * @var PaymentMethodService
+     */
+    public $payment_method_service;
 
     /**
      * OrderService constructor.
      */
     public function __construct() {
-        $this->customer_service      = new CustomerService();
-        $this->shopping_cart_service = new ShoppingCartService();
+        $this->customer_service       = new CustomerService();
+        $this->shopping_cart_service  = new ShoppingCartService();
+        $this->payment_method_service = new PaymentMethodService();
     }
 
     /**
-     * @param WC_Order             $order
-     * @param string               $gateway_code
-     * @param string               $type
-     * @param GatewayInfoInterface $gateway_info
+     * @param WC_Order $order
+     * @param string   $gateway_code
+     * @param string   $type
      * @return OrderRequest
      */
-    public function create_order_request( WC_Order $order, string $gateway_code, string $type, GatewayInfoInterface $gateway_info = null ): OrderRequest {
+    public function create_order_request( WC_Order $order, string $gateway_code, string $type ): OrderRequest {
         $order_request = new OrderRequest();
         $order_request
             ->addOrderId( $order->get_order_number() )
@@ -67,23 +72,20 @@ class OrderService {
             $order_request->addShoppingCart( $this->shopping_cart_service->create_shopping_cart( $order, $order->get_currency() ) );
         }
 
-        if ( ! empty( $_POST[ ( Gateways::get_payment_method_object_by_gateway_code( $gateway_code ) )->get_payment_method_id() . '_payment_component_payload' ] ) ) {
+        if ( ! empty( $_POST[ ( $this->payment_method_service->get_woocommerce_payment_gateway_by_multisafepay_gateway_code( $gateway_code ) )->get_payment_method_id() . '_payment_component_payload' ] ) ) {
             $order_request->addType( 'direct' );
-            $order_request->addData( array( 'payment_data' => array( 'payload' => $_POST[ ( Gateways::get_payment_method_object_by_gateway_code( $gateway_code ) )->get_payment_method_id() . '_payment_component_payload' ] ) ) );
+            $order_request->addData( array( 'payment_data' => array( 'payload' => $_POST[ ( ( new PaymentMethodService() )->get_woocommerce_payment_gateway_by_multisafepay_gateway_code( $gateway_code ) )->get_payment_method_id() . '_payment_component_payload' ] ) ) );
         }
 
-        if ( $gateway_info ) {
-            $order_request->addGatewayInfo( $gateway_info );
-        }
+        $order_request = $this->add_none_tax_rate( $order_request );
 
         return apply_filters( 'multisafepay_order_request', $order_request );
-
     }
 
     /**
      * @return PluginDetails
      */
-    private function create_plugin_details() {
+    private function create_plugin_details(): PluginDetails {
         $plugin_details = new PluginDetails();
         global $wp_version;
         return $plugin_details
@@ -94,8 +96,8 @@ class OrderService {
     }
 
     /**
-     * @param   WC_Order $order
-     * @return  PaymentOptions
+     * @param  WC_Order $order
+     * @return PaymentOptions
      */
     private function create_payment_options( WC_Order $order ): PaymentOptions {
         $url_redirect_on_cancel = ( get_option( 'multisafepay_redirect_after_cancel', 'cart' ) === 'cart' ? '' : wc_get_checkout_url() );
@@ -113,10 +115,10 @@ class OrderService {
     /**
      * Return the order description.
      *
-     * @param   string $order_number
-     * @return  string   $order_description
+     * @param string $order_number
+     * @return string $order_description
      */
-    private function get_order_description_text( $order_number ):string {
+    private function get_order_description_text( $order_number ): string {
         /* translators: %s: order id */
         $order_description = sprintf( __( 'Payment for order: %s', 'multisafepay' ), $order_number );
         if ( get_option( 'multisafepay_order_request_description', false ) ) {
@@ -142,4 +144,31 @@ class OrderService {
         return $time_active;
     }
 
+    /**
+     * This method add a tax rate of 0, in case is not being created automatically by the shopping cart.
+     * This is required to process refunds, based on shopping cart items
+     *
+     * @param OrderRequest $order_request
+     * @return OrderRequest
+     */
+    public function add_none_tax_rate( OrderRequest $order_request ): OrderRequest {
+        if ( $order_request->getShoppingCart() === null ) {
+            return $order_request;
+        }
+        if ( $order_request->getCheckoutOptions()->getTaxTable() === null ) {
+            return $order_request;
+        }
+        $shopping_cart = $order_request->getShoppingCart()->getData();
+        if ( isset( $shopping_cart['items'] ) ) {
+            foreach ( $shopping_cart['items'] as $item ) {
+                if ( '0' === $item['tax_table_selector'] ) {
+                    return $order_request;
+                }
+            }
+        }
+        $tax_rate = ( new TaxRate() )->addRate( 0 );
+        $tax_rule = ( new TaxRule() )->addTaxRate( $tax_rate )->addName( '0' );
+        $order_request->getCheckoutOptions()->getTaxTable()->addTaxRule( $tax_rule );
+        return $order_request;
+    }
 }

@@ -15,7 +15,6 @@ use WC_Order_Item_Coupon;
 use WC_Tax;
 use WC_Coupon;
 
-
 /**
  * Class ShoppingCartService
  *

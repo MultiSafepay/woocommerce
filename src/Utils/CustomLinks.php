@@ -3,10 +3,7 @@
 namespace MultiSafepay\WooCommerce\Utils;
 
 /**
- * This class defines the custom links added to the WordPress plugin list
- * for this plugin
- *
- * @since    4.0.0
+ * This class defines the custom links added to the WordPress plugin list for this plugin
  */
 class CustomLinks {
 
@@ -21,11 +18,8 @@ class CustomLinks {
     public function get_links( array $links ): array {
         $custom_links = array(
             '<a href="' . admin_url( 'admin.php?page=multisafepay-settings' ) . '">' . __( 'Settings', 'multisafepay' ) . '</a>',
-            '<a target="_blank" href="https://docs.multisafepay.com/docs/woocommerce">' . __( 'Docs', 'multisafepay' ) . '</a>',
-            '<a target="_blank" href="https://docs.multisafepay.com/docs/woocommerce">' . __( 'Support', 'multisafepay' ) . '</a>',
+            '<a target="_blank" href="https://docs.multisafepay.com/docs/woocommerce">' . __( 'Docs & Support', 'multisafepay' ) . '</a>',
         );
         return array_merge( $custom_links, $links );
     }
-
-
 }

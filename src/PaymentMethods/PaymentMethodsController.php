@@ -2,25 +2,21 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods;
 
-use MultiSafepay\Api\Gateways\Gateway;
+use Exception;
 use MultiSafepay\Api\Transactions\TransactionResponse;
 use MultiSafepay\Api\Transactions\UpdateRequest;
 use MultiSafepay\Exception\ApiException;
 use MultiSafepay\Util\Notification;
 use MultiSafepay\WooCommerce\Services\OrderService;
+use MultiSafepay\WooCommerce\Services\PaymentMethodService;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Utils\Logger;
+use Psr\Http\Client\ClientExceptionInterface;
 use WC_Order;
 use WP_REST_Request;
-use WP_REST_Response;
-use MultiSafepay\WooCommerce\Services\CustomerService;
 
 /**
- * The payment methods controller.
- *
- * Defines all the functionalities needed to register the Payment Methods actions and filters
- *
- * @since   4.0.0
+ * Defines all the methods needed to register related with Payment Methods actions and filters
  */
 class PaymentMethodsController {
 
@@ -43,8 +39,9 @@ class PaymentMethodsController {
      * @param array $gateways
      * @return array
      */
-    public static function get_gateways( array $gateways ): array {
-        return array_merge( $gateways, Gateways::GATEWAYS );
+    public function get_woocommerce_payment_gateways( array $gateways ): array {
+        $multisafepay_woocommerce_payment_gateways = ( new PaymentMethodService() )->get_woocommerce_payment_gateways();
+        return array_merge( $gateways, $multisafepay_woocommerce_payment_gateways );
     }
 
     /**
@@ -137,27 +134,6 @@ class PaymentMethodsController {
     }
 
     /**
-     * Action added to wp_loaded hook.
-     * Handles notifications from transactions created before 4.X.X plugin version
-     *
-     * @return void
-     */
-    public static function deprecated_callback() {
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        if ( isset( $_GET['page'] ) && 'multisafepaynotify' === $_GET['page'] ) {
-            $required_args = array( 'transactionid', 'timestamp' );
-            foreach ( $required_args as $arg ) {
-                // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-                if ( ! isset( $_GET[ $arg ] ) || empty( $_GET[ $arg ] ) ) {
-                    wp_die( esc_html__( 'Invalid request', 'multisafepay' ), esc_html__( 'Invalid request', 'multisafepay' ), 400 );
-                }
-            }
-            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-            ( new PaymentMethodCallback( sanitize_text_field( (string) $_GET['transactionid'] ) ) )->process_callback();
-        }
-    }
-
-    /**
      * Catch the notification request.
      *
      * @return  void
@@ -174,7 +150,6 @@ class PaymentMethodsController {
         ( new PaymentMethodCallback( sanitize_text_field( (string) $_GET['transactionid'] ) ) )->process_callback();
     }
 
-
     /**
      * Process the POST notification
      *
@@ -190,7 +165,6 @@ class PaymentMethodsController {
             die( 'OK' );
         }
 
-        $timestamp           = $request->get_param( 'timestamp' );
         $auth                = $request->get_header( 'auth' );
         $body                = $request->get_body();
         $api_key             = ( new SdkService() )->get_api_key();
@@ -212,11 +186,12 @@ class PaymentMethodsController {
 
         $multisafepay_transaction = new TransactionResponse( $request->get_json_params(), $body );
         ( new PaymentMethodCallback( (string) $transactionid, $multisafepay_transaction ) )->process_callback();
-
     }
 
     /**
      * Register the endpoint to handle the POST notification
+     *
+     * @return void
      */
     public function multisafepay_register_rest_route() {
         $arguments = array(
@@ -232,7 +207,6 @@ class PaymentMethodsController {
         );
     }
 
-
     /**
      * Action added to woocommerce_new_order hook.
      * Takes an order generated in admin and pass the data to MultiSafepay to process the order request.
@@ -241,7 +215,6 @@ class PaymentMethodsController {
      * @return  void
      */
     public function generate_orders_from_backend( int $order_id ): void {
-
         $order = wc_get_order( $order_id );
 
         // Check if the order is created in admin
@@ -258,11 +231,15 @@ class PaymentMethodsController {
         $sdk                 = new SdkService();
         $transaction_manager = $sdk->get_transaction_manager();
         $order_service       = new OrderService();
-        $gateway_object      = Gateways::get_payment_method_object_by_payment_method_id( $order->get_payment_method() );
-        $gateway_code        = $gateway_object->get_payment_method_code();
-        $gateway_info        = $gateway_object->get_gateway_info();
-        $order_request       = $order_service->create_order_request( $order, $gateway_code, 'paymentlink', $gateway_info );
-        $transaction         = $transaction_manager->create( $order_request );
+        $gateway_object      = ( new PaymentMethodService() )->get_woocommerce_payment_gateway_by_id( $order->get_payment_method() );
+        $gateway_code        = $gateway_object->get_payment_method_gateway_code();
+        $order_request       = $order_service->create_order_request( $order, $gateway_code, 'paymentlink' );
+
+        try {
+            $transaction = $transaction_manager->create( $order_request );
+        } catch ( Exception | ApiException | ClientExceptionInterface $exception ) {
+            Logger::log_error( $exception->getMessage() );
+        }
 
         if ( $transaction->getPaymentUrl() ) {
             // Update order meta data with the payment link
@@ -286,6 +263,7 @@ class PaymentMethodsController {
         if ( $send_payment_link ) {
             return get_post_meta( $order->get_id(), 'payment_url', true );
         }
+
         return $default_payment_link;
     }
 
@@ -294,16 +272,17 @@ class PaymentMethodsController {
      * since this one is the value pass in the Order Request
      *
      * @param string $transactionid The order number id received in callback notification function
-     *
      * @return int
      */
     public function multisafepay_transaction_order_id( string $transactionid ): int {
         if ( function_exists( 'wc_seq_order_number_pro' ) ) {
             return (int) wc_seq_order_number_pro()->find_order_by_order_number( $transactionid );
         }
+
         if ( function_exists( 'wc_sequential_order_numbers' ) ) {
             return (int) wc_sequential_order_numbers()->find_order_by_order_number( $transactionid );
         }
+
         return (int) $transactionid;
     }
 
@@ -313,68 +292,18 @@ class PaymentMethodsController {
      *
      * @param array    $order_status
      * @param WC_Order $order
-     *
      * @return array
      */
     public function allow_cancel_multisafepay_orders_with_on_hold_status( array $order_status, WC_Order $order ): array {
         if ( strpos( $order->get_payment_method(), 'multisafepay_' ) !== false ) {
-            $gateway              = Gateways::GATEWAYS[ $order->get_payment_method() ];
-            $initial_order_status = ( new $gateway() )->initial_order_status;
+            $gateway              = ( new PaymentMethodService() )->get_woocommerce_payment_gateway_by_id( $order->get_payment_method() );
+            $initial_order_status = $gateway->initial_order_status;
             // If the MultiSafepay gateway initial order status is wc-on-hold
             if ( 'wc-on-hold' === $initial_order_status ) {
-                array_push( $order_status, 'on-hold' );
+                $order_status[] = 'on-hold';
             }
         }
+
         return $order_status;
     }
-
-    /**
-     * Return the credit card component arguments require to process a pre-order
-     *
-     * @return void
-     */
-    public function get_credit_card_payment_component_arguments(): void {
-        if ( wp_verify_nonce( $_POST['nonce'], 'credit_card_payment_component_arguments_nonce' ) ) {
-            $sdk_service = new SdkService();
-
-            $credit_card_payment_component_arguments = array(
-                'debug'      => (bool) get_option( 'multisafepay_debugmode', false ),
-                'env'        => $sdk_service->get_test_mode() ? 'test' : 'live',
-                'api_token'  => $sdk_service->get_api_token(),
-                'orderData'  => array(
-                    'currency' => get_woocommerce_currency(),
-                    'amount'   => ( WC()->cart ) ? (int) ( WC()->cart->get_total( '' ) * 100 ) : null,
-                    'customer' => array(
-                        'locale'  => ( new CustomerService() )->get_locale(),
-                        'country' => ( WC()->customer )->get_billing_country(),
-                    ),
-                    'template' => array(
-                        'settings' => array(
-                            'embed_mode' => true,
-                        ),
-                    ),
-                ),
-                'recurring'  => null,
-                'ajax_url'   => admin_url( 'admin-ajax.php' ),
-                'nonce'      => wp_create_nonce( 'credit_card_payment_component_arguments_nonce' ),
-                'gateway_id' => sanitize_key( $_POST['gateway_id'] ),
-                'gateway'    => sanitize_text_field( $_POST['gateway'] ),
-
-            );
-
-            $gateway = Gateways::get_payment_method_object_by_gateway_code( sanitize_text_field( $_POST['gateway'] ) );
-            if ( $gateway->is_tokenization_enable() ) {
-                $credit_card_payment_component_arguments['recurring'] = array(
-                    'model'  => 'cardOnFile',
-                    'tokens' => $sdk_service->get_payment_tokens(
-                        (string) get_current_user_id(),
-                        sanitize_text_field( $_POST['gateway'] )
-                    ),
-                );
-            }
-
-            wp_send_json( $credit_card_payment_component_arguments );
-        }
-    }
-
 }

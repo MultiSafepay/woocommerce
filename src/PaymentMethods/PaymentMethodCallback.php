@@ -5,6 +5,7 @@ namespace MultiSafepay\WooCommerce\PaymentMethods;
 use MultiSafepay\Api\Transactions\Transaction;
 use MultiSafepay\Api\Transactions\TransactionResponse;
 use MultiSafepay\Exception\ApiException;
+use MultiSafepay\WooCommerce\Services\PaymentMethodService;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Settings\SettingsFields;
 use MultiSafepay\WooCommerce\Utils\Logger;
@@ -13,9 +14,6 @@ use WC_Order;
 
 /**
  * The payment method callback handle the notification process.
- * *
- *
- * @since   4.0.0
  */
 class PaymentMethodCallback {
 
@@ -59,7 +57,6 @@ class PaymentMethodCallback {
      *
      * @param  string               $multisafepay_order_id
      * @param  ?TransactionResponse $multisafepay_transaction
-     * @throws ClientExceptionInterface
      */
     public function __construct( string $multisafepay_order_id, $multisafepay_transaction = null ) {
         $this->multisafepay_order_id = $multisafepay_order_id;
@@ -88,7 +85,6 @@ class PaymentMethodCallback {
      * Return the MultiSafepay Transaction
      *
      * @return TransactionResponse
-     * @throws ClientExceptionInterface
      */
     private function get_transaction(): TransactionResponse {
         $transaction_manager = ( new SdkService() )->get_transaction_manager();
@@ -219,12 +215,12 @@ class PaymentMethodCallback {
             die( 'OK' );
         }
 
-        $registered_by_multisafepay_payment_method_object = Gateways::get_payment_method_object_by_gateway_code( $this->get_multisafepay_transaction_gateway_code() );
+        $registered_by_multisafepay_payment_method_object = ( new PaymentMethodService() )->get_woocommerce_payment_gateway_by_multisafepay_gateway_code( $this->get_multisafepay_transaction_gateway_code() );
         $payment_method_id_registered_by_multisafepay     = $registered_by_multisafepay_payment_method_object ? $registered_by_multisafepay_payment_method_object->get_payment_method_id() : false;
         $payment_method_title_registered_by_multisafepay  = $registered_by_multisafepay_payment_method_object ? $registered_by_multisafepay_payment_method_object->get_payment_method_title() : false;
         $payment_method_id_registered_by_wc               = $this->order->get_payment_method();
         $payment_method_title_registered_by_wc            = $this->order->get_payment_method_title();
-        $registered_by_woocommerce_payment_method_object  = Gateways::get_payment_method_object_by_payment_method_id( $payment_method_id_registered_by_wc );
+        $registered_by_woocommerce_payment_method_object  = ( new PaymentMethodService() )->get_woocommerce_payment_gateway_by_id( $payment_method_id_registered_by_wc );
         $initial_order_status                             = $registered_by_woocommerce_payment_method_object ? $registered_by_woocommerce_payment_method_object->initial_order_status : false;
         $default_order_status                             = SettingsFields::get_multisafepay_order_statuses();
 

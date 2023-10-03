@@ -2,31 +2,26 @@
 
 namespace MultiSafepay\WooCommerce;
 
-use MultiSafepay\WooCommerce\PaymentMethods\Gateways;
-use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodsBlocksController;
+use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodsController;
 use MultiSafepay\WooCommerce\Settings\SettingsController;
 use MultiSafepay\WooCommerce\Utils\CustomLinks;
 use MultiSafepay\WooCommerce\Utils\Internationalization;
 use MultiSafepay\WooCommerce\Utils\Loader;
+use MultiSafepay\WooCommerce\Services\PaymentComponentService;
 
 /**
  * This class is the core of the plugin.
- *
- * Is used to define internationalization, settings hooks, and
- * public face site hooks.
- *
- * @since      4.0.0
+ * Is used to define internationalization, admin and front hooks.
  */
 class Main {
 
 	/**
-	 * The loader that's responsible for maintaining and registering all hooks that power
-	 * the plugin.
+	 * The loader that's responsible for maintaining and registering all hooks
 	 *
-	 * @var      Loader     Maintains and registers all hooks for the plugin.
+	 * @var Loader Maintains and registers all hooks for the plugin.
 	 */
-	private $loader;
+	public $loader;
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -78,6 +73,7 @@ class Main {
 	private function define_settings_hooks(): void {
         // Settings controller
 	    $plugin_settings = new SettingsController();
+
         // Filter get_option for some option names.
         $this->loader->add_filter( 'option_multisafepay_testmode', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
         $this->loader->add_filter( 'option_multisafepay_debugmode', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
@@ -103,15 +99,15 @@ class Main {
 	 * Register all of the hooks related to the payment methods
 	 * of the plugin.
      *
-     * @return  void
+     * @return void
 	 */
 	private function define_payment_methods_hooks(): void {
         // Payment controller
 		$payment_methods = new PaymentMethodsController();
-        // Enqueue styles in payment methods
+		// Enqueue styles in payment methods
 		$this->loader->add_action( 'wp_enqueue_scripts', $payment_methods, 'enqueue_styles' );
         // Register the MultiSafepay payment gateways in WooCommerce.
-        $this->loader->add_filter( 'woocommerce_payment_gateways', $payment_methods, 'get_gateways' );
+        $this->loader->add_filter( 'woocommerce_payment_gateways', $payment_methods, 'get_woocommerce_payment_gateways' );
         // Filter transaction order id on callback
         $this->loader->add_filter( 'multisafepay_transaction_order_id', $payment_methods, 'multisafepay_transaction_order_id', 11 );
         // Filter per country
@@ -128,47 +124,24 @@ class Main {
         }
         // Replace checkout payment url if a payment link has been generated in backoffice
         $this->loader->add_filter( 'woocommerce_get_checkout_payment_url', $payment_methods, 'replace_checkout_payment_url', 10, 2 );
-        // Register deprecated notification endpoint
-        $this->loader->add_action( 'wp_loaded', $payment_methods, 'deprecated_callback' );
-        // Register notification endpoint for each payment method
-        foreach ( Gateways::get_gateways_ids() as $gateway_id ) {
-            $this->loader->add_action( 'woocommerce_api_' . $gateway_id, $payment_methods, 'callback' );
-        }
-        // One new notification URL for all payment methods
+        // One notification URL for all payment methods
         $this->loader->add_action( 'woocommerce_api_multisafepay', $payment_methods, 'callback' );
         // One endpoint to handle notifications via POST.
         $this->loader->add_action( 'rest_api_init', $payment_methods, 'multisafepay_register_rest_route' );
         // Allow cancel orders for on-hold status
         $this->loader->add_filter( 'woocommerce_valid_order_statuses_for_cancel', $payment_methods, 'allow_cancel_multisafepay_orders_with_on_hold_status', 10, 2 );
-        // Ajax related to update the order information of a credit card component
-        foreach ( Gateways::get_gateways_with_payment_component() as $gateway_id ) {
-            $this->loader->add_action( 'wp_ajax_' . $gateway_id . '_component_arguments', $payment_methods, 'get_credit_card_payment_component_arguments' );
-            $this->loader->add_action( 'wp_ajax_nopriv_' . $gateway_id . '_component_arguments', $payment_methods, 'get_credit_card_payment_component_arguments' );
-        }
-
-        $blocks_controller = new PaymentMethodsBlocksController();
-        if ( $blocks_controller->is_blocks_plugin_active() ) {
-            $this->loader->add_action( 'wp_enqueue_scripts', $blocks_controller, 'enqueue_woocommerce_blocks_script' );
-        }
-
+        // Allow to refresh the data sent to initialize the Payment Components, when in the checkout, something changed in the order details
+        $payment_component_service = new PaymentComponentService();
+        $this->loader->add_action( 'wp_ajax_get_payment_component_arguments', $payment_component_service, 'ajax_get_payment_component_arguments' );
+        $this->loader->add_action( 'wp_ajax_nopriv_get_payment_component_arguments', $payment_component_service, 'ajax_get_payment_component_arguments' );
 	}
 
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
      *
-     * @return  void
+     * @return void
 	 */
 	public function init() {
 		$this->loader->init();
 	}
-
-    /**
-     * The reference to the class that orchestrates the hooks with the plugin.
-     *
-     * @return    Loader    Orchestrates the hooks of the plugin.
-     */
-    public function get_loader(): Loader {
-        return $this->loader;
-    }
-
 }

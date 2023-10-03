@@ -6,11 +6,6 @@ use WC_Log_Handler_File;
 
 /**
  * Class Logger
- *
- * @see https://tools.ietf.org/html/rfc5424#page-11
- *
- * @package MultiSafepay\WooCommerce\Utils
- * @since    4.4.2
  */
 class Logger {
 
@@ -138,5 +133,4 @@ class Logger {
         }
         return $logs;
     }
-
 }

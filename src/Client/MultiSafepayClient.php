@@ -4,7 +4,6 @@ namespace MultiSafepay\WooCommerce\Client;
 
 use MultiSafepay\WooCommerce\Utils\Logger;
 use Nyholm\Psr7\Response;
-use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -60,5 +59,4 @@ class MultiSafepayClient implements ClientInterface {
         }
         return $args;
     }
-
 }

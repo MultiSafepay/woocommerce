@@ -1,21 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace MultiSafepay\WooCommerce\Utils;
+use MultiSafepay\WooCommerce\Utils\EscapeUtil;
 
-/**
- * Class EscapeUtil
- *
- * @package MultiSafepay\WooCommerce\Utils
- */
-class EscapeUtil {
+class Test_EscapeUtil extends WP_UnitTestCase {
 
-    /**
-     * Return an array with the allowed html tags to escape the output in the setting form
-     *
-     * @return array
-     */
-    public static function get_allowed_html_tags(): array {
-        return array(
+    public function test_escape_util() {
+        $expected_allowed_tags = array(
             'input'  => array(
                 'name'        => array(),
                 'id'          => array(),
@@ -36,5 +26,7 @@ class EscapeUtil {
                 'selected' => true,
             ),
         );
+        $allowed_tags = EscapeUtil::get_allowed_html_tags();
+        $this->assertEquals($expected_allowed_tags, $allowed_tags);
     }
 }

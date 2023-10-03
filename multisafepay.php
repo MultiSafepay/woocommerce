@@ -4,15 +4,15 @@
  * Plugin Name:             MultiSafepay
  * Plugin URI:              https://docs.multisafepay.com/docs/woocommerce
  * Description:             MultiSafepay Payment Plugin
- * Version:                 5.4.1
+ * Version:                 6.0.0
  * Author:                  MultiSafepay
  * Author URI:              https://www.multisafepay.com
  * Copyright:               Copyright (c) MultiSafepay, Inc. (https://www.multisafepay.com)
  * License:                 GNU General Public License v3.0
  * License URI:             http://www.gnu.org/licenses/gpl-3.0.html
- * Requires at least:       5.0
+ * Requires at least:       6.0
  * Tested up to:            6.3.1
- * WC requires at least:    4.2.0
+ * WC requires at least:    6.0.0
  * WC tested up to:         8.1.1
  * Requires PHP:            7.3
  * Text Domain:             multisafepay
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Plugin version
  */
-define( 'MULTISAFEPAY_PLUGIN_VERSION', '5.4.1' );
+define( 'MULTISAFEPAY_PLUGIN_VERSION', '6.0.0' );
 
 /**
  * Plugin URL
@@ -52,10 +52,10 @@ use MultiSafepay\WooCommerce\Main;
  * The code that runs during plugin activation.
  * The class is documented in src/utils/Activator.php
  *
- * @since   4.0.0
  * @see     https://developer.wordpress.org/reference/functions/register_activation_hook/
  *
  * @param   null|bool $network_wide
+ * @return void
  */
 function activate_multisafepay( ?bool $network_wide ): void {
     $activator = new Activator();
@@ -66,8 +66,8 @@ register_activation_hook( __FILE__, 'activate_multisafepay' );
 /**
  * Init plugin
  *
- * @since    4.0.0
  * @see      https://developer.wordpress.org/plugins/hooks/
+ * @return void
  */
 function init_multisafepay() {
     if ( ! function_exists( 'is_plugin_active' ) ) {
@@ -80,12 +80,11 @@ function init_multisafepay() {
 }
 
 /**
- * Load plugin when WooCommerce is loaded
+ * Wait for WooCommerce to load
  *
  * @return void
  */
 function action_woocommerce_loaded() {
     init_multisafepay();
 }
-
 add_action( 'woocommerce_loaded', 'action_woocommerce_loaded', 10, 1 );

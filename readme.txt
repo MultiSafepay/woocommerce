@@ -125,6 +125,11 @@ Please follow these steps:
 Yes, you can fully or partially refund transactions directly from your WooCommerce backend for all payment methods, except for [Buy now pay later](https://docs.multisafepay.com/docs/bnpl) payment methods in which it is only possible to process full refunds.
 You can also refund from your [MultiSafepay Control](https://merchant.multisafepay.com)
 
+== Upgrade Notice ==
+
+= 6.0.0 =
+6.x.x is a major upgrade in which the MultiSafepay payment methods are registered dynamically. After upgrade, please navigate to MultiSafepay settings page and to the payment methods list and confirm the settings in each section are set up according to your preferences.
+
 == Screenshots ==
 
 1. MultiSafepay Settings Page - Account section
