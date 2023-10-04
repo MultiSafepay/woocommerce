@@ -1,10 +1,10 @@
 === MultiSafepay plugin for WooCommerce ===
 Contributors: multisafepayplugin
 Tags: multisafepay, credit card, credit cards, gateway, payments, woocommerce, ideal, bancontact, klarna, sofort, giropay, sepa direct debit
-Requires at least: 5.0
+Requires at least: 6.0
 Tested up to: 6.3.1
 Requires PHP: 7.3
-Stable tag: 5.4.1
+Stable tag: 6.0.0
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -128,7 +128,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 == Upgrade Notice ==
 
 = 6.0.0 =
-6.x.x is a major upgrade in which the MultiSafepay payment methods are registered dynamically. After upgrade, please navigate to MultiSafepay settings page and to the payment methods list and confirm the settings in each section are set up according to your preferences.
+6.x.x is a major upgrade in which the MultiSafepay payment methods are registered dynamically via an API request to MultiSafepay. After the upgrade, please navigate to the MultiSafepay settings page, and to each one of the payment methods enabled in your account, and confirm the settings in each section are set up according to your preferences.
 
 == Screenshots ==
 
