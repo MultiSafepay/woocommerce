@@ -51,7 +51,7 @@ class Test_BaseGiftCardPaymentMethod extends WP_UnitTestCase {
 
     public function test_has_payment_component_setting_field() {
         $setting_fields = $this->woocommerce_payment_gateway->add_form_fields();
-        $this->assertArrayHasKey( 'payment_component', $setting_fields );
+        $this->assertArrayNotHasKey( 'payment_component', $setting_fields );
     }
 
     public function test_has_tokenization_setting_field() {
@@ -81,8 +81,8 @@ class Test_BaseGiftCardPaymentMethod extends WP_UnitTestCase {
                     "is_enabled" => true,
                 ],
                 "payment_components" => [
-                    "has_fields" => true,
-                    "is_enabled" => true,
+                    "has_fields" => false,
+                    "is_enabled" => false,
                 ],
             ],
             "brands" => [],

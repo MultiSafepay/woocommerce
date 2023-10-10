@@ -215,11 +215,10 @@ class BasePaymentMethod extends WC_Payment_Gateway {
      * @return bool
      */
     public function is_payment_component_enabled(): bool {
-        $settings = get_option( 'woocommerce_' . $this->id . '_settings', array( 'payment_component' => 'no' ) );
-        if ( ! isset( $settings['payment_component'] ) ) {
-            return false;
+        if ( $this->payment_method->supportsPaymentComponent() ) {
+            return true;
         }
-        return 'yes' === $settings['payment_component'];
+        return false;
     }
 
     /**
@@ -317,25 +316,13 @@ class BasePaymentMethod extends WC_Payment_Gateway {
             ),
         );
 
-        if ( $this->payment_method->supportsPaymentComponent() ) {
-            $form_fields['payment_component'] = array(
-                'title'       => __( 'Payment Components', 'multisafepay' ),
-                'label'       => 'Enable Payment Component in ' . $this->get_method_title() . ' Gateway',
-                'type'        => 'checkbox',
-                'description' => __( 'More information about Payment Components on <a href="https://docs.multisafepay.com/docs/payment-components" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
-                'default'     => $this->get_option( 'payment_component', $this->payment_method->supportsPaymentComponent() ? 'yes' : 'no' ),
-                'value'       => $this->get_option( 'payment_component', $this->payment_method->supportsPaymentComponent() ? 'yes' : 'no' ),
-            );
-        }
-
         if ( $this->payment_method->supportsTokenization() && $this->payment_method->supportsPaymentComponent() ) {
             $form_fields['tokenization'] = array(
-                'title'       => __( 'Tokenization', 'multisafepay' ),
-                'label'       => 'Enable Tokenization in ' . $this->get_method_title() . ' Gateway within the Payment Component',
-                'type'        => 'checkbox',
-                'description' => __( 'Tokenization only applies when payment component is enabled. More information about Tokenization on <a href="https://docs.multisafepay.com/docs/recurring-payments" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
-                'default'     => $this->get_option( 'tokenization', $this->payment_method->supportsTokenizationCardOnFile() ? 'yes' : 'no' ),
-                'value'       => $this->get_option( 'tokenization', $this->payment_method->supportsTokenizationCardOnFile() ? 'yes' : 'no' ),
+                'title'   => __( 'Tokenization', 'multisafepay' ),
+                'label'   => 'Enable recurring payments in ' . $this->get_method_title(),
+                'type'    => 'checkbox',
+                'default' => $this->get_option( 'tokenization', 'no' ),
+                'value'   => $this->get_option( 'tokenization', 'no' ),
             );
         }
 
