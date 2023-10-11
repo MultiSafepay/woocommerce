@@ -3,6 +3,7 @@
 namespace MultiSafepay\WooCommerce\Settings;
 
 use MultiSafepay\Util\Version;
+use MultiSafepay\WooCommerce\PaymentMethods\Base\BasePaymentMethod;
 use MultiSafepay\WooCommerce\Services\PaymentMethodService;
 use WC_API;
 use WC_Countries;
@@ -234,6 +235,7 @@ class SystemReport {
             'title'    => __( 'MultiSafepay Gateway Settings', 'multisafepay' ),
             'settings' => array(),
         );
+        /** @var BasePaymentMethod $woocommerce_payment_gateway */
         foreach ( ( new PaymentMethodService() )->get_woocommerce_payment_gateways() as $woocommerce_payment_gateway ) {
             $is_enable = $woocommerce_payment_gateway->enabled ? true : false;
             if ( $is_enable ) {
@@ -249,6 +251,12 @@ class SystemReport {
                 }
                 if ( ! empty( $woocommerce_payment_gateway->countries ) ) {
                     $multisafepay_gateway_settings_value .= __( 'Countries: ', 'multisafepay' ) . implode( ', ', $woocommerce_payment_gateway->countries ) . '. ';
+                }
+                if ( ! empty( $woocommerce_payment_gateway->is_payment_component_enabled() ) ) {
+                    $multisafepay_gateway_settings_value .= __( 'Payment Component: ', 'multisafepay' ) . ( $woocommerce_payment_gateway->is_payment_component_enabled() ? __( 'Enabled', 'multisafepay' ) : __( 'Disabled', 'multisafepay' ) ) . '. ';
+                }
+                if ( ! empty( $woocommerce_payment_gateway->is_tokenization_enabled() ) ) {
+                    $multisafepay_gateway_settings_value .= __( 'Recurring payments: ', 'multisafepay' ) . ( $woocommerce_payment_gateway->is_tokenization_enabled() ? __( 'Enabled', 'multisafepay' ) : __( 'Disabled', 'multisafepay' ) ) . '. ';
                 }
 
                 $multisafepay_gateway_settings['settings'][ $woocommerce_payment_gateway->id ]['label'] = $woocommerce_payment_gateway->get_payment_method_title();
