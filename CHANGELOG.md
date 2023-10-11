@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.1.0
+Release Date: Oct 11th, 2023
+
+### Added
++ PLGWOOS-884: Add in the system report missing settings for each payment method
+
+### Changed
++ PLGWOOS-882: Enable Payment Components by default in all payment methods where is available
+
+***
+
 ## 6.0.0
 Release Date: Oct 4th, 2023
 
