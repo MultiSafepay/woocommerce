@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.1.1
+Release Date: Oct 16th, 2023
+
+### Fixed
++ PLGWOOS-887: Disable Payment Components for Gift Cards payment methods, even when API is returning Payment Component is allowed
+
+
+***
+
 ## 6.1.0
 Release Date: Oct 11th, 2023
 

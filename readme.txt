@@ -4,7 +4,7 @@ Tags: multisafepay, credit card, credit cards, gateway, payments, woocommerce, i
 Requires at least: 6.0
 Tested up to: 6.3.1
 Requires PHP: 7.3
-Stable tag: 6.1.0
+Stable tag: 6.1.1
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -143,6 +143,11 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 9. Embedded Credit Card form using MultiSafepay Payment Component
 
 == Changelog ==
+= Release Notes - WooCommerce 6.1.1 (Oct 16th, 2023) =
+
+### Fixed
++ PLGWOOS-887: Disable Payment Components for Gift Cards payment methods, even when API is returning Payment Component is allowed
+
 = Release Notes - WooCommerce 6.1.0 (Oct 11th, 2023) =
 
 ### Added
