@@ -18,4 +18,13 @@ class BaseGiftCardPaymentMethod extends BasePaymentMethod {
     public function can_refund_order( $order ) {
         return false;
     }
+
+    /**
+     * Return if payment component is enabled.
+     *
+     * @return bool
+     */
+    public function is_payment_component_enabled(): bool {
+        return false;
+    }
 }
