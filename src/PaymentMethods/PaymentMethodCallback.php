@@ -17,6 +17,8 @@ use WC_Order;
  */
 class PaymentMethodCallback {
 
+    public const CREDIT_CARD_GATEWAYS = array( 'VISA', 'MASTERCARD', 'AMEX', 'MAESTRO' );
+
     /**
      * The WooCommerce Order Id.
      *
@@ -116,6 +118,12 @@ class PaymentMethodCallback {
      */
     private function get_multisafepay_transaction_gateway_code(): string {
         $code = $this->multisafepay_transaction->getPaymentDetails()->getType();
+        if (
+            in_array( $code, self::CREDIT_CARD_GATEWAYS, true ) &&
+            get_option( 'multisafepay_group_credit_cards', false )
+        ) {
+            $code = 'CREDITCARD';
+        }
         if ( strpos( $code, 'Coupon::' ) !== false ) {
             $data = $this->multisafepay_transaction->getPaymentDetails()->getData();
             return $data['coupon_brand'];
