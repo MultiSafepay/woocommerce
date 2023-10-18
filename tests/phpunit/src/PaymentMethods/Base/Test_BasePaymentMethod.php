@@ -52,7 +52,7 @@ class Test_BasePaymentMethod extends WP_UnitTestCase {
 
     public function test_has_payment_component_setting_field() {
         $setting_fields = $this->woocommerce_payment_gateway->add_form_fields();
-        $this->assertArrayNotHasKey( 'payment_component', $setting_fields );
+        $this->assertArrayHasKey( 'payment_component', $setting_fields );
     }
 
     public function test_has_tokenization_setting_field() {

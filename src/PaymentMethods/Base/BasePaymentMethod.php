@@ -215,10 +215,14 @@ class BasePaymentMethod extends WC_Payment_Gateway {
      * @return bool
      */
     public function is_payment_component_enabled(): bool {
-        if ( $this->payment_method->supportsPaymentComponent() ) {
+        if ( ! $this->payment_method->supportsPaymentComponent() ) {
+            return false;
+        }
+        $settings = get_option( 'woocommerce_' . $this->id . '_settings', array( 'payment_component' => 'yes' ) );
+        if ( ! isset( $settings['payment_component'] ) ) {
             return true;
         }
-        return false;
+        return 'yes' === $settings['payment_component'];
     }
 
     /**
@@ -316,13 +320,31 @@ class BasePaymentMethod extends WC_Payment_Gateway {
             ),
         );
 
+        if ( $this->payment_method->supportsPaymentComponent() ) {
+            $form_fields['payment_component'] = array(
+                'title'       => __( 'Payment Type', 'multisafepay' ),
+                'type'        => 'select',
+                'options'     => array(
+                    'no'  => __( 'Redirect', 'multisafepay' ),
+                    'yes' => __( 'Payment component', 'multisafepay' ),
+                ),
+                'description' => __( 'Redirect - Redirect the customer to a payment page to finish the payment. <br /> Payment Component - Payment components let you embed payment checkout fields directly into your checkout. <br /><br /> More information about Payment Components on <a href="https://docs.multisafepay.com/docs/payment-components" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
+                'default'     => $this->get_option( 'payment_component', $this->payment_method->supportsPaymentComponent() ? 'yes' : 'no' ),
+                'value'       => $this->get_option( 'payment_component', $this->payment_method->supportsPaymentComponent() ? 'yes' : 'no' ),
+            );
+        }
+
         if ( $this->payment_method->supportsTokenization() && $this->payment_method->supportsPaymentComponent() ) {
             $form_fields['tokenization'] = array(
-                'title'   => __( 'Tokenization', 'multisafepay' ),
-                'label'   => 'Enable recurring payments in ' . $this->get_method_title(),
-                'type'    => 'checkbox',
-                'default' => $this->get_option( 'tokenization', 'no' ),
-                'value'   => $this->get_option( 'tokenization', 'no' ),
+                'title'       => __( 'Recurring payments', 'multisafepay' ),
+                'type'        => 'select',
+                'options'     => array(
+                    'no'  => __( 'Disabled', 'multisafepay' ),
+                    'yes' => __( 'Enabled', 'multisafepay' ),
+                ),
+                'description' => __( 'Ensure that the Payment component is enabled. It won\'t work using redirect payment type.', 'multisafepay' ),
+                'default'     => $this->get_option( 'tokenization', 'no' ),
+                'value'       => $this->get_option( 'tokenization', 'no' ),
             );
         }
 
