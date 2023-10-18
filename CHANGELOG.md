@@ -6,12 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.1.2
+Release Date: Oct 19th, 2023
+
+### Fixed
++ PLGWOOS-886: Fix the assignation of the payment method, when the selected payment method changes on the payment page, and is selected a credit card or debit card payment method, and "Group Credit Cards" setting field is enabled.
+
+### Changed
++ PLGWOOS-890: Bring back the payment component setting field to allow users to disable it.
+
+***
+
 ## 6.1.1
 Release Date: Oct 16th, 2023
 
 ### Fixed
 + PLGWOOS-887: Disable Payment Components for Gift Cards payment methods, even when API is returning Payment Component is allowed
-
 
 ***
 
