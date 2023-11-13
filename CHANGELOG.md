@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.2.0
+Release Date: Nov 13th, 2023
+
+### Added
++ PLGWOOS-872: Add support for [High-Performance Order Storage](https://woo.com/document/high-performance-order-storage/)
+
+***
+
 ## 6.1.2
 Release Date: Oct 19th, 2023
 
