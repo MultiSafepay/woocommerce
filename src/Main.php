@@ -5,6 +5,7 @@ namespace MultiSafepay\WooCommerce;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodsController;
 use MultiSafepay\WooCommerce\Settings\SettingsController;
+use MultiSafepay\WooCommerce\Settings\ThirdPartyCompatibility;
 use MultiSafepay\WooCommerce\Utils\CustomLinks;
 use MultiSafepay\WooCommerce\Utils\Internationalization;
 use MultiSafepay\WooCommerce\Utils\Loader;
@@ -35,6 +36,7 @@ class Main {
         $this->add_custom_links_in_plugin_list();
         $this->define_settings_hooks();
 		$this->define_payment_methods_hooks();
+        $this->define_compatibilities();
 	}
 
 	/**
@@ -63,6 +65,15 @@ class Main {
         $this->loader->add_filter( 'plugin_action_links_multisafepay/multisafepay.php', $custom_links, 'get_links' );
     }
 
+    /**
+     * Define compatibilities with third party plugins
+     *
+     * @return void
+     */
+    private function define_compatibilities(): void {
+        $compatibilities = new ThirdPartyCompatibility();
+        $this->loader->add_action( 'before_woocommerce_init', $compatibilities, 'declare_hpos_compatibility' );
+    }
 
 	/**
 	 * Register all of the hooks related to the common settings

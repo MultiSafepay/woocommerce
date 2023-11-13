@@ -34,10 +34,10 @@ class WC_Order_Item_Fee_Fixture extends WP_UnitTestCase {
 
     }
 
-    public function get_wc_order_item_fee_mock() {
+    public function get_wc_order_item_fee_mock( $wc_order ) {
         $wc_order_item_fee =  $this->getMockBuilder( 'WC_Order_Item_Fee' )
                                    ->disableOriginalConstructor()
-                                   ->setMethods( array( 'get_id', 'get_name', 'get_type', 'get_quantity', 'get_total', 'get_total_tax', 'get_product_id', 'get_taxes' ) )
+                                   ->setMethods( array( 'get_id', 'get_name', 'get_type', 'get_quantity', 'get_total', 'get_total_tax', 'get_product_id', 'get_taxes', 'get_order' ) )
                                    ->getMock();
         $wc_order_item_fee->method( 'get_id' )->willReturn( 17 );
         $wc_order_item_fee->method( 'get_name' )->willReturn( 'Fee Name' );
@@ -50,6 +50,7 @@ class WC_Order_Item_Fee_Fixture extends WP_UnitTestCase {
             $wc_order_item_fee->method( 'get_taxes' )->willReturn( array( 'total' => array('4' => $this->fee_total * ( $this->fee_tax_rate / 100 ) ) ) );
         }
         $wc_order_item_fee->method( 'get_taxes' )->willReturn( array( 'total' => array() ) );
+        $wc_order_item_fee->method( 'get_order' )->willReturn( $wc_order );
         return $wc_order_item_fee;
     }
 

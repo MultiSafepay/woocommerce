@@ -137,5 +137,4 @@
     <!-- Report @todo comments  -->
     <rule ref="Generic.Commenting.Todo.CommentFound"/>
 
-
 </ruleset>

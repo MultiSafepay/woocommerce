@@ -35,7 +35,7 @@ class WC_Order_Fixture extends WP_UnitTestCase {
     }
 
     public function get_wc_order_mock() {
-        $wc_order =  $this->getMockBuilder( 'WC_Order' )
+        $wc_order =  $this->getMockBuilder( WC_Order::class )
                                 ->disableOriginalConstructor()
                                 ->setMethods( array( 'get_shipping_total',  'get_shipping_tax', 'get_items' ) )
                                 ->getMock();

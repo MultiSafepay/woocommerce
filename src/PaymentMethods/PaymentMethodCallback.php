@@ -10,6 +10,7 @@ use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Settings\SettingsFields;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use Psr\Http\Client\ClientExceptionInterface;
+use WC_Data_Exception;
 use WC_Order;
 
 /**
@@ -184,6 +185,7 @@ class PaymentMethodCallback {
      * Process the callback.
      *
      * @return void
+     * @throws WC_Data_Exception
      */
     public function process_callback(): void {
         // On pre-transactions notification, and using sequential order numbers plugins, var 2 is not received in the notification, then order doesn't exist
@@ -232,17 +234,6 @@ class PaymentMethodCallback {
         $initial_order_status                             = $registered_by_woocommerce_payment_method_object ? $registered_by_woocommerce_payment_method_object->initial_order_status : false;
         $default_order_status                             = SettingsFields::get_multisafepay_order_statuses();
 
-        // If the payment method changed in MultiSafepay payment page, after leave WooCommerce checkout page
-        if ( $payment_method_id_registered_by_multisafepay && $payment_method_id_registered_by_wc !== $payment_method_id_registered_by_multisafepay ) {
-            if ( get_option( 'multisafepay_debugmode', false ) ) {
-                $message = 'Callback received with a different payment method for Order ID: ' . $this->woocommerce_order_id . ' and Order Number: ' . $this->multisafepay_order_id . ' on ' . $this->time_stamp . '. Payment method changed from ' . $payment_method_title_registered_by_wc . ' to ' . $payment_method_title_registered_by_multisafepay . '.';
-                Logger::log_info( $message );
-                $this->order->add_order_note( $message );
-            }
-            update_post_meta( $this->woocommerce_order_id, '_payment_method', $payment_method_id_registered_by_multisafepay );
-            update_post_meta( $this->woocommerce_order_id, '_payment_method_title', $payment_method_title_registered_by_multisafepay );
-        }
-
         // Check if the WooCommerce Order status do not match with the order status received in notification, to avoid to process repeated of notification.
         // Or if the custom initial order status of the gateway is different than the general one, and the MultiSafepay transaction status is initialized, and custom initial order status is different than the current WooCommerce order status
         if (
@@ -279,6 +270,19 @@ class PaymentMethodCallback {
                 Logger::log_info( $message );
                 $this->order->add_order_note( $message );
             }
+        }
+
+        // If the payment method changed in MultiSafepay payment page, after leave WooCommerce checkout page
+        if ( $payment_method_id_registered_by_multisafepay && $payment_method_id_registered_by_wc !== $payment_method_id_registered_by_multisafepay ) {
+            if ( get_option( 'multisafepay_debugmode', false ) ) {
+                $message = 'Callback received with a different payment method for Order ID: ' . $this->woocommerce_order_id . ' and Order Number: ' . $this->multisafepay_order_id . ' on ' . $this->time_stamp . '. Payment method changed from ' . $payment_method_title_registered_by_wc . ' to ' . $payment_method_title_registered_by_multisafepay . '.';
+                Logger::log_info( $message );
+                $this->order->add_order_note( $message );
+            }
+
+            $this->order = wc_get_order( $this->woocommerce_order_id );
+            $this->order->set_payment_method( $registered_by_multisafepay_payment_method_object );
+            $this->order->save();
         }
 
         header( 'Content-type: text/plain' );

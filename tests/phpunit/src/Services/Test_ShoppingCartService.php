@@ -32,11 +32,12 @@ class Test_ShoppingCartService extends WP_UnitTestCase {
         $tax_fixture = new TaxesFixture( 'Tax Rate Name', 21, 'Tax Class Name' );
         $tax_fixture->register_tax_rate();
 
-        // Set Products.
-        $wc_order_item_product = (new WC_Order_Item_Product_Fixture( $product_id, $product_name, $product_price, $product_quantity, $product_tax_rate, $discount_percentage, sanitize_title('Tax Class Name')))->get_wc_order_item_product_mock();
-        $wc_order_item_shipping = (new WC_Order_Item_Shipping_Fixture( $shipping_total, $shipping_tax_rate ))->get_wc_order_item_shipping_mock();
-        $wc_order_item_fee = (new WC_Order_Item_Fee_Fixture( 3.30, 21 ))->get_wc_order_item_fee_mock();
         $wc_order = (new WC_Order_Fixture( $shipping_total, $shipping_tax_rate ))->get_wc_order_mock();
+
+        // Set Products.
+        $wc_order_item_product = (new WC_Order_Item_Product_Fixture( $product_id, $product_name, $product_price, $product_quantity, $product_tax_rate, $discount_percentage, sanitize_title('Tax Class Name')))->get_wc_order_item_product_mock( $wc_order );
+        $wc_order_item_shipping = (new WC_Order_Item_Shipping_Fixture( $shipping_total, $shipping_tax_rate ))->get_wc_order_item_shipping_mock( $wc_order );
+        $wc_order_item_fee = (new WC_Order_Item_Fee_Fixture( 3.30, 21 ))->get_wc_order_item_fee_mock( $wc_order );
 
         // Consecutive calls for WC_Order->get_items()
         $wc_order->method( 'get_items' )->withConsecutive( array('line_item'),  array('shipping'), array('fee'), array('coupon') )
@@ -83,11 +84,12 @@ class Test_ShoppingCartService extends WP_UnitTestCase {
         $tax_fixture = new TaxesFixture( 'Tax Rate Name', 21, 'Tax Class Name' );
         $tax_fixture->register_tax_rate();
 
-        // Set Products.
-        $wc_order_item_product = (new WC_Order_Item_Product_Fixture( $product_id, $product_name, $product_price, $product_quantity, $product_tax_rate, $discount_percentage, sanitize_title('Tax Class Name')))->get_wc_order_item_product_mock();
-        $wc_order_item_shipping = (new WC_Order_Item_Shipping_Fixture( $shipping_total, $shipping_tax_rate ))->get_wc_order_item_shipping_mock();
-        $wc_order_item_fee = (new WC_Order_Item_Fee_Fixture( 3.30, 21 ))->get_wc_order_item_fee_mock();
         $wc_order = (new WC_Order_Fixture( $shipping_total, $shipping_tax_rate ))->get_wc_order_mock();
+
+        // Set Products.
+        $wc_order_item_product = (new WC_Order_Item_Product_Fixture( $product_id, $product_name, $product_price, $product_quantity, $product_tax_rate, $discount_percentage, sanitize_title('Tax Class Name')))->get_wc_order_item_product_mock( $wc_order );
+        $wc_order_item_shipping = (new WC_Order_Item_Shipping_Fixture( $shipping_total, $shipping_tax_rate ))->get_wc_order_item_shipping_mock( $wc_order );
+        $wc_order_item_fee = (new WC_Order_Item_Fee_Fixture( 3.30, 21 ))->get_wc_order_item_fee_mock( $wc_order );
 
         // Consecutive calls for WC_Order->get_items()
         $wc_order->method( 'get_items' )->withConsecutive( array('line_item'),  array('shipping'), array('fee'), array('coupon') )
@@ -150,10 +152,11 @@ class Test_ShoppingCartService extends WP_UnitTestCase {
         $tax_fixture = new TaxesFixture( 'Tax Rate Name', 21, 'Tax Class Name' );
         $tax_fixture->register_tax_rate();
 
-        // Set Products.
-        $wc_order_item_product = (new WC_Order_Item_Product_Fixture( $product_id, $product_name, $product_price, $product_quantity, $product_tax_rate, $discount_percentage, sanitize_title('Tax Class Name')))->get_wc_order_item_product_mock();
-        $wc_order_item_fee = (new WC_Order_Item_Fee_Fixture( 3.30, 21 ))->get_wc_order_item_fee_mock();
         $wc_order = (new WC_Order_Fixture( $shipping_total, $shipping_tax_rate ))->get_wc_order_mock();
+
+        // Set Products.
+        $wc_order_item_product = (new WC_Order_Item_Product_Fixture( $product_id, $product_name, $product_price, $product_quantity, $product_tax_rate, $discount_percentage, sanitize_title('Tax Class Name')))->get_wc_order_item_product_mock( $wc_order );
+        $wc_order_item_fee = (new WC_Order_Item_Fee_Fixture( 3.30, 21 ))->get_wc_order_item_fee_mock( $wc_order );
 
         // Consecutive calls for WC_Order->get_items()
         $wc_order->method( 'get_items' )->withConsecutive( array('line_item'), array('shipping'), array('fee'), array('coupon') )
@@ -216,18 +219,19 @@ class Test_ShoppingCartService extends WP_UnitTestCase {
         $tax_fixture_2 = new TaxesFixture( 'Tax Rate Name 10', 10, 'Tax Class Name 10' );
         $tax_fixture_2->register_tax_rate();
 
+        $wc_order = (new WC_Order_Fixture( $shipping_total, $shipping_tax_rate ))->get_wc_order_mock();
+
         // Set Products.
         $items = array();
 
-        $product_1 = (new WC_Order_Item_Product_Fixture( $product_1_id, $product_1_name, $product_1_price, $product_1_quantity, $product_1_tax_rate, 0, sanitize_title('Tax Class Name 21')))->get_wc_order_item_product_mock();
+        $product_1 = (new WC_Order_Item_Product_Fixture( $product_1_id, $product_1_name, $product_1_price, $product_1_quantity, $product_1_tax_rate, 0, sanitize_title('Tax Class Name 21')))->get_wc_order_item_product_mock( $wc_order );
         $items[] = $product_1;
 
-        $product_2 = (new WC_Order_Item_Product_Fixture( $product_2_id, $product_2_name, $product_2_price, $product_2_quantity, $product_2_tax_rate, $discount_percentage, sanitize_title('Tax Class Name 10')))->get_wc_order_item_product_mock();
+        $product_2 = (new WC_Order_Item_Product_Fixture( $product_2_id, $product_2_name, $product_2_price, $product_2_quantity, $product_2_tax_rate, $discount_percentage, sanitize_title('Tax Class Name 10')))->get_wc_order_item_product_mock( $wc_order );
         $items[] = $product_2;
 
-        $wc_order_item_shipping = (new WC_Order_Item_Shipping_Fixture( $shipping_total, $shipping_tax_rate ))->get_wc_order_item_shipping_mock();
-        $wc_order_item_fee = (new WC_Order_Item_Fee_Fixture( 3.30, 21 ))->get_wc_order_item_fee_mock();
-        $wc_order = (new WC_Order_Fixture( $shipping_total, $shipping_tax_rate ))->get_wc_order_mock();
+        $wc_order_item_shipping = (new WC_Order_Item_Shipping_Fixture( $shipping_total, $shipping_tax_rate ))->get_wc_order_item_shipping_mock( $wc_order );
+        $wc_order_item_fee = (new WC_Order_Item_Fee_Fixture( 3.30, 21 ))->get_wc_order_item_fee_mock( $wc_order );
 
         // Consecutive calls for WC_Order->get_items()
         $wc_order->method( 'get_items' )->withConsecutive( array('line_item'), array('shipping'), array('fee'), array('coupon') )
@@ -296,10 +300,11 @@ class Test_ShoppingCartService extends WP_UnitTestCase {
         $shipping_total             = 0;
         $shipping_tax_rate          = 0;
 
-        // Set Products.
-        $wc_order_item_product = (new WC_Order_Item_Product_Fixture( $product_id, $product_name, $product_price, $product_quantity, $product_tax_rate, $discount_percentage, sanitize_title('Tax Class Name')))->get_wc_order_item_product_mock();
-        $wc_order_item_fee = (new WC_Order_Item_Fee_Fixture( 0.00, 0 ))->get_wc_order_item_fee_mock();
         $wc_order = (new WC_Order_Fixture( $shipping_total, $shipping_tax_rate ))->get_wc_order_mock();
+
+        // Set Products.
+        $wc_order_item_product = (new WC_Order_Item_Product_Fixture( $product_id, $product_name, $product_price, $product_quantity, $product_tax_rate, $discount_percentage, sanitize_title('Tax Class Name')))->get_wc_order_item_product_mock( $wc_order );
+        $wc_order_item_fee = (new WC_Order_Item_Fee_Fixture( 0.00, 0 ))->get_wc_order_item_fee_mock( $wc_order );
 
         // Consecutive calls for WC_Order->get_items()
         $wc_order->method( 'get_items' )->withConsecutive( array('line_item'), array('shipping'), array('fee'), array('coupon') )

@@ -101,16 +101,19 @@ class Test_OrderService extends WP_UnitTestCase {
 
         $shopping_cart_service = $this->getMockBuilder(ShoppingCartService::class)
             ->disableOriginalConstructor()
-            ->setMethods(['create_shopping_cart'])
+            ->setMethods([
+                'create_shopping_cart'
+            ])
             ->getMock();
-
 
         // Set taxes.
         $tax_fixture = new TaxesFixture( 'Tax Rate Name', 21, 'Tax Class Name' );
         $tax_fixture->register_tax_rate();
 
         // Set Products.
-        $wc_order_item_product = (new WC_Order_Item_Product_Fixture( 11, 'Vneck Tshirt', 18.00, 2, 21, 10, sanitize_title('Tax Class Name')))->get_wc_order_item_product_mock();
+        $wc_order_item_product = (new WC_Order_Item_Product_Fixture( 11, 'Vneck Tshirt', 18.00, 2, 21, 10, sanitize_title('Tax Class Name')))->get_wc_order_item_product_mock(
+            $this->wc_order
+        );
 
         // Consecutive calls for WC_Order->get_items()
         $this->wc_order->method( 'get_items' )->withConsecutive( array('line_item'),  array('shipping'), array('fee'), array('coupon') )

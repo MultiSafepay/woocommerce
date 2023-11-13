@@ -5,6 +5,7 @@ namespace MultiSafepay\WooCommerce\Services;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\ShoppingCart;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\ShoppingCart\Item as CartItem;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\ShoppingCart\ShippingItem;
+use MultiSafepay\WooCommerce\Utils\Hpos;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
 use WC_Order;
@@ -119,7 +120,7 @@ class ShoppingCartService {
             return 0;
         }
 
-        if ( $this->is_order_vat_exempt( $item->get_order_id() ) ) {
+        if ( $this->is_order_vat_exempt( $item->get_order() ) ) {
             return 0;
         }
 
@@ -163,7 +164,7 @@ class ShoppingCartService {
             return 0;
         }
 
-        if ( $this->is_order_vat_exempt( $item->get_order_id() ) ) {
+        if ( $this->is_order_vat_exempt( $item->get_order() ) ) {
             return 0;
         }
 
@@ -205,7 +206,7 @@ class ShoppingCartService {
             return 0;
         }
 
-        if ( $this->is_order_vat_exempt( $item->get_order_id() ) ) {
+        if ( $this->is_order_vat_exempt( $item->get_order() ) ) {
             return 0;
         }
 
@@ -227,14 +228,11 @@ class ShoppingCartService {
     /**
      * Returns if order is VAT exempt via WC->Customer->is_vat_exempt
      *
-     * @param int $order_id
+     * @param WC_Order $order
      * @return boolean
      */
-    private function is_order_vat_exempt( int $order_id ): bool {
-        if ( get_post_meta( $order_id, 'is_vat_exempt', true ) === 'yes' ) {
-            return true;
-        }
-        return false;
+    public function is_order_vat_exempt( WC_Order $order ): bool {
+        return Hpos::get_meta( $order, 'is_vat_exempt' ) === 'yes';
     }
 
     /**

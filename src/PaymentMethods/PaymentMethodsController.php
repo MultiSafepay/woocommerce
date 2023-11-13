@@ -10,6 +10,7 @@ use MultiSafepay\Util\Notification;
 use MultiSafepay\WooCommerce\Services\OrderService;
 use MultiSafepay\WooCommerce\Services\PaymentMethodService;
 use MultiSafepay\WooCommerce\Services\SdkService;
+use MultiSafepay\WooCommerce\Utils\Hpos;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use Psr\Http\Client\ClientExceptionInterface;
 use WC_Order;
@@ -211,8 +212,10 @@ class PaymentMethodsController {
      * Action added to woocommerce_new_order hook.
      * Takes an order generated in admin and pass the data to MultiSafepay to process the order request.
      *
-     * @param   int $order_id
-     * @return  void
+     * @param  int $order_id
+     *
+     * @return void
+     * @throws ClientExceptionInterface
      */
     public function generate_orders_from_backend( int $order_id ): void {
         $order = wc_get_order( $order_id );
@@ -242,9 +245,9 @@ class PaymentMethodsController {
         }
 
         if ( $transaction->getPaymentUrl() ) {
-            // Update order meta data with the payment link
-            update_post_meta( $order_id, 'payment_url', $transaction->getPaymentUrl() );
-            update_post_meta( $order_id, 'send_payment_link', '1' );
+            // Update order metadata with the payment link
+            Hpos::update_meta( $order, 'payment_url', $transaction->getPaymentUrl() );
+            Hpos::update_meta( $order, 'send_payment_link', '1' );
 
             if ( get_option( 'multisafepay_debugmode', false ) ) {
                 $message = 'Order details has been registered in MultiSafepay and a payment link has been generated: ' . esc_url( $transaction->getPaymentUrl() );
@@ -257,13 +260,14 @@ class PaymentMethodsController {
     /**
      * @param string   $default_payment_link
      * @param WC_Order $order
+     *
+     * @return mixed|string
      */
     public function replace_checkout_payment_url( string $default_payment_link, WC_Order $order ) {
-        $send_payment_link = get_post_meta( $order->get_id(), 'send_payment_link', true );
+        $send_payment_link = Hpos::get_meta( $order, 'send_payment_link' );
         if ( $send_payment_link ) {
-            return get_post_meta( $order->get_id(), 'payment_url', true );
+            return Hpos::get_meta( $order, 'payment_url' );
         }
-
         return $default_payment_link;
     }
 

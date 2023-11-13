@@ -25,6 +25,8 @@ trait BaseRefunds {
      * @param string  $reason Reason description.
      *
      * @return  mixed boolean|WP_Error
+     *
+     * @throws ClientExceptionInterface
      */
     public function process_refund( $order_id, $amount = null, $reason = '' ) {
 
@@ -50,12 +52,7 @@ trait BaseRefunds {
 
         $refund_request->addDescriptionText( $reason );
 
-        // If the used gateway is a billing suite gateway, or the generic requiring shopping cart, create the refund based on items
-        if (
-            (bool) get_post_meta( $order->get_id(), 'order_require_shopping_cart', true ) ||
-            $multisafepay_transaction->requiresShoppingCart()
-        ) {
-
+        if ( $multisafepay_transaction->requiresShoppingCart() ) {
             $refunds                 = $order->get_refunds();
             $refund_merchant_item_id = reset( $refunds )->id;
 

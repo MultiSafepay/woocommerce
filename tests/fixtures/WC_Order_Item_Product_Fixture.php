@@ -3,6 +3,7 @@
 namespace MultiSafepay\WooCommerce\Tests\Fixtures;
 
 use WP_UnitTestCase;
+use WC_Order;
 use MultiSafepay\WooCommerce\Tests\Fixtures\WC_ProductFixture;
 
 /**
@@ -69,14 +70,14 @@ class WC_Order_Item_Product_Fixture extends WP_UnitTestCase {
         $this->tax_class_name      = $tax_class_name;
     }
 
-    public function get_wc_order_item_product_mock() {
+    public function get_wc_order_item_product_mock( $wc_order ) {
         $product_subtotal = ( $this->product_price * ($this->product_tax_rate / 100 ) ) * $this->product_quantity;
         $product_discount = $this->product_price - ($this->product_price * ($this->discount_percentage / 100 ) );
         $product_total    = $product_discount * ($this->product_tax_rate / 100 ) * $this->product_quantity;
 
         $wc_order_item_product =  $this->getMockBuilder( 'WC_Order_Item_Product' )
                                        ->disableOriginalConstructor()
-                                       ->setMethods( array( 'get_id', 'get_name', 'get_type', 'get_quantity', 'get_subtotal', 'get_total', 'get_total_tax', 'get_product_id', 'get_variation_id', 'get_tax_class', 'get_taxes', 'get_product' ) )
+                                       ->setMethods( array( 'get_id', 'get_name', 'get_type', 'get_quantity', 'get_subtotal', 'get_total', 'get_total_tax', 'get_product_id', 'get_variation_id', 'get_tax_class', 'get_taxes', 'get_product', 'get_order' ) )
                                        ->getMock();
         $wc_order_item_product->method( 'get_id' )->willReturn( $this->product_id );
         $wc_order_item_product->method( 'get_name' )->willReturn( $this->product_name );
@@ -90,6 +91,7 @@ class WC_Order_Item_Product_Fixture extends WP_UnitTestCase {
         $wc_order_item_product->method( 'get_tax_class' )->willReturn( $this->tax_class_name );
         $wc_order_item_product->method( 'get_taxes' )->willReturn( array('total' => array('4' => $product_total), 'subtotal' => array('4' => $product_subtotal ) ) );
         $wc_order_item_product->method( 'get_product' )->willReturn( (new WC_Product_Fixture( $this->product_price, $this->product_quantity, $this->product_tax_rate))->get_wc_product_mock() );
+        $wc_order_item_product->method( 'get_order' )->willReturn( $wc_order );
         return $wc_order_item_product;
     }
 
