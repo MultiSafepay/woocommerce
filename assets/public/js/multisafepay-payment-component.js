@@ -215,10 +215,6 @@
             $( 'form.woocommerce-checkout .' + this.gateway + '_payment_component_errors' ).remove();
         }
 
-        reinit_payment_component() {
-            this.init_payment_component();
-        }
-
         logger( argument ) {
             if ( this.config && this.config.debug ) {
                 console.log( argument );
