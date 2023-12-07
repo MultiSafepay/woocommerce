@@ -1,10 +1,14 @@
+# In alphabetical order
 *.DS_Store
-/.idea
 /.dist
-/vendor
-/coverage.xml
-/phpunit.xml
+/.env
+/.idea
+/.phpunit.result.cache
+/assets/public/js/multisafepay-blocks/build/*
 /composer.lock
 /coverage-report/*
-/.env
-.phpunit.result.cache
+/coverage.xml
+/node_modules
+/package-lock.json
+/phpunit.xml
+/vendor

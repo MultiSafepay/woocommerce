@@ -28,5 +28,15 @@ unzip "$FILENAME_PREFIX""$RELEASE_VERSION".zip
 rm "$FILENAME_PREFIX""$RELEASE_VERSION".zip
 composer install --no-dev --working-dir="$FOLDER_PREFIX"
 
+# Install Node Modules
+cd "$FOLDER_PREFIX"
+npm install --include=dev --no-fund
+
+# Build file.
+npm run build
+
+# Back to root directory RELEASE_FOLDER
+cd ../
+
 # zip everything
-zip -9 -r "$FILENAME_PREFIX""$RELEASE_VERSION".zip "$FOLDER_PREFIX" -x "$FOLDER_PREFIX""/composer.json" -x "$FOLDER_PREFIX""/composer.lock" -x "$FOLDER_PREFIX""/.wordpress-org/*" -x "$FOLDER_PREFIX""/.distignore"
+zip -9 -r "$FILENAME_PREFIX""$RELEASE_VERSION".zip "$FOLDER_PREFIX" -x "$FOLDER_PREFIX""/composer.json" -x "$FOLDER_PREFIX""/composer.lock" -x "$FOLDER_PREFIX""/.wordpress-org/*" -x "$FOLDER_PREFIX""/.distignore" -x "$FOLDER_PREFIX""/package.json" -x "$FOLDER_PREFIX""/node_modules" -x "$FOLDER_PREFIX""/webpack.config.js" -x "$FOLDER_PREFIX""/assets/public/js/multisafepay-blocks/src/*"

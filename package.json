@@ -1,0 +1,23 @@
+{
+    "name": "multisafepay-blocks",
+    "version": "1.0.0",
+    "description": "Use the MultiSafepay plugin to accept payments in WooCommerce blocks.",
+    "main": "index.js",
+    "keywords": [
+        "MultiSafepay"
+    ],
+    "author": {
+        "name": "MultiSafepay",
+        "homepage": "https://multisafepay.com/"
+    },
+    "license": "GPL-3.0-or-later",
+    "devDependencies": {
+        "@wordpress/scripts": "^26.18.0"
+    },
+    "scripts": {
+        "build": "wp-scripts build"
+    },
+    "dependencies": {
+        "@wordpress/dependency-extraction-webpack-plugin": "^4.30.0"
+    }
+}

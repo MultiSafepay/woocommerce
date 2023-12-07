@@ -35,7 +35,7 @@
         }
     },
     "scripts": {
-        "phpcs": "@php vendor/bin/phpcs -s --standard=phpcs.xml .",
+        "phpcs": "@php vendor/bin/phpcs --standard=phpcs.xml .",
         "phpcbf": "@php vendor/bin/phpcbf --standard=phpcs.xml .",
         "run-grumphp": "@php vendor/bin/grumphp run --tasks=phpcs,phpunit",
         "phpunit": "@php vendor/bin/phpunit",

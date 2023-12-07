@@ -12,6 +12,7 @@ parameters:
             - ../../templates/multisafepay-checkout-fields-display.php
             - ../../tests/phpunit/*
             - ../../tests/fixtures/*
+            - ../../src/PaymentMethods/Base/BasePaymentMethodBlocks.php
     ignoreErrors:
         - '#Constant MULTISAFEPAY_PLUGIN_DIR_PATH not found.#'
         - '#Constant MULTISAFEPAY_PLUGIN_URL not found.#'
@@ -21,3 +22,5 @@ parameters:
         - '#Variable \$transaction might not be defined.#'
         - '#Property WC_Payment_Gateway::\$max_amount \(int\) does not accept string.#'
         - '#Property WC_Payment_Gateway::\$countries \(array\) does not accept string.#'
+        - '#Parameter \$payment_method_registry of anonymous function has invalid type Automattic\\WooCommerce\\Blocks\\Payments\\PaymentMethodRegistry\.#'
+        - '#Call to method register\(\) on an unknown class Automattic\\WooCommerce\\Blocks\\Payments\\PaymentMethodRegistry\.#'

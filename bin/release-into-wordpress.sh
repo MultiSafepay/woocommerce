@@ -27,3 +27,10 @@ cd "$RELEASE_FOLDER"
 unzip "$FILENAME_PREFIX""$RELEASE_VERSION".zip
 rm "$FILENAME_PREFIX""$RELEASE_VERSION".zip
 composer install --no-dev --working-dir="$FOLDER_PREFIX"
+
+# Install Node Modules
+cd "$FOLDER_PREFIX"
+npm install --include=dev --no-fund
+
+# Build file.
+npm run build

@@ -248,6 +248,25 @@ class BasePaymentMethod extends WC_Payment_Gateway {
     }
 
     /**
+     * Check if woocommerce checkout block is active.
+     *
+     * @return bool
+     */
+    private function is_woocommerce_checkout_block_active(): bool {
+        global $post;
+
+        if ( $post && has_blocks( $post->post_content ) ) {
+            $blocks = parse_blocks( $post->post_content );
+            foreach ( $blocks as $block ) {
+                if ( 'woocommerce/checkout' === $block['blockName'] ) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * Enqueue Javascript related with a MultiSafepay Payment Method.
      *
      * @return void
@@ -255,7 +274,7 @@ class BasePaymentMethod extends WC_Payment_Gateway {
     public function enqueue_multisafepay_scripts_by_gateway_code() {
         if ( is_checkout() || is_wc_endpoint_url( 'order-pay' ) ) {
 
-            if ( 'APPLEPAY' === $this->get_payment_method_gateway_code() ) {
+            if ( 'APPLEPAY' === $this->get_payment_method_gateway_code() && ! $this->is_woocommerce_checkout_block_active() ) {
                 wp_enqueue_script( 'multisafepay-apple-pay-js', MULTISAFEPAY_PLUGIN_URL . '/assets/public/js/multisafepay-apple-pay.js', array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
             }
 

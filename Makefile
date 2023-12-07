@@ -61,6 +61,11 @@ install-storefront-theme:
 .PHONY: install-multisafepay
 install-multisafepay:
 	docker-compose exec --workdir /var/www/html/wp-content/plugins/multisafepay app composer install
+	# Install the updated dependencies, while suppressing messages about funding
+	docker-compose exec -u www-data:www-data --workdir /var/www/html/wp-content/plugins/multisafepay app npm install --no-fund
+	# Run the build script as defined in package.json
+	docker-compose exec -u www-data:www-data --workdir /var/www/html/wp-content/plugins/multisafepay app npm run build
+	# Activate MultiSafepay plugin
 	docker-compose exec app wp plugin activate multisafepay --user=1
 
 .PHONY: composer-update
@@ -78,3 +83,11 @@ phpcbf:
 .PHONY: phpstan
 phpstan:
 	docker-compose exec --workdir /var/www/html/wp-content/plugins/multisafepay app composer run-script phpstan
+
+.PHONY: npm-install
+npm-install:
+	docker-compose exec -u www-data:www-data --workdir /var/www/html/wp-content/plugins/multisafepay app npm install --no-fund
+
+.PHONY: npm-run-build
+npm-run-build:
+	docker-compose exec -u www-data:www-data --workdir /var/www/html/wp-content/plugins/multisafepay app npm run build

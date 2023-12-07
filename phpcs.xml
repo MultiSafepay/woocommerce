@@ -11,6 +11,12 @@
     <!-- Exclude the Composer Vendor directory. -->
     <exclude-pattern>./vendor/*</exclude-pattern>
 
+    <!-- Exclude the Node Modules directory. -->
+    <exclude-pattern>./node_modules/*</exclude-pattern>
+
+    <!-- Exclude the build directory. -->
+    <exclude-pattern>./assets/public/js/multisafepay-blocks/build/*</exclude-pattern>
+
     <!-- Exclude minified Javascript files. -->
     <exclude-pattern>*.min.js</exclude-pattern>
 

@@ -2,6 +2,7 @@
 
 namespace MultiSafepay\WooCommerce;
 
+use MultiSafepay\WooCommerce\PaymentMethods\Base\BasePaymentMethodBlocks;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodsController;
 use MultiSafepay\WooCommerce\Settings\SettingsController;
@@ -38,6 +39,22 @@ class Main {
 		$this->define_payment_methods_hooks();
         $this->define_compatibilities();
 	}
+
+    /**
+     * Register the MultiSafepay payment methods in WooCommerce Blocks.
+     *
+     * @return void
+     */
+    public static function register_multisafepay_payment_methods_blocks(): void {
+        if ( class_exists( \Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry::class ) ) {
+            add_action(
+                'woocommerce_blocks_payment_method_type_registration',
+                function ( \Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry $payment_method_registry ) {
+                    $payment_method_registry->register( new BasePaymentMethodBlocks() );
+                }
+            );
+        }
+    }
 
 	/**
 	 * Define the locale for this plugin for internationalization.
@@ -145,6 +162,8 @@ class Main {
         $payment_component_service = new PaymentComponentService();
         $this->loader->add_action( 'wp_ajax_get_payment_component_arguments', $payment_component_service, 'ajax_get_payment_component_arguments' );
         $this->loader->add_action( 'wp_ajax_nopriv_get_payment_component_arguments', $payment_component_service, 'ajax_get_payment_component_arguments' );
+        // Register the MultiSafepay payment methods in WooCommerce Blocks.
+        add_action( 'woocommerce_blocks_loaded', array( $this, 'register_multisafepay_payment_methods_blocks' ) );
 	}
 
 	/**
