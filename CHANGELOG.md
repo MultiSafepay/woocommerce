@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.2.1
+Release Date: Feb 1st, 2024
+
+### Fixed
++ PLGWOOS-902: Support for WooCommerce Checkout Blocks for redirect payment methods
++ PLGWOOS-901: Remove duplicated method reinit_payment_component()
+
+***
+
 ## 6.2.0
 Release Date: Nov 13th, 2023
 

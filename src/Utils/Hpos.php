@@ -8,7 +8,6 @@ use WC_Order;
  * Class HPOS Checker
  *
  * @package MultiSafepay\WooCommerce\Utils
- * @since   6.2.0
  */
 class Hpos {
 
