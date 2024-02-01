@@ -34,3 +34,9 @@ npm install --include=dev --no-fund
 
 # Build file.
 npm run build
+
+# Remove node_modules
+rm -rf node_modules
+
+# Remove src folder
+rm -rf assets/public/js/multisafepay-blocks/src

@@ -4,6 +4,7 @@
 /.env
 /.idea
 /.phpunit.result.cache
+/.release/
 /assets/public/js/multisafepay-blocks/build/*
 /composer.lock
 /coverage-report/*
