@@ -1,8 +1,5 @@
 <?php declare(strict_types=1);
 
-use MultiSafepay\WooCommerce\Utils\DependencyChecker;
-use MultiSafepay\WooCommerce\Exceptions\MissingDependencyException;
-
 class Multisite_Test_Activator extends WP_UnitTestCase {
 
     public function set_up() {

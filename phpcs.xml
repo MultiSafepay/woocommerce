@@ -22,9 +22,7 @@
 
     <!-- Include the WordPress-Extra standard. -->
     <rule ref="WordPress-Extra">
-        <!-- We don`t use tabs indents -->
-        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent.SpacesUsed"/>
-        <!-- This is disable and incompatible with strict_types after opening PHP tags -->
+        <!-- This is disabled and incompatible with strict_types after opening PHP tags -->
         <exclude name="Squiz.Commenting.FileComment.Missing"/>
         <!-- Not every @param needs to be commented  -->
         <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment"/>
@@ -48,8 +46,26 @@
         <exclude name="Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClass"/>
     </rule>
 
-    <!-- Exclude nonce verification, which according with documentation is not required when submit an order -->
+    <rule ref="WordPress">
+        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
+        <exclude name="PEAR.Functions.FunctionCallSignature.Indent"/>
+    </rule>
+    <rule ref="Generic.WhiteSpace.ScopeIndent">
+        <properties>
+            <property name="indent" value="4"/>
+            <property name="tabIndent" value="false"/>
+        </properties>
+    </rule>
+    <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
+
+    <!-- Exclude all gateways and giftcards classes from this rule -->
+    <rule ref="Squiz.Commenting.ClassComment.Missing">
+        <exclude-pattern>*/src/PaymentMethods/*</exclude-pattern>
+    </rule>
+
+    <!-- Exclude nonce verification, which, according to documentation, is not required when submit an order -->
     <rule ref="WordPress.Security.NonceVerification.Missing">
+        <exclude-pattern>*/src/PaymentMethods/PaymentMethodsController.php</exclude-pattern>
         <exclude-pattern>*/src/PaymentMethods/Base/BasePaymentMethod.php</exclude-pattern>
         <exclude-pattern>*/src/Services/OrderService.php</exclude-pattern>
         <exclude-pattern>*/src/Services/CustomerService.php</exclude-pattern>
@@ -136,7 +152,7 @@
     </rule>
     <rule ref="ObjectCalisthenics.Metrics.MethodPerClassLimit">
         <properties>
-            <property name="maxCount" value="25"/>
+            <property name="maxCount" value="26"/>
         </properties>
     </rule>
 

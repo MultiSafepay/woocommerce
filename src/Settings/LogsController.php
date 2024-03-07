@@ -17,11 +17,12 @@ class LogsController {
      * Render and display the log tab
      */
     public function display() {
-        $logger = new Logger();
-        $logs   = $logger->get_multisafepay_logs();
+        $logger                      = new Logger();
+        $logs                        = $logger->get_multisafepay_logs();
+        $view_multisafepay_log_nonce = sanitize_key( $_POST['view-multisafepay-log'] ?? '' );
 
         if (
-            ( isset( $_POST['view-multisafepay-log'] ) && wp_verify_nonce( $_POST['view-multisafepay-log'], 'view-multisafepay-log' ) ) &&
+            ( ! empty( $view_multisafepay_log_nonce ) && wp_verify_nonce( wp_unslash( $view_multisafepay_log_nonce ), 'view-multisafepay-log' ) ) &&
             ! empty( $_POST['log_file'] ) && isset( $logs[ sanitize_title( wp_unslash( $_POST['log_file'] ) ) ] ) ) {
             $current_log = $logs[ sanitize_title( wp_unslash( $_POST['log_file'] ) ) ];
         // phpcs:ignore ObjectCalisthenics.ControlStructures.NoElse.ObjectCalisthenics\Sniffs\ControlStructures\NoElseSniff

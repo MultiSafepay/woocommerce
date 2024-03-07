@@ -97,10 +97,11 @@ class PaymentComponentService {
      * @return void
      */
     public function ajax_get_payment_component_arguments() {
-        if ( ! wp_verify_nonce( $_POST['nonce'], 'payment_component_arguments_nonce' ) ) {
+        $payment_component_arguments_nonce = sanitize_key( $_POST['nonce'] ?? '' );
+        if ( ! wp_verify_nonce( wp_unslash( $payment_component_arguments_nonce ), 'payment_component_arguments_nonce' ) ) {
             wp_send_json( array() );
         }
-        $gateway_id                  = sanitize_key( $_POST['gateway_id'] );
+        $gateway_id                  = sanitize_key( $_POST['gateway_id'] ?? '' );
         $woocommerce_payment_gateway = $this->payment_method_service->get_woocommerce_payment_gateway_by_id( $gateway_id );
         $payment_component_arguments = $this->get_payment_component_arguments( $woocommerce_payment_gateway );
         wp_send_json( $payment_component_arguments );

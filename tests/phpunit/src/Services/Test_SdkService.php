@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 
 use MultiSafepay\WooCommerce\Services\SdkService;
-use MultiSafepay\Api\Gateways\Gateway;
 use MultiSafepay\Api\TransactionManager;
 use MultiSafepay\Api\GatewayManager;
 

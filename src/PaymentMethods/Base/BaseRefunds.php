@@ -64,7 +64,7 @@ trait BaseRefunds {
                 ->addTaxRate( 0 );
 
             $refund_request->getCheckoutData()->addItem( $cart_item );
-		}
+        }
 
         if ( ! $multisafepay_transaction->requiresShoppingCart() ) {
             $refund_request->addMoney( MoneyUtil::create_money( (float) $amount, $order->get_currency() ) );

@@ -42,8 +42,24 @@ class CustomerService {
             $order->get_customer_ip_address() ? $order->get_customer_ip_address() : '',
             $order->get_customer_user_agent() ? $order->get_customer_user_agent() : '',
             $order->get_billing_company(),
-            $this->should_send_customer_reference( $order->get_payment_method() ) ? (string) $order->get_customer_id() : null
+            $this->should_send_customer_reference( $order->get_payment_method() ) ? (string) $order->get_customer_id() : null,
+            $this->get_customer_browser_info()
         );
+    }
+
+    /**
+     * Return browser information
+     *
+     * @return array|null
+     */
+    private function get_customer_browser_info(): ?array {
+        $browser = sanitize_text_field( wp_unslash( $_POST['browser'] ?? '' ) );
+
+        if ( ! empty( $browser ) ) {
+            return json_decode( $browser, true );
+        }
+
+        return null;
     }
 
     /**
@@ -80,8 +96,9 @@ class CustomerService {
      * @param string      $last_name
      * @param string      $ip_address
      * @param string      $user_agent
-     * @param string      $company_name
+     * @param null|string $company_name
      * @param null|string $customer_id
+     * @param null|array  $browser
      * @return CustomerDetails
      */
     private function create_customer(
@@ -93,7 +110,8 @@ class CustomerService {
         string $ip_address,
         string $user_agent,
         string $company_name = null,
-        string $customer_id = null
+        string $customer_id = null,
+        ?array $browser = null
     ): CustomerDetails {
         $customer_details = new CustomerDetails();
         $customer_details
@@ -103,14 +121,14 @@ class CustomerService {
             ->addLastName( $last_name )
             ->addPhoneNumber( new PhoneNumber( $phone_number ) )
             ->addLocale( $this->get_locale() )
-            ->addCompanyName( $company_name ? $company_name : '' );
+            ->addCompanyName( $company_name ?? '' );
 
         if ( ! empty( $ip_address ) ) {
             $customer_details->addIpAddress( new IpAddress( $ip_address ) );
         }
 
         if ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-            $customer_details->addForwardedIp( new IpAddress( sanitize_text_field( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) );
+            $customer_details->addForwardedIp( new IpAddress( sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) );
         }
 
         if ( ! empty( $user_agent ) ) {
@@ -119,6 +137,10 @@ class CustomerService {
 
         if ( ! empty( $customer_id ) ) {
             $customer_details->addReference( $customer_id );
+        }
+
+        if ( ! empty( $browser ) ) {
+            $customer_details->addData( $browser );
         }
 
         return $customer_details;

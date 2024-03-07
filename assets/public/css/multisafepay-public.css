@@ -35,3 +35,22 @@
     -moz-animation: msp-spin 1.5s infinite;
     animation: msp-spin 1.5s infinite;
 }
+.apple-pay-button {
+    display: inline-block;
+    -webkit-appearance: -apple-pay-button;
+    -apple-pay-button-type: plain;
+    width: 100%;
+    min-width: 160px;
+    height: 65px;
+    min-height: 40px;
+    border-radius: 0;
+}
+.apple-pay-button-black {
+    -apple-pay-button-style: black;
+}
+.gpay-button.short, .gpay-button.plain {
+    min-width: 160px !important;
+    min-height: 40px !important;
+    border-radius: 0 !important;
+    background-size: 84px 33px !important;
+}

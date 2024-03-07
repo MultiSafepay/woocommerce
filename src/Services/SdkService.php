@@ -195,4 +195,20 @@ class SdkService {
 
         return $tokens;
     }
+
+    /**
+     * Return the MultiSafepay Merchant Account ID
+     *
+     * @return int
+     */
+    public function get_multisafepay_account_id(): int {
+        try {
+            $account_manager     = $this->sdk->getAccountManager();
+            $gateway_merchant_id = $account_manager->get()->getAccountId();
+        } catch ( ApiException | ClientExceptionInterface | Exception $exception ) {
+            Logger::log_error( 'Error when try to set the merchant credentials: ' . $exception->getMessage() );
+        }
+
+        return $gateway_merchant_id ?? 0;
+    }
 }

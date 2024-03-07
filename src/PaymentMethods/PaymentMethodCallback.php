@@ -171,7 +171,7 @@ class PaymentMethodCallback {
         // Check if the WooCommerce completed order status is considered as the final one
         if ( $this->is_completed_the_final_status( $this->get_wc_order_status() ) ) {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-            $message = 'It seems a notification is trying to process an order which already has defined completed as the final order status. For this reason notification is being ignored. Transaction ID received is ' . sanitize_text_field( (string) $_GET['transactionid'] ) . ' with status ' . $this->get_multisafepay_transaction_status();
+            $message = 'It seems a notification is trying to process an order which already has defined completed as the final order status. For this reason notification is being ignored. Transaction ID received is ' . sanitize_text_field( (string) wp_unslash( $this->get_multisafepay_transaction_id() ) ) . ' with status ' . $this->get_multisafepay_transaction_status();
             Logger::log_warning( $message );
             $this->order->add_order_note( $message );
             return false;

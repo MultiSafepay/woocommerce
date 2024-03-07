@@ -4,6 +4,7 @@ namespace MultiSafepay\WooCommerce\Services;
 
 use MultiSafepay\Api\Transactions\Gateways as GatewaysSdk;
 use MultiSafepay\Api\Transactions\OrderRequest;
+use MultiSafepay\Api\Transactions\OrderRequest\Arguments\GatewayInfo\Wallet;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\PaymentOptions;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\PluginDetails;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\SecondChance;
@@ -73,8 +74,25 @@ class OrderService {
         }
 
         if ( ! empty( $_POST[ ( $this->payment_method_service->get_woocommerce_payment_gateway_by_multisafepay_gateway_code( $gateway_code ) )->get_payment_method_id() . '_payment_component_payload' ] ) ) {
+            $payment_method_id             = ( new PaymentMethodService() )->get_woocommerce_payment_gateway_by_multisafepay_gateway_code( $gateway_code )->get_payment_method_id();
+            $payment_component_payload_key = $payment_method_id . '_payment_component_payload';
+            $payment_component_payload     = sanitize_text_field( wp_unslash( $_POST[ $payment_component_payload_key ] ?? '' ) );
+            if ( ! empty( $payment_component_payload ) ) {
+                $order_request->addType( 'direct' );
+                $order_request->addData(
+                    array(
+                        'payment_data' => array(
+                            'payload' => $payment_component_payload,
+                        ),
+                    )
+                );
+            }
+        }
+
+        $payment_token = sanitize_text_field( wp_unslash( $_POST['payment_token'] ?? '' ) );
+        if ( ! empty( $payment_token ) && ( ( 'APPLEPAY' === $gateway_code ) || ( 'GOOGLEPAY' === $gateway_code ) ) ) {
             $order_request->addType( 'direct' );
-            $order_request->addData( array( 'payment_data' => array( 'payload' => $_POST[ ( ( new PaymentMethodService() )->get_woocommerce_payment_gateway_by_multisafepay_gateway_code( $gateway_code ) )->get_payment_method_id() . '_payment_component_payload' ] ) ) );
+            $order_request->addGatewayInfo( ( new Wallet() )->addPaymentToken( $payment_token ) );
         }
 
         $order_request = $this->add_none_tax_rate( $order_request );

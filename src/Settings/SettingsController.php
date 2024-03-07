@@ -20,12 +20,12 @@ class SettingsController {
      * @param   string $value
      * @return  boolean
      */
-	public function filter_multisafepay_settings_as_booleans( string $value ): bool {
+    public function filter_multisafepay_settings_as_booleans( string $value ): bool {
         if ( 'yes' === $value || '1' === $value ) {
             return true;
         }
         return false;
-	}
+    }
 
     /**
      * This function returns int instead of strings for multisafepay_time_active
@@ -39,16 +39,23 @@ class SettingsController {
         return (int) $value;
     }
 
-	/**
-	 * Register the stylesheets for the settings page.
+    /**
+     * Register the stylesheets and javascript files for the settings page.
      *
      * @see https://developer.wordpress.org/reference/functions/wp_enqueue_style/
+     * @see https://developer.wordpress.org/reference/functions/wp_enqueue_script/
      *
      * @return void
-	 */
-	public function enqueue_styles(): void {
-		wp_enqueue_style( 'multisafepay-admin-css', MULTISAFEPAY_PLUGIN_URL . '/assets/admin/css/multisafepay-admin.css', array(), MULTISAFEPAY_PLUGIN_VERSION, 'all' );
-	}
+     */
+    public function enqueue_styles_and_scripts(): void {
+        if ( get_current_screen()->base === 'woocommerce_page_multisafepay-settings' ) {
+            wp_enqueue_style( 'multisafepay-admin-css', MULTISAFEPAY_PLUGIN_URL . '/assets/admin/css/multisafepay-admin.css', array(), MULTISAFEPAY_PLUGIN_VERSION, 'all' );
+        }
+        $sections = array( 'multisafepay_applepay', 'multisafepay_googlepay' );
+        if ( isset( $_GET['section'] ) && in_array( $_GET['section'], $sections, true ) ) {
+            wp_enqueue_script( 'multisafepay-admin-js', MULTISAFEPAY_PLUGIN_URL . '/assets/admin/js/multisafepay-admin.js', array(), MULTISAFEPAY_PLUGIN_VERSION, true );
+        }
+    }
 
     /**
      * Register the common settings page in WooCommerce menu section.
@@ -57,7 +64,7 @@ class SettingsController {
      *
      * @return void
      */
-	public function register_common_settings_page(): void {
+    public function register_common_settings_page(): void {
         $title = sprintf( __( 'MultiSafepay Settings v. %s', 'multisafepay' ), MULTISAFEPAY_PLUGIN_VERSION ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
         add_submenu_page(
             'woocommerce',
@@ -74,7 +81,7 @@ class SettingsController {
      *
      * @return void
      */
-	public function display_multisafepay_settings(): void {
+    public function display_multisafepay_settings(): void {
         $tab_active = $this->get_tab_active();
         require_once MULTISAFEPAY_PLUGIN_DIR_PATH . 'templates/multisafepay-settings-display.php';
     }
@@ -115,7 +122,7 @@ class SettingsController {
      */
     private function get_tab_active(): string {
         if ( isset( $_GET['tab'] ) && '' !== $_GET['tab'] ) {
-            return $_GET['tab'];
+            return wp_unslash( sanitize_key( $_GET['tab'] ) );
         }
         return 'general';
     }

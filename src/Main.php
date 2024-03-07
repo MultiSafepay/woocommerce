@@ -18,27 +18,27 @@ use MultiSafepay\WooCommerce\Services\PaymentComponentService;
  */
 class Main {
 
-	/**
-	 * The loader that's responsible for maintaining and registering all hooks
-	 *
-	 * @var Loader Maintains and registers all hooks for the plugin.
-	 */
-	public $loader;
+    /**
+     * The loader that's responsible for maintaining and registering all hooks
+     *
+     * @var Loader Maintains and registers all hooks for the plugin.
+     */
+    public $loader;
 
-	/**
-	 * Define the core functionality of the plugin.
-	 *
-	 * Load the dependencies, define the locale, and set the hooks for the admin area and
-	 * the public face of the site.
-	 */
-	public function __construct() {
-		$this->loader = new Loader();
-		$this->set_locale();
+    /**
+     * Define the core functionality of the plugin.
+     *
+     * Load the dependencies, define the locale, and set the hooks for the admin area and
+     * the public face of the site.
+     */
+    public function __construct() {
+        $this->loader = new Loader();
+        $this->set_locale();
         $this->add_custom_links_in_plugin_list();
         $this->define_settings_hooks();
-		$this->define_payment_methods_hooks();
+        $this->define_payment_methods_hooks();
         $this->define_compatibilities();
-	}
+    }
 
     /**
      * Register the MultiSafepay payment methods in WooCommerce Blocks.
@@ -56,18 +56,18 @@ class Main {
         }
     }
 
-	/**
-	 * Define the locale for this plugin for internationalization.
-	 *
-	 * Uses the Internationalization class in order to set the domain and register the hook
-	 * with WordPress.
+    /**
+     * Define the locale for this plugin for internationalization.
+     *
+     * Uses the Internationalization class in order to set the domain and register the hook
+     * with WordPress.
      *
      * @return void
-	 */
-	private function set_locale() {
-		$plugin_i18n = new Internationalization();
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-	}
+     */
+    private function set_locale() {
+        $plugin_i18n = new Internationalization();
+        $this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
+    }
 
 
     /**
@@ -92,26 +92,27 @@ class Main {
         $this->loader->add_action( 'before_woocommerce_init', $compatibilities, 'declare_hpos_compatibility' );
     }
 
-	/**
-	 * Register all of the hooks related to the common settings
-	 * of the plugin.
+    /**
+     * Register all of the hooks related to the common settings
+     * of the plugin.
      *
      * @return void
-	 */
-	private function define_settings_hooks(): void {
+     */
+    private function define_settings_hooks(): void {
         // Settings controller
-	    $plugin_settings = new SettingsController();
+        $plugin_settings = new SettingsController();
 
         // Filter get_option for some option names.
         $this->loader->add_filter( 'option_multisafepay_testmode', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
         $this->loader->add_filter( 'option_multisafepay_debugmode', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
         $this->loader->add_filter( 'option_multisafepay_second_chance', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
+        $this->loader->add_filter( 'option_multisafepay_final_order_status', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
         $this->loader->add_filter( 'option_multisafepay_disable_shopping_cart', $plugin_settings, 'filter_multisafepay_settings_as_booleans' );
         $this->loader->add_filter( 'option_multisafepay_time_active', $plugin_settings, 'filter_multisafepay_settings_as_int' );
 
         if ( is_admin() ) {
-            // Enqueue styles in controller settings page
-            $this->loader->add_action( 'admin_enqueue_scripts', $plugin_settings, 'enqueue_styles', 1 );
+            // Enqueue styles and JavaScript file in controller settings page
+            $this->loader->add_action( 'admin_enqueue_scripts', $plugin_settings, 'enqueue_styles_and_scripts', 1 );
             // Add menu page for common settings page
             $this->loader->add_action( 'admin_menu', $plugin_settings, 'register_common_settings_page', 60 );
             // Add the new settings page the WooCommerce screen options
@@ -121,19 +122,19 @@ class Main {
             // Filter and return ordered the results of the fields
             $this->loader->add_filter( 'multisafepay_common_settings_fields', $plugin_settings, 'filter_multisafepay_common_settings_fields', 10, 1 );
         }
-	}
+    }
 
-	/**
-	 * Register all of the hooks related to the payment methods
-	 * of the plugin.
+    /**
+     * Register all of the hooks related to the payment methods
+     * of the plugin.
      *
      * @return void
-	 */
-	private function define_payment_methods_hooks(): void {
+     */
+    private function define_payment_methods_hooks(): void {
         // Payment controller
-		$payment_methods = new PaymentMethodsController();
-		// Enqueue styles in payment methods
-		$this->loader->add_action( 'wp_enqueue_scripts', $payment_methods, 'enqueue_styles' );
+        $payment_methods = new PaymentMethodsController();
+        // Enqueue styles in payment methods
+        $this->loader->add_action( 'wp_enqueue_scripts', $payment_methods, 'enqueue_styles' );
         // Register the MultiSafepay payment gateways in WooCommerce.
         $this->loader->add_filter( 'woocommerce_payment_gateways', $payment_methods, 'get_woocommerce_payment_gateways' );
         // Filter transaction order id on callback
@@ -162,16 +163,22 @@ class Main {
         $payment_component_service = new PaymentComponentService();
         $this->loader->add_action( 'wp_ajax_get_payment_component_arguments', $payment_component_service, 'ajax_get_payment_component_arguments' );
         $this->loader->add_action( 'wp_ajax_nopriv_get_payment_component_arguments', $payment_component_service, 'ajax_get_payment_component_arguments' );
+        // Ajax related to Apple Pay Direct validation
+        $this->loader->add_action( 'wp_ajax_applepay_direct_validation', $payment_methods, 'applepay_direct_validation' );
+        $this->loader->add_action( 'wp_ajax_nopriv_applepay_direct_validation', $payment_methods, 'applepay_direct_validation' );
+        // Getting total price update for payment methods
+        $this->loader->add_action( 'wp_ajax_get_updated_total_price', $payment_methods, 'get_updated_total_price' );
+        $this->loader->add_action( 'wp_ajax_nopriv_get_updated_total_price', $payment_methods, 'get_updated_total_price' );
         // Register the MultiSafepay payment methods in WooCommerce Blocks.
         add_action( 'woocommerce_blocks_loaded', array( $this, 'register_multisafepay_payment_methods_blocks' ) );
-	}
+    }
 
-	/**
-	 * Run the loader to execute all of the hooks with WordPress.
+    /**
+     * Run the loader to execute all of the hooks with WordPress.
      *
      * @return void
-	 */
-	public function init() {
-		$this->loader->init();
-	}
+     */
+    public function init() {
+        $this->loader->init();
+    }
 }

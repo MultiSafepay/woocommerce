@@ -17,7 +17,7 @@ class Activator {
      * @param  null|bool $network_wide
      * @return  void
      */
-	public function activate( ?bool $network_wide ): void {
+    public function activate( ?bool $network_wide ): void {
         if ( ! current_user_can( 'activate_plugins' ) ) {
             die( esc_html__( 'It seems you don\'t have permission to activate plugins', 'multisafepay' ) );
         }
@@ -66,11 +66,11 @@ class Activator {
      *
      * @return array
      */
-	private function get_blogs_ids(): array {
+    private function get_blogs_ids(): array {
         $args      = array(
             'fields' => 'ids',
         );
         $blogs_ids = get_sites( $args );
         return $blogs_ids;
-	}
+    }
 }

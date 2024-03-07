@@ -2,7 +2,6 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods\Base;
 
-use Exception;
 use MultiSafepay\Api\PaymentMethods\PaymentMethod;
 use MultiSafepay\Exception\ApiException;
 use MultiSafepay\WooCommerce\Services\OrderService;
@@ -26,6 +25,10 @@ class BasePaymentMethod extends WC_Payment_Gateway {
 
     public const TRANSACTION_TYPE_DIRECT   = 'direct';
     public const TRANSACTION_TYPE_REDIRECT = 'redirect';
+
+    public const GOOGLEPAY_TEST_MERCHANT_ID   = '12345678901234567890';
+    public const GOOGLEPAY_TEST_MERCHANT_NAME = 'Example Merchant';
+    public const APPLEPAY_TEST_MERCHANT_NAME  = 'Example Merchant';
 
     public const MULTISAFEPAY_COMPONENT_JS_URL  = 'https://pay.multisafepay.com/sdk/components/v2/components.js';
     public const MULTISAFEPAY_COMPONENT_CSS_URL = 'https://pay.multisafepay.com/sdk/components/v2/components.css';
@@ -79,7 +82,21 @@ class BasePaymentMethod extends WC_Payment_Gateway {
     public $payment_component = false;
 
     /**
-     * BasePaymentMethod constructor.
+     * Merchant name for Google Pay and Apple Pay
+     *
+     * @var string
+     */
+    public $merchant_name = '';
+
+    /**
+     * Merchant ID for Google Pay
+     *
+     * @var string
+     */
+    public $merchant_id = '';
+
+    /**
+     * Defines if the payment method is tokenizable
      *
      * @param PaymentMethod $payment_method
      */
@@ -115,6 +132,8 @@ class BasePaymentMethod extends WC_Payment_Gateway {
         $this->countries            = $this->get_option( 'countries' );
         $this->initial_order_status = $this->get_option( 'initial_order_status', false );
         $this->payment_component    = $this->is_payment_component_enabled();
+        $this->merchant_name        = $this->get_option( 'merchant_name', false );
+        $this->merchant_id          = $this->get_option( 'merchant_id', false );
         $this->errors               = array();
 
         add_action(
@@ -149,6 +168,21 @@ class BasePaymentMethod extends WC_Payment_Gateway {
             return self::TRANSACTION_TYPE_DIRECT;
         }
 
+        return self::TRANSACTION_TYPE_REDIRECT;
+    }
+
+    /**
+     * Get the status of Google Pay or Apple Pay direct button
+     *
+     * @param string $payment_method
+     *
+     * @return string
+     */
+    public function get_google_apple_pay_use_button( string $payment_method ): string {
+        $settings = get_option( 'woocommerce_multisafepay_' . $payment_method . '_settings' );
+        if ( is_array( $settings ) && isset( $settings['use_direct_button'] ) ) {
+            return '1' === $settings['use_direct_button'] ? self::TRANSACTION_TYPE_DIRECT : self::TRANSACTION_TYPE_REDIRECT;
+        }
         return self::TRANSACTION_TYPE_REDIRECT;
     }
 
@@ -271,16 +305,53 @@ class BasePaymentMethod extends WC_Payment_Gateway {
      *
      * @return void
      */
-    public function enqueue_multisafepay_scripts_by_gateway_code() {
-        if ( is_checkout() || is_wc_endpoint_url( 'order-pay' ) ) {
+    public function enqueue_multisafepay_scripts_by_gateway_code(): void {
+        $gateway_code = $this->get_payment_method_gateway_code();
 
-            if ( 'APPLEPAY' === $this->get_payment_method_gateway_code() && ! $this->is_woocommerce_checkout_block_active() ) {
-                wp_enqueue_script( 'multisafepay-apple-pay-js', MULTISAFEPAY_PLUGIN_URL . '/assets/public/js/multisafepay-apple-pay.js', array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
+        if ( ( 'APPLEPAY' === $gateway_code ) && ( ( $this->get_google_apple_pay_use_button( 'applepay' ) === self::TRANSACTION_TYPE_REDIRECT ) || is_wc_endpoint_url( 'order-pay' ) ) ) {
+            wp_enqueue_script( 'multisafepay-apple-pay-js', MULTISAFEPAY_PLUGIN_URL . '/assets/public/js/multisafepay-apple-pay.js', array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
+        }
+
+        if ( ( 'GOOGLEPAY' === $gateway_code ) && ( ( $this->get_google_apple_pay_use_button( 'googlepay' ) === self::TRANSACTION_TYPE_REDIRECT ) || is_wc_endpoint_url( 'order-pay' ) ) ) {
+            wp_enqueue_script( 'multisafepay-google-pay-js', MULTISAFEPAY_PLUGIN_URL . '/assets/public/js/multisafepay-google-pay.js', array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
+        }
+
+        // Static variable to track if the payment variables have been added
+        static $payment_variables_for_applepay_added  = false;
+        static $payment_variables_for_googlepay_added = false;
+
+        if ( ! $this->is_woocommerce_checkout_block_active() && ( is_checkout() && ! is_wc_endpoint_url( 'order-pay' ) ) ) {
+            if ( ( 'APPLEPAY' === $gateway_code ) && ! $payment_variables_for_applepay_added && ( $this->get_google_apple_pay_use_button( 'applepay' ) === self::TRANSACTION_TYPE_DIRECT ) ) {
+                wp_enqueue_script( 'multisafepay-apple-pay-wallet', MULTISAFEPAY_PLUGIN_URL . '/assets/public/js/multisafepay-apple-pay-wallet.js', array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
+                $payment_variables = $this->build_applepay_wallet_variables( self::APPLEPAY_TEST_MERCHANT_NAME ) ?? '';
+                wp_add_inline_script( 'multisafepay-apple-pay-wallet', $payment_variables, 'before' );
+                // Mark that the payment variables have been added
+                $payment_variables_for_applepay_added = true;
             }
 
-            if ( 'GOOGLEPAY' === $this->get_payment_method_gateway_code() ) {
-                wp_enqueue_script( 'multisafepay-google-pay-js', MULTISAFEPAY_PLUGIN_URL . '/assets/public/js/multisafepay-google-pay.js', array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
+            if ( 'GOOGLEPAY' === $gateway_code ) {
                 wp_enqueue_script( 'google-pay-js', 'https://pay.google.com/gp/p/js/pay.js', array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
+                if ( ! $payment_variables_for_googlepay_added && ( $this->get_google_apple_pay_use_button( 'googlepay' ) === self::TRANSACTION_TYPE_DIRECT ) ) {
+                    wp_enqueue_script( 'multisafepay-google-pay-wallet', MULTISAFEPAY_PLUGIN_URL . '/assets/public/js/multisafepay-google-pay-wallet.js', array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
+                    $payment_variables = $this->build_googlepay_wallet_variables( self::GOOGLEPAY_TEST_MERCHANT_ID, self::GOOGLEPAY_TEST_MERCHANT_NAME ) ?? '';
+                    wp_add_inline_script( 'multisafepay-google-pay-wallet', $payment_variables, 'before' );
+                    // Mark that the payment variables have been added
+                    $payment_variables_for_googlepay_added = true;
+                }
+            }
+
+            if (
+                ( ! $payment_variables_for_googlepay_added || ! $payment_variables_for_applepay_added ) &&
+                ( ( 'GOOGLEPAY' === $gateway_code ) || ( 'APPLEPAY' === $gateway_code ) )
+            ) {
+                wp_enqueue_script( 'multisafepay-validator-wallets', MULTISAFEPAY_PLUGIN_URL . '/assets/public/js/multisafepay-validator-wallets.js', array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
+                wp_enqueue_script( 'multisafepay-common-wallets', MULTISAFEPAY_PLUGIN_URL . '/assets/public/js/multisafepay-common-wallets.js', array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
+                $admin_url_array = array(
+                    'location' => admin_url( 'admin-ajax.php' ),
+                    'nonce'    => wp_create_nonce( 'total_price_nonce' ),
+                );
+                wp_localize_script( 'multisafepay-common-wallets', 'configAdminUrlAjax', $admin_url_array );
+                wp_enqueue_script( 'multisafepay-jquery-wallets', MULTISAFEPAY_PLUGIN_URL . '/assets/public/js/multisafepay-jquery-wallets.js', array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
             }
         }
     }
@@ -338,6 +409,52 @@ class BasePaymentMethod extends WC_Payment_Gateway {
                 'default'     => $this->get_option( 'countries', array() ),
             ),
         );
+
+        if ( 'APPLEPAY' === $this->get_payment_method_gateway_code() ) {
+            $form_fields['use_direct_button'] = array(
+                'title'       => __( 'Use Apple Pay Direct Button', 'multisafepay' ),
+                'type'        => 'select',
+                'options'     => array(
+                    '0' => 'Disabled',
+                    '1' => 'Enabled',
+                ),
+                'description' => __( 'If you enable this, the place order button on the checkout page will be replaced by the Apple Pay button when this method is selected. We strongly recommend you, test this feature carefully before enabled. More information about Apple Pay Direct on <a href="https://docs.multisafepay.com/docs/apple-pay-direct" target="_blank">MultiSafepay\'s Documentation Center</a>', 'multisafepay' ),
+                'desc_tip'    => __( 'Enable this feature, to replace the place order button on the checkout page with the Apple Pay button, when the customer selects this one.', 'multisafepay' ),
+                'default'     => '0',
+            );
+            $form_fields['merchant_name']     = array(
+                'title'    => __( 'Apple Pay Merchant Name', 'multisafepay' ),
+                'type'     => 'text',
+                'desc_tip' => __( 'Field required by Apple Pay direct transactions.', 'multisafepay' ),
+                'default'  => '',
+            );
+        }
+
+        if ( 'GOOGLEPAY' === $this->get_payment_method_gateway_code() ) {
+            $form_fields['use_direct_button'] = array(
+                'title'       => __( 'Use Google Pay Direct Button', 'multisafepay' ),
+                'type'        => 'select',
+                'options'     => array(
+                    '0' => 'Disabled',
+                    '1' => 'Enabled',
+                ),
+                'description' => __( 'If you enable this, the place order button on the checkout page will be replaced by the Google Pay button when this method is selected. We strongly recommend you, test this feature carefully before enabled. More information about Google Pay Direct on <a href="https://docs.multisafepay.com/docs/google-pay-direct" target="_blank">MultiSafepay\'s Documentation Center</a>', 'multisafepay' ),
+                'desc_tip'    => __( 'Enable this feature, to replace the place order button on the checkout page with the Google Pay button, when the customer selects this one.', 'multisafepay' ),
+                'default'     => '0',
+            );
+            $form_fields['merchant_name']     = array(
+                'title'    => __( 'Google Merchant Name', 'multisafepay' ),
+                'type'     => 'text',
+                'desc_tip' => __( 'Field required by Google Pay direct transactions.', 'multisafepay' ),
+                'default'  => '',
+            );
+            $form_fields['merchant_id']       = array(
+                'title'    => __( 'Google Merchant ID', 'multisafepay' ),
+                'type'     => 'text',
+                'desc_tip' => __( 'Field required by Google Pay direct transactions.', 'multisafepay' ),
+                'default'  => '',
+            );
+        }
 
         if ( $this->payment_method->supportsPaymentComponent() ) {
             $form_fields['payment_component'] = array(
@@ -460,7 +577,8 @@ class BasePaymentMethod extends WC_Payment_Gateway {
         }
 
         if ( isset( $_POST[ $this->id . '_payment_component_errors' ] ) && '' !== $_POST[ $this->id . '_payment_component_errors' ] ) {
-            foreach ( $_POST[ $this->id . '_payment_component_errors' ] as $payment_component_error ) {
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+            foreach ( wp_unslash( $_POST[ $this->id . '_payment_component_errors' ] ) as $payment_component_error ) {
                 wc_add_notice( sanitize_text_field( $payment_component_error ), 'error' );
             }
         }
@@ -485,7 +603,98 @@ class BasePaymentMethod extends WC_Payment_Gateway {
     }
 
     /**
-     * Return an array of allowed countries defined in WooCommerce Settings.
+     * Build the variables required to initialize the Credit Card direct transactions
+     *
+     * @param string $payment_method
+     * @return ?array
+     */
+    private function common_wallets_data( string $payment_method ): ?array {
+        $environment   = ( new SdkService() )->get_test_mode() ? 'TEST' : 'LIVE';
+        $debug_mode    = (bool) get_option( 'multisafepay_debugmode', false );
+        $country_code  = ( WC()->customer )->get_billing_country() ? WC()->customer->get_billing_country() : WC()->customer->get_shipping_country();
+        $currency_code = get_woocommerce_currency();
+        $total_price   = (float) WC()->cart->get_total( '' );
+
+        $common_data = array(
+            'environment'         => $environment,
+            'gateway_merchant_id' => ( new SdkService() )->get_multisafepay_account_id(),
+            'debug_mode'          => $debug_mode,
+            'country_code'        => $country_code,
+            'currency_code'       => $currency_code,
+            'total_price'         => $total_price,
+        );
+
+        if ( 'apple_pay' === $payment_method ) {
+            unset( $common_data['gateway_merchant_id'] );
+        }
+
+        return $common_data;
+    }
+
+    /**
+     * Build the variables required to initialize the Google Pay direct transactions
+     *
+     * @param string $test_merchant_id
+     * @param string $test_merchant_name
+     * @return string|null
+     */
+    public function build_googlepay_wallet_variables( string $test_merchant_id, string $test_merchant_name ): ?string {
+        $google_pay = $this->common_wallets_data( 'google_pay' );
+        if ( is_null( $google_pay ) ) {
+            return null;
+        }
+        $merchant_id   = $test_merchant_id;
+        $merchant_name = $test_merchant_name;
+
+        if ( 'LIVE' === $google_pay['environment'] ) {
+            $merchant_id   = $this->merchant_id;
+            $merchant_name = $this->merchant_name;
+        }
+
+        return 'let configGooglePay = ' . wp_json_encode(
+                array(
+                    'environment'       => $google_pay['environment'],
+                    'gatewayMerchantId' => $google_pay['gateway_merchant_id'],
+                    'debugMode'         => $google_pay['debug_mode'],
+                    'countryCode'       => $google_pay['country_code'],
+                    'currencyCode'      => $google_pay['currency_code'],
+                    'merchantId'        => $merchant_id,
+                    'merchantName'      => $merchant_name,
+                    'totalPrice'        => $google_pay['total_price'],
+                )
+        ) . ';';
+    }
+
+    /**
+     * Build the variables required to initialize the Apple Pay direct transactions
+     *
+     * @param string $test_merchant_name
+     * @return string|null
+     */
+    public function build_applepay_wallet_variables( string $test_merchant_name ): ?string {
+        $apple_pay = $this->common_wallets_data( 'apple_pay' );
+        if ( is_null( $apple_pay ) ) {
+            return null;
+        }
+        $merchant_name = $test_merchant_name;
+
+        if ( 'LIVE' === $apple_pay['environment'] ) {
+            $merchant_name = $this->merchant_name;
+        }
+
+        return 'let configApplePay = ' . wp_json_encode(
+                array(
+                    'debugMode'    => $apple_pay['debug_mode'],
+                    'countryCode'  => $apple_pay['country_code'],
+                    'currencyCode' => $apple_pay['currency_code'],
+                    'merchantName' => $merchant_name,
+                    'totalPrice'   => $apple_pay['total_price'],
+                )
+            ) . ';';
+    }
+
+    /**
+     * Get the countries allowed by WooCommerce
      *
      * @return array
      */

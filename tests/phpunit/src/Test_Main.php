@@ -9,6 +9,7 @@ class Test_Main extends WP_UnitTestCase {
         'option_multisafepay_testmode',
         'option_multisafepay_debugmode',
         'option_multisafepay_second_chance',
+        'option_multisafepay_final_order_status',
         'option_multisafepay_disable_shopping_cart',
         'option_multisafepay_time_active',
         'woocommerce_payment_gateways',
@@ -28,7 +29,11 @@ class Test_Main extends WP_UnitTestCase {
         'woocommerce_api_multisafepay',
         'rest_api_init',
         'wp_ajax_ajax_get_payment_component_arguments',
-        'wp_ajax_nopriv_get_payment_component_arguments'
+        'wp_ajax_nopriv_get_payment_component_arguments',
+        'wp_ajax_applepay_direct_validation',
+        'wp_ajax_nopriv_applepay_direct_validation',
+        'wp_ajax_get_updated_total_price',
+        'wp_ajax_nopriv_get_updated_total_price'
     );
 
     public function test_filters() {

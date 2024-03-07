@@ -6,11 +6,9 @@ use MultiSafepay\Api\Transactions\OrderRequest;
 use MultiSafepay\WooCommerce\Services\ShoppingCartService;
 use MultiSafepay\WooCommerce\Tests\Fixtures\TaxesFixture;
 use MultiSafepay\WooCommerce\Tests\Fixtures\WC_Order_Item_Product_Fixture;
-use MultiSafepay\WooCommerce\Tests\Fixtures\WC_Order_Item_Shipping_Fixture;
 use MultiSafepay\Api\PaymentMethods\PaymentMethod;
 use MultiSafepay\WooCommerce\Tests\Fixtures\PaymentMethodFixture;
 use MultiSafepay\WooCommerce\PaymentMethods\Base\BasePaymentMethod;
-use MultiSafepay\WooCommerce\Services\PaymentMethodService;
 
 class Test_OrderService extends WP_UnitTestCase {
 

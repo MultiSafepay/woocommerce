@@ -2,6 +2,7 @@
 
 namespace MultiSafepay\WooCommerce\Client;
 
+use Exception;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use Nyholm\Psr7\Response;
 use Psr\Http\Client\ClientInterface;
@@ -19,7 +20,7 @@ class MultiSafepayClient implements ClientInterface {
      *
      * @param RequestInterface $request
      * @return ResponseInterface
-     * @throws \Exception
+     * @throws Exception
      */
     public function sendRequest( RequestInterface $request ): ResponseInterface {
         $request->getBody()->rewind();
@@ -28,11 +29,11 @@ class MultiSafepayClient implements ClientInterface {
         try {
             $response_data = wp_remote_request( $request->getUri(), $args );
             if ( is_wp_error( $response_data ) ) {
-                throw new \Exception( $response_data->get_error_message() );
+                throw new Exception( $response_data->get_error_message() );
             }
-        } catch ( \Exception $exception ) {
+        } catch ( Exception $exception ) {
             Logger::log_error( 'Error when process request via MultiSafepayClient: ' . $exception->getMessage() );
-            throw new \Exception( $exception->getMessage() );
+            throw new Exception( $exception->getMessage() );
         }
 
         $body     = wp_remote_retrieve_body( $response_data );
