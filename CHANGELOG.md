@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.3.0
+Release Date: Mar 11th, 2024
+
+### Added
++ PLGWOOS-866: Add Apple Pay and Google Pay direct
+
+***
+
 ## 6.2.1
 Release Date: Feb 1st, 2024
 

@@ -4,7 +4,7 @@ Tags: multisafepay, credit card, credit cards, gateway, payments, woocommerce, i
 Requires at least: 6.0
 Tested up to: 6.4.3
 Requires PHP: 7.3
-Stable tag: 6.2.1
+Stable tag: 6.3.0
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -26,7 +26,6 @@ Payment methods:
 * Bank transfer
 * Bancontact
 * Belfius
-* Betaal per Maand
 * Dotpay
 * E-Invoicing
 * EPS
@@ -127,7 +126,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 
 == Upgrade Notice ==
 
-= 6.2.1 =
+= 6.3.0 =
 6.x.x is a major upgrade in which the MultiSafepay payment methods are registered dynamically via an API request to MultiSafepay. If you are upgrading from 5.X.X version, after the upgrade, please navigate to the MultiSafepay settings page, and to each one of the payment methods enabled in your account, and confirm the settings in each section are set up according to your preferences.
 
 == Screenshots ==
@@ -143,6 +142,11 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 9. Embedded Credit Card form using MultiSafepay Payment Component
 
 == Changelog ==
+= Release Notes - WooCommerce 6.3.0 (Mar 11th, 2024) =
+
+### Added
++ PLGWOOS-866: Add Apple Pay and Google Pay direct
+
 = Release Notes - WooCommerce 6.2.1 (Feb 1st, 2024) =
 
 ### Fixed
