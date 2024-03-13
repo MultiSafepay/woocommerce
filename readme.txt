@@ -4,7 +4,7 @@ Tags: multisafepay, credit card, credit cards, gateway, payments, woocommerce, i
 Requires at least: 6.0
 Tested up to: 6.4.3
 Requires PHP: 7.3
-Stable tag: 6.3.0
+Stable tag: 6.3.1
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -126,7 +126,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 
 == Upgrade Notice ==
 
-= 6.3.0 =
+= 6.3.1 =
 6.x.x is a major upgrade in which the MultiSafepay payment methods are registered dynamically via an API request to MultiSafepay. If you are upgrading from 5.X.X version, after the upgrade, please navigate to the MultiSafepay settings page, and to each one of the payment methods enabled in your account, and confirm the settings in each section are set up according to your preferences.
 
 == Screenshots ==
@@ -142,6 +142,14 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 9. Embedded Credit Card form using MultiSafepay Payment Component
 
 == Changelog ==
+= Release Notes - WooCommerce 6.3.1 (Mar 13th, 2024) =
+
+### Fixed
++ PLGWOOS-911: Fix initialisation or refreshing of the Payment Component when payment methods is assigned to specific country
+
+### Changed
++ PLGWOOS-912: Ignore offline action - notifications related with pretransactions
+
 = Release Notes - WooCommerce 6.3.0 (Mar 11th, 2024) =
 
 ### Added

@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.3.1
+Release Date: Mar 13th, 2024
+
+### Fixed
++ PLGWOOS-911: Fix initialisation or refreshing of the Payment Component when payment methods is assigned to specific country
+
+### Changed
++ PLGWOOS-912: Ignore offline action - notifications related with pretransactions
+
+***
+
 ## 6.3.0
 Release Date: Mar 11th, 2024
 
