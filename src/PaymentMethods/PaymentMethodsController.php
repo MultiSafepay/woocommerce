@@ -155,6 +155,12 @@ class PaymentMethodsController {
                 wp_die( esc_html__( 'Invalid request', 'multisafepay' ), esc_html__( 'Invalid request', 'multisafepay' ), 400 );
             }
         }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( isset( $_GET['payload_type'] ) && 'pretransaction' === $_GET['payload_type'] ) {
+            wp_die( esc_html__( 'Invalid request', 'multisafepay' ), esc_html__( 'Invalid request', 'multisafepay' ), 400 );
+        }
+
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.InputNotValidated
         $transactionid = sanitize_text_field( (string) wp_unslash( $_GET['transactionid'] ) );
         ( new PaymentMethodCallback( sanitize_text_field( (string) wp_unslash( $transactionid ) ) ) )->process_callback();
@@ -172,6 +178,13 @@ class PaymentMethodsController {
 
         if ( ! $request->sanitize_params() ) {
             Logger::log_info( 'Notification for transactionid . ' . $transactionid . ' has been received but could not be sanitized' );
+            header( 'Content-type: text/plain' );
+            die( 'OK' );
+        }
+
+        $payload_type = $request->get_param( 'payload_type' ) ?? '';
+        if ( 'pretransaction' === $payload_type ) {
+            Logger::log_info( 'Notification for transactionid . ' . $transactionid . ' has been received but is going to be ignored, because is pretransaction type' );
             header( 'Content-type: text/plain' );
             die( 'OK' );
         }
