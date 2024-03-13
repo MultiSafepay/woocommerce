@@ -248,7 +248,6 @@
         multisafepay_payment_component_gateways,
         function ( index, gateway ) {
             if (
-                $( '#payment ul.wc_payment_methods li.payment_method_' + gateway ).length > 0 &&
                 typeof window['payment_component_config_' + gateway] !== "undefined" &&
                 (window['payment_component_config_' + gateway].api_token !== '')
             ) {
