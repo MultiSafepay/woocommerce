@@ -55,12 +55,13 @@ class PaymentComponentService {
                     'locale'  => strtoupper( substr( ( new CustomerService() )->get_locale(), 0, 2 ) ),
                     'country' => ( WC()->customer )->get_billing_country(),
                 ),
-                'template'        => array(
-                    'settings' => array(
-                        'embed_mode' => true,
-                    ),
-                ),
                 'payment_options' => array(
+                    'template' => array(
+                        'settings' => array(
+                            'embed_mode' => 1,
+                        ),
+                        'merge'    => true,
+                    ),
                     'settings' => array(
                         'connect' => array(
                             'issuers_display_mode' => 'select',
@@ -105,6 +106,5 @@ class PaymentComponentService {
         $woocommerce_payment_gateway = $this->payment_method_service->get_woocommerce_payment_gateway_by_id( $gateway_id );
         $payment_component_arguments = $this->get_payment_component_arguments( $woocommerce_payment_gateway );
         wp_send_json( $payment_component_arguments );
-
     }
 }

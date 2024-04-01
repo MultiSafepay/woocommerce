@@ -60,13 +60,11 @@ class Test_PaymentComponentService extends WP_UnitTestCase {
         $this->assertIsArray( $payment_component_arguments['orderData']['customer'] );
         $this->assertArrayHasKey( 'locale', $payment_component_arguments['orderData']['customer'] );
         $this->assertArrayHasKey( 'country', $payment_component_arguments['orderData']['customer'] );
-        $this->assertArrayHasKey( 'template', $payment_component_arguments['orderData'] );
-        $this->assertIsArray( $payment_component_arguments['orderData']['template'] );
-        $this->assertArrayHasKey( 'settings', $payment_component_arguments['orderData']['template'] );
-        $this->assertIsArray( $payment_component_arguments['orderData']['template']['settings'] );
-        $this->assertArrayHasKey( 'embed_mode', $payment_component_arguments['orderData']['template']['settings'] );
+        $this->assertArrayHasKey( 'payment_options', $payment_component_arguments['orderData'] );
         $this->assertIsArray( $payment_component_arguments['orderData']['payment_options'] );
-        $this->assertArrayHasKey( 'settings', $payment_component_arguments['orderData']['payment_options'] );
+        $this->assertArrayHasKey( 'settings', $payment_component_arguments['orderData']['payment_options']['template'] );
+        $this->assertIsArray( $payment_component_arguments['orderData']['payment_options']['template']['settings'] );
+        $this->assertArrayHasKey( 'embed_mode', $payment_component_arguments['orderData']['payment_options']['template']['settings'] );
         $this->assertIsArray( $payment_component_arguments['orderData']['payment_options']['settings'] );
         $this->assertArrayHasKey( 'connect', $payment_component_arguments['orderData']['payment_options']['settings'] );
         $this->assertIsArray( $payment_component_arguments['orderData']['payment_options']['settings']['connect'] );
