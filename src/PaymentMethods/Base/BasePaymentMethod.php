@@ -30,6 +30,10 @@ class BasePaymentMethod extends WC_Payment_Gateway {
     public const GOOGLEPAY_TEST_MERCHANT_NAME = 'Example Merchant';
     public const APPLEPAY_TEST_MERCHANT_NAME  = 'Example Merchant';
 
+    public const DIRECT_PAYMENT_METHODS_WITHOUT_COMPONENTS = array(
+        'BANKTRANS',
+    );
+
     public const MULTISAFEPAY_COMPONENT_JS_URL  = 'https://pay.multisafepay.com/sdk/components/v2/components.js';
     public const MULTISAFEPAY_COMPONENT_CSS_URL = 'https://pay.multisafepay.com/sdk/components/v2/components.css';
 
@@ -164,7 +168,7 @@ class BasePaymentMethod extends WC_Payment_Gateway {
      * @return string
      */
     public function get_payment_method_type(): string {
-        if ( $this->is_payment_component_enabled() ) {
+        if ( $this->is_payment_component_enabled() || (bool) $this->get_option( 'direct_transaction', '0' ) ) {
             return self::TRANSACTION_TYPE_DIRECT;
         }
 
@@ -427,6 +431,19 @@ class BasePaymentMethod extends WC_Payment_Gateway {
                 'type'     => 'text',
                 'desc_tip' => __( 'Field required by Apple Pay direct transactions.', 'multisafepay' ),
                 'default'  => '',
+            );
+        }
+
+        if ( in_array( $this->get_payment_method_gateway_code(), self::DIRECT_PAYMENT_METHODS_WITHOUT_COMPONENTS, true ) ) {
+            $form_fields['direct_transaction'] = array(
+                'title'    => __( 'Transaction Type', 'multisafepay' ),
+                'type'     => 'select',
+                'options'  => array(
+                    '0' => 'Redirect',
+                    '1' => 'Direct',
+                ),
+                'desc_tip' => __( 'If enabled, the consumer receives an e-mail with payment details, and no extra information is required during checkout.', 'multisafepay' ),
+                'default'  => '0',
             );
         }
 
