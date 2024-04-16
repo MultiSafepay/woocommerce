@@ -2,9 +2,9 @@
 Contributors: multisafepayplugin
 Tags: multisafepay, payment gateway, credit cards, ideal, bnpl
 Requires at least: 6.0
-Tested up to: 6.4.3
+Tested up to: 6.5.2
 Requires PHP: 7.3
-Stable tag: 6.3.1
+Stable tag: 6.4.0
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -31,6 +31,7 @@ Payment methods:
 * EPS
 * Giropay
 * iDEAL
+* iDEAL+in3
 * in3
 * KBC/CBC
 * Klarna
@@ -88,7 +89,7 @@ To use the plugin you need a MultiSafepay account.
 * In _Account_ tab, set the API key. Information about the API key can be found on our [API key page](https://docs.multisafepay.com/docs/sites#site-id-api-key-and-security-code). Click on _Save changes_ button.
 * Go to _Order Status_ tab and confirm the match between WooCommerce order statuses and MultiSafepay order statuses. Click on _Save changes_ button.
 * Go to _Options_ tab and confirm the settings for each field. Click on _Save changes_ button.
-* Navigate to _WooCommerce_ -> _Settings_ -> _Payments_. Click on the payment methods you would like to offer, check and set or confirm the settings for those been enable. Click on _Save changes_ button.
+* Navigate to _WooCommerce_ -> _Settings_ -> _Payments_. Click on the payment methods you would like to offer, check and set or confirm the settings for those been enabled. Click on _Save changes_ button.
 
 
 == Frequently Asked Questions ==
@@ -116,7 +117,7 @@ Please follow these steps:
 2. Register the order details as explained in [WooCommerce documentation](https://docs.woocommerce.com/document/managing-orders/#section-16).
 3. In "Order actions" panel; select the option "Email invoice / order details to customer".
 4. Click on "Create" order button.
-5. An email will be sended to the customer with the details of the order and a payment link to finish the order.
+5. An email will be sent to the customer with the details of the order and a payment link to finish the order.
 6. The payment link will be available for the customer in their private account area, in "Orders" section.
 
 = Can I refund orders? =
@@ -126,7 +127,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 
 == Upgrade Notice ==
 
-= 6.3.1 =
+= 6.4.0 =
 6.x.x is a major upgrade in which the MultiSafepay payment methods are registered dynamically via an API request to MultiSafepay. If you are upgrading from 5.X.X version, after the upgrade, please navigate to the MultiSafepay settings page, and to each one of the payment methods enabled in your account, and confirm the settings in each section are set up according to your preferences.
 
 == Screenshots ==
@@ -142,10 +143,19 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 9. Embedded Credit Card form using MultiSafepay Payment Component
 
 == Changelog ==
+= Release Notes - WooCommerce 6.4.0 (Apr 17th, 2024) =
+
+### Added
++ PLGWOOS-915: Add 'direct' transaction type for 'Bank Transfer' payment method
+
+### Fixed
++ PLGWOOS-918: Fix overwriting the payment methods name in WooCommerce Blocks
++ DAVAMS-747: Fix 'template_id' within the Payment Components
+
 = Release Notes - WooCommerce 6.3.1 (Mar 13th, 2024) =
 
 ### Fixed
-+ PLGWOOS-911: Fix initialisation or refreshing of the Payment Component when payment methods is assigned to specific country
++ PLGWOOS-911: Fix initialisation or refreshing of the Payment Component when payment methods are assigned to specific country
 
 ### Changed
 + PLGWOOS-912: Ignore offline action - notifications related with pretransactions

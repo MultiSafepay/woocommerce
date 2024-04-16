@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.4.0
+Release Date: Apr 17th, 2024
+
+### Added
++ PLGWOOS-915: Add 'direct' transaction type for 'Bank Transfer' payment method
+
+### Fixed
++ PLGWOOS-918: Fix overwriting the payment methods name in WooCommerce Blocks
++ DAVAMS-747: Fix 'template_id' within the Payment Components
+
+***
+
 ## 6.3.1
 Release Date: Mar 13th, 2024
 
