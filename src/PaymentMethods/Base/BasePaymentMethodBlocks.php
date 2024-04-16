@@ -4,6 +4,7 @@ namespace MultiSafepay\WooCommerce\PaymentMethods\Base;
 
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
 use MultiSafepay\Api\PaymentMethods\PaymentMethod;
+use MultiSafepay\Exception\InvalidDataInitializationException;
 use MultiSafepay\WooCommerce\Services\PaymentMethodService;
 
 /**
@@ -31,6 +32,7 @@ final class BasePaymentMethodBlocks extends AbstractPaymentMethodType {
      * Initializes the array of payment methods
      *
      * @return void
+     * @throws InvalidDataInitializationException
      */
     public function initialize(): void {
         static $was_printed = false;
@@ -39,10 +41,15 @@ final class BasePaymentMethodBlocks extends AbstractPaymentMethodType {
             $payment_method_service       = new PaymentMethodService();
             $multisafepay_payment_methods = $payment_method_service->get_multisafepay_payment_methods_from_api();
             foreach ( $multisafepay_payment_methods as $multisafepay_payment_method ) {
-                $gateway        = new BasePaymentMethod( new PaymentMethod( $multisafepay_payment_method ) );
-                $this->settings = get_option( 'woocommerce_' . $gateway->get_payment_method_id() . '_settings', array() );
-                if ( ( 'redirect' === $gateway->get_payment_method_type() ) && $gateway->is_available() ) {
-                    $this->gateways[] = $gateway;
+                $woocommerce_payment_gateway = null;
+                if ( isset( $multisafepay_payment_method['type'] ) && ( 'coupon' === $multisafepay_payment_method['type'] ) ) {
+                    $woocommerce_payment_gateway = new BaseGiftCardPaymentMethod( new PaymentMethod( $multisafepay_payment_method ) );
+                }
+                if ( isset( $multisafepay_payment_method['type'] ) && ( 'payment-method' === $multisafepay_payment_method['type'] ) ) {
+                    $woocommerce_payment_gateway = new BasePaymentMethod( new PaymentMethod( $multisafepay_payment_method ) );
+                }
+                if ( ( 'redirect' === $woocommerce_payment_gateway->get_payment_method_type() ) && $woocommerce_payment_gateway->is_available() ) {
+                    $this->gateways[] = $woocommerce_payment_gateway;
                 }
             }
             $was_printed = true;
@@ -93,8 +100,8 @@ final class BasePaymentMethodBlocks extends AbstractPaymentMethodType {
         foreach ( $this->gateways as $gateway ) {
             $payment_methods_data[] = array(
                 'id'          => $gateway->get_payment_method_id(),
-                'title'       => $gateway->get_payment_method_title(),
-                'description' => $gateway->get_option( 'description' ),
+                'title'       => $gateway->get_title(),
+                'description' => $gateway->get_description(),
             );
         }
 
