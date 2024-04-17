@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.4.1
+Release Date: Apr 17th, 2024
+
+### Fixed
++ PLGWOOS-920: Fix Apple Pay and Google Pay being shown in WooCommerce blocks, when are using direct payment buttons
+
+***
+
 ## 6.4.0
 Release Date: Apr 17th, 2024
 
