@@ -168,7 +168,10 @@ class BasePaymentMethod extends WC_Payment_Gateway {
      * @return string
      */
     public function get_payment_method_type(): string {
-        if ( $this->is_payment_component_enabled() || (bool) $this->get_option( 'direct_transaction', '0' ) ) {
+        if ( $this->is_payment_component_enabled() ||
+            (bool) $this->get_option( 'direct_transaction', '0' ) ||
+            (bool) $this->get_option( 'use_direct_button', '0' )
+        ) {
             return self::TRANSACTION_TYPE_DIRECT;
         }
 
