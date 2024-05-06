@@ -43,6 +43,19 @@ class PaymentMethodService {
     }
 
     /**
+     *  Check if the current page is the WooCommerce settings page for payment methods
+     *
+     * @return bool
+     *
+     * @phpcs:disable WordPress.Security.NonceVerification.Recommended
+     */
+    public function is_settings_payments_page(): bool {
+        $page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+        $tab  = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+        return is_admin() && ( 'wc-settings' === $page ) && ( 'checkout' === $tab );
+    }
+
+    /**
      * Return an array with the information of each payment method from the API
      * If the result is cached by transient api, will be returned from there,
      * except when the call comes from admin side, in which case it will
@@ -54,7 +67,9 @@ class PaymentMethodService {
      */
     public function get_multisafepay_payment_methods_from_api(): array {
         $multisafepay_payment_methods_in_cache = get_transient( 'multisafepay_payment_methods' );
-        if ( false !== $multisafepay_payment_methods_in_cache && ! is_admin() ) {
+        $admin_area                            = $this->is_settings_payments_page();
+
+        if ( ( false !== $multisafepay_payment_methods_in_cache ) && ! $admin_area ) {
             return $multisafepay_payment_methods_in_cache;
         }
 
