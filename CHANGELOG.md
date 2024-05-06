@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.4.2
+Release Date: May 6th, 2024
+
+### Fixed
++ PLGWOOS-922: Reduce the amount of request done to the payment-methods endpoint, from the admin
+
+***
+
 ## 6.4.1
 Release Date: Apr 17th, 2024
 
