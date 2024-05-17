@@ -20,9 +20,9 @@ use Psr\Http\Client\ClientExceptionInterface;
 class PaymentMethodService {
 
     /**
-     * Time in seconds, in which the stored value in cache with information of all gateways will expired.
+     * Time in seconds, in which the stored value in cache with information about all gateways will expire.
      */
-    public const EXPIRATION_TIME_FOR_PAYMENT_METHODS_API_REQUEST = 3600;
+    public const EXPIRATION_TIME_FOR_PAYMENT_METHODS_API_REQUEST = 86400;
 
     /**
      * @var PaymentMethodManager
