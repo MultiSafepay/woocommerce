@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.4.3
+Release Date: May 17th, 2024
+
+### Fixed
++ PLGWOOS-922: Reduce the amount of API request improving general performance of the plugin
+
+***
+
 ## 6.4.2
 Release Date: May 6th, 2024
 
