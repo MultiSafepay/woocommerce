@@ -10,6 +10,7 @@ use MultiSafepay\WooCommerce\Services\PaymentMethodService;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use Psr\Http\Client\ClientExceptionInterface;
+use WC_Blocks_Utils;
 use WC_Countries;
 use WC_Order;
 use WC_Payment_Gateway;
@@ -100,6 +101,13 @@ class BasePaymentMethod extends WC_Payment_Gateway {
     public $merchant_id = '';
 
     /**
+     * Is WooCommerce checkout blocks active?
+     *
+     * @var bool
+     */
+    private $is_checkout_blocks;
+
+    /**
      * Defines if the payment method is tokenizable
      *
      * @param PaymentMethod $payment_method
@@ -109,12 +117,17 @@ class BasePaymentMethod extends WC_Payment_Gateway {
         $this->supports       = array( 'products', 'refunds' );
         $this->id             = $this->get_payment_method_id();
 
-        if ( $this->is_payment_component_enabled() ) {
-            add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_payment_component_styles' ) );
-            add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_payment_component_scripts' ) );
-        }
+        $this->is_checkout_blocks = $this->is_woocommerce_checkout_block_active();
 
-        add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_multisafepay_scripts_by_gateway_code' ) );
+        // Disable the payment component JSs and CSSs,
+        // and Google/Apple Pay set for the block-based checkout
+        if ( ! $this->is_checkout_blocks ) {
+            if ( $this->is_payment_component_enabled() ) {
+                add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_payment_component_styles' ) );
+                add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_payment_component_scripts' ) );
+            }
+            add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_multisafepay_scripts_by_gateway_code' ) );
+        }
 
         $this->type               = $this->get_payment_method_type();
         $this->method_title       = $this->get_payment_method_title();
@@ -165,17 +178,89 @@ class BasePaymentMethod extends WC_Payment_Gateway {
     }
 
     /**
+     *  Get the defined direct payment methods without components
+     *
+     * @return array
+     */
+    public function get_defined_direct_payment_methods_without_components(): array {
+        return apply_filters( 'multisafepay_direct_payment_methods_without_components', self::DIRECT_PAYMENT_METHODS_WITHOUT_COMPONENTS );
+    }
+
+    /**
+     *  Get the custom payment method type
+     *
+     * @return bool
+     */
+    public function is_payment_method_type_direct(): bool {
+        return (bool) $this->get_option( 'direct_transaction', '0' ) ||
+            (bool) $this->get_option( 'use_direct_button', '0' );
+    }
+
+    /**
+     * Check if the payment method could be a direct payment method without components
+     *
+     * @return bool
+     */
+    public function check_direct_payment_methods_without_components(): bool {
+        return $this->is_payment_method_type_direct() &&
+            in_array(
+                $this->get_payment_method_gateway_code(),
+                $this->get_defined_direct_payment_methods_without_components(),
+                true
+            );
+    }
+
+    /**
+     * Checks if the admin is editing the checkout page in the admin area
+     *
+     * This prevents WordPress from issuing a warning when some payment methods
+     * are attempted to be used with block-based checkout
+     *
+     * @return bool
+     *
+     * @phpcs:disable WordPress.Security.NonceVerification.Recommended
+     */
+    public function admin_editing_checkout_page(): bool {
+        // "null" as default value to avoid matching a potential page with id 0, or false
+        $page_post_id = isset( $_GET['post'] ) ? (int) $_GET['post'] : null;
+        $checkout_id  = (int) get_option( 'woocommerce_checkout_page_id', false );
+        $page_action  = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
+
+        return $page_post_id &&
+            ( $page_post_id === $checkout_id ) &&
+            ( 'edit' === $page_action ) &&
+            is_admin() &&
+            current_user_can( 'edit_pages' );
+    }
+
+    /**
+     *  Get the payment method type
+     *
      * @return string
      */
     public function get_payment_method_type(): string {
-        if ( $this->is_payment_component_enabled() ||
-            (bool) $this->get_option( 'direct_transaction', '0' ) ||
-            (bool) $this->get_option( 'use_direct_button', '0' )
-        ) {
-            return self::TRANSACTION_TYPE_DIRECT;
+        // Avoiding the warning when the admin is editing
+        // the checkout page to add the block-based checkout.
+        // It does not affect the frontend context.
+        if ( $this->admin_editing_checkout_page() ) {
+            return self::TRANSACTION_TYPE_REDIRECT;
         }
 
-        return self::TRANSACTION_TYPE_REDIRECT;
+        // If block-based checkout is "already" active ...
+        if ( $this->is_checkout_blocks ) {
+            // Check if the current payment method falls within
+            // the category of direct payments without components.
+            if ( $this->check_direct_payment_methods_without_components() ) {
+                return self::TRANSACTION_TYPE_DIRECT;
+            }
+            // Otherwise, the transaction type is always redirect.
+            return self::TRANSACTION_TYPE_REDIRECT;
+        }
+
+        return $this->is_payment_method_type_direct() ||
+            $this->is_payment_component_enabled()
+                ? self::TRANSACTION_TYPE_DIRECT
+                : self::TRANSACTION_TYPE_REDIRECT;
     }
 
     /**
@@ -271,7 +356,7 @@ class BasePaymentMethod extends WC_Payment_Gateway {
      *
      * @return void
      */
-    public function enqueue_payment_component_scripts() {
+    public function enqueue_payment_component_scripts(): void {
         if ( is_checkout() || is_wc_endpoint_url( 'order-pay' ) ) {
 
             wp_enqueue_script( 'multisafepay-payment-component-script', self::MULTISAFEPAY_COMPONENT_JS_URL, array(), MULTISAFEPAY_PLUGIN_VERSION, true );
@@ -294,17 +379,7 @@ class BasePaymentMethod extends WC_Payment_Gateway {
      * @return bool
      */
     private function is_woocommerce_checkout_block_active(): bool {
-        global $post;
-
-        if ( $post && has_blocks( $post->post_content ) ) {
-            $blocks = parse_blocks( $post->post_content );
-            foreach ( $blocks as $block ) {
-                if ( 'woocommerce/checkout' === $block['blockName'] ) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return WC_Blocks_Utils::has_block_in_page( wc_get_page_id( 'checkout' ), 'woocommerce/checkout' );
     }
 
     /**
@@ -327,7 +402,7 @@ class BasePaymentMethod extends WC_Payment_Gateway {
         static $payment_variables_for_applepay_added  = false;
         static $payment_variables_for_googlepay_added = false;
 
-        if ( ! $this->is_woocommerce_checkout_block_active() && ( is_checkout() && ! is_wc_endpoint_url( 'order-pay' ) ) ) {
+        if ( is_checkout() && ! is_wc_endpoint_url( 'order-pay' ) ) {
             if ( ( 'APPLEPAY' === $gateway_code ) && ! $payment_variables_for_applepay_added && ( $this->get_google_apple_pay_use_button( 'applepay' ) === self::TRANSACTION_TYPE_DIRECT ) ) {
                 wp_enqueue_script( 'multisafepay-apple-pay-wallet', MULTISAFEPAY_PLUGIN_URL . '/assets/public/js/multisafepay-apple-pay-wallet.js', array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
                 $payment_variables = $this->build_applepay_wallet_variables( self::APPLEPAY_TEST_MERCHANT_NAME ) ?? '';
@@ -437,7 +512,7 @@ class BasePaymentMethod extends WC_Payment_Gateway {
             );
         }
 
-        if ( in_array( $this->get_payment_method_gateway_code(), self::DIRECT_PAYMENT_METHODS_WITHOUT_COMPONENTS, true ) ) {
+        if ( in_array( $this->get_payment_method_gateway_code(), $this->get_defined_direct_payment_methods_without_components(), true ) ) {
             $form_fields['direct_transaction'] = array(
                 'title'    => __( 'Transaction Type', 'multisafepay' ),
                 'type'     => 'select',
@@ -587,7 +662,7 @@ class BasePaymentMethod extends WC_Payment_Gateway {
         }
 
         if (
-            $this->is_payment_component_enabled() &&
+            ! $this->is_checkout_blocks && $this->is_payment_component_enabled() &&
             (
                 ! isset( $_POST[ $this->id . '_payment_component_payload' ] ) ||
                 empty( $_POST[ $this->id . '_payment_component_payload' ] )

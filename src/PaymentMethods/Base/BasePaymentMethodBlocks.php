@@ -48,6 +48,15 @@ final class BasePaymentMethodBlocks extends AbstractPaymentMethodType {
                 if ( isset( $multisafepay_payment_method['type'] ) && ( 'payment-method' === $multisafepay_payment_method['type'] ) ) {
                     $woocommerce_payment_gateway = new BasePaymentMethod( new PaymentMethod( $multisafepay_payment_method ) );
                 }
+
+                // Include direct payment methods without components just in the checkout page of the frontend context
+                if (
+                    $woocommerce_payment_gateway->check_direct_payment_methods_without_components() &&
+                    ! $woocommerce_payment_gateway->admin_editing_checkout_page()
+                ) {
+                    $this->gateways[] = $woocommerce_payment_gateway;
+                }
+
                 if ( ( 'redirect' === $woocommerce_payment_gateway->get_payment_method_type() ) && $woocommerce_payment_gateway->is_available() ) {
                     $this->gateways[] = $woocommerce_payment_gateway;
                 }
@@ -102,6 +111,7 @@ final class BasePaymentMethodBlocks extends AbstractPaymentMethodType {
                 'id'          => $gateway->get_payment_method_id(),
                 'title'       => $gateway->get_title(),
                 'description' => $gateway->get_description(),
+                'is_admin'    => is_admin(),
             );
         }
 

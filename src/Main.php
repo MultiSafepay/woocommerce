@@ -89,7 +89,7 @@ class Main {
      */
     private function define_compatibilities(): void {
         $compatibilities = new ThirdPartyCompatibility();
-        $this->loader->add_action( 'before_woocommerce_init', $compatibilities, 'declare_hpos_compatibility' );
+        $this->loader->add_action( 'before_woocommerce_init', $compatibilities, 'declare_all_compatibilities' );
     }
 
     /**

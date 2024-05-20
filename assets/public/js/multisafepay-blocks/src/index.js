@@ -29,7 +29,7 @@ const registerMultiSafepayPaymentMethods = ( { wc, multisafepay_gateways } ) => 
     multisafepay_gateways.forEach(
         ( gateway ) =>
         {
-            if ( ( gateway.id !== 'multisafepay_applepay' ) || check_apple_pay_availability() ) {
+            if ( gateway.is_admin || ( gateway.id !== 'multisafepay_applepay' ) || check_apple_pay_availability() ) {
                 registerPaymentMethod( createOptions( gateway ) );
             }
         }
