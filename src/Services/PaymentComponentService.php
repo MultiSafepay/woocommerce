@@ -42,6 +42,17 @@ class PaymentComponentService {
      * @return array
      */
     public function get_payment_component_arguments( BasePaymentMethod $woocommerce_payment_gateway ): array {
+        $total_amount = ( WC()->cart ) ? ( WC()->cart->get_total( '' ) * 100 ) : null;
+        if ( is_wc_endpoint_url( 'order-pay' ) ) {
+            $order_id = absint( get_query_var( 'order-pay' ) );
+            if ( 0 < $order_id ) {
+                $order = wc_get_order( $order_id );
+                if ( $order ) {
+                    $total_amount = (float) $order->get_total();
+                }
+            }
+        }
+
         $payment_component_arguments = array(
             'debug'     => (bool) get_option( 'multisafepay_debugmode', false ),
             'env'       => $this->sdk_service->get_test_mode() ? 'test' : 'live',
@@ -50,7 +61,7 @@ class PaymentComponentService {
             'api_token' => $this->api_token_service->get_api_token(),
             'orderData' => array(
                 'currency'        => get_woocommerce_currency(),
-                'amount'          => ( WC()->cart ) ? ( WC()->cart->get_total( '' ) * 100 ) : null,
+                'amount'          => ( $total_amount * 100 ),
                 'customer'        => array(
                     'locale'  => strtoupper( substr( ( new CustomerService() )->get_locale(), 0, 2 ) ),
                     'country' => ( WC()->customer )->get_billing_country(),
