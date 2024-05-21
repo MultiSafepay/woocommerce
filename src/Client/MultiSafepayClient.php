@@ -27,7 +27,7 @@ class MultiSafepayClient implements ClientInterface {
         $args = $this->get_headers_from_request_interface( $request );
 
         try {
-            $response_data = wp_remote_request( $request->getUri(), $args );
+            $response_data = wp_remote_request( $request->getUri()->__toString(), $args );
             if ( is_wp_error( $response_data ) ) {
                 throw new Exception( $response_data->get_error_message() );
             }
