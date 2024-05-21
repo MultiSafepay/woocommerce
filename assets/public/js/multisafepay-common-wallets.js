@@ -35,7 +35,7 @@ let debugStatus    = false;
  */
 function cleanUpDirectButtons()
 {
-    const buttonClasses = ['.gpay-button', '.apple-pay-button'];
+    const buttonClasses = ['#gpay-button-online-api-id', '.gpay-button', '.apple-pay-button'];
 
     buttonClasses.forEach(
         buttonClass => {
