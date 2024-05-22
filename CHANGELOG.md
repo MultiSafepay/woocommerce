@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.5.0
+Release Date: May 22nd, 2024
+
+### Added
++ PLGWOOS-925: Add support for missing payments methods in WooCommerce Checkout Blocks
+
+### Fixed
++ PLGWOOS-933: Fix conflict with Query Monitor
++ PLGWOOS-934: Fix the Google Pay button duplication issue
++ PLGWOOS-935: Fix Payment Component on order-pay page endpoint, not loading if the shopping cart is empty
+
+***
+
 ## 6.4.3
 Release Date: May 17th, 2024
 
