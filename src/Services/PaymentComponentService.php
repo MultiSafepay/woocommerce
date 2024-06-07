@@ -42,17 +42,6 @@ class PaymentComponentService {
      * @return array
      */
     public function get_payment_component_arguments( BasePaymentMethod $woocommerce_payment_gateway ): array {
-        $total_amount = ( WC()->cart ) ? ( WC()->cart->get_total( '' ) * 100 ) : null;
-        if ( is_wc_endpoint_url( 'order-pay' ) ) {
-            $order_id = absint( get_query_var( 'order-pay' ) );
-            if ( 0 < $order_id ) {
-                $order = wc_get_order( $order_id );
-                if ( $order ) {
-                    $total_amount = (float) $order->get_total();
-                }
-            }
-        }
-
         $payment_component_arguments = array(
             'debug'     => (bool) get_option( 'multisafepay_debugmode', false ),
             'env'       => $this->sdk_service->get_test_mode() ? 'test' : 'live',
@@ -61,7 +50,7 @@ class PaymentComponentService {
             'api_token' => $this->api_token_service->get_api_token(),
             'orderData' => array(
                 'currency'        => get_woocommerce_currency(),
-                'amount'          => ( $total_amount * 100 ),
+                'amount'          => ( $this->get_total_amount() * 100 ),
                 'customer'        => array(
                     'locale'  => strtoupper( substr( ( new CustomerService() )->get_locale(), 0, 2 ) ),
                     'country' => ( WC()->customer )->get_billing_country(),
@@ -117,5 +106,26 @@ class PaymentComponentService {
         $woocommerce_payment_gateway = $this->payment_method_service->get_woocommerce_payment_gateway_by_id( $gateway_id );
         $payment_component_arguments = $this->get_payment_component_arguments( $woocommerce_payment_gateway );
         wp_send_json( $payment_component_arguments );
+    }
+
+    /**
+     * Return the total amount of the cart or order
+     *
+     * @return float
+     */
+    private function get_total_amount(): float {
+        $total_amount = ( WC()->cart ) ? (float) WC()->cart->get_total( '' ) : null;
+
+        if ( is_wc_endpoint_url( 'order-pay' ) ) {
+            $order_id = absint( get_query_var( 'order-pay' ) );
+            if ( 0 < $order_id ) {
+                $order = wc_get_order( $order_id );
+                if ( $order ) {
+                    $total_amount = (float) $order->get_total();
+                }
+            }
+        }
+
+        return $total_amount;
     }
 }
