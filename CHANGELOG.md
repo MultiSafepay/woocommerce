@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.5.1
+Release Date: Jun 7th, 2024
+
+### Fixed
++ PLGWOOS-936: Fix the values set as min and max amount from payment method API request
++ PLGWOOS-937: Fix Payment Components, where the amount is wrongly being set
+
+***
+
 ## 6.5.0
 Release Date: May 22nd, 2024
 
