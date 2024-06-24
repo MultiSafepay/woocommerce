@@ -9,9 +9,3 @@
 /grumphp.yml export-ignore
 /README.md export-ignore
 /.codecov.yml export-ignore
-/docker export-ignore
-/.env export-ignore
-/.env.example export-ignore
-/docker-compose.yml export-ignore
-/DEVELOPMENT.md export-ignore
-/Makefile export-ignore
