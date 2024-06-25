@@ -9,6 +9,7 @@ use MultiSafepay\WooCommerce\Services\PaymentMethodService;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Settings\SettingsFields;
 use MultiSafepay\WooCommerce\Utils\Logger;
+use MultiSafepay\WooCommerce\Utils\Order as OrderUtil;
 use Psr\Http\Client\ClientExceptionInterface;
 use WC_Data_Exception;
 use WC_Order;
@@ -198,7 +199,7 @@ class PaymentMethodCallback {
         }
 
         // If payment method of the order does not belong to MultiSafepay
-        if ( strpos( $this->order->get_payment_method(), 'multisafepay_' ) === false ) {
+        if ( ! OrderUtil::is_multisafepay_order( $this->order ) ) {
             if ( get_option( 'multisafepay_debugmode', false ) ) {
                 $message = 'It seems a notification is trying to process an order processed by another payment method. Transaction ID received is ' . $this->order->get_id();
                 Logger::log_info( $message );

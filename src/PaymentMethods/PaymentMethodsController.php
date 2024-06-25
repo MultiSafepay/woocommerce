@@ -5,14 +5,15 @@ namespace MultiSafepay\WooCommerce\PaymentMethods;
 use Exception;
 use MultiSafepay\Api\Transactions\TransactionResponse;
 use MultiSafepay\Api\Transactions\UpdateRequest;
-use MultiSafepay\Exception\ApiException;
 use MultiSafepay\Api\Wallets\ApplePay\MerchantSessionRequest;
+use MultiSafepay\Exception\ApiException;
 use MultiSafepay\Util\Notification;
 use MultiSafepay\WooCommerce\Services\OrderService;
 use MultiSafepay\WooCommerce\Services\PaymentMethodService;
 use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Utils\Hpos;
 use MultiSafepay\WooCommerce\Utils\Logger;
+use MultiSafepay\WooCommerce\Utils\Order as OrderUtil;
 use Psr\Http\Client\ClientExceptionInterface;
 use WC_Data_Exception;
 use WC_Order;
@@ -103,7 +104,7 @@ class PaymentMethodsController {
      */
     public function set_multisafepay_transaction_as_shipped( int $order_id ): void {
         $order = wc_get_order( $order_id );
-        if ( strpos( $order->get_payment_method(), 'multisafepay_' ) !== false ) {
+        if ( OrderUtil::is_multisafepay_order( $order ) ) {
             $sdk                 = new SdkService();
             $transaction_manager = $sdk->get_transaction_manager();
             $update_order        = new UpdateRequest();
@@ -127,7 +128,7 @@ class PaymentMethodsController {
      */
     public function set_multisafepay_transaction_as_invoiced( int $order_id ): void {
         $order = wc_get_order( $order_id );
-        if ( strpos( $order->get_payment_method(), 'multisafepay_' ) !== false ) {
+        if ( OrderUtil::is_multisafepay_order( $order ) ) {
             $sdk                 = new SdkService();
             $transaction_manager = $sdk->get_transaction_manager();
             $update_order        = new UpdateRequest();
@@ -249,7 +250,7 @@ class PaymentMethodsController {
         }
 
         // Check if the payment method belongs to MultiSafepay
-        if ( strpos( $order->get_payment_method(), 'multisafepay_' ) === false ) {
+        if ( ! OrderUtil::is_multisafepay_order( $order ) ) {
             return;
         }
 
@@ -325,7 +326,7 @@ class PaymentMethodsController {
      * @return array
      */
     public function allow_cancel_multisafepay_orders_with_on_hold_status( array $order_status, WC_Order $order ): array {
-        if ( strpos( $order->get_payment_method(), 'multisafepay_' ) !== false ) {
+        if ( OrderUtil::is_multisafepay_order( $order ) ) {
             $gateway = ( new PaymentMethodService() )->get_woocommerce_payment_gateway_by_id( $order->get_payment_method() );
             if ( ! $gateway ) {
                 Logger::log_error( ' Gateway object is null ' );
