@@ -12,12 +12,10 @@
     },
     "license": "GPL-3.0-or-later",
     "devDependencies": {
-        "@wordpress/scripts": "^26.18.0"
+        "@wordpress/scripts": "^28.1.0",
+        "@wordpress/dependency-extraction-webpack-plugin": "^6.1.0"
     },
     "scripts": {
         "build": "wp-scripts build"
-    },
-    "dependencies": {
-        "@wordpress/dependency-extraction-webpack-plugin": "^4.30.0"
     }
 }
