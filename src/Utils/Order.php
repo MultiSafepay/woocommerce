@@ -23,4 +23,19 @@ class Order {
         return false;
     }
 
+    /**
+     * Add a note to the order
+     *
+     * @param WC_Order $order
+     * @param string   $message
+     * @param bool     $on_debug
+     * @return void
+     */
+    public static function add_order_note( WC_Order $order, string $message, bool $on_debug = false ): void {
+        if ( $on_debug || ! get_option( 'multisafepay_debugmode', false ) ) {
+            return;
+        }
+
+        $order->add_order_note( $message );
+    }
 }

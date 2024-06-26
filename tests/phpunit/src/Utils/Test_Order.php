@@ -24,4 +24,40 @@ class OrderTest extends WP_UnitTestCase {
 
         $this->assertFalse(Order::is_multisafepay_order($order));
     }
+
+    public function orderNoteIsAddedWhenDebugModeIsOnAndOnlyOnDebugIsFalse(): void {
+        $order = $this->createMock(WC_Order::class);
+        $order->expects($this->once())->method('add_order_note');
+
+        update_option('multisafepay_debugmode', true);
+
+        Order::add_order_note($order, 'Test message', false);
+    }
+
+    public function orderNoteIsNotAddedWhenDebugModeIsOffAndOnlyOnDebugIsFalse(): void {
+        $order = $this->createMock(WC_Order::class);
+        $order->expects($this->never())->method('add_order_note');
+
+        update_option('multisafepay_debugmode', false);
+
+        Order::add_order_note($order, 'Test message', false);
+    }
+
+    public function orderNoteIsAddedWhenDebugModeIsOnAndOnlyOnDebugIsTrue(): void {
+        $order = $this->createMock(WC_Order::class);
+        $order->expects($this->once())->method('add_order_note');
+
+        update_option('multisafepay_debugmode', true);
+
+        Order::add_order_note($order, 'Test message', true);
+    }
+
+    public function orderNoteIsNotAddedWhenDebugModeIsOffAndOnlyOnDebugIsTrue(): void {
+        $order = $this->createMock(WC_Order::class);
+        $order->expects($this->never())->method('add_order_note');
+
+        update_option('multisafepay_debugmode', false);
+
+        Order::add_order_note($order, 'Test message', true);
+    }
 }
