@@ -7,6 +7,11 @@ use MultiSafepay\Api\GatewayManager;
 
 class Test_SdkService extends WP_UnitTestCase {
 
+    /**
+     * @var array|false|string
+     */
+    private $api_key;
+
     public function set_up() {
         parent::set_up();
         $this->api_key = getenv('MULTISAFEPAY_API_KEY');
