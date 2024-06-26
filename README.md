@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://www.multisafepay.com/img/multisafepaylogo.svg" width="400px" position="center">
+  <img src="https://raw.githubusercontent.com/MultiSafepay/MultiSafepay-logos/master/MultiSafepay-logo-color.svg" width="400px" position="center">
 </p>
 
 # MultiSafepay plugin for WooCommerce
