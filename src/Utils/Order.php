@@ -32,7 +32,7 @@ class Order {
      * @return void
      */
     public static function add_order_note( WC_Order $order, string $message, bool $on_debug = false ): void {
-        if ( $on_debug || ! get_option( 'multisafepay_debugmode', false ) ) {
+        if ( $on_debug && ! get_option( 'multisafepay_debugmode', false ) ) {
             return;
         }
 

@@ -215,7 +215,7 @@ class PaymentMethodCallback {
         if ( $this->get_woocommerce_order_status() === 'trash' ) {
             $message = 'It seems a notification is trying to change the order status, but the order has been moved to the trash. Transaction ID received is ' . $this->order->get_id() . ' and transaction status is ' . $this->get_multisafepay_transaction_status();
             Logger::log_info( $message );
-            OrderUtil::add_order_note( $message, $this->order, true );
+            OrderUtil::add_order_note( $this->order, $message, true );
             header( 'Content-type: text/plain' );
             die( 'OK' );
         }
@@ -223,7 +223,7 @@ class PaymentMethodCallback {
         // If the transaction status is partial_refunded, we just register a new order note.
         if ( $this->get_multisafepay_transaction_status() === Transaction::PARTIAL_REFUNDED ) {
             $message = 'A partial refund has been registered within MultiSafepay Control for Order ID: ' . $this->woocommerce_order_id . ' and Order Number: ' . $this->multisafepay_order_id;
-            OrderUtil::add_order_note( $message, $this->order );
+            OrderUtil::add_order_note( $this->order, $message );
             header( 'Content-type: text/plain' );
             die( 'OK' );
         }
@@ -268,14 +268,14 @@ class PaymentMethodCallback {
 
             $message = 'Callback received for Order ID: ' . $this->woocommerce_order_id . ' and Order Number: ' . $this->multisafepay_order_id . ' on ' . $this->time_stamp . ' with status: ' . $this->get_multisafepay_transaction_status() . ' and PSP ID: ' . $this->get_multisafepay_transaction_id() . '.';
             Logger::log_info( $message );
-            OrderUtil::add_order_note( $message, $this->order, true );
+            OrderUtil::add_order_note( $this->order, $message, true );
         }
 
         // If the payment method changed in MultiSafepay payment page, after leave WooCommerce checkout page
         if ( $payment_method_id_registered_by_multisafepay && $payment_method_id_registered_by_wc !== $payment_method_id_registered_by_multisafepay ) {
             $message = 'Callback received with a different payment method for Order ID: ' . $this->woocommerce_order_id . ' and Order Number: ' . $this->multisafepay_order_id . ' on ' . $this->time_stamp . '. Payment method changed from ' . $payment_method_title_registered_by_wc . ' to ' . $payment_method_title_registered_by_multisafepay . '.';
             Logger::log_info( $message );
-            OrderUtil::add_order_note( $message, $this->order, true );
+            OrderUtil::add_order_note( $this->order, $message, true );
             $this->order = wc_get_order( $this->woocommerce_order_id );
             $this->order->set_payment_method( $registered_by_multisafepay_payment_method_object );
             $this->order->save();
