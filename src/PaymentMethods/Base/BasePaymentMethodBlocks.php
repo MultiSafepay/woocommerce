@@ -41,24 +41,33 @@ final class BasePaymentMethodBlocks extends AbstractPaymentMethodType {
             $payment_method_service       = new PaymentMethodService();
             $multisafepay_payment_methods = $payment_method_service->get_multisafepay_payment_methods_from_api();
             foreach ( $multisafepay_payment_methods as $multisafepay_payment_method ) {
-                $woocommerce_payment_gateway = null;
+                $woocommerce_payment_gateways = array();
+
                 if ( isset( $multisafepay_payment_method['type'] ) && ( 'coupon' === $multisafepay_payment_method['type'] ) ) {
-                    $woocommerce_payment_gateway = new BaseGiftCardPaymentMethod( new PaymentMethod( $multisafepay_payment_method ) );
+                    $woocommerce_payment_gateways[] = new BaseGiftCardPaymentMethod( new PaymentMethod( $multisafepay_payment_method ) );
                 }
+
                 if ( isset( $multisafepay_payment_method['type'] ) && ( 'payment-method' === $multisafepay_payment_method['type'] ) ) {
-                    $woocommerce_payment_gateway = new BasePaymentMethod( new PaymentMethod( $multisafepay_payment_method ) );
+                    $woocommerce_payment_gateways[] = new BasePaymentMethod( new PaymentMethod( $multisafepay_payment_method ) );
+                    foreach ( $multisafepay_payment_method['brands'] as $brand ) {
+                        if ( ! empty( $brand['allowed_countries'] ) ) {
+                            $woocommerce_payment_gateways[] = new BaseBrandedPaymentMethod( new PaymentMethod( $multisafepay_payment_method ), $brand );
+                        }
+                    }
                 }
 
-                // Include direct payment methods without components just in the checkout page of the frontend context
-                if (
-                    $woocommerce_payment_gateway->check_direct_payment_methods_without_components() &&
-                    ! $woocommerce_payment_gateway->admin_editing_checkout_page()
-                ) {
-                    $this->gateways[] = $woocommerce_payment_gateway;
-                }
+                foreach ( $woocommerce_payment_gateways as $woocommerce_payment_gateway ) {
+                    // Include direct payment methods without components just in the checkout page of the frontend context
+                    if (
+                        $woocommerce_payment_gateway->check_direct_payment_methods_without_components() &&
+                        ! $woocommerce_payment_gateway->admin_editing_checkout_page()
+                    ) {
+                        $this->gateways[] = $woocommerce_payment_gateway;
+                    }
 
-                if ( ( 'redirect' === $woocommerce_payment_gateway->get_payment_method_type() ) && $woocommerce_payment_gateway->is_available() ) {
-                    $this->gateways[] = $woocommerce_payment_gateway;
+                    if ( ( 'redirect' === $woocommerce_payment_gateway->get_payment_method_type() ) && $woocommerce_payment_gateway->is_available() ) {
+                        $this->gateways[] = $woocommerce_payment_gateway;
+                    }
                 }
             }
             $was_printed = true;

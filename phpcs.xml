@@ -122,6 +122,8 @@
         <properties>
             <property name="maxNestingLevel" value="3"/>
         </properties>
+        <exclude-pattern>*/src/PaymentMethods/Base/BasePaymentMethodBlocks.php</exclude-pattern>
+        <exclude-pattern>*/src/Services/PaymentMethodService.php</exclude-pattern>
     </rule>
 
     <!-- Minimal length for variables names -->

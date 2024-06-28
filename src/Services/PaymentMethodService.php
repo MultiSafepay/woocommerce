@@ -9,6 +9,7 @@ use MultiSafepay\Exception\ApiException;
 use MultiSafepay\Exception\InvalidDataInitializationException;
 use MultiSafepay\WooCommerce\PaymentMethods\Base\BaseGiftCardPaymentMethod;
 use MultiSafepay\WooCommerce\PaymentMethods\Base\BasePaymentMethod;
+use MultiSafepay\WooCommerce\PaymentMethods\Base\BaseBrandedPaymentMethod;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use Psr\Http\Client\ClientExceptionInterface;
 
@@ -107,13 +108,55 @@ class PaymentMethodService {
         $woocommerce_payment_gateways = array();
         $multisafepay_payment_methods = $this->get_multisafepay_payment_methods_from_api();
         foreach ( $multisafepay_payment_methods as $multisafepay_payment_method ) {
-            if ( isset( $multisafepay_payment_method['type'] ) && 'coupon' === $multisafepay_payment_method['type'] ) {
-                $woocommerce_payment_gateways[ self::get_legacy_woocommerce_payment_gateway_ids( $multisafepay_payment_method['id'] ) ] = new BaseGiftCardPaymentMethod( new PaymentMethod( $multisafepay_payment_method ) );
-            }
-            if ( isset( $multisafepay_payment_method['type'] ) && 'payment-method' === $multisafepay_payment_method['type'] ) {
-                $woocommerce_payment_gateways[ self::get_legacy_woocommerce_payment_gateway_ids( $multisafepay_payment_method['id'] ) ] = new BasePaymentMethod( new PaymentMethod( $multisafepay_payment_method ) );
+            if ( isset( $multisafepay_payment_method['type'] ) ) {
+                $woocommerce_payment_gateways = $this->create_woocommerce_payment_gateways( $multisafepay_payment_method, $woocommerce_payment_gateways );
             }
         }
+
+        return $woocommerce_payment_gateways;
+    }
+
+    /**
+     * @param array $multisafepay_payment_method
+     * @param array $woocommerce_payment_gateways
+     * @return array
+     */
+    private function create_woocommerce_payment_gateways( array $multisafepay_payment_method, array $woocommerce_payment_gateways ) : array {
+        $payment_method_id = self::get_legacy_woocommerce_payment_gateway_ids( $multisafepay_payment_method['id'] );
+
+        try {
+            $payment_method = new PaymentMethod( $multisafepay_payment_method );
+        } catch ( InvalidDataInitializationException $exception ) {
+            Logger::log_error( $exception->getMessage() );
+            return $woocommerce_payment_gateways;
+        }
+
+        if ( 'payment-method' === $multisafepay_payment_method['type'] ) {
+            $woocommerce_payment_gateways[ $payment_method_id ] = new BasePaymentMethod( $payment_method );
+            $woocommerce_payment_gateways                       = $this->create_branded_woocommerce_payment_gateways( $multisafepay_payment_method, $woocommerce_payment_gateways, $payment_method );
+        }
+
+        if ( 'coupon' === $multisafepay_payment_method['type'] ) {
+            $woocommerce_payment_gateways[ $payment_method_id ] = new BaseGiftCardPaymentMethod( $payment_method );
+        }
+
+        return $woocommerce_payment_gateways;
+    }
+
+    /**
+     * @param array         $multisafepay_payment_method
+     * @param array         $woocommerce_payment_gateways
+     * @param PaymentMethod $payment_method
+     * @return array
+     */
+    private function create_branded_woocommerce_payment_gateways( array $multisafepay_payment_method, array $woocommerce_payment_gateways, PaymentMethod $payment_method ) : array {
+        foreach ( $multisafepay_payment_method['brands'] as $brand ) {
+            if ( ! empty( $brand['allowed_countries'] ) ) {
+                $payment_method_id                                  = self::get_legacy_woocommerce_payment_gateway_ids( $brand['id'] );
+                $woocommerce_payment_gateways[ $payment_method_id ] = new BaseBrandedPaymentMethod( $payment_method, $brand );
+            }
+        }
+
         return $woocommerce_payment_gateways;
     }
 
@@ -173,6 +216,11 @@ class PaymentMethodService {
             $payment_method_object = new PaymentMethod( $payment_method );
             if ( $payment_method_object->supportsPaymentComponent() ) {
                 $payment_methods_with_payment_component[] = self::get_legacy_woocommerce_payment_gateway_ids( $payment_method_object->getId() );
+                foreach ( $payment_method['brands'] as $brand ) {
+                    if ( ! empty( $brand['allowed_countries'] ) ) {
+                        $payment_methods_with_payment_component[] = self::get_legacy_woocommerce_payment_gateway_ids( $brand['id'] );
+                    }
+                }
             }
         }
         return $payment_methods_with_payment_component;
@@ -187,7 +235,6 @@ class PaymentMethodService {
      * @return string
      */
     public static function get_legacy_woocommerce_payment_gateway_ids( string $code ): string {
-
         $woocommerce_payment_gateway_id = 'multisafepay_' . str_replace( '-', '_', sanitize_title( strtolower( $code ) ) );
 
         $legacy_woocommerce_payment_gateway_ids = array(

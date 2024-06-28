@@ -73,8 +73,8 @@ class OrderService {
             $order_request->addShoppingCart( $this->shopping_cart_service->create_shopping_cart( $order, $order->get_currency() ) );
         }
 
-        if ( ! empty( $_POST[ ( $this->payment_method_service->get_woocommerce_payment_gateway_by_multisafepay_gateway_code( $gateway_code ) )->get_payment_method_id() . '_payment_component_payload' ] ) ) {
-            $payment_method_id             = ( new PaymentMethodService() )->get_woocommerce_payment_gateway_by_multisafepay_gateway_code( $gateway_code )->get_payment_method_id();
+        if ( ! empty( $_POST[ $order->get_payment_method() . '_payment_component_payload' ] ) ) {
+            $payment_method_id             = $order->get_payment_method();
             $payment_component_payload_key = $payment_method_id . '_payment_component_payload';
             $payment_component_payload     = sanitize_text_field( wp_unslash( $_POST[ $payment_component_payload_key ] ?? '' ) );
             if ( ! empty( $payment_component_payload ) ) {
