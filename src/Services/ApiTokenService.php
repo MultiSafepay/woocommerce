@@ -25,9 +25,17 @@ class ApiTokenService {
     public $api_token_manager;
 
     /**
-     * ApiTokenService constructor.
+     * @var Logger
      */
-    public function __construct() {
+    private $logger;
+
+    /**
+     * ApiTokenService constructor.
+     *
+     * @param Logger|null $logger
+     */
+    public function __construct( ?Logger $logger = null ) {
+        $this->logger            = $logger ?? new Logger();
         $this->api_token_manager = ( new SdkService() )->get_api_token_manager();
     }
 
@@ -49,7 +57,7 @@ class ApiTokenService {
         try {
             $api_token = $this->api_token_manager->get()->getApiToken();
         } catch ( ApiException | ClientExceptionInterface $exception ) {
-            Logger::log_error( $exception->getMessage() );
+            $this->logger->log_error( $exception->getMessage() );
             return '';
         }
 

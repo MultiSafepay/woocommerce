@@ -9,7 +9,6 @@ use MultiSafepay\Api\Transactions\RefundRequest;
 use MultiSafepay\Api\Transactions\TransactionResponse;
 use MultiSafepay\ValueObject\CartItem;
 use MultiSafepay\WooCommerce\Services\SdkService;
-use MultiSafepay\WooCommerce\Utils\Logger;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
 use Psr\Http\Client\ClientExceptionInterface;
 use WC_Order;
@@ -75,14 +74,14 @@ trait BaseRefunds {
             $transaction_manager->refund( $multisafepay_transaction, $refund_request );
         } catch ( Exception | ClientExceptionInterface | ApiException $exception ) {
             $error = __( 'Error:', 'multisafepay' ) . htmlspecialchars( $exception->getMessage() );
-            Logger::log_error( $error );
+            $this->logger->log_error( $error );
             wc_add_notice( $error, 'error' );
         }
 
         if ( ! $error ) {
             /* translators: %1$: The currency code. %2$ The transaction amount */
             $note = sprintf( __( 'Refund of %1$s%2$s has been processed successfully.', 'multisafepay' ), get_woocommerce_currency_symbol( $order->get_currency() ), $amount );
-            Logger::log_info( $note );
+            $this->logger->log_info( $note );
             $order->add_order_note( $note );
             return true;
         }
@@ -90,7 +89,7 @@ trait BaseRefunds {
         if ( get_option( 'multisafepay_debugmode', false ) ) {
             /* translators: %1$: The order ID. %2$ The PSP transaction ID */
             $message = sprintf( __( 'Refund for Order ID: %1$s with transactionId: %2$s gives message: %3$s.', 'multisafepay' ), $order_id, $multisafepay_transaction->getTransactionId(), $error );
-            Logger::log_warning( $message );
+            $this->logger->log_warning( $message );
         }
 
         return false;

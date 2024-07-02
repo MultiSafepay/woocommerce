@@ -28,6 +28,18 @@ class PaymentMethodsController {
     public const ORIGIN_DOMAIN_KEY  = 'origin_domain';
 
     /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
+     * @param Logger|null $logger
+     */
+    public function __construct( ?Logger $logger = null ) {
+        $this->logger = $logger ?? new Logger();
+    }
+
+    /**
      * Register the stylesheets related with the payment methods
      *
      * @see https://developer.wordpress.org/reference/functions/wp_enqueue_style/
@@ -112,7 +124,7 @@ class PaymentMethodsController {
             try {
                 $transaction_manager->update( (string) $order->get_order_number(), $update_order );
             } catch ( ApiException $api_exception ) {
-                Logger::log_error( $api_exception->getMessage() );
+                $this->logger->log_error( $api_exception->getMessage() );
                 return;
             }
         }
@@ -136,7 +148,7 @@ class PaymentMethodsController {
             try {
                 $transaction_manager->update( (string) $order->get_order_number(), $update_order );
             } catch ( ApiException $api_exception ) {
-                Logger::log_error( $api_exception->getMessage() );
+                $this->logger->log_error( $api_exception->getMessage() );
                 return;
             }
         }
@@ -178,14 +190,14 @@ class PaymentMethodsController {
         $transactionid = $request->get_param( 'transactionid' );
 
         if ( ! $request->sanitize_params() ) {
-            Logger::log_info( 'Notification for transactionid . ' . $transactionid . ' has been received but could not be sanitized' );
+            $this->logger->log_info( 'Notification for transactionid . ' . $transactionid . ' has been received but could not be sanitized' );
             header( 'Content-type: text/plain' );
             die( 'OK' );
         }
 
         $payload_type = $request->get_param( 'payload_type' ) ?? '';
         if ( 'pretransaction' === $payload_type ) {
-            Logger::log_info( 'Notification for transactionid . ' . $transactionid . ' has been received but is going to be ignored, because is pretransaction type' );
+            $this->logger->log_info( 'Notification for transactionid . ' . $transactionid . ' has been received but is going to be ignored, because is pretransaction type' );
             header( 'Content-type: text/plain' );
             die( 'OK' );
         }
@@ -196,16 +208,16 @@ class PaymentMethodsController {
         $verify_notification = Notification::verifyNotification( $body, $auth, $api_key );
 
         if ( ! $verify_notification ) {
-            Logger::log_info( 'Notification for transactionid . ' . $transactionid . ' has been received but is not validated' );
+            $this->logger->log_info( 'Notification for transactionid . ' . $transactionid . ' has been received but is not validated' );
             header( 'Content-type: text/plain' );
             die( 'OK' );
         }
 
         if ( get_option( 'multisafepay_debugmode', false ) ) {
-            Logger::log_info( 'Notification has been received and validated for transaction id ' . $transactionid );
+            $this->logger->log_info( 'Notification has been received and validated for transaction id ' . $transactionid );
 
             if ( ! empty( $body ) ) {
-                Logger::log_info( 'Body of the POST notification: ' . wc_print_r( $body, true ) );
+                $this->logger->log_info( 'Body of the POST notification: ' . wc_print_r( $body, true ) );
             }
         }
 
@@ -260,7 +272,7 @@ class PaymentMethodsController {
         $order_service       = new OrderService();
         $gateway_object      = ( new PaymentMethodService() )->get_woocommerce_payment_gateway_by_id( $order->get_payment_method() );
         if ( ! $gateway_object ) {
-            Logger::log_error( ' Gateway object is null ' );
+            $this->logger->log_error( ' Gateway object is null ' );
             return;
         }
         $gateway_code  = $gateway_object->get_payment_method_gateway_code();
@@ -275,12 +287,12 @@ class PaymentMethodsController {
 
                 if ( get_option( 'multisafepay_debugmode', false ) ) {
                     $message = 'Order details has been registered in MultiSafepay and a payment link has been generated: ' . esc_url( $transaction->getPaymentUrl() );
-                    Logger::log_info( $message );
+                    $this->logger->log_info( $message );
                     $order->add_order_note( $message );
                 }
             }
         } catch ( Exception | ApiException | ClientExceptionInterface $exception ) {
-            Logger::log_error( $exception->getMessage() );
+            $this->logger->log_error( $exception->getMessage() );
         }
     }
 
@@ -329,7 +341,7 @@ class PaymentMethodsController {
         if ( OrderUtil::is_multisafepay_order( $order ) ) {
             $gateway = ( new PaymentMethodService() )->get_woocommerce_payment_gateway_by_id( $order->get_payment_method() );
             if ( ! $gateway ) {
-                Logger::log_error( ' Gateway object is null ' );
+                $this->logger->log_error( ' Gateway object is null ' );
                 return $order_status;
             }
             $initial_order_status = $gateway->initial_order_status;
@@ -363,7 +375,7 @@ class PaymentMethodsController {
             );
         } catch ( ApiException | Exception | ClientExceptionInterface $exception ) {
             $error_message = 'Error when trying to get the ApplePay session via MultiSafepay SDK';
-            Logger::log_error( $error_message . ': ' . $exception->getMessage() );
+            $this->logger->log_error( $error_message . ': ' . $exception->getMessage() );
             wp_send_json( array( 'message' => $error_message ) );
         }
     }
@@ -397,12 +409,12 @@ class PaymentMethodsController {
         $origin_domain       = $origin_domain_parse['host'];
 
         if ( empty( $validation_url ) ) {
-            Logger::log_error( 'Error when trying to get the ApplePay session. Validation URL empty' );
+            $this->logger->log_error( 'Error when trying to get the ApplePay session. Validation URL empty' );
             exit;
         }
 
         if ( empty( $origin_domain ) ) {
-            Logger::log_error( 'Error when trying to get the ApplePay session. Origin domain empty' );
+            $this->logger->log_error( 'Error when trying to get the ApplePay session. Origin domain empty' );
             exit;
         }
 

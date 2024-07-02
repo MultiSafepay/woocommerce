@@ -24,6 +24,18 @@ use WC_Coupon;
 class ShoppingCartService {
 
     /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
+     * @param Logger|null $logger
+     */
+    public function __construct( ?Logger $logger = null ) {
+        $this->logger = $logger ?? new Logger();
+    }
+
+    /**
      * @param WC_Order $order
      * @param string   $currency
      * @return ShoppingCart
@@ -38,7 +50,7 @@ class ShoppingCartService {
         $cart_items = array();
 
         if ( get_option( 'multisafepay_debugmode', false ) ) {
-            Logger::log_info( wc_print_r( $order->get_items(), true ) );
+            $this->logger->log_info( wc_print_r( $order->get_items(), true ) );
         }
 
         /** @var WC_Order_Item_Product $item */
@@ -71,7 +83,7 @@ class ShoppingCartService {
         $shopping_cart = new ShoppingCart( $cart_items );
 
         if ( get_option( 'multisafepay_debugmode', false ) ) {
-            Logger::log_info( wp_json_encode( $shopping_cart->getData() ) );
+            $this->logger->log_info( wp_json_encode( $shopping_cart->getData() ) );
         }
 
         return $shopping_cart;

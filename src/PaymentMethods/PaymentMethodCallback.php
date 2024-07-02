@@ -57,12 +57,17 @@ class PaymentMethodCallback {
     private $multisafepay_transaction;
 
     /**
-     * PaymentMethodCallback constructor
-     *
-     * @param  string               $multisafepay_order_id
-     * @param  ?TransactionResponse $multisafepay_transaction
+     * @var Logger
      */
-    public function __construct( string $multisafepay_order_id, $multisafepay_transaction = null ) {
+    private $logger;
+
+    /**
+     * @param string                   $multisafepay_order_id
+     * @param TransactionResponse|null $multisafepay_transaction
+     * @param Logger|null              $logger
+     */
+    public function __construct( string $multisafepay_order_id, ?TransactionResponse $multisafepay_transaction = null, ?Logger $logger = null ) {
+        $this->logger                   = $logger ?? new Logger();
         $this->multisafepay_order_id    = $multisafepay_order_id;
         $this->multisafepay_transaction = $multisafepay_transaction ?? $this->get_transaction();
         $this->woocommerce_order_id     = $this->get_woocommerce_order_id();
@@ -80,10 +85,10 @@ class PaymentMethodCallback {
         try {
             $transaction = $transaction_manager->get( $this->multisafepay_order_id );
         } catch ( ClientExceptionInterface $client_exception ) {
-            Logger::log_error( $client_exception->getMessage() );
+            $this->logger->log_error( $client_exception->getMessage() );
             wp_die( esc_html__( 'Invalid request', 'multisafepay' ), esc_html__( 'Invalid request', 'multisafepay' ), 400 );
         } catch ( ApiException $api_exception ) {
-            Logger::log_error( $api_exception->getMessage() );
+            $this->logger->log_error( $api_exception->getMessage() );
             wp_die( esc_html__( 'Invalid request', 'multisafepay' ), esc_html__( 'Invalid request', 'multisafepay' ), 400 );
         }
         return $transaction;
@@ -181,7 +186,7 @@ class PaymentMethodCallback {
         if ( $this->is_completed_the_final_status( $this->get_woocommerce_order_status() ) ) {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             $message = 'It seems a notification is trying to process an order which already has defined completed as the final order status. For this reason notification is being ignored. Transaction ID received is ' . sanitize_text_field( (string) wp_unslash( $this->get_multisafepay_transaction_id() ) ) . ' with status ' . $this->get_multisafepay_transaction_status();
-            Logger::log_warning( $message );
+            $this->logger->log_warning( $message );
             $this->order->add_order_note( $message );
             return false;
         }
@@ -199,7 +204,7 @@ class PaymentMethodCallback {
     public function process_callback(): void {
         // On pre-transactions notification, and using sequential order numbers plugins, var 2 is not received in the notification, then order doesn't exist
         if ( ! $this->order ) {
-            Logger::log_info( 'Notification has been received for the transaction ID ' . $this->multisafepay_order_id . ' but WooCommerce order object has not been found' );
+            $this->logger->log_info( 'Notification has been received for the transaction ID ' . $this->multisafepay_order_id . ' but WooCommerce order object has not been found' );
             header( 'Content-type: text/plain' );
             die( 'OK' );
         }
@@ -207,14 +212,14 @@ class PaymentMethodCallback {
         // If payment method of the order does not belong to MultiSafepay
         if ( ! OrderUtil::is_multisafepay_order( $this->order ) ) {
             $message = 'It seems a notification is trying to process an order processed by another payment method. Transaction ID received is ' . $this->order->get_id();
-            Logger::log_info( $message );
+            $this->logger->log_info( $message );
             header( 'Content-type: text/plain' );
             die( 'OK' );
         }
 
         if ( $this->get_woocommerce_order_status() === 'trash' ) {
             $message = 'It seems a notification is trying to change the order status, but the order has been moved to the trash. Transaction ID received is ' . $this->order->get_id() . ' and transaction status is ' . $this->get_multisafepay_transaction_status();
-            Logger::log_info( $message );
+            $this->logger->log_info( $message );
             OrderUtil::add_order_note( $this->order, $message, true );
             header( 'Content-type: text/plain' );
             die( 'OK' );
@@ -267,14 +272,14 @@ class PaymentMethodCallback {
             }
 
             $message = 'Callback received for Order ID: ' . $this->woocommerce_order_id . ' and Order Number: ' . $this->multisafepay_order_id . ' on ' . $this->time_stamp . ' with status: ' . $this->get_multisafepay_transaction_status() . ' and PSP ID: ' . $this->get_multisafepay_transaction_id() . '.';
-            Logger::log_info( $message );
+            $this->logger->log_info( $message );
             OrderUtil::add_order_note( $this->order, $message, true );
         }
 
         // If the payment method changed in MultiSafepay payment page, after leave WooCommerce checkout page
         if ( $payment_method_id_registered_by_multisafepay && $payment_method_id_registered_by_wc !== $payment_method_id_registered_by_multisafepay ) {
             $message = 'Callback received with a different payment method for Order ID: ' . $this->woocommerce_order_id . ' and Order Number: ' . $this->multisafepay_order_id . ' on ' . $this->time_stamp . '. Payment method changed from ' . $payment_method_title_registered_by_wc . ' to ' . $payment_method_title_registered_by_multisafepay . '.';
-            Logger::log_info( $message );
+            $this->logger->log_info( $message );
             OrderUtil::add_order_note( $this->order, $message, true );
             $this->order = wc_get_order( $this->woocommerce_order_id );
             $this->order->set_payment_method( $registered_by_multisafepay_payment_method_object );

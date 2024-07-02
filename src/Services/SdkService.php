@@ -13,7 +13,6 @@ use MultiSafepay\Exception\ApiException;
 use MultiSafepay\Exception\InvalidApiKeyException;
 use MultiSafepay\Sdk;
 use MultiSafepay\WooCommerce\Client\MultiSafepayClient;
-use MultiSafepay\WooCommerce\Services\PaymentMethodService;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -43,23 +42,29 @@ class SdkService {
      */
     private $sdk = null;
 
+    /**
+     * @var Logger
+     */
+    private $logger;
 
     /**
      * SdkService constructor.
      *
-     * @param  string  $api_key
-     * @param  boolean $test_mode
+     * @param  string      $api_key
+     * @param  boolean     $test_mode
+     * @param Logger|null $logger
      */
-    public function __construct( string $api_key = null, bool $test_mode = null ) {
+    public function __construct( string $api_key = null, bool $test_mode = null, ?Logger $logger = null ) {
         $this->api_key   = $api_key ?? $this->get_api_key();
         $this->test_mode = $test_mode ?? $this->get_test_mode();
+        $this->logger    = $logger ?? new Logger();
         $psr_factory     = new Psr17Factory();
         $client          = new MultiSafepayClient();
         try {
             $this->sdk = new Sdk( $this->api_key, ( $this->test_mode ) ? false : true, $client, $psr_factory, $psr_factory );
         } catch ( InvalidApiKeyException $invalid_api_key_exception ) {
             set_transient( 'multisafepay_payment_methods', array() );
-            Logger::log_error( $invalid_api_key_exception->getMessage() );
+            $this->logger->log_error( $invalid_api_key_exception->getMessage() );
         }
     }
 
@@ -95,7 +100,7 @@ class SdkService {
         try {
             return $this->sdk->getGatewayManager();
         } catch ( ApiException $api_exception ) {
-            Logger::log_error( $api_exception->getMessage() );
+            $this->logger->log_error( $api_exception->getMessage() );
             return new WP_Error( 'multisafepay-warning', $api_exception->getMessage() );
         }
     }
@@ -110,7 +115,7 @@ class SdkService {
         try {
             return $this->get_gateway_manager()->getGateways( true );
         } catch ( ApiException $api_exception ) {
-            Logger::log_error( $api_exception->getMessage() );
+            $this->logger->log_error( $api_exception->getMessage() );
             return new WP_Error( 'multisafepay-warning', $api_exception->getMessage() );
         }
     }
@@ -148,7 +153,7 @@ class SdkService {
      */
     public function get_api_token_manager(): ?ApiTokenManager {
         if ( null === $this->sdk ) {
-            Logger::log_error( 'SDK is not initialized' );
+            $this->logger->log_error( 'SDK is not initialized' );
             return null;
         }
         return $this->sdk->getApiTokenManager();
@@ -161,13 +166,13 @@ class SdkService {
      */
     public function get_payment_method_manager(): ?PaymentMethodManager {
         if ( null === $this->sdk ) {
-            Logger::log_error( 'SDK is not initialized' );
+            $this->logger->log_error( 'SDK is not initialized' );
             return null;
         }
         try {
             return $this->sdk->getPaymentMethodManager();
         } catch ( ApiException $api_exception ) {
-            Logger::log_error( $api_exception->getMessage() );
+            $this->logger->log_error( $api_exception->getMessage() );
             return null;
         }
     }
@@ -183,13 +188,13 @@ class SdkService {
         try {
             $tokens = $this->sdk->getTokenManager()->getListByGatewayCodeAsArray( $customer_reference, $gateway_code );
         } catch ( ApiException $api_exception ) {
-            Logger::log_error( $api_exception->getMessage() );
+            $this->logger->log_error( $api_exception->getMessage() );
             return array();
         } catch ( ClientExceptionInterface $client_exception ) {
-            Logger::log_error( $client_exception->getMessage() );
+            $this->logger->log_error( $client_exception->getMessage() );
             return array();
         } catch ( Exception $exception ) {
-            Logger::log_error( $exception->getMessage() );
+            $this->logger->log_error( $exception->getMessage() );
             return array();
         }
 
@@ -206,7 +211,7 @@ class SdkService {
             $account_manager     = $this->sdk->getAccountManager();
             $gateway_merchant_id = $account_manager->get()->getAccountId();
         } catch ( ApiException | ClientExceptionInterface | Exception $exception ) {
-            Logger::log_error( 'Error when try to set the merchant credentials: ' . $exception->getMessage() );
+            $this->logger->log_error( 'Error when try to set the merchant credentials: ' . $exception->getMessage() );
         }
 
         return $gateway_merchant_id ?? 0;

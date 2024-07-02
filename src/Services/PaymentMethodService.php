@@ -31,15 +31,19 @@ class PaymentMethodService {
     public $payment_method_manager;
 
     /**
-     * PaymentMethodsService constructor.
-     *
-     * @return void
+     * @var Logger
      */
-    public function __construct() {
+    private $logger;
+
+    /**
+     * @param Logger|null $logger
+     */
+    public function __construct( ?Logger $logger = null ) {
+        $this->logger = $logger ?? new Logger();
         try {
             $this->payment_method_manager = ( new SdkService() )->get_payment_method_manager();
         } catch ( ApiException $api_exception ) {
-            Logger::log_error( $api_exception->getMessage() );
+            $this->logger->log_error( $api_exception->getMessage() );
         }
     }
 
@@ -75,7 +79,7 @@ class PaymentMethodService {
         }
 
         if ( null === $this->payment_method_manager ) {
-            Logger::log_error( 'SDK is not initialized' );
+            $this->logger->log_error( 'SDK is not initialized' );
             return array();
         }
 
@@ -90,7 +94,7 @@ class PaymentMethodService {
                 )
             );
         } catch ( Exception | ApiException | InvalidDataInitializationException | ClientExceptionInterface $exception ) {
-            Logger::log_error( $exception->getMessage() );
+            $this->logger->log_error( $exception->getMessage() );
             return array();
         }
 
@@ -121,13 +125,13 @@ class PaymentMethodService {
      * @param array $woocommerce_payment_gateways
      * @return array
      */
-    private function create_woocommerce_payment_gateways( array $multisafepay_payment_method, array $woocommerce_payment_gateways ) : array {
+    public function create_woocommerce_payment_gateways( array $multisafepay_payment_method, array $woocommerce_payment_gateways ) : array {
         $payment_method_id = self::get_legacy_woocommerce_payment_gateway_ids( $multisafepay_payment_method['id'] );
 
         try {
             $payment_method = new PaymentMethod( $multisafepay_payment_method );
         } catch ( InvalidDataInitializationException $exception ) {
-            Logger::log_error( $exception->getMessage() );
+            $this->logger->log_error( $exception->getMessage() );
             return $woocommerce_payment_gateways;
         }
 
@@ -149,7 +153,7 @@ class PaymentMethodService {
      * @param PaymentMethod $payment_method
      * @return array
      */
-    private function create_branded_woocommerce_payment_gateways( array $multisafepay_payment_method, array $woocommerce_payment_gateways, PaymentMethod $payment_method ) : array {
+    public function create_branded_woocommerce_payment_gateways( array $multisafepay_payment_method, array $woocommerce_payment_gateways, PaymentMethod $payment_method ) : array {
         foreach ( $multisafepay_payment_method['brands'] as $brand ) {
             if ( ! empty( $brand['allowed_countries'] ) ) {
                 $payment_method_id                                  = self::get_legacy_woocommerce_payment_gateway_ids( $brand['id'] );

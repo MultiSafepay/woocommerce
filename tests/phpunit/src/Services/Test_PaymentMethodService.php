@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
 
+use MultiSafepay\Api\PaymentMethods\PaymentMethod;
 use MultiSafepay\Api\PaymentMethods\PaymentMethodListing;
-use MultiSafepay\WooCommerce\Tests\Fixtures\PaymentMethodFixture;
-use MultiSafepay\WooCommerce\Services\PaymentMethodService;
 use MultiSafepay\WooCommerce\PaymentMethods\Base\BasePaymentMethod;
+use MultiSafepay\WooCommerce\Services\PaymentMethodService;
+use MultiSafepay\WooCommerce\Tests\Fixtures\PaymentMethodFixture;
 
 class Test_PaymentMethodService extends WP_UnitTestCase {
 
@@ -90,4 +91,17 @@ class Test_PaymentMethodService extends WP_UnitTestCase {
         $this->assertEquals( 'multisafepay_whatever', $legacy_woocommerce_payment_gateway_id);
     }
 
+    public function test_branded_payment_gateways_are_created_when_brand_has_allowed_countries(): void {
+        $multisafepay_payment_method = ( new PaymentMethodFixture() )->get_credit_card_payment_method_fixture();
+        $payment_method = new PaymentMethod( $multisafepay_payment_method );
+        $result = $this->payment_method_service->create_branded_woocommerce_payment_gateways($multisafepay_payment_method, array(), $payment_method);
+        $this->assertEquals(3, count($result));
+    }
+
+    public function test_payment_gateways_are_created(): void {
+        $multisafepay_payment_method = ( new PaymentMethodFixture() )->get_credit_card_payment_method_fixture();
+        $payment_method = new PaymentMethod( $multisafepay_payment_method );
+        $result = $this->payment_method_service->create_woocommerce_payment_gateways($multisafepay_payment_method, array());
+        $this->assertEquals(4, count($result));
+    }
 }

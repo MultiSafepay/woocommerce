@@ -108,11 +108,18 @@ class BasePaymentMethod extends WC_Payment_Gateway {
     private $is_checkout_blocks;
 
     /**
-     * Defines if the payment method is tokenizable
+     * @var Logger
+     */
+    private $logger;
+
+    /**
+     * BasePaymentMethod constructor.
      *
      * @param PaymentMethod $payment_method
+     * @param Logger|null   $logger
      */
-    public function __construct( PaymentMethod $payment_method ) {
+    public function __construct( PaymentMethod $payment_method, ?Logger $logger = null ) {
+        $this->logger         = $logger ?? new Logger();
         $this->payment_method = $payment_method;
         $this->supports       = array( 'products', 'refunds' );
         $this->id             = $this->get_payment_method_id();
@@ -635,13 +642,13 @@ class BasePaymentMethod extends WC_Payment_Gateway {
         try {
             $transaction = $transaction_manager->create( $order_request );
         } catch ( ApiException | ClientExceptionInterface $exception ) {
-            Logger::log_error( $exception->getMessage() );
+            $this->logger->log_error( $exception->getMessage() );
             wc_add_notice( __( 'There was a problem processing your payment. Please try again later or contact with us.', 'multisafepay' ), 'error' );
             return;
         }
 
         if ( get_option( 'multisafepay_debugmode', false ) ) {
-            Logger::log_info( 'Start MultiSafepay transaction for the order ID ' . $order_id . ' on ' . date( 'd/m/Y H:i:s' ) . ' with payment URL ' . $transaction->getPaymentUrl() );
+            $this->logger->log_info( 'Start MultiSafepay transaction for the order ID ' . $order_id . ' on ' . date( 'd/m/Y H:i:s' ) . ' with payment URL ' . $transaction->getPaymentUrl() );
         }
 
         return array(

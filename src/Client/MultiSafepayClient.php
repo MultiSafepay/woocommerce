@@ -15,6 +15,18 @@ use Psr\Http\Message\ResponseInterface;
 class MultiSafepayClient implements ClientInterface {
 
     /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
+     * @param Logger|null $logger
+     */
+    public function __construct( ?Logger $logger = null ) {
+        $this->logger = $logger ?? new Logger();
+    }
+
+    /**
      * Sends a request using wp_remote_request for the given PSR-7 request (RequestInterface)
      * and returns a PSR-7 response (ResponseInterface).
      *
@@ -32,7 +44,7 @@ class MultiSafepayClient implements ClientInterface {
                 throw new Exception( $response_data->get_error_message() );
             }
         } catch ( Exception $exception ) {
-            Logger::log_error( 'Error when process request via MultiSafepayClient: ' . $exception->getMessage() );
+            $this->logger->log_error( 'Error when process request via MultiSafepayClient: ' . $exception->getMessage() );
             throw new Exception( $exception->getMessage() );
         }
 

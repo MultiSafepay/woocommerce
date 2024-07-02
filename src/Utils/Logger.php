@@ -3,11 +3,24 @@
 namespace MultiSafepay\WooCommerce\Utils;
 
 use WC_Log_Handler_File;
+use WC_Logger_Interface;
 
 /**
  * Class Logger
  */
 class Logger {
+
+    /**
+     * @var WC_Logger_Interface
+     */
+    private $logger;
+
+    /**
+     * @param WC_Logger_Interface|null $logger
+     */
+    public function __construct( ?WC_Logger_Interface $logger = null ) {
+        $this->logger = $logger ?? wc_get_logger();
+    }
 
     /**
      * Log method for emergency level
@@ -16,9 +29,8 @@ class Logger {
      *
      * @param string $message
      */
-    public static function log_emergency( string $message ) {
-        $logger = wc_get_logger();
-        $logger->log( 'emergency', $message, array( 'source' => 'multisafepay' ) );
+    public function log_emergency( string $message ) {
+        $this->logger->log( 'emergency', $message, array( 'source' => 'multisafepay' ) );
     }
 
     /**
@@ -28,9 +40,8 @@ class Logger {
      *
      * @param string $message
      */
-    public static function log_alert( string $message ) {
-        $logger = wc_get_logger();
-        $logger->log( 'alert', $message, array( 'source' => 'multisafepay' ) );
+    public function log_alert( string $message ) {
+        $this->logger->log( 'alert', $message, array( 'source' => 'multisafepay' ) );
     }
 
     /**
@@ -40,9 +51,8 @@ class Logger {
      *
      * @param string $message
      */
-    public static function log_critical( string $message ) {
-        $logger = wc_get_logger();
-        $logger->log( 'critical', $message, array( 'source' => 'multisafepay' ) );
+    public function log_critical( string $message ) {
+        $this->logger->log( 'critical', $message, array( 'source' => 'multisafepay' ) );
     }
 
     /**
@@ -52,9 +62,8 @@ class Logger {
      *
      * @param string $message
      */
-    public static function log_error( string $message ) {
-        $logger = wc_get_logger();
-        $logger->log( 'error', $message, array( 'source' => 'multisafepay' ) );
+    public function log_error( string $message ) {
+        $this->logger->log( 'error', $message, array( 'source' => 'multisafepay' ) );
     }
 
     /**
@@ -64,9 +73,8 @@ class Logger {
      *
      * @param string $message
      */
-    public static function log_warning( string $message ) {
-        $logger = wc_get_logger();
-        $logger->log( 'warning', $message, array( 'source' => 'multisafepay' ) );
+    public function log_warning( string $message ) {
+        $this->logger->log( 'warning', $message, array( 'source' => 'multisafepay' ) );
     }
 
     /**
@@ -76,9 +84,8 @@ class Logger {
      *
      * @param string $message
      */
-    public static function log_notice( string $message ) {
-        $logger = wc_get_logger();
-        $logger->log( 'notice', $message, array( 'source' => 'multisafepay' ) );
+    public function log_notice( string $message ) {
+        $this->logger->log( 'notice', $message, array( 'source' => 'multisafepay' ) );
     }
 
     /**
@@ -88,10 +95,9 @@ class Logger {
      *
      * @param string $message
      */
-    public static function log_info( string $message ) {
+    public function log_info( string $message ) {
         if ( get_option( 'multisafepay_debugmode', false ) ) {
-            $logger = wc_get_logger();
-            $logger->log( 'info', $message, array( 'source' => 'multisafepay' ) );
+            $this->logger->log( 'info', $message, array( 'source' => 'multisafepay' ) );
         }
     }
 
@@ -102,10 +108,9 @@ class Logger {
      *
      * @param string $message
      */
-    public static function log_debug( string $message ) {
+    public function log_debug( string $message ) {
         if ( get_option( 'multisafepay_debugmode', false ) ) {
-            $logger = wc_get_logger();
-            $logger->log( 'debug', $message, array( 'source' => 'multisafepay' ) );
+            $this->logger->log( 'debug', $message, array( 'source' => 'multisafepay' ) );
         }
     }
 
@@ -115,8 +120,7 @@ class Logger {
      * @return array
      */
     private function get_logs(): array {
-        $logs = WC_Log_Handler_File::get_log_files();
-        return $logs;
+        return WC_Log_Handler_File::get_log_files();
     }
 
     /**
