@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.6.0
+Release Date: Jul 8th, 2024
+
+### Added
++ PLGWOOS-946: Add support for branded credit and debit cards
+
+### Changed
++ PLGWOOS-943: Refactor PaymentMethodCallback class (#574)
++ PLGWOOS-948: General improvements to increase unit test coverage 
+
+***
+
 ## 6.5.1
 Release Date: Jun 7th, 2024
 
