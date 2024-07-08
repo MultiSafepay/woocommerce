@@ -13,7 +13,7 @@ Release Date: Jul 8th, 2024
 + PLGWOOS-946: Add support for branded credit and debit cards
 
 ### Changed
-+ PLGWOOS-943: Refactor PaymentMethodCallback class (#574)
++ PLGWOOS-943: Refactor PaymentMethodCallback class
 + PLGWOOS-948: General improvements to increase unit test coverage 
 
 ***
