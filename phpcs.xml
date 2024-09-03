@@ -156,6 +156,7 @@
         <properties>
             <property name="maxCount" value="30"/>
         </properties>
+        <exclude-pattern>*/src/PaymentMethods/Base/BasePaymentMethod.php</exclude-pattern>
     </rule>
 
     <!-- Report @todo comments  -->

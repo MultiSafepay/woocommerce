@@ -246,6 +246,11 @@ class BasePaymentMethod extends WC_Payment_Gateway {
      * @return string
      */
     public function get_payment_method_type(): string {
+        // Converting to direct the transaction type for iDEAL
+        if ( $this->is_ideal_2_0() ) {
+            return self::TRANSACTION_TYPE_DIRECT;
+        }
+
         // Avoiding the warning when the admin is editing
         // the checkout page to add the block-based checkout.
         // It does not affect the frontend context.
@@ -351,6 +356,15 @@ class BasePaymentMethod extends WC_Payment_Gateway {
         if ( ! $this->payment_method->supportsPaymentComponent() ) {
             return false;
         }
+
+        if ( $this->is_ideal_2_0() ) {
+            $settings = get_option( 'woocommerce_' . $this->id . '_settings', array( 'tokenization' => 'yes' ) );
+            if ( ! isset( $settings['tokenization'] ) ) {
+                return true;
+            }
+            return 'yes' === $settings['tokenization'];
+        }
+
         $settings = get_option( 'woocommerce_' . $this->id . '_settings', array( 'payment_component' => 'yes' ) );
         if ( ! isset( $settings['payment_component'] ) ) {
             return true;
@@ -558,7 +572,7 @@ class BasePaymentMethod extends WC_Payment_Gateway {
             );
         }
 
-        if ( $this->payment_method->supportsPaymentComponent() ) {
+        if ( $this->payment_method->supportsPaymentComponent() && ! $this->is_ideal_2_0() ) {
             $form_fields['payment_component'] = array(
                 'title'       => __( 'Payment Type', 'multisafepay' ),
                 'type'        => 'select',
@@ -584,6 +598,10 @@ class BasePaymentMethod extends WC_Payment_Gateway {
                 'default'     => $this->get_option( 'tokenization', 'no' ),
                 'value'       => $this->get_option( 'tokenization', 'no' ),
             );
+
+            if ( $this->is_ideal_2_0() ) {
+                unset( $form_fields['tokenization']['description'] );
+            }
         }
 
         return $form_fields;
@@ -803,5 +821,24 @@ class BasePaymentMethod extends WC_Payment_Gateway {
     protected function get_countries(): array {
         $countries = new WC_Countries();
         return $countries->get_allowed_countries();
+    }
+
+    /**
+     * If the API starts returning that the payment component has no fields for IDEAL,
+     * it's because the payment component is disabled for this payment method.
+     *
+     * @return bool
+     */
+    private function is_ideal_2_0(): bool {
+        if ( $this->payment_method->getId() !== 'IDEAL' ) {
+            return false;
+        }
+
+        $payment_method_apps = $this->payment_method->getApps();
+        if ( false === $payment_method_apps[ PaymentMethod::PAYMENT_COMPONENT_KEY ][ PaymentMethod::PAYMENT_COMPONENT_HAS_FIELDS_KEY ] ) {
+            return true;
+        }
+
+        return false;
     }
 }

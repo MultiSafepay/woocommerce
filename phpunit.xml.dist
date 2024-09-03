@@ -1,31 +1,31 @@
 <?xml version="1.0"?>
 <phpunit
-	bootstrap="tests/bootstrap.php"
-	backupGlobals="false"
-	colors="true"
-	convertErrorsToExceptions="true"
-	convertNoticesToExceptions="true"
-	convertWarningsToExceptions="true"
-	>
-	<php>
-		<env name="MULTISAFEPAY_API_KEY" value="" />
-	</php>
-	<testsuites>
-		<testsuite name="unit">
-			<directory prefix="Test_" suffix=".php">./tests/</directory>
-		</testsuite>
-	</testsuites>
-	<filter>
-		<whitelist processUncoveredFilesFromWhitelist="true">
-			<directory suffix=".php">./src</directory>
-			<exclude>
-				<directory>./tests</directory>
-				<directory>./assets</directory>
-				<directory>./bin</directory>
-				<directory>./languages</directory>
-				<directory>./vendor</directory>
-				<directory>./templates</directory>
-			</exclude>
-		</whitelist>
-	</filter>
+    bootstrap="tests/bootstrap.php"
+    backupGlobals="false"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+>
+    <php>
+        <env name="MULTISAFEPAY_API_KEY" value="" />
+    </php>
+    <testsuites>
+        <testsuite name="unit">
+            <directory prefix="Test_" suffix=".php">./tests/</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+            <exclude>
+                <directory>./tests</directory>
+                <directory>./assets</directory>
+                <directory>./bin</directory>
+                <directory>./languages</directory>
+                <directory>./vendor</directory>
+                <directory>./templates</directory>
+            </exclude>
+        </whitelist>
+    </filter>
 </phpunit>
