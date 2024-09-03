@@ -5,9 +5,7 @@ namespace MultiSafepay\WooCommerce\Settings;
 use MultiSafepay\Util\Version;
 use MultiSafepay\WooCommerce\PaymentMethods\Base\BasePaymentMethod;
 use MultiSafepay\WooCommerce\Services\PaymentMethodService;
-use WC_API;
 use WC_Countries;
-use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods;
 use WC_Tax;
 use WP_Error;
 
@@ -40,9 +38,17 @@ class SystemReport {
      * @return array|WP_Error
      */
     private function get_woocommerce_system_status_report() {
-        $wc_api = new WC_API();
-        $report = $wc_api->get_endpoint_data( '/wc/v3/system_status' );
-        return $report;
+        if ( class_exists( \Automattic\WooCommerce\Utilities\RestApiUtil::class ) ) {
+            return wc_get_container()->get( \Automattic\WooCommerce\Utilities\RestApiUtil::class )->get_endpoint_data( '/wc/v3/system_status' );
+        }
+
+        if ( class_exists( \WC_API::class ) ) {
+            $wc_api = new \WC_API();
+            $report = $wc_api->get_endpoint_data( '/wc/v3/system_status' );
+            return $report;
+        }
+
+        return array();
     }
 
     /**
@@ -51,6 +57,10 @@ class SystemReport {
      * @return array
      */
     public function get_multisafepay_system_status_report() {
+        if ( empty( $this->report ) ) {
+            return array();
+        }
+
         $status_report = array(
             'wordpress_environment'          => $this->get_system_report_wordpress_environment(),
             'server_environment'             => $this->get_system_report_server_environment(),
