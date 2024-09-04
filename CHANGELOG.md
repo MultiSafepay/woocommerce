@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.6.1
+Release Date: Sep 4th, 2024
+
+### Fixed
++ PLGWOOS-952: Fix System Report failing because WC_API not found
+
+### Removed
++ PLGWOOS-950: Remove iDEAL issuers of the payment component
+
+***
+
 ## 6.6.0
 Release Date: Jul 8th, 2024
 
