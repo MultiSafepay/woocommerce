@@ -6,6 +6,8 @@ on:
   pull_request:
     branches:
       - master
+  schedule:
+    - cron: '0 2 * * 0' # Weekly on Sundays at 02:00
 jobs:
   build:
     services:
@@ -34,16 +36,29 @@ jobs:
       - name: Get latest release tag of WooCommerce
         id: latestrelease
         run: |
-          echo "::set-output name=releasetag::$(curl -s https://api.github.com/repos/woocommerce/woocommerce/releases/latest | jq '.tag_name' | sed 's/\"//g')"
+          echo "releasetag=$(curl -s https://api.github.com/repos/woocommerce/woocommerce/releases/latest | jq '.tag_name' | sed 's/\"//g')" >> $GITHUB_OUTPUT
       - name: Download WooCommerce
-        uses: dsaltares/fetch-gh-release-asset@master
-        with:
-          repo: 'woocommerce/woocommerce'
-          version: 'tags/${{ steps.latestrelease.outputs.releasetag }}'
-          file: 'WooCommerce.${{ steps.latestrelease.outputs.releasetag }}.zip'
-          token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RELEASE_TAG="${{ steps.latestrelease.outputs.releasetag }}"
+          BASE_URL="https://github.com/woocommerce/woocommerce/releases/download/${RELEASE_TAG}"
+          FILENAMES=("woocommerce.${RELEASE_TAG}.zip" "woocommerce.zip")
+
+          for filename in "${FILENAMES[@]}"; do
+            # --head: Fetches only the headers
+            # --fail: Returns an error code for HTTP responses with status 400 or higher
+            if curl --output /dev/null --silent --head --fail "${BASE_URL}/${filename}"; then
+              echo "Downloading ${filename}"
+              curl -L -o woocommerce.zip "${BASE_URL}/${filename}"
+              break
+            fi
+          done
+
+          if [ ! -f woocommerce.zip ] || [ ! -s woocommerce.zip ]; then
+            echo "Failed to download WooCommerce release. Script will be exited."
+            exit 1
+          fi
       - name: Unzip WooCommerce
-        run: unzip WooCommerce.${{ steps.latestrelease.outputs.releasetag }}.zip
+        run: unzip woocommerce.zip
       - name: Install composer for plugin
         working-directory: multisafepay
         run: composer install --dev
