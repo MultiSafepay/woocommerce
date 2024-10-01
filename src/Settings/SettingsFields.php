@@ -89,14 +89,14 @@ class SettingsFields {
             'fields' => array(
                 array(
                     'id'           => 'multisafepay_group_credit_cards',
-                    'label'        => __( 'Group Credit Cards', 'multisafepay' ),
-                    'description'  => __( 'If is enable, payment methods classified as credit cards (Amex, Maestro, Mastercard, and Visa) will shown grouped as a single payment method', 'multisafepay' ),
+                    'label'        => __( 'Group debit and credit cards', 'multisafepay' ),
+                    'description'  => __( 'If is enabled, payment methods classified as debit and credit cards  (Amex, Maestro, Mastercard, and Visa) will shown grouped as a single payment method', 'multisafepay' ),
                     'type'         => 'checkbox',
                     'default'      => (bool) get_option(
                         'multisafepay_group_credit_cards',
                         PaymentMethodService::is_multisafepay_credit_card_woocommerce_payment_gateway_enabled()
                     ),
-                    'placeholder'  => __( 'Group Credit Cards', 'multisafepay' ),
+                    'placeholder'  => __( 'Group debit and credit cards', 'multisafepay' ),
                     'tooltip'      => '',
                     'callback'     => '',
                     'setting_type' => 'boolean',
