@@ -19,7 +19,7 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v2
       - name: Build project
-        run: ./bin/release-into-wordpress.sh ${{ steps.get_version.outputs.VERSION }}
+        run: ./bin/release-into-wordpress.sh ${{ env.VERSION }}
       - name: Composer dependencies
         run: composer install --no-dev
       - name: WordPress Plugin Deploy
