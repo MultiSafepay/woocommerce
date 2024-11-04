@@ -65,7 +65,7 @@ class OrderService {
             ->addSecondChance( ( new SecondChance() )->addSendEmail( (bool) get_option( 'multisafepay_second_chance', false ) ) )
             ->addData( array( 'var2' => $order->get_id() ) );
 
-        if ( $order->needs_shipping_address() ) {
+        if ( $order->needs_shipping_address() && $order->has_shipping_address() ) {
             $order_request->addDelivery( $this->customer_service->create_delivery_details( $order ) );
         }
 
