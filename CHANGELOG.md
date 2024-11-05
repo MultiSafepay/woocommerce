@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.6.2
+Release Date: Nov 5th, 2024
+
+### Added
++ PLGWOOS-961: Add double-check before addDelivery() in the order request builder
+
+### Changed
++ PLGWOOS-953: Change label of the group cards setting field
+
+***
+
 ## 6.6.1
 Release Date: Sep 4th, 2024
 
