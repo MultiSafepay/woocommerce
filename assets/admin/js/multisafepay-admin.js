@@ -29,6 +29,23 @@
                 '#woocommerce_multisafepay_applepay_use_direct_button',
                 '#woocommerce_multisafepay_applepay_merchant_name'
             );
-        }
-    );
+
+            function addMultiSafepayTransactionLink() {
+                const orderNumbers = $('.woocommerce-order-data__meta.order_number');
+                const theRegex = /\((\d+)\)/;
+
+                orderNumbers.each( function() {
+                    const objectThis = $( this );
+                    const currentHtml = objectThis.html();
+                    if ( ( typeof multisafepayAdminData !== 'undefined' ) && multisafepayAdminData.transactionUrl ) {
+                        const newHtml = currentHtml.replace( theRegex, ( match, transactionId ) => {
+                            return '(<a href="' + multisafepayAdminData.transactionUrl + '" target="_blank" title="' + multisafepayAdminData.transactionLinkTitle + '">' + transactionId + '</a>)';
+                        });
+                        objectThis.html( newHtml );
+                    }
+                });
+            }
+
+            addMultiSafepayTransactionLink();
+        });
 })( jQuery );

@@ -423,4 +423,39 @@ class PaymentMethodsController {
             self::ORIGIN_DOMAIN_KEY  => $origin_domain,
         );
     }
+
+    /**
+     * Add a link to the MultiSafepay transaction ID in the order details page
+     *
+     * @param WC_Order $order
+     * @return void
+     */
+    public function add_multisafepay_transaction_link( WC_Order $order ): void {
+        $transaction_id = $order->get_transaction_id();
+        $environment    = $order->get_meta( '_multisafepay_order_environment' );
+
+        if ( empty( $transaction_id ) || ! is_numeric( $transaction_id ) || empty( $environment ) ) {
+            return;
+        }
+
+        $test_mode = 'test' === $environment;
+        $url       = 'https://' . ( $test_mode ? 'testmerchant' : 'merchant' ) . '.multisafepay.com/transaction/' . $transaction_id;
+
+        wp_enqueue_script(
+            'multisafepay-admin',
+            MULTISAFEPAY_PLUGIN_URL . '/assets/admin/js/multisafepay-admin.js',
+            array( 'jquery' ),
+            MULTISAFEPAY_PLUGIN_VERSION,
+            true
+        );
+
+        wp_localize_script(
+            'multisafepay-admin',
+            'multisafepayAdminData',
+            array(
+                'transactionUrl'       => esc_url( $url ),
+                'transactionLinkTitle' => __( 'View transaction in the MultiSafepay dashboard', 'multisafepay' ),
+            )
+        );
+    }
 }

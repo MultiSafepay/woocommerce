@@ -3,7 +3,6 @@
 namespace MultiSafepay\WooCommerce;
 
 use MultiSafepay\WooCommerce\PaymentMethods\Base\BasePaymentMethodBlocks;
-use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethods;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodsController;
 use MultiSafepay\WooCommerce\Settings\SettingsController;
 use MultiSafepay\WooCommerce\Settings\ThirdPartyCompatibility;
@@ -169,6 +168,8 @@ class Main {
         // Getting total price update for payment methods
         $this->loader->add_action( 'wp_ajax_get_updated_total_price', $payment_methods, 'get_updated_total_price' );
         $this->loader->add_action( 'wp_ajax_nopriv_get_updated_total_price', $payment_methods, 'get_updated_total_price' );
+        // Add the MultiSafepay transaction link in the order details page
+        $this->loader->add_action( 'woocommerce_admin_order_data_after_payment_info', $payment_methods, 'add_multisafepay_transaction_link' );
         // Register the MultiSafepay payment methods in WooCommerce Blocks.
         add_action( 'woocommerce_blocks_loaded', array( $this, 'register_multisafepay_payment_methods_blocks' ) );
     }

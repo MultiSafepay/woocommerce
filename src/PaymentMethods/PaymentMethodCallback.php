@@ -259,7 +259,11 @@ class PaymentMethodCallback {
 
             // If MultiSafepay transaction status is completed, payment_complete function will handle the order status change
             if ( $this->get_multisafepay_transaction_status() === Transaction::COMPLETED ) {
-                $this->order->payment_complete( $this->get_multisafepay_transaction_id() );
+                $payment_complete = $this->order->payment_complete( $this->get_multisafepay_transaction_id() );
+                if ( $payment_complete ) {
+                    $this->order->update_meta_data( '_multisafepay_order_environment', get_option( 'multisafepay_testmode', false ) ? 'test' : 'live' );
+                    $this->order->save();
+                }
             }
 
             // If MultiSafepay transaction status is not completed and not initialized, process the notification according order status settings
