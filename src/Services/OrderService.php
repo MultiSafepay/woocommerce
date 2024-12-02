@@ -118,10 +118,17 @@ class OrderService {
      * @return PaymentOptions
      */
     private function create_payment_options( WC_Order $order ): PaymentOptions {
-        $url_redirect_on_cancel = ( get_option( 'multisafepay_redirect_after_cancel', 'cart' ) === 'cart' ? '' : wc_get_checkout_url() );
-        $payment_options        = new PaymentOptions();
+        $payment_options = new PaymentOptions();
         $payment_options->addNotificationUrl( get_rest_url( get_current_blog_id(), 'multisafepay/v1/notification' ) );
-        $payment_options->addCancelUrl( wp_specialchars_decode( $order->get_cancel_order_url( $url_redirect_on_cancel ) ) );
+
+        $cancel_endpoint = ( get_option( 'multisafepay_redirect_after_cancel', 'cart' ) === 'cart' ? '' : wc_get_checkout_url() );
+        $cancel_url      = wp_specialchars_decode( $order->get_cancel_order_url( $cancel_endpoint ) );
+
+        if ( is_wc_endpoint_url( 'order-pay' ) ) {
+            $cancel_url = wp_specialchars_decode( $order->get_checkout_payment_url() );
+        }
+
+        $payment_options->addCancelUrl( $cancel_url );
         $payment_options->addRedirectUrl( $order->get_checkout_order_received_url() );
         if ( ! apply_filters( 'multisafepay_post_notification', true ) ) {
             $payment_options->addNotificationUrl( add_query_arg( 'wc-api', 'multisafepay', home_url( '/' ) ) );
