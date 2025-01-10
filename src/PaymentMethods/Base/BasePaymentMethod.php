@@ -44,6 +44,10 @@ class BasePaymentMethod extends WC_Payment_Gateway {
         'failed',
     );
 
+    public const NOT_ALLOW_REFUND_PAYMENT_METHODS = array(
+        'MULTIBANCO',
+    );
+
     /**
      * A PaymentMethod object with the information of the payment method object
      *
@@ -638,6 +642,10 @@ class BasePaymentMethod extends WC_Payment_Gateway {
      * @return bool
      */
     public function can_refund_order( $order ) {
+        if ( in_array( $this->get_payment_method_gateway_code(), self::NOT_ALLOW_REFUND_PAYMENT_METHODS, true ) ) {
+            return false;
+        }
+
         if ( in_array( $order->get_status(), self::NOT_ALLOW_REFUND_ORDER_STATUSES, true ) ) {
             return false;
         }

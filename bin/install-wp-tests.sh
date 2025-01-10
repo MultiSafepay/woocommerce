@@ -53,6 +53,26 @@ else
 fi
 set -ex
 
+install_svn() {
+    if ! command -v svn &> /dev/null; then
+        echo 'svn could not be found, installing...'
+        if [ "$(uname)" == 'Darwin' ]; then
+            # macOS
+            if ! command -v brew &> /dev/null; then
+                echo 'Homebrew is not installed. Please install Homebrew first.'
+                exit 1
+            fi
+            brew install subversion
+        else
+            # Linux
+            sudo apt-get update
+            sudo apt-get install -y subversion
+        fi
+    else
+        echo 'svn is already installed.'
+    fi
+}
+
 install_wp() {
 
 	if [ -d $WP_CORE_DIR ]; then
@@ -176,6 +196,7 @@ install_db() {
 	fi
 }
 
+install_svn
 install_wp
 install_test_suite
 install_db
