@@ -16,6 +16,7 @@ class Test_Main extends WP_UnitTestCase {
         'multisafepay_transaction_order_id',
         'woocommerce_available_payment_gateways',
         'woocommerce_available_payment_gateways',
+        'woocommerce_available_payment_gateways',
         'woocommerce_get_checkout_payment_url',
         'woocommerce_valid_order_statuses_for_cancel'
     );

@@ -515,6 +515,14 @@ class BasePaymentMethod extends WC_Payment_Gateway {
                 'options'     => $this->get_countries(),
                 'default'     => $this->get_option( 'countries', array() ),
             ),
+            'user_roles'           => array(
+                'title'       => __( 'User Roles', 'multisafepay' ),
+                'type'        => 'multiselect',
+                'description' => __( 'If you select one or more user roles, this payment method will be shown in the checkout page, if the user rules of the customer match with the selected values. Leave blank for no restrictions.', 'multisafepay' ),
+                'desc_tip'    => __( 'For most operating system and configurations, you must hold Ctrl or Cmd in your keyboard, while you click in the options to select more than one value.', 'multisafepay' ),
+                'options'     => $this->get_user_roles(),
+                'default'     => $this->get_option( 'user_roles', array() ),
+            ),
         );
 
         if ( 'APPLEPAY' === $this->get_payment_method_gateway_code() ) {
@@ -829,6 +837,22 @@ class BasePaymentMethod extends WC_Payment_Gateway {
     protected function get_countries(): array {
         $countries = new WC_Countries();
         return $countries->get_allowed_countries();
+    }
+
+    /**
+     * Get the user roles allowed by WordPress
+     *
+     * @return array
+     */
+    protected function get_user_roles(): array {
+        $roles = wp_roles()->roles;
+
+        return array_map(
+            static function ( $role ) {
+                return $role['name'];
+            },
+            $roles
+        );
     }
 
     /**

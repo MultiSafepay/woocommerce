@@ -29,6 +29,9 @@ class PaymentMethodFixture {
                 "payment_components" => [
                     "has_fields" => true,
                     "is_enabled" => true,
+                    "qr" => [
+                        "supported" => true,
+                    ],
                 ],
             ],
             "brands" => [],
@@ -74,6 +77,9 @@ class PaymentMethodFixture {
                 "payment_components" => [
                     "has_fields" => true,
                     "is_enabled" => true,
+                    "qr" => [
+                        "supported" => true,
+                    ],
                 ],
             ],
             "brands" => [
@@ -220,6 +226,9 @@ class PaymentMethodFixture {
                 "payment_components" => [
                     "has_fields" => true,
                     "is_enabled" => true,
+                    "qr" => [
+                        "supported" => true,
+                    ],
                 ],
             ],
             "brands" => [],

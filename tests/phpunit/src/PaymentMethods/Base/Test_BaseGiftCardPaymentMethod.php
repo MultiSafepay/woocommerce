@@ -83,6 +83,9 @@ class Test_BaseGiftCardPaymentMethod extends WP_UnitTestCase {
                 "payment_components" => [
                     "has_fields" => false,
                     "is_enabled" => false,
+                    "qr" => [
+                        "supported" => true,
+                    ],
                 ],
             ],
             "brands" => [],

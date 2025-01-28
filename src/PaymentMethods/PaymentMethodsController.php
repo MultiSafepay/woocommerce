@@ -107,6 +107,23 @@ class PaymentMethodsController {
     }
 
     /**
+     * Filter the payment methods by user role defined in payment gateway settings
+     *
+     * @param   array $payment_gateways
+     * @return  array
+     */
+    public function filter_gateway_per_user_roles( array $payment_gateways ): array {
+        $user_roles = is_user_logged_in() ? wp_get_current_user()->roles : array();
+
+        foreach ( $payment_gateways as $gateway_id => $gateway ) {
+            if ( ! empty( $gateway->settings['user_roles'] ) && ! array_intersect( $user_roles, $gateway->settings['user_roles'] ) ) {
+                unset( $payment_gateways[ $gateway_id ] );
+            }
+        }
+        return $payment_gateways;
+    }
+
+    /**
      * Set the MultiSafepay transaction as shipped when the order
      * status change to the one defined as shipped in the settings.
      *
