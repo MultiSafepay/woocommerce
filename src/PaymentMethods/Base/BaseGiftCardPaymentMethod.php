@@ -21,9 +21,10 @@ class BaseGiftCardPaymentMethod extends BasePaymentMethod {
      */
     public function __construct( PaymentMethod $payment_method, ?Logger $logger = null ) {
         parent::__construct( $payment_method, $logger );
-        if ( ! empty( $this->get_option( 'max_amount' ) ) ) {
+        if ( ! $this->get_option( $this->get_payment_method_id() . '_gift_card_max_amount_updated', false ) ) {
             $this->update_option( 'max_amount', '' );
-            $this->max_amount = $this->get_option( 'max_amount' );
+            $this->update_option( $this->get_payment_method_id() . '_gift_card_max_amount_updated', '1' );
+            $this->max_amount = '';
         }
     }
 
