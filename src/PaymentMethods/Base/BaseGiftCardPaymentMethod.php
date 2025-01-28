@@ -2,6 +2,8 @@
 
 namespace MultiSafepay\WooCommerce\PaymentMethods\Base;
 
+use MultiSafepay\Api\PaymentMethods\PaymentMethod;
+use MultiSafepay\WooCommerce\Utils\Logger;
 use WC_Order;
 
 /**
@@ -10,6 +12,20 @@ use WC_Order;
  * @package MultiSafepay\WooCommerce\PaymentMethods\Base
  */
 class BaseGiftCardPaymentMethod extends BasePaymentMethod {
+
+    /**
+     * BaseGiftCardPaymentMethod constructor.
+     *
+     * @param PaymentMethod $payment_method
+     * @param Logger|null   $logger
+     */
+    public function __construct( PaymentMethod $payment_method, ?Logger $logger = null ) {
+        parent::__construct( $payment_method, $logger );
+        if ( ! empty( $this->get_option( 'max_amount' ) ) ) {
+            $this->update_option( 'max_amount', '' );
+            $this->max_amount = $this->get_option( 'max_amount' );
+        }
+    }
 
     /**
      * @param WC_Order $order
