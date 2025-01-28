@@ -2,9 +2,9 @@
 Contributors: multisafepayplugin
 Tags: multisafepay, payment gateway, credit cards, ideal, bnpl
 Requires at least: 6.0
-Tested up to: 6.6.2
+Tested up to: 6.7.1
 Requires PHP: 7.3
-Stable tag: 6.6.2
+Stable tag: 6.7.0
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -127,7 +127,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 
 == Upgrade Notice ==
 
-= 6.6.2 =
+= 6.7.0 =
 6.x.x is a major upgrade in which the MultiSafepay payment methods are registered dynamically via an API request to MultiSafepay. If you are upgrading from 5.X.X version, after the upgrade, please navigate to the MultiSafepay settings page, and to each one of the payment methods enabled in your account, and confirm the settings in each section are set up according to your preferences.
 
 == Screenshots ==
@@ -143,6 +143,19 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 9. Embedded Credit Card form using MultiSafepay Payment Component
 
 == Changelog ==
+= Release Notes - WooCommerce 6.7.0 (Jan 28th, 2025) =
+
+### Added
++ PLGWOOS-967: Add filter per user role
++ PLGWOOS-960: Add a transaction link in the order detail view in admin
+
+### Changed
++ DAVAMS-868: Block refunds for Multibanco
+
+### Fixed
++ DAVAMS-875: Setup gift cards max amount to 0, because it allows partial payment
++ PLGWOOS-963: Fix redirection after canceling a payment, when the user is using the "order-pay" endpoint
+
 = Release Notes - WooCommerce 6.6.2 (Nov 5th, 2024) =
 
 ### Added

@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.7.0
+Release Date: Jan 28th, 2025
+
+### Added
++ PLGWOOS-967: Add filter per user role
++ PLGWOOS-960: Add a transaction link in the order detail view in admin
+
+### Changed
++ DAVAMS-868: Block refunds for Multibanco
+
+### Fixed
++ DAVAMS-875: Setup gift cards max amount to 0, because it allows partial payment
++ PLGWOOS-963: Fix redirection after canceling a payment, when the user is using the "order-pay" endpoint
+
+***
+
 ## 6.6.2
 Release Date: Nov 5th, 2024
 
