@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.7.1
+Release Date: Feb 7th, 2025
+
+### Added
++ PLGWOOS-968: Add system report values from the payment method's user role setting and enhance logging for filter methods
+
+***
+
 ## 6.7.0
 Release Date: Jan 28th, 2025
 

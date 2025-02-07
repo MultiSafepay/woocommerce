@@ -2,7 +2,7 @@
     "name": "multisafepay/woocommerce",
     "description": "A new WooCommerce plugin",
     "type": "wordpress-plugin",
-    "version": "6.7.0",
+    "version": "6.7.1",
     "license": "MIT",
     "minimum-stability": "RC",
     "keywords" : [ "wordpress", "multisafepay" ],
