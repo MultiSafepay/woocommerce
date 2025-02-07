@@ -73,6 +73,7 @@ class PaymentMethodsController {
         $customer_country = ( WC()->customer ) ? WC()->customer->get_billing_country() : false;
         foreach ( $payment_gateways as $gateway_id => $gateway ) {
             if ( ! empty( $gateway->countries ) && $customer_country && ! in_array( $customer_country, $gateway->countries, true ) ) {
+                $this->logger->log_info( 'Payment method ' . $gateway_id . ' is being unset because the customer country ' . $customer_country . ' is not allowed' );
                 unset( $payment_gateways[ $gateway_id ] );
             }
         }
@@ -100,6 +101,7 @@ class PaymentMethodsController {
 
         foreach ( $payment_gateways as $gateway_id => $gateway ) {
             if ( ! empty( $gateway->min_amount ) && $total_amount < $gateway->min_amount ) {
+                $this->logger->log_info( 'Payment method ' . $gateway_id . ' is being unset because the total amount ' . $total_amount . ' is less than the min amount ' . $gateway->min_amount );
                 unset( $payment_gateways[ $gateway_id ] );
             }
         }
@@ -117,6 +119,7 @@ class PaymentMethodsController {
 
         foreach ( $payment_gateways as $gateway_id => $gateway ) {
             if ( ! empty( $gateway->settings['user_roles'] ) && ! array_intersect( $user_roles, $gateway->settings['user_roles'] ) ) {
+                $this->logger->log_info( 'Payment method ' . $gateway_id . ' is being unset because the current user roles ' . implode( ', ', $user_roles ) . ' is not not allowed' );
                 unset( $payment_gateways[ $gateway_id ] );
             }
         }

@@ -84,6 +84,13 @@ class BasePaymentMethod extends WC_Payment_Gateway {
     public $initial_order_status;
 
     /**
+     * User Roles
+     *
+     * @var array
+     */
+    public $user_roles;
+
+    /**
      * If supports payment component
      *
      * @var bool
@@ -157,6 +164,7 @@ class BasePaymentMethod extends WC_Payment_Gateway {
         $this->description          = $this->get_option( 'description' );
         $this->max_amount           = $this->get_option( 'max_amount' );
         $this->min_amount           = $this->get_option( 'min_amount' );
+        $this->user_roles           = (array) $this->get_option( 'user_roles', array() );
         $this->countries            = $this->get_option( 'countries' );
         $this->initial_order_status = $this->get_option( 'initial_order_status', false );
         $this->payment_component    = $this->is_payment_component_enabled();

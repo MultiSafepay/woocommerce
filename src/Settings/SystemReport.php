@@ -268,6 +268,9 @@ class SystemReport {
                 if ( ! empty( $woocommerce_payment_gateway->is_tokenization_enabled() ) ) {
                     $multisafepay_gateway_settings_value .= __( 'Recurring payments: ', 'multisafepay' ) . ( $woocommerce_payment_gateway->is_tokenization_enabled() ? __( 'Enabled', 'multisafepay' ) : __( 'Disabled', 'multisafepay' ) ) . '. ';
                 }
+                if ( ! empty( $woocommerce_payment_gateway->user_roles ) ) {
+                    $multisafepay_gateway_settings_value .= __( 'User Roles: ', 'multisafepay' ) . implode( ', ', $woocommerce_payment_gateway->user_roles ) . '. ';
+                }
 
                 $multisafepay_gateway_settings['settings'][ $woocommerce_payment_gateway->id ]['label'] = $woocommerce_payment_gateway->get_payment_method_title();
                 $multisafepay_gateway_settings['settings'][ $woocommerce_payment_gateway->id ]['value'] = $multisafepay_gateway_settings_value;
