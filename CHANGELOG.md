@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.7.2
+Release Date: Feb 14th, 2025
+
+### Fixed
++ PLGWOOS-971: Fix iDEAL payment method not being shown on WooCommerce Checkout Blocks
+
+***
+
 ## 6.7.1
 Release Date: Feb 7th, 2025
 
