@@ -258,11 +258,6 @@ class BasePaymentMethod extends WC_Payment_Gateway {
      * @return string
      */
     public function get_payment_method_type(): string {
-        // Converting to direct the transaction type for iDEAL
-        if ( $this->is_ideal_2_0() ) {
-            return self::TRANSACTION_TYPE_DIRECT;
-        }
-
         // Avoiding the warning when the admin is editing
         // the checkout page to add the block-based checkout.
         // It does not affect the frontend context.
@@ -279,6 +274,11 @@ class BasePaymentMethod extends WC_Payment_Gateway {
             }
             // Otherwise, the transaction type is always redirect.
             return self::TRANSACTION_TYPE_REDIRECT;
+        }
+
+        // Converting to direct the transaction type for iDEAL
+        if ( $this->is_ideal_2_0() ) {
+            return self::TRANSACTION_TYPE_DIRECT;
         }
 
         return $this->is_payment_method_type_direct() ||
