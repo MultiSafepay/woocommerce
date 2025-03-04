@@ -36,11 +36,12 @@ class ShoppingCartService {
     }
 
     /**
-     * @param WC_Order $order
-     * @param string   $currency
+     * @param WC_Order    $order
+     * @param string      $currency
+     * @param string|null $gateway_code
      * @return ShoppingCart
      */
-    public function create_shopping_cart( WC_Order $order, string $currency ): ShoppingCart {
+    public function create_shopping_cart( WC_Order $order, string $currency, ?string $gateway_code = '' ): ShoppingCart {
 
         // If coupon type is percentage, fixed_product type, or fixed_cart, which comes by default in WooCommerce,
         // then discounted amount is being included at product item level to avoid miscalculations in the tax rates, since WooCommerce is rounding the
@@ -55,17 +56,17 @@ class ShoppingCartService {
 
         /** @var WC_Order_Item_Product $item */
         foreach ( $order->get_items() as $item ) {
-            $cart_items[] = $this->create_cart_item( $item, $currency );
+            $cart_items[] = $this->create_cart_item( $item, $currency, $gateway_code );
         }
 
         /** @var WC_Order_Item_Shipping $item */
         foreach ( $order->get_items( 'shipping' ) as $item ) {
-            $cart_items[] = $this->create_shipping_cart_item( $item, $currency );
+            $cart_items[] = $this->create_shipping_cart_item( $item, $currency, $gateway_code );
         }
 
         /** @var WC_Order_Item_Fee $item */
         foreach ( $order->get_items( 'fee' ) as $item ) {
-            $cart_items[] = $this->create_fee_cart_item( $item, $currency );
+            $cart_items[] = $this->create_fee_cart_item( $item, $currency, $gateway_code );
         }
 
         /** @var WC_Order_Item_Coupon $item */
@@ -93,9 +94,10 @@ class ShoppingCartService {
     /**
      * @param WC_Order_Item_Product $item
      * @param string                $currency
+     * @param string                $gateway_code
      * @return CartItem
      */
-    private function create_cart_item( WC_Order_Item_Product $item, string $currency ): CartItem {
+    private function create_cart_item( WC_Order_Item_Product $item, string $currency, string $gateway_code ): CartItem {
         $merchant_item_id = apply_filters( 'multisafepay_merchant_item_id', (string) $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id(), $item );
         $product_name     = $item->get_name();
         $product_price    = (float) $item->get_subtotal() / (int) $item->get_quantity();
@@ -114,16 +116,17 @@ class ShoppingCartService {
             ->addQuantity( (int) $item->get_quantity() )
             ->addMerchantItemId( (string) $merchant_item_id )
             ->addUnitPrice( MoneyUtil::create_money( $product_price, $currency ) )
-            ->addTaxRate( $this->get_item_tax_rate( $item ) );
+            ->addTaxRate( $this->get_item_tax_rate( $item, $gateway_code ) );
     }
 
     /**
      * Returns the tax rate value applied for an order item.
      *
      * @param WC_Order_Item_Product $item
+     * @param string                $gateway_code
      * @return float
      */
-    private function get_item_tax_rate( WC_Order_Item_Product $item ): float {
+    private function get_item_tax_rate( WC_Order_Item_Product $item, string $gateway_code ): float {
         if ( ! wc_tax_enabled() ) {
             return 0;
         }
@@ -149,29 +152,32 @@ class ShoppingCartService {
                 $tax_rate = ( ( wc_get_price_including_tax( $item->get_product() ) / wc_get_price_excluding_tax( $item->get_product() ) ) - 1 ) * 100;
                 break;
         }
-        return $tax_rate;
+
+        return $this->rounding_filter( $tax_rate, $gateway_code );
     }
 
     /**
      * @param WC_Order_Item_Shipping $item
      * @param string                 $currency
+     * @param string                 $gateway_code
      * @return ShippingItem
      */
-    private function create_shipping_cart_item( WC_Order_Item_Shipping $item, string $currency ): ShippingItem {
+    private function create_shipping_cart_item( WC_Order_Item_Shipping $item, string $currency, string $gateway_code ): ShippingItem {
         $cart_item = new ShippingItem();
         return $cart_item->addName( __( 'Shipping', 'multisafepay' ) )
             ->addQuantity( 1 )
             ->addUnitPrice( MoneyUtil::create_money( (float) $item->get_total(), $currency ) )
-            ->addTaxRate( $this->get_shipping_tax_rate( $item ) );
+            ->addTaxRate( $this->get_shipping_tax_rate( $item, $gateway_code ) );
     }
 
     /**
      * Returns the tax rate value applied for the shipping item.
      *
      * @param WC_Order_Item_Shipping $item
+     * @param string                 $gateway_code
      * @return float
      */
-    private function get_shipping_tax_rate( WC_Order_Item_Shipping $item ): float {
+    private function get_shipping_tax_rate( WC_Order_Item_Shipping $item, string $gateway_code ): float {
         if ( ! wc_tax_enabled() ) {
             return 0;
         }
@@ -190,30 +196,33 @@ class ShoppingCartService {
         }
         $total_tax = array_sum( $taxes['total'] );
         $tax_rate  = ( (float) $total_tax * 100 ) / (float) $item->get_total();
-        return $tax_rate;
+
+        return $this->rounding_filter( $tax_rate, $gateway_code );
     }
 
     /**
      * @param WC_Order_Item_Fee $item
      * @param string            $currency
+     * @param string            $gateway_code
      * @return CartItem
      */
-    private function create_fee_cart_item( WC_Order_Item_Fee $item, string $currency ): CartItem {
+    private function create_fee_cart_item( WC_Order_Item_Fee $item, string $currency, string $gateway_code ): CartItem {
         $cart_item = new CartItem();
         return $cart_item->addName( $item->get_name() )
             ->addQuantity( $item->get_quantity() )
             ->addMerchantItemId( (string) $item->get_id() )
             ->addUnitPrice( MoneyUtil::create_money( (float) $item->get_total(), $currency ) )
-            ->addTaxRate( $this->get_fee_tax_rate( $item ) );
+            ->addTaxRate( $this->get_fee_tax_rate( $item, $gateway_code ) );
     }
 
     /**
      * Returns the tax rate value applied for a fee item.
      *
      * @param WC_Order_Item_Fee $item
+     * @param string            $gateway_code
      * @return float
      */
-    private function get_fee_tax_rate( WC_Order_Item_Fee $item ): float {
+    private function get_fee_tax_rate( WC_Order_Item_Fee $item, string $gateway_code ): float {
         if ( ! wc_tax_enabled() ) {
             return 0;
         }
@@ -234,7 +243,8 @@ class ShoppingCartService {
 
         $total_tax = array_sum( $taxes['total'] );
         $tax_rate  = ( (float) $total_tax * 100 ) / (float) $item->get_total();
-        return $tax_rate;
+
+        return $this->rounding_filter( $tax_rate, $gateway_code );
     }
 
     /**
@@ -262,4 +272,24 @@ class ShoppingCartService {
             ->addTaxRate( 0 );
     }
 
+    /**
+     * @param float  $tax_rate
+     * @param string $gateway_code
+     * @return float
+     */
+    private function rounding_filter( float $tax_rate, string $gateway_code ): float {
+        if ( 'BILLINK' !== $gateway_code ) {
+            return $tax_rate;
+        }
+
+        $allowed_rates = array( 0, 5, 6, 7, 9, 16, 19, 20, 21 );
+
+        foreach ( $allowed_rates as $rate ) {
+            if ( abs( $tax_rate - $rate ) <= 0.15 ) {
+                return round( $tax_rate );
+            }
+        }
+
+        return $tax_rate;
+    }
 }

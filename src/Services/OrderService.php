@@ -70,7 +70,7 @@ class OrderService {
         }
 
         if ( ! get_option( 'multisafepay_disable_shopping_cart', false ) || in_array( $gateway_code, GatewaysSdk::SHOPPING_CART_REQUIRED_GATEWAYS, true ) ) {
-            $order_request->addShoppingCart( $this->shopping_cart_service->create_shopping_cart( $order, $order->get_currency() ) );
+            $order_request->addShoppingCart( $this->shopping_cart_service->create_shopping_cart( $order, $order->get_currency(), $gateway_code ) );
         }
 
         if ( ! empty( $_POST[ $order->get_payment_method() . '_payment_component_payload' ] ) ) {
