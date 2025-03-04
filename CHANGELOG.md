@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.7.3
+Release Date: Mar 4th, 2025
+
+### Fixed
++ PLGWOOS-973: Round shopping cart item tax rates in BILLINK gateway
+
+***
+
 ## 6.7.2
 Release Date: Feb 14th, 2025
 
