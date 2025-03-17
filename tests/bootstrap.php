@@ -25,15 +25,26 @@ if ( ! file_exists( "{$_tests_dir}/includes/functions.php" ) ) {
 // Give access to tests_add_filter() function.
 require_once "{$_tests_dir}/includes/functions.php";
 
-/**
- * Manually load the plugin being tested.
- */
-function _manually_load_plugin() {
-    require dirname(dirname( dirname( __FILE__ )) ) . '/woocommerce/woocommerce.php';
-    require dirname( dirname( __FILE__ ) ) . '/multisafepay.php';
+// Install WooCommerce.
+tests_add_filter( 'init', '_install_woocommerce', 0 );
+
+// Manually load the plugin being tested.
+tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' , 1 );
+
+function _install_woocommerce() {
+    if ( ! defined( 'WC_PLUGIN_BASENAME' ) ) {
+        define( 'WC_PLUGIN_BASENAME', 'woocommerce/woocommerce.php' );
+    }
+
+    if ( ! class_exists( 'WC_Install' ) ) {
+        require dirname( __FILE__, 3 ) . '/woocommerce/woocommerce.php';
+        WC_Install::install();
+    }
 }
 
-tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
+function _manually_load_plugin() {
+    require dirname( __FILE__, 2 ) . '/multisafepay.php';
+}
 
 // Start up the WP testing environment.
 require "{$_tests_dir}/includes/bootstrap.php";

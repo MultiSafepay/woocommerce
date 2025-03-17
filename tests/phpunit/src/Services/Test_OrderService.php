@@ -23,6 +23,21 @@ class Test_OrderService extends WP_UnitTestCase {
     public $wc_order;
 
     public function set_up() {
+        // Initialize WooCommerce session and customer if not set
+        if ( ! WC()->session ) {
+            WC()->session = new WC_Session_Handler();
+            WC()->session->init();
+        }
+
+        // Added a dummy WC_Customer to ensure WC()->customer is not null.
+        if ( null === WC()->customer ) {
+            $wc_customer = $this->getMockBuilder('WC_Customer')
+                ->disableOriginalConstructor()
+                ->setMethods(['get_base_country'])
+                ->getMock();
+            $wc_customer->method('get_base_country')->willReturn('NL');
+            WC()->customer = $wc_customer;
+        }
 
         update_option( 'woocommerce_calc_taxes', 'yes');
 

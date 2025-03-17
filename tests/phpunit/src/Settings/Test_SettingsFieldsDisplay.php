@@ -5,7 +5,7 @@ use MultiSafepay\WooCommerce\Settings\SettingsFieldsDisplay;
 
 class Test_SettingsFieldsDisplay extends WP_UnitTestCase {
 
-    private array $settings_fields;
+    private $settings_fields;
 
     public function set_up() {
         parent::set_up();
@@ -20,8 +20,8 @@ class Test_SettingsFieldsDisplay extends WP_UnitTestCase {
                 ob_start();
                 $settings_fields_display->display();
                 $output = ob_get_clean();
-                $this->assertRegExp( '/name="' . $field['id'] . '"/', $output );
-                $this->assertRegExp( '/' . $field['type'] . '/', $output );
+                $this->assertMatchesRegularExpression( '/name="' . $field['id'] . '"/', $output );
+                $this->assertMatchesRegularExpression( '/' . $field['type'] . '/', $output );
             }
         }
     }

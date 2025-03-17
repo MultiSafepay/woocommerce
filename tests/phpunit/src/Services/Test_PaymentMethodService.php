@@ -14,6 +14,18 @@ class Test_PaymentMethodService extends WP_UnitTestCase {
     public $payment_method_service;
 
     public function set_up() {
+        // Ensure WC()->cart is available so that get_total_amount() returns a valid float.
+        if ( function_exists( 'WC' ) && ! isset( WC()->cart ) ) {
+            WC()->cart = $this->getMockBuilder( 'WC_Cart' )
+                ->disableOriginalConstructor()
+                ->setMethods( ['get_total'] )
+                ->getMock();
+
+            WC()->cart->expects( $this->once() )
+                ->method( 'get_total' )
+                ->willReturn( '10.00' );
+        }
+
         $this->payment_method_service = new PaymentMethodService();
 
         $payment_methods_fixture = (new PaymentMethodListing(

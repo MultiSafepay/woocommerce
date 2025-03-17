@@ -24,9 +24,20 @@ class Test_PaymentComponentService extends WP_UnitTestCase {
 
 
     public function set_up() {
+        if ( function_exists( 'WC' ) && ! isset( WC()->cart ) ) {
+            WC()->cart = $this->getMockBuilder( 'WC_Cart' )
+                ->disableOriginalConstructor()
+                ->setMethods( ['get_total'] )
+                ->getMock();
+
+            WC()->cart->expects( $this->once() )
+                ->method( 'get_total' )
+                ->willReturn( '10.00' );
+        }
+
         $this->payment_method = new PaymentMethod( ( new PaymentMethodFixture() )->get_amex_payment_method_fixture() );
         $this->woocommerce_payment_gateway = new BasePaymentMethod( $this->payment_method );
-        $this->payment_component_service = New PaymentComponentService();
+        $this->payment_component_service = new PaymentComponentService();
 
         $sdk_service = $this->getMockBuilder('SdkService')
             ->disableOriginalConstructor()
