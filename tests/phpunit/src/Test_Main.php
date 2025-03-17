@@ -35,7 +35,8 @@ class Test_Main extends WP_UnitTestCase {
         'wp_ajax_nopriv_applepay_direct_validation',
         'wp_ajax_get_updated_total_price',
         'wp_ajax_nopriv_get_updated_total_price',
-        'add_multisafepay_transaction_link'
+        'add_multisafepay_transaction_link',
+        'woocommerce_blocks_loaded'
     );
 
     public function test_filters() {
