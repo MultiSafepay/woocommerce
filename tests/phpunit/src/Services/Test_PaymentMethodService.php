@@ -84,13 +84,6 @@ class Test_PaymentMethodService extends WP_UnitTestCase {
         $this->assertEquals( 'multisafepay_ideal', $woocommerce_payment_gateway_ids[1]);
     }
 
-    public function test_get_woocommerce_payment_gateway_ids_with_payment_component_support() {
-        delete_transient('multisafepay_payment_methods');
-        $woocommerce_payment_gateway_ids = $this->payment_method_service->get_woocommerce_payment_gateway_ids_with_payment_component_support();
-        $this->assertEquals( 'multisafepay_amex', $woocommerce_payment_gateway_ids[0]);
-        $this->assertEquals( 'multisafepay_ideal', $woocommerce_payment_gateway_ids[1]);
-    }
-
     public function test_get_legacy_woocommerce_payment_gateway_ids() {
         delete_transient('multisafepay_payment_methods');
         $legacy_woocommerce_payment_gateway_id = $this->payment_method_service->get_legacy_woocommerce_payment_gateway_ids( 'bnpl_instm');

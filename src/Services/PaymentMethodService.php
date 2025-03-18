@@ -216,20 +216,28 @@ class PaymentMethodService {
      */
     public function get_woocommerce_payment_gateway_ids_with_payment_component_support(): array {
         $payment_methods_with_payment_component = array();
-        foreach ( $this->get_multisafepay_payment_methods_from_api() as $payment_method ) {
-            $payment_method_object = new PaymentMethod( $payment_method );
-            if ( $payment_method_object->supportsPaymentComponent() ) {
-                $payment_methods_with_payment_component[] = self::get_legacy_woocommerce_payment_gateway_ids( $payment_method_object->getId() );
-                foreach ( $payment_method['brands'] as $brand ) {
-                    if ( ! empty( $brand['allowed_countries'] ) ) {
-                        $payment_methods_with_payment_component[] = self::get_legacy_woocommerce_payment_gateway_ids( $brand['id'] );
-                    }
-                }
+        foreach ( $this->get_enabled_woocommerce_payment_gateways() as $woocommerce_payment_gateway ) {
+            if ( $woocommerce_payment_gateway->is_payment_component_enabled() ) {
+                $payment_methods_with_payment_component[] = $woocommerce_payment_gateway->get_payment_method_id();
             }
         }
         return $payment_methods_with_payment_component;
     }
 
+    /**
+     * Get all active MultiSafepay WooCommerce payment gateways
+     *
+     * @return array
+     */
+    public function get_enabled_woocommerce_payment_gateways(): array {
+        $enabled_payment_gateways = array();
+        foreach ( $this->get_woocommerce_payment_gateways() as $woocommerce_payment_gateway ) {
+            if ( 'yes' === $woocommerce_payment_gateway->enabled ) {
+                $enabled_payment_gateways[] = $woocommerce_payment_gateway;
+            }
+        }
+        return $enabled_payment_gateways;
+    }
 
     /**
      * Return the woocommerce_payment_gateway_ids considering those one previously set
