@@ -31,6 +31,9 @@ tests_add_filter( 'init', '_install_woocommerce', 0 );
 // Manually load the plugin being tested.
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' , 1 );
 
+// Prevent issues with WC core logging.
+define('FS_METHOD', 'direct');
+
 function _install_woocommerce() {
     if ( ! defined( 'WC_PLUGIN_BASENAME' ) ) {
         define( 'WC_PLUGIN_BASENAME', 'woocommerce/woocommerce.php' );

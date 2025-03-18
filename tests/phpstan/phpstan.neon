@@ -10,6 +10,7 @@ parameters:
     excludePaths:
         analyseAndScan:
             - ../../templates/multisafepay-checkout-fields-display.php
+            - ../../tests/bootstrap.php
             - ../../tests/phpunit/*
             - ../../tests/fixtures/*
             - ../../src/PaymentMethods/Base/BasePaymentMethodBlocks.php
