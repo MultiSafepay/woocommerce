@@ -3,7 +3,7 @@
     "description": "A new WooCommerce plugin",
     "type": "wordpress-plugin",
     "version": "6.7.3",
-    "license": "MIT",
+    "license": "GPL-3.0-or-later",
     "minimum-stability": "RC",
     "keywords" : [ "wordpress", "multisafepay" ],
     "require": {

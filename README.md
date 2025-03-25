@@ -3,10 +3,12 @@
 </p>
 
 # MultiSafepay plugin for WooCommerce
+[![Build](https://img.shields.io/github/actions/workflow/status/multisafepay/woocommerce/release.yml?style=for-the-badge)](https://github.com/MultiSafepay/woocommerce/actions)
+[![Codecov](https://img.shields.io/codecov/c/github/multisafepay/woocommerce?style=for-the-badge)](https://app.codecov.io/gh/MultiSafepay/woocommerce)
+[![Latest stable version](https://img.shields.io/github/v/release/multisafepay/woocommerce?style=for-the-badge)](https://packagist.org/packages/multisafepay/magento2)
+[![License](https://img.shields.io/github/license/multisafepay/woocommerce?style=for-the-badge)](https://github.com/MultiSafepay/woocommerce/blob/master/LICENSE.md)
 
 Easily integrate MultiSafepay payment solutions into your WooCommerce webshop with our free plugin.
-
-[![Latest stable version](https://img.shields.io/github/release/multisafepay/woocommerce.svg)](https://github.com/MultiSafepay/WooCommerce)
 
 ## About MultiSafepay
 
@@ -21,6 +23,9 @@ See MultiSafepay Docs – [WooCommerce](https://docs.multisafepay.com/docs/wooco
 - You will need a [MultiSafepay account](https://testmerchant.multisafepay.com/signup). Consider a test account first.
 - WooCommerce 5.0.0 or higher
 - PHP 7.3 or 7.4
+
+## License
+[Open software license (OSL 3.0)](https://github.com/MultiSafepay/woocommerce/blob/master/LICENSE.md)
 
 ## How to install
 
