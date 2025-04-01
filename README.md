@@ -5,8 +5,8 @@
 # MultiSafepay plugin for WooCommerce
 [![Build](https://img.shields.io/github/actions/workflow/status/multisafepay/woocommerce/release.yml?style=for-the-badge)](https://github.com/MultiSafepay/woocommerce/actions)
 [![Codecov](https://img.shields.io/codecov/c/github/multisafepay/woocommerce?style=for-the-badge)](https://app.codecov.io/gh/MultiSafepay/woocommerce)
-[![Latest stable version](https://img.shields.io/github/v/release/multisafepay/woocommerce?style=for-the-badge)](https://packagist.org/packages/multisafepay/magento2)
-[![License](https://img.shields.io/github/license/multisafepay/woocommerce?style=for-the-badge)](https://github.com/MultiSafepay/woocommerce/blob/master/LICENSE.md)
+[![Latest stable version](https://img.shields.io/github/v/release/multisafepay/woocommerce?style=for-the-badge)](https://github.com/MultiSafepay/woocommerce/releases)
+[![License](https://img.shields.io/badge/License-OSL%203.0-blue.svg?style=for-the-badge)](https://github.com/MultiSafepay/woocommerce/blob/master/LICENSE.md)
 
 Easily integrate MultiSafepay payment solutions into your WooCommerce webshop with our free plugin.
 
