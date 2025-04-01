@@ -38,4 +38,24 @@ class Order {
 
         $order->add_order_note( $message );
     }
+
+    /**
+     * Return WooCommerce Order ID where meta value key is 'multisafepay_transaction_id' and value is $order_id
+     *
+     * @param string $order_id
+     * @return false|mixed|\WC_Order
+     *
+     * @phpcs:disable WordPress.DB.SlowDBQuery
+     */
+    public static function get_order_id_by_multisafepay_transaction_id_key( string $order_id ) {
+        $orders = wc_get_orders(
+            array(
+                'limit'      => 1,
+                'meta_key'   => 'multisafepay_transaction_id',
+                'meta_value' => $order_id,
+                'return'     => 'ids',
+            )
+        );
+        return ! empty( $orders ) ? $orders[0] : false;
+    }
 }

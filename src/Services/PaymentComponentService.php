@@ -3,6 +3,7 @@
 namespace MultiSafepay\WooCommerce\Services;
 
 use MultiSafepay\WooCommerce\PaymentMethods\Base\BasePaymentMethod;
+use MultiSafepay\WooCommerce\Utils\QrCheckoutManager;
 
 /**
  * Class PaymentComponentService
@@ -39,16 +40,17 @@ class PaymentComponentService {
      * Return the arguments required when payment component needs to be initialized
      *
      * @param BasePaymentMethod $woocommerce_payment_gateway
+     * @param bool              $validate_checkout
      * @return array
      */
-    public function get_payment_component_arguments( BasePaymentMethod $woocommerce_payment_gateway ): array {
+    public function get_payment_component_arguments( BasePaymentMethod $woocommerce_payment_gateway, bool $validate_checkout = false ): array {
         $payment_component_arguments = array(
-            'debug'     => (bool) get_option( 'multisafepay_debugmode', false ),
-            'env'       => $this->sdk_service->get_test_mode() ? 'test' : 'live',
-            'ajax_url'  => admin_url( 'admin-ajax.php' ),
-            'nonce'     => wp_create_nonce( 'payment_component_arguments_nonce' ),
-            'api_token' => $this->api_token_service->get_api_token(),
-            'orderData' => array(
+            'debug'        => (bool) get_option( 'multisafepay_debugmode', false ),
+            'env'          => $this->sdk_service->get_test_mode() ? 'test' : 'live',
+            'ajax_url'     => admin_url( 'admin-ajax.php' ),
+            'nonce'        => wp_create_nonce( 'payment_component_arguments_nonce' ),
+            'api_token'    => $this->api_token_service->get_api_token(),
+            'orderData'    => array(
                 'currency'        => get_woocommerce_currency(),
                 'amount'          => ( $this->get_total_amount() * 100 ),
                 'customer'        => array(
@@ -69,7 +71,8 @@ class PaymentComponentService {
                     ),
                 ),
             ),
-            'gateway'   => $woocommerce_payment_gateway->get_payment_method_gateway_code(),
+            'gateway'      => $woocommerce_payment_gateway->get_payment_method_gateway_code(),
+            'qr_supported' => $woocommerce_payment_gateway->is_qr_enabled() || $woocommerce_payment_gateway->is_qr_only_enabled(),
         );
 
         // Payment Component Template ID.
@@ -89,6 +92,22 @@ class PaymentComponentService {
             );
         }
 
+        // Payment Component QR
+        if ( $validate_checkout ) {
+            $qr_checkout_manager = new QrCheckoutManager();
+            if ( $qr_checkout_manager->validate_checkout_fields() ) {
+                if ( $woocommerce_payment_gateway->is_qr_enabled() ) {
+                    $payment_component_arguments['orderData']['payment_options']['settings']['connect']['qr'] = array( 'enabled' => 1 );
+                }
+                if ( $woocommerce_payment_gateway->is_qr_only_enabled() ) {
+                    $payment_component_arguments['orderData']['payment_options']['settings']['connect']['qr'] = array(
+                        'enabled' => 1,
+                        'qr_only' => 1,
+                    );
+                }
+            }
+        }
+
         return $payment_component_arguments;
     }
 
@@ -97,14 +116,15 @@ class PaymentComponentService {
      *
      * @return void
      */
-    public function ajax_get_payment_component_arguments() {
+    public function refresh_payment_component_config() {
         $payment_component_arguments_nonce = sanitize_key( $_POST['nonce'] ?? '' );
         if ( ! wp_verify_nonce( wp_unslash( $payment_component_arguments_nonce ), 'payment_component_arguments_nonce' ) ) {
             wp_send_json( array() );
         }
         $gateway_id                  = sanitize_key( $_POST['gateway_id'] ?? '' );
         $woocommerce_payment_gateway = $this->payment_method_service->get_woocommerce_payment_gateway_by_id( $gateway_id );
-        $payment_component_arguments = $this->get_payment_component_arguments( $woocommerce_payment_gateway );
+        $validate_checkout_fields    = ( $woocommerce_payment_gateway->is_payment_component_enabled() && $woocommerce_payment_gateway->is_qr_enabled() || $woocommerce_payment_gateway->is_qr_only_enabled() );
+        $payment_component_arguments = $this->get_payment_component_arguments( $woocommerce_payment_gateway, $validate_checkout_fields );
         wp_send_json( $payment_component_arguments );
     }
 

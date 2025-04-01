@@ -103,7 +103,7 @@ class OrderService {
     /**
      * @return PluginDetails
      */
-    private function create_plugin_details(): PluginDetails {
+    protected function create_plugin_details(): PluginDetails {
         $plugin_details = new PluginDetails();
         global $wp_version;
         return $plugin_details
@@ -143,7 +143,7 @@ class OrderService {
      * @param string $order_number
      * @return string $order_description
      */
-    private function get_order_description_text( $order_number ): string {
+    protected function get_order_description_text( $order_number ): string {
         /* translators: %s: order id */
         $order_description = sprintf( __( 'Payment for order: %s', 'multisafepay' ), $order_number );
         if ( get_option( 'multisafepay_order_request_description', false ) ) {
@@ -157,7 +157,7 @@ class OrderService {
      *
      * @return int
      */
-    private function get_seconds_active(): int {
+    protected function get_seconds_active(): int {
         $time_active      = get_option( 'multisafepay_time_active', '30' );
         $time_active_unit = get_option( 'multisafepay_time_unit', 'days' );
         if ( 'days' === $time_active_unit ) {

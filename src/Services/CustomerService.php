@@ -52,7 +52,7 @@ class CustomerService {
      *
      * @return array|null
      */
-    private function get_customer_browser_info(): ?array {
+    protected function get_customer_browser_info(): ?array {
         $browser = sanitize_text_field( wp_unslash( $_POST['browser'] ?? '' ) );
 
         if ( ! empty( $browser ) ) {
@@ -101,7 +101,7 @@ class CustomerService {
      * @param null|array  $browser
      * @return CustomerDetails
      */
-    private function create_customer(
+    protected function create_customer(
         Address $address,
         string $email_address,
         string $phone_number,
@@ -155,7 +155,7 @@ class CustomerService {
      * @param string $zip_code
      * @return Address
      */
-    private function create_address(
+    protected function create_address(
         string $address_line_1,
         string $address_line_2,
         string $country,
@@ -196,7 +196,7 @@ class CustomerService {
      * @param string $payment_method_id
      * @return bool
      */
-    private function should_send_customer_reference( string $payment_method_id ): bool {
+    protected function should_send_customer_reference( string $payment_method_id ): bool {
         if ( ! isset( $_POST[ $payment_method_id . '_payment_component_tokenize' ] ) ) {
             return false;
         }

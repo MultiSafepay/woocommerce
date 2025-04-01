@@ -5,6 +5,8 @@ namespace MultiSafepay\WooCommerce;
 use MultiSafepay\WooCommerce\Blocks\BlocksController;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodsController;
 use MultiSafepay\WooCommerce\Services\PaymentComponentService;
+use MultiSafepay\WooCommerce\Services\Qr\QrPaymentComponentService;
+use MultiSafepay\WooCommerce\Services\Qr\QrPaymentWebhook;
 use MultiSafepay\WooCommerce\Settings\SettingsController;
 use MultiSafepay\WooCommerce\Settings\ThirdPartyCompatibility;
 use MultiSafepay\WooCommerce\Utils\CustomLinks;
@@ -39,6 +41,8 @@ class Main {
         $this->block_hooks();
         $this->payment_methods_hooks();
         $this->payment_components_hooks();
+        $this->payment_components_qr_hooks();
+        $this->callback_hooks();
     }
 
     /**
@@ -78,7 +82,7 @@ class Main {
     }
 
     /**
-     * Register all of the hooks related to the common settings
+     * Register the hooks related to the common settings
      * of the plugin.
      *
      * @return void
@@ -109,7 +113,7 @@ class Main {
     }
 
     /**
-     * Register all of the hooks related to the payment methods
+     * Register the hooks related to the payment methods
      * of the plugin.
      *
      * @return void
@@ -155,15 +159,43 @@ class Main {
     }
 
     /**
-     * Register all of the hooks related to the MultiSafepay payment component
+     * Register the hooks related to the MultiSafepay payment component
      *
      * @return void
      */
     public function payment_components_hooks(): void {
         $payment_component_service = new PaymentComponentService();
         // Allow to refresh the data sent to initialize the Payment Components, when in the checkout, something changed in the order details
-        $this->loader->add_action( 'wp_ajax_get_payment_component_arguments', $payment_component_service, 'ajax_get_payment_component_arguments' );
-        $this->loader->add_action( 'wp_ajax_nopriv_get_payment_component_arguments', $payment_component_service, 'ajax_get_payment_component_arguments' );
+        $this->loader->add_action( 'wp_ajax_refresh_payment_component_config', $payment_component_service, 'refresh_payment_component_config' );
+        $this->loader->add_action( 'wp_ajax_nopriv_refresh_payment_component_config', $payment_component_service, 'refresh_payment_component_config' );
+    }
+
+    /**
+     * Register the hooks related to the MultiSafepay payment component with QR
+     *
+     * @return void
+     */
+    public function payment_components_qr_hooks() {
+        $qr_payment_component_service = new QrPaymentComponentService();
+        // Set the MultiSafepay QR code transaction
+        $this->loader->add_action( 'wp_ajax_set_multisafepay_qr_code_transaction', $qr_payment_component_service, 'set_multisafepay_qr_code_transaction' );
+        $this->loader->add_action( 'wp_ajax_nopriv_set_multisafepay_qr_code_transaction', $qr_payment_component_service, 'set_multisafepay_qr_code_transaction' );
+        // Get the redirect URL for the order submitted via Payment Components QR
+        $this->loader->add_action( 'wp_ajax_get_qr_order_redirect_url', $qr_payment_component_service, 'get_qr_order_redirect_url' );
+        $this->loader->add_action( 'wp_ajax_nopriv_get_qr_order_redirect_url', $qr_payment_component_service, 'get_qr_order_redirect_url' );
+    }
+
+    /**
+     * Register the hooks related to the processing of the MultiSafepay payment component with QR webhooks
+     *
+     * @return void
+     */
+    public function callback_hooks() {
+        $qr_payment_webhook = new QrPaymentWebhook();
+        // Handle the balancer after submit a QR order, to know where to redirect the user
+        $this->loader->add_action( 'rest_api_init', $qr_payment_webhook, 'multisafepay_register_rest_route_qr_balancer' );
+        // Handle the webhook request from MultiSafepay for the payment status update for QR orders
+        $this->loader->add_action( 'rest_api_init', $qr_payment_webhook, 'multisafepay_register_rest_route_qr_notification' );
     }
 
     /**
@@ -177,7 +209,7 @@ class Main {
     }
 
     /**
-     * Run the loader to execute all of the hooks with WordPress.
+     * Run the loader to execute the hooks with WordPress.
      *
      * @return void
      */

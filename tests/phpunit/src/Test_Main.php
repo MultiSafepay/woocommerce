@@ -22,21 +22,27 @@ class Test_Main extends WP_UnitTestCase {
     );
 
     public const ACTION_HOOKS = array (
+        'before_woocommerce_init',
         'plugins_loaded',
+        'woocommerce_blocks_loaded',
         'wp_enqueue_scripts',
         'woocommerce_order_status_completed',
-        'woocommerce_new_order',
-        'before_woocommerce_init',
+        'woocommerce_order_status_completed',
         'woocommerce_api_multisafepay',
         'rest_api_init',
-        'wp_ajax_ajax_get_payment_component_arguments',
-        'wp_ajax_nopriv_get_payment_component_arguments',
         'wp_ajax_applepay_direct_validation',
         'wp_ajax_nopriv_applepay_direct_validation',
         'wp_ajax_get_updated_total_price',
         'wp_ajax_nopriv_get_updated_total_price',
-        'add_multisafepay_transaction_link',
-        'woocommerce_blocks_loaded'
+        'woocommerce_admin_order_data_after_payment_info',
+        'wp_ajax_refresh_payment_component_config',
+        'wp_ajax_nopriv_refresh_payment_component_config',
+        'wp_ajax_set_multisafepay_qr_code_transaction',
+        'wp_ajax_nopriv_set_multisafepay_qr_code_transaction',
+        'wp_ajax_get_qr_order_redirect_url',
+        'wp_ajax_nopriv_get_qr_order_redirect_url',
+        'rest_api_init',
+        'rest_api_init'
     );
 
     public function test_filters() {

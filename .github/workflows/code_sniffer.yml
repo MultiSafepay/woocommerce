@@ -1,10 +1,11 @@
 name: Code sniffer
 on:
+  push:
+    branches:
+      - master
   pull_request:
     branches:
       - master
-      - develop
-      - 4.0.0
 jobs:
   code_sniffer:
     name: Code sniffer

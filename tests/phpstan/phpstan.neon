@@ -24,3 +24,4 @@ parameters:
         - '#Property WC_Payment_Gateway::\$countries \(array\) does not accept string.#'
         - '#Parameter \$payment_method_registry of anonymous function has invalid type Automattic\\WooCommerce\\Blocks\\Payments\\PaymentMethodRegistry\.#'
         - '#Call to method register\(\) on an unknown class Automattic\\WooCommerce\\Blocks\\Payments\\PaymentMethodRegistry\.#'
+        - '#Call to an undefined method WC_Cart::get_shipping_methods\(\).#'

@@ -43,8 +43,13 @@ trait BaseRefunds {
         /** @var WC_Order $order */
         $order = wc_get_order( $order_id );
 
+        // Get meta multisafepay_transaction_id
+        $multisafepay_transaction_id = $order->get_meta( 'multisafepay_transaction_id', true );
+
         /** @var TransactionResponse $multisafepay_transaction */
-        $multisafepay_transaction = $transaction_manager->get( $order->get_order_number() );
+        $multisafepay_transaction = $transaction_manager->get(
+            ! empty( $multisafepay_transaction_id ) ? $multisafepay_transaction_id : $order->get_order_number()
+        );
 
         /** @var RefundRequest $refund_request */
         $refund_request = $transaction_manager->createRefundRequest( $multisafepay_transaction );

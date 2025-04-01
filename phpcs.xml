@@ -65,6 +65,7 @@
 
     <!-- Exclude nonce verification, which, according to documentation, is not required when submit an order -->
     <rule ref="WordPress.Security.NonceVerification.Missing">
+        <exclude-pattern>*/src/Utils/QrCheckoutManager.php</exclude-pattern>
         <exclude-pattern>*/src/PaymentMethods/PaymentMethodsController.php</exclude-pattern>
         <exclude-pattern>*/src/PaymentMethods/Base/BasePaymentMethod.php</exclude-pattern>
         <exclude-pattern>*/src/Services/OrderService.php</exclude-pattern>
@@ -115,13 +116,16 @@
     </rule>
 
     <!-- No "else" -->
-    <rule ref="ObjectCalisthenics.ControlStructures.NoElse"/>
+    <rule ref="ObjectCalisthenics.ControlStructures.NoElse">
+        <exclude-pattern>*/src/Utils/QrCheckoutManager.php</exclude-pattern>
+    </rule>
 
     <!-- Only 3 indentation level per function/method -->
     <rule ref="ObjectCalisthenics.Metrics.MaxNestingLevel">
         <properties>
             <property name="maxNestingLevel" value="3"/>
         </properties>
+        <exclude-pattern>*/src/Utils/QrCheckoutManager.php</exclude-pattern>
         <exclude-pattern>*/src/PaymentMethods/Base/BasePaymentMethodBlocks.php</exclude-pattern>
         <exclude-pattern>*/src/Services/PaymentMethodService.php</exclude-pattern>
     </rule>

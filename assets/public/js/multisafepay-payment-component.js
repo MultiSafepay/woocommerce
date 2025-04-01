@@ -21,6 +21,7 @@
 
 (function (multisafepay_payment_component_gateways, $) {
 
+    const FORM_SELECTOR           = 'form.checkout';
     const PAYMENT_METHOD_SELECTOR = 'ul.wc_payment_methods input[type=\'radio\'][name=\'payment_method\']';
     const FORM_BUTTON_SELECTOR    = '#place_order';
 
@@ -30,6 +31,10 @@
         config                               = [];
         gateway                              = '';
         payment_component_container_selector = '';
+        order_id                             = null;
+        mandatory_field_changed              = false;
+        qr_code_generated                    = false;
+        qr_event_launched                    = false;
 
         constructor(config, gateway) {
             this.payment_component_container_selector = '#' + gateway + '_payment_component_container';
@@ -40,33 +45,47 @@
             // Triggered when change the payment method selected
             $( document ).on( 'payment_method_selected', ( event ) => { this.on_payment_method_selected( event ); } );
 
-            // Triggered when something changes in the checkout and start the process to refresh everything
-            $( document ).on( 'update_checkout', ( event ) => { this.on_update_checkout( event ); } );
-
             // Triggered when something changed in the checkout and the process to refresh everything is finished
             $( document ).on( 'updated_checkout', ( event ) => { this.on_updated_checkout( event ); } );
 
-            // Trigered when the checkout loads
+            // Triggered when the checkout loads
             $( document ).on( 'init_checkout', ( event ) => { this.on_init_checkout( event ); } );
 
-            // Trigered when user click on submit button of the checkout form
+            // Triggered when a user clicks on the 'submit' button of the checkout form
             $( document ).on( 'click', FORM_BUTTON_SELECTOR, ( event ) => { this.on_click_place_order( event ); } );
 
+            // Triggered when a user changes a field in the checkout form and a payment method using QR is being used
+            $( FORM_SELECTOR ).on(
+                'change',
+                'input, select, textarea',
+                (event) => {
+                    this.on_checkout_field_change( event );
+                }
+            );
+        }
+
+        on_checkout_field_change( event ) {
+            this.logger( event.type );
+
+            if ($( event.target ).attr( 'name' ) === 'payment_method' && this.config.qr_supported !== '1') {
+                return;
+            }
+
+            if (this.config.qr_supported === '1' && this.is_selected()) {
+                $( document.body ).trigger( 'updated_checkout' );
+            }
         }
 
         on_payment_method_selected( event ) {
             this.logger( event.type );
 
-            if ( false === this.is_selected() || false === this.is_payment_component_gateway() ) {
+            this.enable_place_order_button();
+
+            if ( false === this.is_selected() ) {
                 return;
             }
-            this.maybe_init_payment_component();
-        }
 
-        on_update_checkout( event ) {
-            this.logger( event.type );
-
-            if ( false === this.is_selected() || false === this.is_payment_component_gateway() ) {
+            if ( false === this.is_payment_component_gateway() ) {
                 return;
             }
 
@@ -76,7 +95,11 @@
         on_updated_checkout( event ) {
             this.logger( event.type );
 
-            if ( false === this.is_selected() || false === this.is_payment_component_gateway() ) {
+            if ( false === this.is_selected() ) {
+                return;
+            }
+
+            if ( false === this.is_payment_component_gateway() ) {
                 return;
             }
 
@@ -86,7 +109,11 @@
         on_init_checkout( event ) {
             this.logger( event.type );
 
-            if ( false === this.is_selected() || false === this.is_payment_component_gateway() ) {
+            if ( false === this.is_selected() ) {
+                return;
+            }
+
+            if ( false === this.is_payment_component_gateway() ) {
                 return;
             }
 
@@ -100,9 +127,10 @@
                     type: 'POST',
                     data: {
                         'nonce': this.config.nonce,
-                        'action': 'get_payment_component_arguments',
+                        'action': 'refresh_payment_component_config',
                         'gateway_id': this.gateway,
                         'gateway': this.config.gateway,
+                        'form_data': $( FORM_SELECTOR ).serialize(),
                     },
                     beforeSend: function() {
                         $( this.payment_component_container_selector ).html( '' );
@@ -141,17 +169,11 @@
         }
 
         is_selected() {
-            if ( $( PAYMENT_METHOD_SELECTOR + ":checked" ).val() === this.gateway ) {
-                return true;
-            }
-            return false;
+            return $( PAYMENT_METHOD_SELECTOR + ':checked' ).val() === this.gateway;
         }
 
         is_payment_component_gateway() {
-            if ( $.inArray( $( PAYMENT_METHOD_SELECTOR + ":checked" ).val(), multisafepay_payment_component_gateways ) !== -1 ) {
-                return true;
-            }
-            return false;
+            return $.inArray( $( PAYMENT_METHOD_SELECTOR + ':checked' ).val(), multisafepay_payment_component_gateways ) !== -1;
         }
 
         get_new_payment_component() {
@@ -161,6 +183,61 @@
                     apiToken: this.config.api_token,
                     order: this.config.orderData,
                     recurring: this.config.recurring,
+                }
+            );
+        }
+
+        set_multisafepay_qr_code_transaction( payload ) {
+            this.logger( 'Getting QR Data via Ajax' );
+            return new Promise(
+                ( resolve, reject ) => {
+                    $.ajax(
+                        {
+                            url: this.config.ajax_url,
+                            type: 'POST',
+                            data: {
+                                'nonce': this.config.nonce,
+                                'action': 'set_multisafepay_qr_code_transaction',
+                                'gateway_id': this.gateway,
+                                'payload': payload,
+                                'form_data': $( FORM_SELECTOR ).serialize(),
+                            },
+                            success: function( response ) {
+                                resolve( response );
+                            }.bind( this ),
+                            error: function( error ) {
+                                this.logger( 'Error receiving QR Data: ' + JSON.stringify( error, null, 2 ) );
+                                reject( error );
+                            }.bind( this )
+                        }
+                    );
+                }
+            );
+        }
+
+        get_qr_order_redirect_url( order_id ) {
+            this.logger( 'Getting redirect URL' );
+            return new Promise(
+                ( resolve, reject ) => {
+                    $.ajax(
+                        {
+                            url: this.config.ajax_url,
+                            type: 'POST',
+                            data: {
+                                'nonce': this.config.nonce,
+                                'action': 'get_qr_order_redirect_url',
+                                'gateway_id': this.gateway,
+                                'order_id': order_id
+                            },
+                            success: function( response ) {
+                                resolve( response );
+                            }.bind( this ),
+                            error: function( error ) {
+                                this.logger( 'Error on get_qr_order_redirect_url AJAX: ' + JSON.stringify( error, null, 2 ) );
+                                reject( error );
+                            }.bind( this )
+                        }
+                    );
                 }
             );
         }
@@ -180,8 +257,73 @@
                 {
                     container: this.payment_component_container_selector,
                     gateway: this.config.gateway,
-                    onLoad: state => { this.logger( 'onLoad' ); },
-                    onError: state => { this.logger( 'onError' ); }
+                    onLoad: state => {
+                        this.logger( 'onLoad: ' + JSON.stringify( state, null, 2 ) );
+                    },
+                    onError: state => {
+                        this.logger( 'onError: ' + JSON.stringify( state, null, 2 ) );
+                    },
+                    onValidation: state => {
+                        if ( this.config.qr_supported === '1' && this.is_selected() && state.valid ) {
+                            this.enable_place_order_button();
+                            this.logger( 'onValidation: ' + JSON.stringify( state, null, 2 ) );
+                        }
+                        if ( this.config.qr_supported === '1' && this.is_selected() && ! state.valid ) {
+                            this.disable_place_order_button();
+                        }
+                        this.logger( 'onValidation: ' + JSON.stringify( state, null, 2 ) );
+                    },
+                    onGetQR: state => {
+                        this.logger( 'onGetQR Event: ' + JSON.stringify( state.orderData, null, 2 ) );
+                        this.qr_code_generated = false;
+                        this.qr_event_launched = true;
+                        if ( state.orderData && state.orderData.payment_data && state.orderData.payment_data.payload ) {
+                            this.set_multisafepay_qr_code_transaction( state.orderData.payment_data.payload ).then(
+                                response => {
+                                    this.logger( 'onGetQR - Response: ' + JSON.stringify( response, null, 2 ) );
+                                    multisafepay_component.setQR( { order: response } );
+                                    if ( response.order_id ) {
+                                        this.order_id          = response.order_id;
+                                        this.qr_code_generated = true;
+                                        this.disable_place_order_button();
+                                    }
+                                }
+                            );
+                        }
+                    },
+                    onEvent: state => {
+                        this.logger( 'onEvent: ' + JSON.stringify( state, null, 2 ) );
+                        if ( ( state.type === 'check_status' ) && state.success && state.data.qr_status) {
+                            if ( this.order_id !== null ) {
+                                switch ( state.data.qr_status ) {
+                                    case 'initialized':
+                                        this.disable_place_order_button();
+                                        break;
+                                    case 'completed':
+                                        this.get_qr_order_redirect_url( this.order_id ).then(
+                                            response => {
+                                                if ( response.success ) {
+                                                    window.location.href = response.redirect_url;
+                                                }
+                                            }
+                                        );
+                                        break;
+                                    case 'declined':
+                                        this.get_qr_order_redirect_url( this.order_id ).then(
+                                            response => {
+                                                if ( response.success ) {
+                                                    window.location.href = response.redirect_url;
+                                                }
+                                            }
+                                        );
+                                        break;
+                                    default:
+                                        this.logger( 'Unknown QR status: ' + state.data.qr_status );
+                                        break;
+                                }
+                            }
+                        }
+                    }
                 }
             );
             this.hide_loader();
@@ -192,7 +334,7 @@
         }
 
         maybe_init_payment_component() {
-            // there is no way to know if the payment component exist or not; except for checking the DOM elements
+            // There is no way to know if the payment component exist or not; except for checking the DOM elements
             if ( $( this.payment_component_container_selector + ' > .msp-container-ui' ).length > 0) {
                 return;
             }
@@ -202,12 +344,12 @@
 
         show_loader() {
             $( this.payment_component_container_selector ).html( '<div class="loader-wrapper"><span class="loader"></span></span></div>' );
-            $( FORM_BUTTON_SELECTOR ).prop( 'disabled', true );
+            this.disable_place_order_button();
         }
 
         hide_loader() {
             $( this.payment_component_container_selector + ' .loader-wrapper' ).remove();
-            $( FORM_BUTTON_SELECTOR ).prop( 'disabled', false );
+            this.enable_place_order_button();
         }
 
         insert_payload_and_tokenize( payload, tokenize ) {
@@ -240,6 +382,14 @@
             if ( this.config && this.config.debug ) {
                 console.log( argument );
             }
+        }
+
+        disable_place_order_button() {
+            $( FORM_BUTTON_SELECTOR ).prop( 'disabled', true );
+        }
+
+        enable_place_order_button() {
+            $( FORM_BUTTON_SELECTOR ).prop( 'disabled', false );
         }
 
     }

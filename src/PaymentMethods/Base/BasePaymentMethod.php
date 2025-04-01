@@ -381,7 +381,46 @@ class BasePaymentMethod extends WC_Payment_Gateway {
         if ( ! isset( $settings['payment_component'] ) ) {
             return true;
         }
+
+        if ( $this->is_qr_enabled() || $this->is_qr_only_enabled() ) {
+            return true;
+        }
+
         return 'yes' === $settings['payment_component'];
+    }
+
+    /**
+     * Return if QR is enabled for payment components.
+     *
+     * @return bool
+     */
+    public function is_qr_enabled(): bool {
+        if ( ! $this->payment_method->supportsQr() ) {
+            return false;
+        }
+
+        $settings = get_option( 'woocommerce_' . $this->id . '_settings', array( 'payment_component' => 'qr' ) );
+        if ( ! isset( $settings['payment_component'] ) ) {
+            return true;
+        }
+        return 'qr' === $settings['payment_component'];
+    }
+
+    /**
+     * Return if QR only is enabled for payment components.
+     *
+     * @return bool
+     */
+    public function is_qr_only_enabled(): bool {
+        if ( ! $this->payment_method->supportsQr() ) {
+            return false;
+        }
+
+        $settings = get_option( 'woocommerce_' . $this->id . '_settings', array( 'payment_component' => 'qr_only' ) );
+        if ( ! isset( $settings['payment_component'] ) ) {
+            return true;
+        }
+        return 'qr_only' === $settings['payment_component'];
     }
 
     /**
@@ -592,7 +631,7 @@ class BasePaymentMethod extends WC_Payment_Gateway {
             );
         }
 
-        if ( $this->payment_method->supportsPaymentComponent() && ! $this->is_ideal_2_0() ) {
+        if ( $this->payment_method->supportsPaymentComponent() && ! $this->payment_method->supportsQr() && ! $this->is_ideal_2_0() ) {
             $form_fields['payment_component'] = array(
                 'title'       => __( 'Payment Type', 'multisafepay' ),
                 'type'        => 'select',
@@ -601,6 +640,22 @@ class BasePaymentMethod extends WC_Payment_Gateway {
                     'yes' => __( 'Payment component', 'multisafepay' ),
                 ),
                 'description' => __( 'Redirect - Redirect the customer to a payment page to finish the payment. <br /> Payment Component - Payment components let you embed payment checkout fields directly into your checkout. <br /><br /> More information about Payment Components on <a href="https://docs.multisafepay.com/docs/payment-components" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
+                'default'     => $this->get_option( 'payment_component', $this->payment_method->supportsPaymentComponent() ? 'yes' : 'no' ),
+                'value'       => $this->get_option( 'payment_component', $this->payment_method->supportsPaymentComponent() ? 'yes' : 'no' ),
+            );
+        }
+
+        if ( $this->payment_method->supportsPaymentComponent() && $this->payment_method->supportsQr() ) {
+            $form_fields['payment_component'] = array(
+                'title'       => __( 'Payment Type', 'multisafepay' ),
+                'type'        => 'select',
+                'options'     => array(
+                    'no'      => __( 'Redirect', 'multisafepay' ),
+                    'yes'     => __( 'Payment component', 'multisafepay' ),
+                    'qr'      => __( 'Payment component with QR', 'multisafepay' ),
+                    'qr_only' => __( 'Payment component with QR only', 'multisafepay' ),
+                ),
+                'description' => __( 'Redirect - Redirect the customer to a payment page to finish the payment. <br /> Payment Component - Payment components let you embed payment checkout fields directly into your checkout. <br /> Payment Component with QR (*) - Similar to the previous option, but now includes the ability to pay using a QR code too. <br /> Payment Component with QR only (*) - Payment can only be completed via a QR code. <br /><br /> (*) Payment Components using QR is a experimental feature and may not work as expected. Contact MultiSafepay support for more information. <br /><br /> More information about Payment Components on <a href="https://docs.multisafepay.com/docs/payment-components" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
                 'default'     => $this->get_option( 'payment_component', $this->payment_method->supportsPaymentComponent() ? 'yes' : 'no' ),
                 'value'       => $this->get_option( 'payment_component', $this->payment_method->supportsPaymentComponent() ? 'yes' : 'no' ),
             );
@@ -689,9 +744,7 @@ class BasePaymentMethod extends WC_Payment_Gateway {
             return;
         }
 
-        if ( get_option( 'multisafepay_debugmode', false ) ) {
-            $this->logger->log_info( 'Start MultiSafepay transaction for the order ID ' . $order_id . ' on ' . date( 'd/m/Y H:i:s' ) . ' with payment URL ' . $transaction->getPaymentUrl() );
-        }
+        $this->logger->log_info( 'Start MultiSafepay transaction for the order ID ' . $order_id . ' on ' . date( 'd/m/Y H:i:s' ) . ' with payment URL ' . $transaction->getPaymentUrl() );
 
         return array(
             'result'   => 'success',

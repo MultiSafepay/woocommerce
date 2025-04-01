@@ -54,3 +54,17 @@
     border-radius: 0 !important;
     background-size: 84px 33px !important;
 }
+@supports (not (-moz-appearance:none)) {
+    .msp-ui-qr-code {
+        max-width: 55% !important;
+        max-height: 55% !important;
+    }
+}
+@supports (-moz-appearance:none) {
+    .msp-ui-qr-code {
+        width: 206px !important;
+        height: 206px !important;
+        max-width: 206px !important;
+        max-height: 206px !important;
+    }
+}

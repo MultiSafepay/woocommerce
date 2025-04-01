@@ -251,7 +251,7 @@ class ShoppingCartService {
      * Returns if order is VAT exempt via WC->Customer->is_vat_exempt
      *
      * @param WC_Order $order
-     * @return boolean
+     * @return bool
      */
     public function is_order_vat_exempt( WC_Order $order ): bool {
         return Hpos::get_meta( $order, 'is_vat_exempt' ) === 'yes';
