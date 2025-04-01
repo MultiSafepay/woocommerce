@@ -22,7 +22,7 @@ See MultiSafepay Docs – [WooCommerce](https://docs.multisafepay.com/docs/wooco
 
 - You will need a [MultiSafepay account](https://testmerchant.multisafepay.com/signup). Consider a test account first.
 - WooCommerce 5.0.0 or higher
-- PHP 7.3 or 7.4
+- PHP version 7.3 or higher
 
 ## License
 [Open software license (OSL 3.0)](https://github.com/MultiSafepay/woocommerce/blob/master/LICENSE.md)
