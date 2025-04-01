@@ -4,7 +4,7 @@ Tags: multisafepay, payment gateway, credit cards, ideal, bnpl
 Requires at least: 6.0
 Tested up to: 6.7.2
 Requires PHP: 7.3
-Stable tag: 6.7.3
+Stable tag: 6.8.0
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -125,11 +125,6 @@ Please follow these steps:
 Yes, you can fully or partially refund transactions directly from your WooCommerce backend for all payment methods, except for [Buy now pay later](https://docs.multisafepay.com/docs/bnpl) payment methods in which it is only possible to process full refunds.
 You can also refund from your [MultiSafepay Control](https://merchant.multisafepay.com)
 
-== Upgrade Notice ==
-
-= 6.7.3 =
-6.x.x is a major upgrade in which the MultiSafepay payment methods are registered dynamically via an API request to MultiSafepay. If you are upgrading from 5.X.X version, after the upgrade, please navigate to the MultiSafepay settings page, and to each one of the payment methods enabled in your account, and confirm the settings in each section are set up according to your preferences.
-
 == Screenshots ==
 
 1. MultiSafepay Settings Page - Account section
@@ -143,6 +138,14 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 9. Embedded Credit Card form using MultiSafepay Payment Component
 
 == Changelog ==
+= Release Notes - WooCommerce 6.8.0 (Apr 1st, 2025) =
+
+### Added
++ PLGWOOS-978: Add Payment Component QR
+
+### Fixed
++ PLGWOOS-957: Fix filter that returns payment methods that supports payment component to return only enabled methods
+
 = Release Notes - WooCommerce 6.7.3 (Mar 4th, 2025) =
 
 ### Fixed

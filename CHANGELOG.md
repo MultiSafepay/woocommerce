@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.8.0
+Release Date: Apr 1st, 2025
+
+### Added
++ PLGWOOS-978: Add Payment Component QR
+
+### Fixed
++ PLGWOOS-957: Fix filter that returns payment methods that supports payment component to return only enabled methods
+
+***
+
 ## 6.7.3
 Release Date: Mar 4th, 2025
 

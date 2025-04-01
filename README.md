@@ -21,7 +21,7 @@ See MultiSafepay Docs – [WooCommerce](https://docs.multisafepay.com/docs/wooco
 ## Prerequisites
 
 - You will need a [MultiSafepay account](https://testmerchant.multisafepay.com/signup). Consider a test account first.
-- WooCommerce 5.0.0 or higher
+- WooCommerce 6.0.0 or higher
 - PHP version 7.3 or higher
 
 ## License
