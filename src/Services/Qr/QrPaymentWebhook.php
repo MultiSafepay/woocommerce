@@ -131,8 +131,15 @@ class QrPaymentWebhook {
             if ( $payment_complete ) {
                 Hpos::update_meta( $order, '_multisafepay_order_environment', get_option( 'multisafepay_testmode', false ) ? 'test' : 'live' );
             }
+
+            header( 'Content-type: text/plain' );
+            die( 'OK' );
+
         } catch ( Exception | WC_Data_Exception  $exception ) {
-            $this->logger->log_error( 'Something went wring when creating WooCommerce order for MultiSafepay order id ' . $multisafepay_order_id . ' with message: ' . $exception->getMessage() );
+            $this->logger->log_error( 'Something went wrong when creating WooCommerce order for MultiSafepay order id ' . $multisafepay_order_id . ' with message: ' . $exception->getMessage() );
+
+            header( 'Content-type: text/plain' );
+            die( 'OK' );
         }
     }
 
@@ -224,19 +231,18 @@ class QrPaymentWebhook {
     }
 
     /**
-     * Process webhook
-     *
      * @param WP_REST_Request $request
      * @return void
-     * @throws InvalidArgumentException
      */
     public function process_webhook( WP_REST_Request $request ): void {
-        $multisafepay_transaction = $this->validate_webhook_request( $request );
-
-        $this->create_woocommerce_order( $multisafepay_transaction );
-
-        header( 'Content-type: text/plain' );
-        die( 'OK' );
+        try {
+            $multisafepay_transaction = $this->validate_webhook_request( $request );
+            $this->create_woocommerce_order( $multisafepay_transaction );
+        } catch ( Exception | InvalidArgumentException $exception ) {
+            $this->logger->log_error( 'Something went wrong when processing webhook for transaction id ' . ( $request->get_param( 'transactionid' ) ?? 'unknown' ) . ' with message: ' . $exception->getMessage() );
+            header( 'Content-type: text/plain' );
+            die( 'OK' );
+        }
     }
 
     /**
