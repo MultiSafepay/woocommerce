@@ -3,12 +3,15 @@
 namespace MultiSafepay\WooCommerce\Services;
 
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\CustomerDetails;
+use MultiSafepay\Exception\ApiException;
+use MultiSafepay\Exception\InvalidArgumentException;
 use MultiSafepay\ValueObject\Customer\Address;
 use MultiSafepay\ValueObject\Customer\AddressParser;
 use MultiSafepay\ValueObject\Customer\Country;
 use MultiSafepay\ValueObject\Customer\EmailAddress;
 use MultiSafepay\ValueObject\Customer\PhoneNumber;
 use MultiSafepay\ValueObject\IpAddress;
+use MultiSafepay\WooCommerce\Utils\Logger;
 use WC_Order;
 
 /**
@@ -18,6 +21,18 @@ use WC_Order;
  */
 class CustomerService {
     public const DEFAULT_LOCALE = 'en_US';
+
+    /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
+     * @param Logger|null $logger
+     */
+    public function __construct( ?Logger $logger = null ) {
+        $this->logger = $logger ?? new Logger();
+    }
 
     /**
      * @param WC_Order $order
@@ -124,11 +139,19 @@ class CustomerService {
             ->addCompanyName( $company_name ?? '' );
 
         if ( ! empty( $ip_address ) ) {
-            $customer_details->addIpAddress( new IpAddress( $ip_address ) );
+            try {
+                $customer_details->addIpAddress( new IpAddress( $ip_address ) );
+            } catch ( InvalidArgumentException $invalid_argument_exception ) {
+                $this->logger->log_warning( 'Invalid Customer IP address: ' . $invalid_argument_exception->getMessage() );
+            }
         }
 
         if ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-            $customer_details->addForwardedIp( new IpAddress( sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) );
+            try {
+                $customer_details->addForwardedIp( new IpAddress( sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) );
+            } catch ( InvalidArgumentException $invalid_argument_exception ) {
+                $this->logger->log_warning( 'Invalid Forwarded IP address: ' . $invalid_argument_exception->getMessage() );
+            }
         }
 
         if ( ! empty( $user_agent ) ) {
