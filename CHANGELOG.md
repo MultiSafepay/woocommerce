@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.8.1
+Release Date: Apr 4th, 2025
+
+### Fixed
++ PLGWOOS-984: Catch and handle InvalidArgumentException when validating the IP Address within the order request
++ PLGWOOS-982: Return early when QR webhook request fails
+
+***
+
 ## 6.8.0
 Release Date: Apr 1st, 2025
 
