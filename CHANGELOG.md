@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.8.2
+Release Date: Apr 7th, 2025
+
+### Fixed
++ PLGWOOS-990: Prevent processing a request on the REST QR related endpoints if this one is disabled
++ PLGWOOS-989: Fix system report payment type to show when QR or QR only is enabled
++ PLGWOOS-987: Typecast as string the value that will be defined as merchant Item ID within the QR request
+
+***
+
 ## 6.8.1
 Release Date: Apr 4th, 2025
 

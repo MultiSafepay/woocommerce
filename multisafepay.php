@@ -4,7 +4,7 @@
  * Plugin Name:             MultiSafepay
  * Plugin URI:              https://docs.multisafepay.com/docs/woocommerce
  * Description:             MultiSafepay Payment Plugin
- * Version:                 6.8.1
+ * Version:                 6.8.2
  * Author:                  MultiSafepay
  * Author URI:              https://www.multisafepay.com
  * Copyright:               Copyright (c) MultiSafepay, Inc. (https://www.multisafepay.com)
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Plugin version
  */
-define( 'MULTISAFEPAY_PLUGIN_VERSION', '6.8.1' );
+define( 'MULTISAFEPAY_PLUGIN_VERSION', '6.8.2' );
 
 /**
  * Plugin URL
