@@ -26,6 +26,11 @@ class PaymentMethodService {
     public const EXPIRATION_TIME_FOR_PAYMENT_METHODS_API_REQUEST = 86400;
 
     /**
+     * Time in seconds, in which the stored value in cache with information about all gateways with QR will expire.
+     */
+    public const EXPIRATION_TIME_FOR_PAYMENT_METHODS_WITH_QR = 60;
+
+    /**
      * @var PaymentMethodManager
      */
     public $payment_method_manager;
@@ -222,6 +227,30 @@ class PaymentMethodService {
             }
         }
         return $payment_methods_with_payment_component;
+    }
+
+    /**
+     * Check if any of the active MultiSafepay payment methods supports payment component with QR
+     *
+     * @return bool
+     */
+    public function is_any_woocommerce_payment_gateway_with_payment_component_qr_enabled(): bool {
+        $is_any_woocommerce_payment_gateway_with_payment_component_qr_enabled = get_transient( 'is_multisafepay_payment_component_qr_enabled' );
+
+        if ( ( false !== $is_any_woocommerce_payment_gateway_with_payment_component_qr_enabled ) ) {
+            return (bool) $is_any_woocommerce_payment_gateway_with_payment_component_qr_enabled;
+        }
+
+        /** @var BasePaymentMethod $woocommerce_payment_gateway */
+        foreach ( $this->get_enabled_woocommerce_payment_gateways() as $woocommerce_payment_gateway ) {
+            if ( $woocommerce_payment_gateway->is_qr_enabled() || $woocommerce_payment_gateway->is_qr_only_enabled() ) {
+                set_transient( 'is_multisafepay_payment_component_qr_enabled', true, self::EXPIRATION_TIME_FOR_PAYMENT_METHODS_WITH_QR );
+                return true;
+            }
+        }
+
+        set_transient( 'is_multisafepay_payment_component_qr_enabled', false, self::EXPIRATION_TIME_FOR_PAYMENT_METHODS_WITH_QR );
+        return false;
     }
 
     /**
