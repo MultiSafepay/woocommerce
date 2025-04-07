@@ -107,7 +107,7 @@ class QrShoppingCartService {
 
         return $item->addName( $product_name )
             ->addQuantity( (int) $cart_item['quantity'] )
-            ->addMerchantItemId( $product->get_sku() ? $product->get_sku() : $product->get_id() )
+            ->addMerchantItemId( $product->get_sku() ? (string) $product->get_sku() : (string) $product->get_id() )
             ->addUnitPrice( MoneyUtil::create_money( $product_price, $currency ) )
             ->addTaxRate( $this->get_item_tax_rate_from_cart( $cart_item, $is_vat_exempt ) );
     }
