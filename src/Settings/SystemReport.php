@@ -262,8 +262,14 @@ class SystemReport {
                 if ( ! empty( $woocommerce_payment_gateway->countries ) ) {
                     $multisafepay_gateway_settings_value .= __( 'Countries: ', 'multisafepay' ) . implode( ', ', $woocommerce_payment_gateway->countries ) . '. ';
                 }
-                if ( ! empty( $woocommerce_payment_gateway->is_payment_component_enabled() ) ) {
-                    $multisafepay_gateway_settings_value .= __( 'Payment Component: ', 'multisafepay' ) . ( $woocommerce_payment_gateway->is_payment_component_enabled() ? __( 'Enabled', 'multisafepay' ) : __( 'Disabled', 'multisafepay' ) ) . '. ';
+                if ( ! empty( $woocommerce_payment_gateway->is_payment_component_enabled() ) && ! empty( $woocommerce_payment_gateway->is_qr_enabled() ) ) {
+                    $multisafepay_gateway_settings_value .= __( 'Payment Type: Payment Component with QR', 'multisafepay' ) . '. ';
+                }
+                if ( ! empty( $woocommerce_payment_gateway->is_payment_component_enabled() ) && ! empty( $woocommerce_payment_gateway->is_qr_only_enabled() ) ) {
+                    $multisafepay_gateway_settings_value .= __( 'Payment Type: Payment Component with QR only', 'multisafepay' ) . '. ';
+                }
+                if ( ! empty( $woocommerce_payment_gateway->is_payment_component_enabled() ) && empty( $woocommerce_payment_gateway->is_qr_enabled() ) && empty( $woocommerce_payment_gateway->is_qr_only_enabled() ) ) {
+                    $multisafepay_gateway_settings_value .= __( 'Payment Type: Payment Component', 'multisafepay' ) . '. ';
                 }
                 if ( ! empty( $woocommerce_payment_gateway->is_tokenization_enabled() ) ) {
                     $multisafepay_gateway_settings_value .= __( 'Recurring payments: ', 'multisafepay' ) . ( $woocommerce_payment_gateway->is_tokenization_enabled() ? __( 'Enabled', 'multisafepay' ) : __( 'Disabled', 'multisafepay' ) ) . '. ';
@@ -271,7 +277,6 @@ class SystemReport {
                 if ( ! empty( $woocommerce_payment_gateway->user_roles ) ) {
                     $multisafepay_gateway_settings_value .= __( 'User Roles: ', 'multisafepay' ) . implode( ', ', $woocommerce_payment_gateway->user_roles ) . '. ';
                 }
-
                 $multisafepay_gateway_settings['settings'][ $woocommerce_payment_gateway->id ]['label'] = $woocommerce_payment_gateway->get_payment_method_title();
                 $multisafepay_gateway_settings['settings'][ $woocommerce_payment_gateway->id ]['value'] = $multisafepay_gateway_settings_value;
             }
