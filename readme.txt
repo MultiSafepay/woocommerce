@@ -4,7 +4,7 @@ Tags: multisafepay, payment gateway, credit cards, ideal, bnpl
 Requires at least: 6.0
 Tested up to: 6.7.2
 Requires PHP: 7.3
-Stable tag: 6.8.2
+Stable tag: 6.8.3
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -138,6 +138,11 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 9. Embedded Credit Card form using MultiSafepay Payment Component
 
 == Changelog ==
+= Release Notes - WooCommerce 6.8.3 (Apr 9th, 2025) =
+
+### Fixed
++ PLGWOOS-992: Prevent processing a request on the REST QR related endpoints using a security token
+
 = Release Notes - WooCommerce 6.8.2 (Apr 7th, 2025) =
 
 ### Fixed

@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.8.3
+Release Date: Apr 9th, 2025
+
+### Fixed
++ PLGWOOS-992: Prevent processing a request on the REST QR related endpoints using a security token
+
+***
+
 ## 6.8.2
 Release Date: Apr 7th, 2025
 
