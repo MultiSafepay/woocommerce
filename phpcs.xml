@@ -50,12 +50,14 @@
         <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
         <exclude name="PEAR.Functions.FunctionCallSignature.Indent"/>
     </rule>
+
     <rule ref="Generic.WhiteSpace.ScopeIndent">
         <properties>
             <property name="indent" value="4"/>
             <property name="tabIndent" value="false"/>
         </properties>
     </rule>
+
     <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
 
     <!-- Exclude all gateways and giftcards classes from this rule -->
@@ -161,6 +163,13 @@
             <property name="maxCount" value="30"/>
         </properties>
         <exclude-pattern>*/src/PaymentMethods/Base/BasePaymentMethod.php</exclude-pattern>
+    </rule>
+
+    <!-- Detect unused imports -->
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
+        <properties>
+            <property name="searchAnnotations" value="true"/>
+        </properties>
     </rule>
 
     <!-- Report @todo comments  -->

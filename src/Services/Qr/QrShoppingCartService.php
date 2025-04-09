@@ -8,7 +8,6 @@ use MultiSafepay\Api\Transactions\OrderRequest\Arguments\ShoppingCart\ShippingIt
 use MultiSafepay\Exception\InvalidArgumentException;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
-use MultiSafepay\WooCommerce\Utils\QrCheckoutManager;
 use WC_Cart;
 use WC_Coupon;
 use WC_Tax;

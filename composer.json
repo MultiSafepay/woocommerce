@@ -23,7 +23,8 @@
         "phpro/grumphp": "^1.0",
         "yoast/phpunit-polyfills": "^1.0",
         "phpstan/phpstan": "^1.5",
-        "php-stubs/woocommerce-stubs": "^6.0"
+        "php-stubs/woocommerce-stubs": "^6.0",
+        "slevomat/coding-standard": "^6.4"
     },
     "autoload": {
         "psr-4": {

@@ -14,8 +14,6 @@ use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
 use Psr\Http\Client\ClientExceptionInterface;
-use WooCommerce;
-use WC_Session_Handler;
 
 /**
  * Class QrOrderService
