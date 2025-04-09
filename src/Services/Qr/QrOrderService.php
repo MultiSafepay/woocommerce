@@ -56,7 +56,6 @@ class QrOrderService extends OrderService {
      * @param string $order_id
      * @param string $gateway_code
      * @param string $payload
-     * @param bool   $qr_enabled
      * @param array  $checkout_fields
      * @return OrderRequest
      * @throws InvalidArgumentException
@@ -65,7 +64,6 @@ class QrOrderService extends OrderService {
         string $order_id,
         string $gateway_code,
         string $payload,
-        bool $qr_enabled,
         array $checkout_fields
     ): OrderRequest {
         $cart          = WC()->cart;
@@ -78,7 +76,7 @@ class QrOrderService extends OrderService {
             ->addPluginDetails( $this->create_plugin_details() )
             ->addDescriptionText( $this->get_order_description_text( $order_id ) )
             ->addCustomer( $this->qr_customer_service->create_customer_details_from_cart( $checkout_fields['customer'] ) )
-            ->addPaymentOptions( $this->create_payment_options( $qr_enabled ) )
+            ->addPaymentOptions( $this->create_payment_options( $this->generate_token( $order_id ) ) )
             ->addSecondsActive( $this->get_seconds_active() )
             ->addSecondChance( ( new SecondChance() )->addSendEmail( (bool) get_option( 'multisafepay_second_chance', false ) ) )
             ->addData( array( 'var2' => $order_id ) );
@@ -119,21 +117,30 @@ class QrOrderService extends OrderService {
     }
 
     /**
-     * @param bool $qr_enabled
+     * @param string $token
      * @return PaymentOptions
-     * @throws InvalidArgumentException
      */
-    public function create_payment_options( bool $qr_enabled ): PaymentOptions {
-        $payment_options = new PaymentOptions();
+    public function create_payment_options( string $token ): PaymentOptions {
+        $redirect_cancel_url = get_rest_url( get_current_blog_id(), 'multisafepay/v1/qr-balancer' ) . '?token=' . rawurlencode( $token );
+        $payment_options     = new PaymentOptions();
         $payment_options->addNotificationUrl( get_rest_url( get_current_blog_id(), 'multisafepay/v1/qr-notification' ) );
-        $payment_options->addCancelUrl( get_rest_url( get_current_blog_id(), 'multisafepay/v1/qr-balancer' ) );
-        $payment_options->addRedirectUrl( get_rest_url( get_current_blog_id(), 'multisafepay/v1/qr-balancer' ) );
-
-        if ( $qr_enabled ) {
-            $payment_options->addSettings( array( 'qr' => array( 'enabled' => true ) ) );
-        }
+        $payment_options->addCancelUrl( $redirect_cancel_url );
+        $payment_options->addRedirectUrl( $redirect_cancel_url );
+        $payment_options->addSettings( array( 'qr' => array( 'enabled' => true ) ) );
 
         return $payment_options;
+    }
+
+    /**
+     * Generate a token that will be used on validation of QR related endpoints
+     *
+     * @param string $order_id
+     * @return string
+     */
+    public function generate_token( string $order_id ) {
+        $token = wp_generate_password( 32, false );
+        set_transient( 'multisafepay_token_' . $order_id, $token, 86400 );
+        return $token;
     }
 
     /**
@@ -187,7 +194,6 @@ class QrOrderService extends OrderService {
             $order_id,
             $payment_gateway->get_payment_method_gateway_code(),
             $payload,
-            true,
             $checkout_fields
         );
 

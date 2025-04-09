@@ -311,15 +311,34 @@ class QrPaymentWebhook {
      * @return void
      */
     public function process_balancer( WP_REST_Request $request ): void {
-        if ( ! ( new PaymentMethodService() )->is_any_woocommerce_payment_gateway_with_payment_component_qr_enabled() ) {
-            return;
-        }
-
         $order_id = sanitize_text_field( wp_unslash( $request->get_param( 'transactionid' ) ?? '' ) );
 
         if ( ! $request->sanitize_params() ) {
             $this->logger->log_info( 'Notification for transactionid . ' . $order_id . ' has been received but could not be sanitized' );
-            return;
+            wp_safe_redirect( wc_get_cart_url(), 302 );
+            exit;
+        }
+
+        if ( empty( $order_id ) ) {
+            $this->logger->log_info( 'Request received without transaction ID' );
+            wp_safe_redirect( wc_get_cart_url(), 302 );
+            exit;
+        }
+
+        if ( ! ( new PaymentMethodService() )->is_any_woocommerce_payment_gateway_with_payment_component_qr_enabled() ) {
+            $this->logger->log_error( 'Payment component QR is not enabled' );
+            wp_safe_redirect( wc_get_cart_url(), 302 );
+            exit();
+        }
+
+        $token = $request->get_param( 'token' );
+        if ( ! empty( $token ) ) {
+            $expected_token = get_transient( 'multisafepay_token_' . $order_id );
+            if ( $token !== $expected_token ) {
+                $this->logger->log_warning( 'Invalid token for transaction: ' . $order_id );
+                wp_safe_redirect( wc_get_cart_url(), 302 );
+                exit;
+            }
         }
 
         for ( $count = 0; $count < 5; $count++ ) {
@@ -354,9 +373,7 @@ class QrPaymentWebhook {
         $arguments = array(
             'methods'             => 'GET',
             'callback'            => array( $this, 'process_balancer' ),
-            'permission_callback' => function() {
-                return '';
-            },
+            'permission_callback' => '__return_true',
         );
         register_rest_route(
             'multisafepay/v1',
@@ -374,9 +391,7 @@ class QrPaymentWebhook {
         $arguments = array(
             'methods'             => 'POST',
             'callback'            => array( $this, 'process_webhook' ),
-            'permission_callback' => function() {
-                return '';
-            },
+            'permission_callback' => '__return_true',
         );
         register_rest_route(
             'multisafepay/v1',

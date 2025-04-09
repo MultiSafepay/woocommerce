@@ -254,9 +254,7 @@ class PaymentMethodsController {
         $arguments = array(
             'methods'             => 'POST',
             'callback'            => array( $this, 'process_post_notification' ),
-            'permission_callback' => function() {
-                return '';
-            },
+            'permission_callback' => '__return_true',
         );
         register_rest_route(
             'multisafepay/v1',

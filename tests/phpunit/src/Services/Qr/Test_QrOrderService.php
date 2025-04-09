@@ -76,7 +76,7 @@ class Test_QrOrderService extends WP_UnitTestCase {
                 ]
             ]
         ];
-        $order_request = $service->get_order_request('QR-1234567890123', 'MISTERCASH', 'payload', true, $checkout_fields);
+        $order_request = $service->get_order_request('QR-1234567890123', 'MISTERCASH', 'payload', $checkout_fields);
         $this->assertInstanceOf(OrderRequest::class, $order_request);
         $this->assertEquals('QR-1234567890123', $order_request->getOrderId());
     }
@@ -164,24 +164,14 @@ class Test_QrOrderService extends WP_UnitTestCase {
         $this->assertFalse($service->is_valid_qr_data($qr_data, $order_id));
     }
 
-    public function test_payment_options_are_created_with_qr_enabled() {
+    public function test_payment_options_are_created() {
         $service = new QrOrderService();
-        $payment_options = $service->create_payment_options(true);
+        $payment_options = $service->create_payment_options('fake-token');
 
         $this->assertEquals(get_rest_url(get_current_blog_id(), 'multisafepay/v1/qr-notification'), $payment_options->getNotificationUrl());
-        $this->assertEquals(get_rest_url(get_current_blog_id(), 'multisafepay/v1/qr-balancer'), $payment_options->getCancelUrl());
-        $this->assertEquals(get_rest_url(get_current_blog_id(), 'multisafepay/v1/qr-balancer'), $payment_options->getRedirectUrl());
+        $this->assertEquals(get_rest_url(get_current_blog_id(), 'multisafepay/v1/qr-balancer?token=fake-token'), $payment_options->getCancelUrl());
+        $this->assertEquals(get_rest_url(get_current_blog_id(), 'multisafepay/v1/qr-balancer?token=fake-token'), $payment_options->getRedirectUrl());
         $this->assertTrue($payment_options->getSettings()['qr']['enabled']);
-    }
-
-    public function test_payment_options_are_created_without_qr_enabled() {
-        $service = new QrOrderService();
-        $payment_options = $service->create_payment_options(false);
-
-        $this->assertEquals(get_rest_url(get_current_blog_id(), 'multisafepay/v1/qr-notification'), $payment_options->getNotificationUrl());
-        $this->assertEquals(get_rest_url(get_current_blog_id(), 'multisafepay/v1/qr-balancer'), $payment_options->getCancelUrl());
-        $this->assertEquals(get_rest_url(get_current_blog_id(), 'multisafepay/v1/qr-balancer'), $payment_options->getRedirectUrl());
-        $this->assertArrayNotHasKey('qr', $payment_options->getSettings());
     }
 
     public function test_shipping_address_is_filled_when_address_1_is_present() {
@@ -235,5 +225,46 @@ class Test_QrOrderService extends WP_UnitTestCase {
         $service = new QrOrderService();
         $checkout_fields = [];
         $this->assertFalse($service->is_filled_shipping_address($checkout_fields));
+    }
+
+    public function test_generates_token_with_correct_length() {
+        $order_id = '12345';
+        $qr_order_service = new QrOrderService();
+
+        $token = $qr_order_service->generate_token($order_id);
+
+        $this->assertEquals(32, strlen($token));
+    }
+
+    public function test_stores_token_in_transient() {
+        $order_id = '12345';
+        $qr_order_service = new QrOrderService();
+
+        $token = $qr_order_service->generate_token($order_id);
+
+        $stored_token = get_transient('multisafepay_token_' . $order_id);
+        $this->assertEquals($token, $stored_token);
+    }
+
+    public function test_generates_unique_tokens_for_different_order_ids() {
+        $order_id_1 = '12345';
+        $order_id_2 = '67890';
+        $qr_order_service = new QrOrderService();
+
+        $token_1 = $qr_order_service->generate_token($order_id_1);
+        $token_2 = $qr_order_service->generate_token($order_id_2);
+
+        $this->assertNotEquals($token_1, $token_2);
+    }
+
+    public function test_overwrites_existing_token_for_same_order_id() {
+        $order_id = '12345';
+        $qr_order_service = new QrOrderService();
+
+        $token_1 = $qr_order_service->generate_token($order_id);
+        $token_2 = $qr_order_service->generate_token($order_id);
+
+        $this->assertNotEquals($token_1, $token_2);
+        $this->assertEquals($token_2, get_transient('multisafepay_token_' . $order_id));
     }
 }
