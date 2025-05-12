@@ -47,34 +47,4 @@ class QrCustomerService extends CustomerService {
             $customer[ $type ]['company'] ?? $customer['billing']['company'],
         );
     }
-
-    /**
-     * Get the customer IP address.
-     *
-     * @return string
-     */
-    public function get_customer_ip_address(): string {
-        $possible_ip_sources = array(
-            'HTTP_CLIENT_IP',
-            'HTTP_X_FORWARDED_FOR',
-            'REMOTE_ADDR',
-        );
-
-        foreach ( $possible_ip_sources as $source ) {
-            if ( ! empty( $_SERVER[ $source ] ) ) {
-                return sanitize_text_field( wp_unslash( $_SERVER[ $source ] ) );
-            }
-        }
-
-        return '';
-    }
-
-    /**
-     * Get the user agent.
-     *
-     * @return string
-     */
-    public function get_user_agent(): string {
-        return sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ?? '' ) );
-    }
 }
