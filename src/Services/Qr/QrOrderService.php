@@ -121,7 +121,7 @@ class QrOrderService extends OrderService {
      * @return PaymentOptions
      */
     public function create_payment_options( string $token ): PaymentOptions {
-        $redirect_cancel_url = get_rest_url( get_current_blog_id(), 'multisafepay/v1/qr-balancer' ) . '?token=' . rawurlencode( $token );
+        $redirect_cancel_url = add_query_arg( 'token', $token, get_rest_url( get_current_blog_id(), 'multisafepay/v1/qr-balancer' ) );
         $payment_options     = new PaymentOptions();
         $payment_options->addNotificationUrl( get_rest_url( get_current_blog_id(), 'multisafepay/v1/qr-notification' ) );
         $payment_options->addCancelUrl( $redirect_cancel_url );

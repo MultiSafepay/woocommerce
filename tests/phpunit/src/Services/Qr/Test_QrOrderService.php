@@ -169,8 +169,9 @@ class Test_QrOrderService extends WP_UnitTestCase {
         $payment_options = $service->create_payment_options('fake-token');
 
         $this->assertEquals(get_rest_url(get_current_blog_id(), 'multisafepay/v1/qr-notification'), $payment_options->getNotificationUrl());
-        $this->assertEquals(get_rest_url(get_current_blog_id(), 'multisafepay/v1/qr-balancer?token=fake-token'), $payment_options->getCancelUrl());
-        $this->assertEquals(get_rest_url(get_current_blog_id(), 'multisafepay/v1/qr-balancer?token=fake-token'), $payment_options->getRedirectUrl());
+        $redirect_cancel_url = add_query_arg('token', 'fake-token', get_rest_url(get_current_blog_id(), 'multisafepay/v1/qr-balancer'));
+        $this->assertEquals($redirect_cancel_url, $payment_options->getCancelUrl());
+        $this->assertEquals($redirect_cancel_url, $payment_options->getRedirectUrl());
         $this->assertTrue($payment_options->getSettings()['qr']['enabled']);
     }
 
