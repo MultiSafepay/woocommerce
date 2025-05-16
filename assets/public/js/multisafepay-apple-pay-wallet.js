@@ -61,6 +61,14 @@ class ApplePayDirect {
          */
         this._sessionActive = false;
 
+        /**
+         * Flag to track if a session has been aborted
+         *
+         * @type {boolean}
+         * @private
+         */
+        this._sessionAborted = false;
+
         this.init()
             .then(
                 () => {
@@ -173,76 +181,20 @@ class ApplePayDirect {
     /**
      * Event handler for Apple Pay button click
      *
-     * @returns {Promise<void>}
+     * @returns {void}
      */
-    onApplePaymentButtonClicked = async() => {
-        try {
-            await this.beginApplePaySession();
-        } catch ( error ) {
-            console.error( 'Error starting Apple Pay session when button is clicked:', error );
+    onApplePaymentButtonClicked = () => {
+        // Check if a session is already active
+        if ( this.isSessionActive() ) {
+            debugDirect( 'Apple Pay session was already activated', this.debug, 'log' );
+            // Force reset session status to allow retry
             this.setSessionStatus( false );
-        }
-    }
-
-    /**
-     * Create Apple Pay button
-     *
-     * @returns {Promise<void>}
-     */
-    async createApplePayButton()
-    {
-        // Check if previous buttons already exist and remove them
-        cleanUpDirectButtons();
-
-        const buttonContainer = document.getElementById( 'place_order' ).parentElement;
-        if ( ! buttonContainer ) {
-            debugDirect( 'Button container not found', this.debug );
+            this._sessionAborted = false;
             return;
         }
 
-        // Features of the button
-        const buttonTag        = document.createElement( 'button' );
-        buttonTag.className    = 'apple-pay-button apple-pay-button-black';
-        buttonTag.style.cursor = 'pointer';
-
-        buttonContainer.addEventListener(
-            'click',
-            (
-                event ) => {
-                    this.onApplePaymentButtonClicked();
-                    // Avoid that WordPress submits the form
-                    event.preventDefault();
-                }
-        );
-
-        // Append the button to the div
-        buttonContainer.appendChild( buttonTag );
-    }
-
-    /**
-     * Create the Apple Pay payment request object and session
-     *
-     * Some variables from the global scope are launched from
-     * the internal code of Prestashop
-     *
-     * @returns {Promise<void>}
-     */
-    async beginApplePaySession()
-    {
         try {
-            const validatorInstance = new FieldsValidator();
-            const fieldsAreValid    = validatorInstance.checkFields();
-            if ( ! fieldsAreValid ) {
-                debugDirect( 'Not all mandatory fields were filled out', this.debug, 'warn' );
-                return;
-            }
-
-            if ( this.isSessionActive() ) {
-                debugDirect( 'Apple Pay session was already activated', this.debug, 'log' );
-                return;
-            }
-
-            // Create the payment request object
+            // Create the payment request object first
             const paymentRequest = {
                 countryCode: configApplePay.countryCode,
                 currencyCode: configApplePay.currencyCode,
@@ -257,46 +209,67 @@ class ApplePayDirect {
                 requiredShippingContactFields: this.config.shippingContactFields
             };
 
-            // Create the session and handle the events
+            // Create the session immediately in the click handler
             const session = new ApplePaySession( this.config.applePayVersion, paymentRequest );
+
             if ( session ) {
+                // Reset the aborted flag
+                this._sessionAborted = false;
+
+                // Setup event handlers
                 session.onvalidatemerchant  = ( event ) => this.handleValidateMerchant( event, session );
                 session.onpaymentauthorized = ( event ) => this.handlePaymentAuthorized( event, session );
                 session.oncancel            = ( event ) => this.handleCancel( event, session );
-                session.begin();
 
+                // Set session as active
                 this.setSessionStatus( true );
+
+                // Validate fields before beginning the session
+                this.validateFieldsBeforeSession( session );
             }
         } catch ( error ) {
-            console.error( 'Error starting Apple Pay session:', error );
+            console.error( 'Error starting Apple Pay session when button is clicked:', error );
             this.setSessionStatus( false );
+            this._sessionAborted = false;
         }
     }
 
     /**
-     * Fetch merchant session data from MultiSafepay
+     * Validate fields before beginning the Apple Pay session
      *
-     * @param {string} validationURL
-     * @param {string} originDomain
-     * @returns {Promise<object>}
+     * @param {object} session - The Apple Pay session
+     * @returns {void}
      */
-    async fetchMerchantSession(validationURL, originDomain)
-    {
-        const data = new URLSearchParams();
-        data.append( 'action', 'applepay_direct_validation' );
-        data.append( 'validation_url', validationURL );
-        data.append( 'origin_domain', originDomain );
+    validateFieldsBeforeSession( session ) {
+        // Create a validator instance
+        const validatorInstance = new FieldsValidator();
 
-        const response = await fetch(
-            this.config.multiSafepayServerScript,
-            {
-                method: 'POST',
-                body: data,
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-            }
-        );
+        // Clear any previous error messages
+        validatorInstance.clearAllErrors();
 
-        return JSON.parse( await response.json() );
+        // Validate fields
+        validatorInstance.checkFields()
+            .then(
+                fieldsAreValid => {
+                    if ( fieldsAreValid ) {
+                        // Fields are valid, now begin the session
+                        session.begin();
+                    } else {
+                        // Fields are not valid, don't begin the session
+                        debugDirect( 'Not all mandatory fields were filled out', this.debug, 'warn' );
+                        this._sessionAborted = true;
+                        this.setSessionStatus( false );
+                    }
+                }
+            )
+            .catch(
+                error => {
+                    // Error during validation
+                    debugDirect( 'Error during field validation: ' + error, this.debug, 'error' );
+                    this._sessionAborted = true;
+                    this.setSessionStatus( false );
+                }
+            );
     }
 
     /**
@@ -308,18 +281,29 @@ class ApplePayDirect {
      */
     handleValidateMerchant = async( event, session ) => {
         try {
+            // Check if the session has been aborted
+            if ( this._sessionAborted ) {
+                debugDirect( 'Session was already aborted, skipping merchant validation', this.debug, 'log' );
+                return;
+            }
+
             const validationURL = event.validationURL;
             const originDomain  = window.location.hostname;
 
             const merchantSession = await this.fetchMerchantSession( validationURL, originDomain );
             if ( merchantSession && ( typeof merchantSession === 'object' ) ) {
-                session.completeMerchantValidation( merchantSession );
+                // Only complete merchant validation if the session hasn't been aborted
+                if ( ! this._sessionAborted ) {
+                    session.completeMerchantValidation( merchantSession );
+                }
             } else {
                 debugDirect( 'Error validating merchant', this.debug );
+                this._sessionAborted = true;
                 session.abort();
             }
         } catch ( error ) {
             console.error( 'Error validating merchant:', error );
+            this._sessionAborted = true;
             session.abort();
         }
 
@@ -335,6 +319,12 @@ class ApplePayDirect {
      */
     handlePaymentAuthorized = async( event, session ) => {
         try {
+            // Check if the session has been aborted
+            if ( this._sessionAborted ) {
+                debugDirect( 'Session was already aborted, skipping payment authorization', this.debug, 'log' );
+                return;
+            }
+
             const paymentToken = JSON.stringify( event.payment.token );
             const success      = await this.submitApplePayForm( paymentToken );
             if ( success ) {
@@ -360,6 +350,7 @@ class ApplePayDirect {
         if ( ApplePaySession.STATUS_FAILURE === 0 ) {
             try {
                 debugDirect( 'Apple Pay Direct session successfully aborted.', this.debug, 'log' );
+                this._sessionAborted = true;
                 session.abort();
             } catch ( error ) {
                 console.error( 'Error when aborting Apple Pay Direct session:', error );
@@ -408,5 +399,67 @@ class ApplePayDirect {
         // Submit the form automatically
         applepayForm.dispatchEvent( new Event( 'submit' ) );
         return true;
+    }
+
+    /**
+     * Fetch merchant session data from MultiSafepay
+     *
+     * @param {string} validationURL
+     * @param {string} originDomain
+     * @returns {Promise<object>}
+     */
+    async fetchMerchantSession( validationURL, originDomain )
+    {
+        const data = new URLSearchParams();
+        data.append( 'action', 'applepay_direct_validation' );
+        data.append( 'validation_url', validationURL );
+        data.append( 'origin_domain', originDomain );
+
+        const response = await fetch(
+            this.config.multiSafepayServerScript,
+            {
+                method: 'POST',
+                body: data,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }
+        );
+
+        return JSON.parse( await response.json() );
+    }
+
+    /**
+     * Create Apple Pay button
+     *
+     * @returns {Promise<void>}
+     */
+    async createApplePayButton()
+    {
+        // Check if previous buttons already exist and remove them
+        cleanUpDirectButtons();
+
+        const buttonContainer = document.getElementById( 'place_order' ).parentElement;
+        if ( ! buttonContainer ) {
+            debugDirect( 'Button container not found', this.debug );
+            return;
+        }
+
+        // Features of the button
+        const buttonTag        = document.createElement( 'button' );
+        buttonTag.className    = 'apple-pay-button apple-pay-button-black';
+        buttonTag.style.cursor = 'pointer';
+
+        // Add an event listener directly to the Apple Pay button, not the container
+        buttonTag.addEventListener(
+            'click',
+            ( event ) => {
+                this.onApplePaymentButtonClicked();
+                // Prevent that WordPress submits the form
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        );
+
+        // Append the button to the div
+        buttonContainer.appendChild( buttonTag );
     }
 }

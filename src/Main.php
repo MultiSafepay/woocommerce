@@ -7,6 +7,7 @@ use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodsController;
 use MultiSafepay\WooCommerce\Services\PaymentComponentService;
 use MultiSafepay\WooCommerce\Services\Qr\QrPaymentComponentService;
 use MultiSafepay\WooCommerce\Services\Qr\QrPaymentWebhook;
+use MultiSafepay\WooCommerce\Services\ValidationService;
 use MultiSafepay\WooCommerce\Settings\SettingsController;
 use MultiSafepay\WooCommerce\Settings\ThirdPartyCompatibility;
 use MultiSafepay\WooCommerce\Utils\CustomLinks;
@@ -43,6 +44,7 @@ class Main {
         $this->payment_components_hooks();
         $this->payment_components_qr_hooks();
         $this->callback_hooks();
+        $this->validation_hooks();
     }
 
     /**
@@ -206,6 +208,18 @@ class Main {
     public function block_hooks(): void {
         $blocks = new BlocksController();
         $this->loader->add_action( 'woocommerce_blocks_loaded', $blocks, 'register_multisafepay_payment_methods_blocks' );
+    }
+
+    /**
+     * Register the hooks related to field validation
+     *
+     * @return void
+     */
+    public function validation_hooks(): void {
+        $validation_service = new ValidationService();
+        // Register AJAX action for zip code validation
+        $this->loader->add_action( 'wp_ajax_multisafepay_validate_postcode', $validation_service, 'validate_postcode' );
+        $this->loader->add_action( 'wp_ajax_nopriv_multisafepay_validate_postcode', $validation_service, 'validate_postcode' );
     }
 
     /**

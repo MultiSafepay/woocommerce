@@ -41,6 +41,8 @@ class Test_Main extends WP_UnitTestCase {
         'wp_ajax_nopriv_set_multisafepay_qr_code_transaction',
         'wp_ajax_get_qr_order_redirect_url',
         'wp_ajax_nopriv_get_qr_order_redirect_url',
+        'wp_ajax_multisafepay_validate_postcode',
+        'wp_ajax_nopriv_multisafepay_validate_postcode',
         'rest_api_init',
         'rest_api_init'
     );

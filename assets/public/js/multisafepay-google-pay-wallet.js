@@ -221,7 +221,7 @@ class GooglePayDirect {
     async onGooglePaymentButtonClicked()
     {
         const validatorInstance = new FieldsValidator();
-        const fieldsAreValid    = validatorInstance.checkFields();
+        const fieldsAreValid    = await validatorInstance.checkFields();
         if ( fieldsAreValid ) {
             if ( paymentsClient && paymentsClient.loadPaymentData ) {
                 try {

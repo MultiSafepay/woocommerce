@@ -43,9 +43,23 @@
                             'select2:select',
                             function() {
                                 debugDirect( 'Select2 action initialized for field: ' + this.name, debugStatus, 'log' );
-                                const select2Container = $( this ).closest( '.validate-required' ).find( '.select2-selection' );
+
+                                const wrapper          = $( this ).closest( '.validate-required' );
+                                const select2Container = wrapper.find( '.select2-selection' );
                                 if ( select2Container.length ) {
-                                    select2Container.attr( 'style', '' );
+                                    // Remove the inline red border style
+                                    select2Container.removeAttr( 'style' );
+                                    // Alternative approach if removeAttr doesn't work
+                                    select2Container.css( 'border', '' );
+                                }
+
+                                // Get the field ID container
+                                const fieldId        = this.name + '_field';
+                                const fieldContainer = $( '#' + fieldId );
+                                if ( fieldContainer.length ) {
+                                    // Remove WooCommerce invalid class and add validated class
+                                    fieldContainer.removeClass( 'woocommerce-invalid' );
+                                    fieldContainer.addClass( 'woocommerce-validated' );
                                 }
                                 validatorInstance.removeErrorMessage( this.name );
                             }
@@ -166,6 +180,8 @@
                                 checkActualTotalPrice();
                                 // Remove the orphan error messages from the notice group
                                 validatorInstance.removeOrphanErrorMessages();
+                                // Re-initialize select2 validation after checkout is updated
+                                select2Validation();
                             }
                         );
                         $( document ).on(

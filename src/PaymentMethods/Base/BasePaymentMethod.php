@@ -500,6 +500,16 @@ class BasePaymentMethod extends WC_Payment_Gateway {
             ) {
                 wp_enqueue_script( 'multisafepay-validator-wallets', MULTISAFEPAY_PLUGIN_URL . '/assets/public/js/multisafepay-validator-wallets.js', array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
                 wp_enqueue_script( 'multisafepay-common-wallets', MULTISAFEPAY_PLUGIN_URL . '/assets/public/js/multisafepay-common-wallets.js', array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
+                // Add parameters for validator wallets
+                wp_localize_script(
+                    'multisafepay-validator-wallets',
+                    'multisafepayParams',
+                    array(
+                        'location' => admin_url( 'admin-ajax.php' ),
+                        'nonce'    => wp_create_nonce( 'multisafepay_validator_nonce' ),
+                    )
+                );
+
                 $admin_url_array = array(
                     'location' => admin_url( 'admin-ajax.php' ),
                     'nonce'    => wp_create_nonce( 'total_price_nonce' ),
