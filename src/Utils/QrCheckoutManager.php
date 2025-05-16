@@ -4,6 +4,7 @@ namespace MultiSafepay\WooCommerce\Utils;
 
 use WC_Cart;
 use WC_Shipping_Rate;
+use WC_Validation;
 
 /**
  * Class QrCheckoutManager
@@ -34,7 +35,7 @@ class QrCheckoutManager {
     public $posted_data = array();
 
     /**
-     * Check if all mandatory fields are filled in the checkout in order to submit a MultiSafepay transaction
+     * Check if all mandatory fields are filled in the checkout to submit a MultiSafepay transaction
      * using Payment Component with QR code.
      *
      * @return bool
@@ -392,12 +393,31 @@ class QrCheckoutManager {
         foreach ( $all_fields as $field ) {
             if ( 'billing_email' === $field ) {
                 $field_value = isset( $this->posted_data[ $field ] ) ? sanitize_email( wp_unslash( $this->posted_data[ $field ] ) ) : '';
+
+                // Verify the email format using PHP's built-in filter validation
+                if ( ! empty( $field_value ) && ! $this->validate_email( $field_value ) ) {
+                    $this->is_validated = false;
+                }
+            } elseif ( strpos( $field, '_postcode' ) !== false ) {
+                $field_value = isset( $this->posted_data[ $field ] ) ? wp_unslash( $this->posted_data[ $field ] ) : '';
+                $field_value = trim( wp_strip_all_tags( $field_value ) );
+
+                // Validate a postcode format if not empty
+                if ( ! empty( $field_value ) ) {
+                    $prefix  = strpos( $field, 'billing_' ) === 0 ? 'billing' : 'shipping';
+                    $country = isset( $this->posted_data[ $prefix . '_country' ] ) ? wp_unslash( $this->posted_data[ $prefix . '_country' ] ) : '';
+                    $country = trim( wp_strip_all_tags( $country ) );
+
+                    if ( ! $this->validate_postcode( $field_value, $country ) ) {
+                        $this->is_validated = false;
+                    }
+                }
             } else {
                 $field_value = isset( $this->posted_data[ $field ] ) ? wp_unslash( $this->posted_data[ $field ] ) : '';
                 $field_value = trim( wp_strip_all_tags( $field_value ) );
             }
 
-            // Check if required field is empty
+            // Check if the required field is empty
             if ( empty( $field_value ) && in_array( $field, $all_required_fields, true ) ) {
                 $this->is_validated = false;
             }
@@ -459,5 +479,30 @@ class QrCheckoutManager {
                 }
             }
         }
+    }
+
+    /**
+     * Validate the email address format
+     *
+     * @param string $email The email to validate
+     * @return bool Whether the email is valid
+     */
+    private function validate_email( string $email ): bool {
+        return (bool) filter_var( $email, FILTER_VALIDATE_EMAIL );
+    }
+
+    /**
+     * Validate a postcode format using WooCommerce's validation
+     *
+     * @param string $postcode The postcode to validate
+     * @param string $country The country code
+     * @return bool Whether the postcode is valid
+     */
+    private function validate_postcode( string $postcode, string $country ): bool {
+        if ( ! WC_Validation::is_postcode( $postcode, $country ) ) {
+            return false;
+        }
+
+        return true;
     }
 }
