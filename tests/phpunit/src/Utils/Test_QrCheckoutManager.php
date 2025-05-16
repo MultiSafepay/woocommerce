@@ -296,14 +296,154 @@ class Test_QrCheckoutManager extends WP_UnitTestCase {
 
     public function test_returns_true_when_all_fields_are_valid() {
         $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
-        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Anytown&billing_postcode=12345&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890';
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Amsterdam&billing_postcode=1033+SC&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890';
         $manager = new QrCheckoutManager();
         $this->assertTrue($manager->validate_checkout_fields());
     }
 
-    public function test_returns_true_when_shipping_fields_are_missing_but_billing_are_valid() {
+    public function test_returns_false_when_shipping_fields_are_missing_and_billing_are_valid() {
         $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
-        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Anytown&billing_postcode=12345&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890&ship_to_different_address=1&shipping_first_name=&shipping_last_name=';
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Amsterdam&billing_postcode=1033+SC&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890&ship_to_different_address=1&shipping_first_name=&shipping_last_name=';
+        $manager = new QrCheckoutManager();
+        $this->assertFalse($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_true_when_shipping_fields_and_billing_are_valid() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Amsterdam&billing_postcode=1033+SC&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890&ship_to_different_address=1&shipping_first_name=Jane&shipping_last_name=Smith&shipping_address_1=456+Secondary+Rd&shipping_city=Amsterdam&shipping_postcode=1033+SC&shipping_country=NL&shipping_company=Company+Ltd&shipping_address_2=Apt+789&shipping_state=Noord+Holland&shipping_phone=9876543210';
+        $manager = new QrCheckoutManager();
+        $this->assertTrue($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_true_when_ship_to_different_address_is_false_and_shipping_fields_missing() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Amsterdam&billing_postcode=1033+SC&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890&ship_to_different_address=0&shipping_first_name=&shipping_last_name=';
+        $manager = new QrCheckoutManager();
+        $this->assertTrue($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_false_when_ship_to_different_address_is_false_and_billing_fields_missing() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=&billing_last_name=&billing_address_1=&billing_city=&billing_postcode=&billing_country=&billing_email=&billing_phone=&ship_to_different_address=0&shipping_first_name=Jane&shipping_last_name=Smith&shipping_address_1=456+Secondary+Rd&shipping_city=Amsterdam&shipping_postcode=1033+SC&shipping_country=NL';
+        $manager = new QrCheckoutManager();
+        $this->assertFalse($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_false_when_ship_to_different_address_is_true_and_shipping_fields_invalid() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Amsterdam&billing_postcode=1033+SC&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890&ship_to_different_address=1&shipping_first_name=Jane&shipping_last_name=Smith&shipping_address_1=&shipping_city=&shipping_postcode=&shipping_country=';
+        $manager = new QrCheckoutManager();
+        $this->assertFalse($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_true_when_both_billing_and_shipping_fields_are_different_but_valid() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Amsterdam&billing_postcode=1033+SC&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890&ship_to_different_address=1&shipping_first_name=Jane&shipping_last_name=Smith&shipping_address_1=456+Secondary+Rd&shipping_city=Rotterdam&shipping_postcode=3011+SC&shipping_country=NL';
+        $manager = new QrCheckoutManager();
+        $this->assertTrue($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_false_when_billing_first_name_is_missing() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Amsterdam&billing_postcode=1033+SC&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890';
+        $manager = new QrCheckoutManager();
+        $this->assertFalse($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_false_when_billing_last_name_is_missing() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=&billing_address_1=123+Main+St&billing_city=Amsterdam&billing_postcode=1033+SC&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890';
+        $manager = new QrCheckoutManager();
+        $this->assertFalse($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_false_when_billing_address_1_is_missing() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=&billing_city=Amsterdam&billing_postcode=1033+SC&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890';
+        $manager = new QrCheckoutManager();
+        $this->assertFalse($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_false_when_billing_city_is_missing() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=&billing_postcode=1033+SC&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890';
+        $manager = new QrCheckoutManager();
+        $this->assertFalse($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_false_when_billing_postcode_is_missing() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Amsterdam&billing_postcode=&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890';
+        $manager = new QrCheckoutManager();
+        $this->assertFalse($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_false_when_billing_country_is_missing() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Amsterdam&billing_postcode=1033+SC&billing_country=&billing_email=example%40multisafepay.com&billing_phone=1234567890';
+        $manager = new QrCheckoutManager();
+        $this->assertFalse($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_false_when_billing_email_is_missing() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Amsterdam&billing_postcode=1033+SC&billing_country=NL&billing_email=&billing_phone=1234567890';
+        $manager = new QrCheckoutManager();
+        $this->assertFalse($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_false_when_billing_phone_is_missing() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Amsterdam&billing_postcode=1033+SC&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=';
+        $manager = new QrCheckoutManager();
+        $this->assertFalse($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_false_when_shipping_first_name_is_missing_with_ship_to_different_address() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Amsterdam&billing_postcode=1033+SC&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890&ship_to_different_address=1&shipping_first_name=&shipping_last_name=Smith&shipping_address_1=456+Secondary+Rd&shipping_city=Rotterdam&shipping_postcode=3011+SC&shipping_country=NL';
+        $manager = new QrCheckoutManager();
+        $this->assertFalse($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_false_when_shipping_last_name_is_missing_with_ship_to_different_address() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Amsterdam&billing_postcode=1033+SC&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890&ship_to_different_address=1&shipping_first_name=Jane&shipping_last_name=&shipping_address_1=456+Secondary+Rd&shipping_city=Rotterdam&shipping_postcode=3011+SC&shipping_country=NL';
+        $manager = new QrCheckoutManager();
+        $this->assertFalse($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_false_when_shipping_address_1_is_missing_with_ship_to_different_address() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Amsterdam&billing_postcode=1033+SC&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890&ship_to_different_address=1&shipping_first_name=Jane&shipping_last_name=Smith&shipping_address_1=&shipping_city=Rotterdam&shipping_postcode=3011+SC&shipping_country=NL';
+        $manager = new QrCheckoutManager();
+        $this->assertFalse($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_false_when_shipping_city_is_missing_with_ship_to_different_address() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Amsterdam&billing_postcode=1033+SC&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890&ship_to_different_address=1&shipping_first_name=Jane&shipping_last_name=Smith&shipping_address_1=456+Secondary+Rd&shipping_city=&shipping_postcode=3011+SC&shipping_country=NL';
+        $manager = new QrCheckoutManager();
+        $this->assertFalse($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_false_when_shipping_postcode_is_missing_with_ship_to_different_address() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Amsterdam&billing_postcode=1033+SC&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890&ship_to_different_address=1&shipping_first_name=Jane&shipping_last_name=Smith&shipping_address_1=456+Secondary+Rd&shipping_city=Rotterdam&shipping_postcode=&shipping_country=NL';
+        $manager = new QrCheckoutManager();
+        $this->assertFalse($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_false_when_shipping_country_is_missing_with_ship_to_different_address() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Amsterdam&billing_postcode=1033+SC&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890&ship_to_different_address=1&shipping_first_name=Jane&shipping_last_name=Smith&shipping_address_1=456+Secondary+Rd&shipping_city=Rotterdam&shipping_postcode=3011+SC&shipping_country=';
+        $manager = new QrCheckoutManager();
+        $this->assertFalse($manager->validate_checkout_fields());
+    }
+
+    public function test_returns_true_when_all_shipping_fields_missing_without_ship_to_different_address() {
+        $_POST['nonce'] = wp_create_nonce('payment_component_arguments_nonce');
+        $_POST['form_data'] = 'billing_first_name=John&billing_last_name=Doe&billing_address_1=123+Main+St&billing_city=Amsterdam&billing_postcode=1033+SC&billing_country=NL&billing_email=example%40multisafepay.com&billing_phone=1234567890&ship_to_different_address=0&shipping_first_name=&shipping_last_name=&shipping_address_1=&shipping_city=&shipping_postcode=&shipping_country=';
         $manager = new QrCheckoutManager();
         $this->assertTrue($manager->validate_checkout_fields());
     }
@@ -556,7 +696,7 @@ class Test_QrCheckoutManager extends WP_UnitTestCase {
         $this->assertEquals($expected_customer_data, $manager->customer_data);
         $this->assertEquals($expected_order_data, $manager->order_data);
     }
-    
+
     public function test_it_should_return_other_data_with_custom_fields() {
         $posted_data = [
             'billing_first_name' => 'John',

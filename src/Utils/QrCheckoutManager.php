@@ -50,25 +50,32 @@ class QrCheckoutManager {
         $this->posted_data = $this->get_posted_data();
 
         // Get required and extra fields
-        $required_fields = $this->get_required_fields();
-        $extra_fields    = $this->get_extra_fields();
+        $billing_required_fields = $this->get_required_fields();
+        $billing_extra_fields    = $this->get_extra_fields();
 
         // Determine if shipping to a different address
         $ship_to_different_address = $this->is_shipping_to_different_address( $this->posted_data );
 
         // Get shipping fields if necessary
-        $shipping_fields = $ship_to_different_address ?
-            $this->get_shipping_fields( $required_fields, $extra_fields ) :
-            array();
+        $shipping_fields          = array();
+        $shipping_required_fields = array();
+
+        if ( $ship_to_different_address ) {
+            $shipping_fields          = $this->get_shipping_fields( $billing_required_fields, $billing_extra_fields );
+            $shipping_required_fields = $this->get_shipping_fields( $billing_required_fields, array() );
+        }
 
         // Combine all fields
-        $all_fields = array_merge( $required_fields, $extra_fields, $shipping_fields );
+        $all_fields = array_merge( $billing_required_fields, $billing_extra_fields, $shipping_fields );
+
+        // Combine all required fields
+        $all_required_fields = array_merge( $billing_required_fields, $shipping_required_fields );
 
         // Get order fields
         $order_fields = $this->get_order_fields();
 
         // Process and validate fields
-        $this->process_checkout_data( $all_fields, $required_fields, $order_fields );
+        $this->process_checkout_data( $all_fields, $all_required_fields, $order_fields );
 
         return $this->is_validated;
     }
@@ -352,17 +359,17 @@ class QrCheckoutManager {
     /**
      * Get the shipping fields based on required and extra fields.
      *
-     * @param array $required_fields The required fields.
-     * @param array $extra_fields The extra fields.
+     * @param array $billing_required_fields The required fields.
+     * @param array $billing_extra_fields The extra fields.
      * @return array
      */
-    public function get_shipping_fields( array $required_fields, array $extra_fields ): array {
+    public function get_shipping_fields( array $billing_required_fields, array $billing_extra_fields ): array {
         return array_map(
             static function( $field ) {
                 return str_replace( 'billing_', 'shipping_', $field );
             },
             array_filter(
-                array_merge( $required_fields, $extra_fields ),
+                array_merge( $billing_required_fields, $billing_extra_fields ),
                 static function( $field ) {
                     // Exclude email and phone fields to be created as shipping fields.
                     return ! in_array( $field, array( 'billing_email', 'billing_phone' ), true );
@@ -375,10 +382,10 @@ class QrCheckoutManager {
      * Process customer and order fields from the posted data.
      *
      * @param array $all_fields All fields to check.
-     * @param array $required_fields The required fields.
+     * @param array $all_required_fields The required fields.
      * @param array $order_fields The order fields.
      */
-    public function process_checkout_data( array $all_fields, array $required_fields, array $order_fields ): void {
+    public function process_checkout_data( array $all_fields, array $all_required_fields, array $order_fields ): void {
         $this->is_validated = true;
 
         // Process customer fields (billing and shipping)
@@ -391,7 +398,7 @@ class QrCheckoutManager {
             }
 
             // Check if required field is empty
-            if ( empty( $field_value ) && in_array( $field, $required_fields, true ) ) {
+            if ( empty( $field_value ) && in_array( $field, $all_required_fields, true ) ) {
                 $this->is_validated = false;
             }
 
