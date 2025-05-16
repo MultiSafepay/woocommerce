@@ -82,7 +82,7 @@ class PaymentComponentService {
         }
 
         // Tokenization and recurring model
-        if ( $woocommerce_payment_gateway->is_tokenization_enabled() ) {
+        if ( $woocommerce_payment_gateway->is_tokenization_enabled() && is_user_logged_in() ) {
             $payment_component_arguments['recurring'] = array(
                 'model'  => 'cardOnFile',
                 'tokens' => $this->sdk_service->get_payment_tokens(
