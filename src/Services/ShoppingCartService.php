@@ -5,6 +5,7 @@ namespace MultiSafepay\WooCommerce\Services;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\ShoppingCart;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\ShoppingCart\Item as CartItem;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\ShoppingCart\ShippingItem;
+use MultiSafepay\Exception\InvalidArgumentException;
 use MultiSafepay\WooCommerce\Utils\Hpos;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
@@ -40,6 +41,7 @@ class ShoppingCartService {
      * @param string      $currency
      * @param string|null $gateway_code
      * @return ShoppingCart
+     * @throws InvalidArgumentException
      */
     public function create_shopping_cart( WC_Order $order, string $currency, ?string $gateway_code = '' ): ShoppingCart {
 
@@ -161,10 +163,15 @@ class ShoppingCartService {
      * @param string                 $currency
      * @param string                 $gateway_code
      * @return ShippingItem
+     * @throws InvalidArgumentException
      */
     private function create_shipping_cart_item( WC_Order_Item_Shipping $item, string $currency, string $gateway_code ): ShippingItem {
-        $cart_item = new ShippingItem();
-        return $cart_item->addName( __( 'Shipping', 'multisafepay' ) )
+        $cart_item            = new ShippingItem();
+        $shipping_method_name = $item->get_method_title();
+        if ( empty( $shipping_method_name ) ) {
+            $shipping_method_name = __( 'Shipping', 'multisafepay' );
+        }
+        return $cart_item->addName( $shipping_method_name )
             ->addQuantity( 1 )
             ->addUnitPrice( MoneyUtil::create_money( (float) $item->get_total(), $currency ) )
             ->addTaxRate( $this->get_shipping_tax_rate( $item, $gateway_code ) );
