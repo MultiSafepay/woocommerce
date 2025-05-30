@@ -292,7 +292,7 @@ class ShoppingCartService {
         $allowed_rates = array( 0, 5, 6, 7, 9, 16, 19, 20, 21 );
 
         foreach ( $allowed_rates as $rate ) {
-            if ( abs( $tax_rate - $rate ) <= 0.15 ) {
+            if ( abs( $tax_rate - $rate ) <= 0.05 ) {
                 return round( $tax_rate );
             }
         }
