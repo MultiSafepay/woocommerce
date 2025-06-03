@@ -51,12 +51,10 @@ trait BaseRefunds {
             ! empty( $multisafepay_transaction_id ) ? $multisafepay_transaction_id : $order->get_order_number()
         );
 
-        /** @var RefundRequest $refund_request */
-        $refund_request = $transaction_manager->createRefundRequest( $multisafepay_transaction );
-
-        $refund_request->addDescriptionText( $reason );
-
         if ( $multisafepay_transaction->requiresShoppingCart() ) {
+            /** @var RefundRequest $refund_request */
+            $refund_request = $transaction_manager->createRefundRequest( $multisafepay_transaction );
+
             $refunds                 = $order->get_refunds();
             $refund_merchant_item_id = reset( $refunds )->id;
 
@@ -71,6 +69,8 @@ trait BaseRefunds {
         }
 
         if ( ! $multisafepay_transaction->requiresShoppingCart() ) {
+            $refund_request = new RefundRequest();
+            $refund_request->addDescriptionText( $reason );
             $refund_request->addMoney( MoneyUtil::create_money( (float) $amount, $order->get_currency() ) );
         }
 
@@ -79,8 +79,7 @@ trait BaseRefunds {
             $transaction_manager->refund( $multisafepay_transaction, $refund_request );
         } catch ( Exception | ClientExceptionInterface | ApiException $exception ) {
             $error = __( 'Error:', 'multisafepay' ) . htmlspecialchars( $exception->getMessage() );
-            $this->logger->log_error( $error );
-            wc_add_notice( $error, 'error' );
+            $this->logger->log_error( 'Error during refund: ' . $error . ' Refund request : ' . wp_json_encode( $refund_request->getData() ) );
         }
 
         if ( ! $error ) {
