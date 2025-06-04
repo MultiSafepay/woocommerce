@@ -399,9 +399,9 @@ class BasePaymentMethod extends WC_Payment_Gateway {
             return false;
         }
 
-        $settings = get_option( 'woocommerce_' . $this->id . '_settings', array( 'payment_component' => 'qr' ) );
+        $settings = get_option( 'woocommerce_' . $this->id . '_settings', array( 'payment_component' => 'yes' ) );
         if ( ! isset( $settings['payment_component'] ) ) {
-            return true;
+            return false;
         }
         return 'qr' === $settings['payment_component'];
     }
@@ -416,9 +416,9 @@ class BasePaymentMethod extends WC_Payment_Gateway {
             return false;
         }
 
-        $settings = get_option( 'woocommerce_' . $this->id . '_settings', array( 'payment_component' => 'qr_only' ) );
+        $settings = get_option( 'woocommerce_' . $this->id . '_settings', array( 'payment_component' => 'yes' ) );
         if ( ! isset( $settings['payment_component'] ) ) {
-            return true;
+            return false;
         }
         return 'qr_only' === $settings['payment_component'];
     }
