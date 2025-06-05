@@ -6,6 +6,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.9.0
+Release Date: Jun 5th, 2025
+
+### Added
++ PLGWOOS-1003: Add zip code and email format validation to QR code implementation
++ PLGWOOS-1001: Improvement over QR code implementation validating checkout when"ship to a different address" is checked.
+
+### Fixed
++ PLGWOOS-1009: Fix Bancontact QR showing up even when it hasn’t been explicitly enabled
++ PLGWOOS-1007: Refund request based on amount is including the checkout data, even when it's not needed.
++ PLGWOOS-997: Validate zip code checkout fields to prevent payments via Wallets
++ PLGWOOS-1002: Payment Component shows "Store my details for future visits" field, when user is not logged in
++ PLGWOOS-999: Fix URL Parameter Concatenation in QR Payment Redirect Flow
++ PLGWOOS-1000: Remove unneeded get_customer_ip_address() and get_user_agent() methods in QrCustomerService
+
+### Changed
++ PLGWOOS-1005: Adjusting the minimum discrepancy allowed to filter Billink tax rates
++ PLGWOOS-1004: Adding shipping method name in the Order Request, instead of generic label "Shipping"
+
+***
+
 ## 6.8.3
 Release Date: Apr 9th, 2025
 

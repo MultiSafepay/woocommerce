@@ -2,9 +2,9 @@
 Contributors: multisafepayplugin
 Tags: multisafepay, payment gateway, credit cards, ideal, bnpl
 Requires at least: 6.0
-Tested up to: 6.7.2
+Tested up to: 6.8.1
 Requires PHP: 7.3
-Stable tag: 6.8.3
+Stable tag: 6.9.0
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -138,6 +138,24 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 9. Embedded Credit Card form using MultiSafepay Payment Component
 
 == Changelog ==
+= Release Notes - WooCommerce 6.9.0 (Jun 5th, 2025) =
+
+### Added
++ PLGWOOS-1003: Add zip code and email format validation to QR code implementation
++ PLGWOOS-1001: Improvement over QR code implementation validating checkout when"ship to a different address" is checked.
+
+### Fixed
++ PLGWOOS-1009: Fix Bancontact QR showing up even when it hasn’t been explicitly enabled
++ PLGWOOS-1007: Refund request based on amount is including the checkout data, even when it's not needed.
++ PLGWOOS-997: Validate zip code checkout fields to prevent payments via Wallets
++ PLGWOOS-1002: Payment Component shows "Store my details for future visits" field, when user is not logged in
++ PLGWOOS-999: Fix URL Parameter Concatenation in QR Payment Redirect Flow
++ PLGWOOS-1000: Remove unneeded get_customer_ip_address() and get_user_agent() methods in QrCustomerService
+
+### Changed
++ PLGWOOS-1005: Adjusting the minimum discrepancy allowed to filter Billink tax rates
++ PLGWOOS-1004: Adding shipping method name in the Order Request, instead of generic label "Shipping"
+
 = Release Notes - WooCommerce 6.8.3 (Apr 9th, 2025) =
 
 ### Fixed
