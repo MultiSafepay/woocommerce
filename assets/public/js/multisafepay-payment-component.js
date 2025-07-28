@@ -159,8 +159,8 @@
                 } else {
                     this.remove_payload_and_tokenize();
                     this.logger( this.get_payment_component().getOrderData() );
-                    var payload  = this.get_payment_component().getPaymentData().payload;
-                    var tokenize = this.get_payment_component().getPaymentData().tokenize ? this.get_payment_component().getPaymentData().tokenize : '0';
+                    const payload  = this.get_payment_component().getPaymentData().payload;
+                    const tokenize = this.get_payment_component().getPaymentData().tokenize ? this.get_payment_component().getPaymentData().tokenize : '0';
                     this.insert_payload_and_tokenize( payload, tokenize );
                 }
                 $( '.woocommerce-checkout' ).submit();
@@ -334,7 +334,7 @@
         }
 
         maybe_init_payment_component() {
-            // There is no way to know if the payment component exist or not; except for checking the DOM elements
+            // There is no way to know if the payment component exists or not; except for checking the DOM elements
             if ( $( this.payment_component_container_selector + ' > .msp-container-ui' ).length > 0) {
                 return;
             }

@@ -37,7 +37,7 @@ class PaymentComponentService {
     }
 
     /**
-     * Return the arguments required when payment component needs to be initialized
+     * Return the arguments required when the payment component needs to be initialized
      *
      * @param BasePaymentMethod $woocommerce_payment_gateway
      * @param bool              $validate_checkout
@@ -57,19 +57,7 @@ class PaymentComponentService {
                     'locale'  => strtoupper( substr( ( new CustomerService() )->get_locale(), 0, 2 ) ),
                     'country' => ( WC()->customer )->get_billing_country(),
                 ),
-                'payment_options' => array(
-                    'template' => array(
-                        'settings' => array(
-                            'embed_mode' => 1,
-                        ),
-                        'merge'    => true,
-                    ),
-                    'settings' => array(
-                        'connect' => array(
-                            'issuers_display_mode' => 'select',
-                        ),
-                    ),
-                ),
+                'payment_options' => $this->build_payment_options(),
             ),
             'gateway'      => $woocommerce_payment_gateway->get_payment_method_gateway_code(),
             'qr_supported' => $woocommerce_payment_gateway->is_qr_enabled() || $woocommerce_payment_gateway->is_qr_only_enabled(),
@@ -94,25 +82,78 @@ class PaymentComponentService {
 
         // Payment Component QR
         if ( $validate_checkout ) {
-            $qr_checkout_manager = new QrCheckoutManager();
-            if ( $qr_checkout_manager->validate_checkout_fields() ) {
-                if ( $woocommerce_payment_gateway->is_qr_enabled() ) {
-                    $payment_component_arguments['orderData']['payment_options']['settings']['connect']['qr'] = array( 'enabled' => 1 );
-                }
-                if ( $woocommerce_payment_gateway->is_qr_only_enabled() ) {
-                    $payment_component_arguments['orderData']['payment_options']['settings']['connect']['qr'] = array(
-                        'enabled' => 1,
-                        'qr_only' => 1,
-                    );
-                }
-            }
+            $this->add_qr_configuration( $payment_component_arguments, $woocommerce_payment_gateway );
         }
 
         return $payment_component_arguments;
     }
 
     /**
-     * Return the arguments required when payment component needs to be initialized via a WP AJAX request
+     * Build payment options array
+     *
+     * @return array
+     */
+    private function build_payment_options(): array {
+        return array(
+            'template' => array(
+                'settings' => array(
+                    'embed_mode' => 1,
+                ),
+                'merge'    => true,
+            ),
+            'settings' => array(
+                'connect' => array(
+                    'issuers_display_mode' => 'select',
+                ),
+            ),
+        );
+    }
+
+    /**
+     * Add QR configuration to payment component arguments
+     *
+     * @param array             $payment_component_arguments
+     * @param BasePaymentMethod $woocommerce_payment_gateway
+     * @return void
+     */
+    private function add_qr_configuration( array &$payment_component_arguments, BasePaymentMethod $woocommerce_payment_gateway ): void {
+        $qr_checkout_manager = new QrCheckoutManager();
+        if ( ! $qr_checkout_manager->validate_checkout_fields() ) {
+            return;
+        }
+
+        $is_qr_only_enabled = $woocommerce_payment_gateway->is_qr_only_enabled();
+
+        if ( $woocommerce_payment_gateway->is_qr_enabled() || $is_qr_only_enabled ) {
+            $qr_config = array(
+                'enabled' => 1,
+                'size'    => 206,
+            );
+
+            if ( $is_qr_only_enabled ) {
+                $qr_config['qr_only'] = 1;
+            }
+            $this->add_qr_width_to_config( $qr_config, $woocommerce_payment_gateway );
+            $payment_component_arguments['orderData']['payment_options']['settings']['connect']['qr'] = $qr_config;
+        }
+    }
+
+    /**
+     * Add QR width to the configuration if specified
+     *
+     * @param array             $qr_config
+     * @param BasePaymentMethod $woocommerce_payment_gateway
+     * @return void
+     */
+    private function add_qr_width_to_config( array &$qr_config, BasePaymentMethod $woocommerce_payment_gateway ): void {
+        $qr_width = $woocommerce_payment_gateway->get_qr_width();
+        if ( ! empty( $qr_width ) && is_numeric( $qr_width ) ) {
+            $qr_config['size'] = (int) $qr_width;
+        }
+    }
+
+    /**
+     * Return the arguments required when the payment component needs to be initialized via a WP AJAX request
      *
      * @return void
      */

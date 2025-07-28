@@ -2,21 +2,19 @@
     $(
         function (
         ) {
-            function togglePaymentSettingsFields( direct, merchantInfo ) {
-                const formInput = $( merchantInfo ).closest( 'tr' );
+            function togglePaymentSettingsFields(conditional, fieldToToggle) {
+                const formInput = $(fieldToToggle).closest('tr');
+                const validValues = ['1', 'qr', 'qr_only'];
+                const selectedValue = $(conditional).find('option:selected').val();
+                const isValidSelection = validValues.indexOf(selectedValue) !== -1;
 
-                if ( $( direct ).find( 'option:selected' ).val() === '1' ) {
-                    formInput.show();
-                } else {
-                    formInput.hide();
-                }
+                // Initial state
+                formInput[isValidSelection ? 'show' : 'hide']();
 
-                $( direct ).on( 'change', function () {
-                    if ( $( this ).find( 'option:selected' ).val() === '1' ) {
-                        formInput.show();
-                    } else {
-                        formInput.hide();
-                    }
+                // Handle select changes
+                $(conditional).on('change', function() {
+                    const currentValue = $(this).find('option:selected').val();
+                    formInput[validValues.indexOf(currentValue) !== -1 ? 'show' : 'hide']();
                 });
             }
 
@@ -28,6 +26,11 @@
             togglePaymentSettingsFields(
                 '#woocommerce_multisafepay_applepay_use_direct_button',
                 '#woocommerce_multisafepay_applepay_merchant_name'
+            );
+
+            togglePaymentSettingsFields(
+                '#woocommerce_multisafepay_bancontact_payment_component',
+                '#woocommerce_multisafepay_bancontact_qr_width'
             );
 
             function addMultiSafepayTransactionLink() {

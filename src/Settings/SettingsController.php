@@ -51,7 +51,7 @@ class SettingsController {
         if ( get_current_screen()->base === 'woocommerce_page_multisafepay-settings' ) {
             wp_enqueue_style( 'multisafepay-admin-css', MULTISAFEPAY_PLUGIN_URL . '/assets/admin/css/multisafepay-admin.css', array(), MULTISAFEPAY_PLUGIN_VERSION, 'all' );
         }
-        $sections = array( 'multisafepay_applepay', 'multisafepay_googlepay' );
+        $sections = array( 'multisafepay_applepay', 'multisafepay_googlepay', 'multisafepay_bancontact' );
         if ( isset( $_GET['section'] ) && in_array( $_GET['section'], $sections, true ) ) {
             wp_enqueue_script( 'multisafepay-admin-js', MULTISAFEPAY_PLUGIN_URL . '/assets/admin/js/multisafepay-admin.js', array(), MULTISAFEPAY_PLUGIN_VERSION, true );
         }

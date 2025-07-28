@@ -424,6 +424,15 @@ class BasePaymentMethod extends WC_Payment_Gateway {
     }
 
     /**
+     * Return the custom QR width in pixels
+     *
+     * @return string
+     */
+    public function get_qr_width(): string {
+        return $this->get_option( 'qr_width', '' );
+    }
+
+    /**
      * Enqueue Javascript related with Payment Component.
      *
      * @return void
@@ -668,6 +677,13 @@ class BasePaymentMethod extends WC_Payment_Gateway {
                 'description' => __( 'Redirect - Redirect the customer to a payment page to finish the payment. <br /> Payment Component - Payment components let you embed payment checkout fields directly into your checkout. <br /> Payment Component with QR (*) - Similar to the previous option, but now includes the ability to pay using a QR code too. <br /> Payment Component with QR only (*) - Payment can only be completed via a QR code. <br /><br /> (*) Payment Components using QR is a experimental feature and may not work as expected. Contact MultiSafepay support for more information. <br /><br /> More information about Payment Components on <a href="https://docs.multisafepay.com/docs/payment-components" target="_blank">MultiSafepay\'s Documentation Center</a>.', 'multisafepay' ),
                 'default'     => $this->get_option( 'payment_component', $this->payment_method->supportsPaymentComponent() ? 'yes' : 'no' ),
                 'value'       => $this->get_option( 'payment_component', $this->payment_method->supportsPaymentComponent() ? 'yes' : 'no' ),
+            );
+            $form_fields['qr_width']          = array(
+                'title'       => __( 'QR image width', 'multisafepay' ),
+                'type'        => 'text',
+                'desc_tip'    => __( 'Defines the width of the QR code in pixels. An appropriate size improves user experience and makes scanning easier.', 'multisafepay' ),
+                'description' => __( 'The numeric value represents the width in pixels. If left blank, the default size will be used.', 'multisafepay' ),
+                'default'     => '',
             );
         }
 
