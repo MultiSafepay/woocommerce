@@ -123,8 +123,8 @@ class CustomerService {
         string $last_name,
         string $ip_address,
         string $user_agent,
-        string $company_name = null,
-        string $customer_id = null,
+        ?string $company_name = null,
+        ?string $customer_id = null,
         ?array $browser = null
     ): CustomerDetails {
         $customer_details = new CustomerDetails();

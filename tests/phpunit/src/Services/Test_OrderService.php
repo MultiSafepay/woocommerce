@@ -136,12 +136,13 @@ class Test_OrderService extends WP_UnitTestCase {
 
         $payment_method_service = $this->getMockBuilder('PaymentMethodService')
             ->disableOriginalConstructor()
-            ->setMethods(['get_woocommerce_payment_gateway_by_multisafepay_gateway_code'])
+            ->setMethods(['get_woocommerce_payment_gateway_by_multisafepay_gateway_code', 'get_woocommerce_payment_gateway_by_id'])
             ->getMock();
 
         $payment_method = new PaymentMethod( ( new PaymentMethodFixture() )->get_amex_payment_method_fixture() );
         $woocommerce_payment_gateway = new BasePaymentMethod( $payment_method );
         $payment_method_service->method('get_woocommerce_payment_gateway_by_multisafepay_gateway_code')->willReturn($woocommerce_payment_gateway);
+        $payment_method_service->method('get_woocommerce_payment_gateway_by_id')->willReturn($woocommerce_payment_gateway);
 
         $shopping_cart_service->method('create_shopping_cart')->willReturn($shopping_cart);
 

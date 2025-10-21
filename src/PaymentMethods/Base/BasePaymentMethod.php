@@ -662,6 +662,12 @@ class BasePaymentMethod extends WC_Payment_Gateway {
                 'default'     => $this->get_option( 'payment_component', $this->payment_method->supportsPaymentComponent() ? 'yes' : 'no' ),
                 'value'       => $this->get_option( 'payment_component', $this->payment_method->supportsPaymentComponent() ? 'yes' : 'no' ),
             );
+
+            if ( 'BILLINK' === $this->get_payment_method_gateway_code() ) {
+                $form_fields['payment_component']['options']['P'] = __( 'B2C Only', 'multisafepay' );
+                $form_fields['payment_component']['options']['B'] = __( 'B2B Only', 'multisafepay' );
+                $form_fields['payment_component']['description'] .= __( '<br /><br /> B2C Only - For individual customers. <br /> B2B Only - For business customers. <br /><br /> Select the appropriate contract type based on your target customer base.', 'multisafepay' );
+            }
         }
 
         if ( $this->payment_method->supportsPaymentComponent() && $this->payment_method->supportsQr() ) {

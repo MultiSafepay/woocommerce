@@ -54,7 +54,7 @@ class SdkService {
      * @param  boolean     $test_mode
      * @param Logger|null $logger
      */
-    public function __construct( string $api_key = null, bool $test_mode = null, ?Logger $logger = null ) {
+    public function __construct( ?string $api_key = null, ?bool $test_mode = null, ?Logger $logger = null ) {
         $this->api_key   = $api_key ?? $this->get_api_key();
         $this->test_mode = $test_mode ?? $this->get_test_mode();
         $this->logger    = $logger ?? new Logger();

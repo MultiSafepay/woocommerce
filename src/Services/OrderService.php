@@ -10,6 +10,7 @@ use MultiSafepay\Api\Transactions\OrderRequest\Arguments\PluginDetails;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\SecondChance;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\TaxTable\TaxRate;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\TaxTable\TaxRule;
+use MultiSafepay\Exception\InvalidArgumentException;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
 use WC_Order;
 
@@ -49,6 +50,7 @@ class OrderService {
      * @param string   $gateway_code
      * @param string   $type
      * @return OrderRequest
+     * @throws InvalidArgumentException
      */
     public function create_order_request( WC_Order $order, string $gateway_code, string $type ): OrderRequest {
         $order_request = new OrderRequest();
@@ -95,6 +97,20 @@ class OrderService {
             $order_request->addGatewayInfo( ( new Wallet() )->addPaymentToken( $payment_token ) );
         }
 
+        // Force BILLINK B2B and B2C transactions to be direct
+        if ( 'BILLINK' === $gateway_code ) {
+            $payment_method_id = $order->get_payment_method();
+            $payment_method    = $this->payment_method_service->get_woocommerce_payment_gateway_by_id( $payment_method_id );
+
+            if ( $payment_method ) {
+                $payment_component_option = $payment_method->get_option( 'payment_component', 'no' );
+
+                if ( 'P' === $payment_component_option || 'B' === $payment_component_option ) {
+                    $order_request->addType( 'direct' );
+                }
+            }
+        }
+
         $order_request = $this->add_none_tax_rate( $order_request );
 
         return apply_filters( 'multisafepay_order_request', $order_request );
@@ -114,8 +130,9 @@ class OrderService {
     }
 
     /**
-     * @param  WC_Order $order
+     * @param WC_Order $order
      * @return PaymentOptions
+     * @throws InvalidArgumentException
      */
     private function create_payment_options( WC_Order $order ): PaymentOptions {
         $payment_options = new PaymentOptions();
@@ -134,6 +151,19 @@ class OrderService {
             $payment_options->addNotificationUrl( add_query_arg( 'wc-api', 'multisafepay', home_url( '/' ) ) );
             $payment_options->addNotificationMethod( 'GET' );
         }
+
+        // Add BILLINK specific settings
+        $payment_method_id = $order->get_payment_method();
+        $payment_method    = $this->payment_method_service->get_woocommerce_payment_gateway_by_id( $payment_method_id );
+
+        if ( $payment_method && 'BILLINK' === $payment_method->get_payment_method_gateway_code() ) {
+            $payment_component_option = $payment_method->get_option( 'payment_component', 'no' );
+
+            if ( 'P' === $payment_component_option || 'B' === $payment_component_option ) {
+                $payment_options->addSettings( array( 'gateways' => array( 'BILLINK' => array( 'type' => $payment_component_option ) ) ) );
+            }
+        }
+
         return $payment_options;
     }
 
