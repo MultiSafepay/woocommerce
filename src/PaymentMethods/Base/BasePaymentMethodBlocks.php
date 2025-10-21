@@ -50,7 +50,9 @@ final class BasePaymentMethodBlocks extends AbstractPaymentMethodType {
                 if ( isset( $multisafepay_payment_method['type'] ) && ( 'payment-method' === $multisafepay_payment_method['type'] ) ) {
                     $woocommerce_payment_gateways[] = new BasePaymentMethod( new PaymentMethod( $multisafepay_payment_method ) );
                     foreach ( $multisafepay_payment_method['brands'] as $brand ) {
-                        if ( ! empty( $brand['allowed_countries'] ) ) {
+                        if ( ! empty( $brand['allowed_countries'] ) && ! get_option( 'multisafepay_group_credit_cards', false ) ) {
+                            $brand['id']                   .= '_' . $multisafepay_payment_method['id'];
+                            $brand['name']                 .= ' - ' . $multisafepay_payment_method['name'];
                             $woocommerce_payment_gateways[] = new BaseBrandedPaymentMethod( new PaymentMethod( $multisafepay_payment_method ), $brand );
                         }
                     }

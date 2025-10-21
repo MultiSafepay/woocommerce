@@ -17,6 +17,7 @@ class Test_Main extends WP_UnitTestCase {
         'woocommerce_available_payment_gateways',
         'woocommerce_available_payment_gateways',
         'woocommerce_available_payment_gateways',
+        'woocommerce_available_payment_gateways',
         'woocommerce_get_checkout_payment_url',
         'woocommerce_valid_order_statuses_for_cancel'
     );
@@ -88,6 +89,7 @@ class Test_Main extends WP_UnitTestCase {
                 [
                     'admin_enqueue_scripts',
                     'admin_menu',
+                    'admin_init',
                     'admin_init',
                     'woocommerce_new_order'
                 ]

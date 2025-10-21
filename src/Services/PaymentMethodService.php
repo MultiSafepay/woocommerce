@@ -160,7 +160,9 @@ class PaymentMethodService {
      */
     public function create_branded_woocommerce_payment_gateways( array $multisafepay_payment_method, array $woocommerce_payment_gateways, PaymentMethod $payment_method ) : array {
         foreach ( $multisafepay_payment_method['brands'] as $brand ) {
-            if ( ! empty( $brand['allowed_countries'] ) ) {
+            if ( ! empty( $brand['allowed_countries'] ) && ! get_option( 'multisafepay_group_credit_cards', false ) ) {
+                $brand['id']                                       .= '_' . $multisafepay_payment_method['id'];
+                $brand['name']                                     .= ' - ' . $multisafepay_payment_method['name'];
                 $payment_method_id                                  = self::get_legacy_woocommerce_payment_gateway_ids( $brand['id'] );
                 $woocommerce_payment_gateways[ $payment_method_id ] = new BaseBrandedPaymentMethod( $payment_method, $brand );
             }

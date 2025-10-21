@@ -894,7 +894,7 @@ class FieldsValidator {
         // Create the complete error message with formatting
         const errorLink                = document.createElement( 'a' );
         errorLink.href                 = '#' + error[0].field;
-        errorLink.style.textDecoration = 'none'; // Don't show underline on the text
+        errorLink.style.textDecoration = 'underline'; // Showing underline like WooCommerce
 
         // Create a strong element for the field name/error
         const strongElement = document.createElement( 'strong' );

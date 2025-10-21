@@ -5,6 +5,7 @@ namespace MultiSafepay\WooCommerce;
 use MultiSafepay\WooCommerce\Blocks\BlocksController;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodsController;
 use MultiSafepay\WooCommerce\Services\PaymentComponentService;
+use MultiSafepay\WooCommerce\Services\PostepayMigrationService;
 use MultiSafepay\WooCommerce\Services\Qr\QrPaymentComponentService;
 use MultiSafepay\WooCommerce\Services\Qr\QrPaymentWebhook;
 use MultiSafepay\WooCommerce\Services\ValidationService;
@@ -111,6 +112,10 @@ class Main {
             $this->loader->add_action( 'admin_init', $plugin_settings, 'register_common_settings' );
             // Filter and return ordered the results of the fields
             $this->loader->add_filter( 'multisafepay_common_settings_fields', $plugin_settings, 'filter_multisafepay_common_settings_fields', 10, 1 );
+
+            // Handle PostePay migration in the admin area
+            $postepay_migration = new PostepayMigrationService();
+            $this->loader->add_action( 'admin_init', $postepay_migration, 'postepay_migration', 5 );
         }
     }
 
@@ -134,6 +139,8 @@ class Main {
         $this->loader->add_filter( 'woocommerce_available_payment_gateways', $payment_methods, 'filter_gateway_per_min_amount', 12 );
         // Filter per user role
         $this->loader->add_filter( 'woocommerce_available_payment_gateways', $payment_methods, 'filter_gateway_per_user_roles', 13 );
+        // Filter duplicated branded payment methods
+        $this->loader->add_filter( 'woocommerce_available_payment_gateways', $payment_methods, 'filter_non_duplicated_branded_names', 14 );
         // Set MultiSafepay transaction as shipped
         $this->loader->add_action( 'woocommerce_order_status_' . str_replace( 'wc-', '', get_option( 'multisafepay_trigger_transaction_to_shipped', 'wc-completed' ) ), $payment_methods, 'set_multisafepay_transaction_as_shipped', 10, 1 );
         // Set MultiSafepay transaction as invoiced

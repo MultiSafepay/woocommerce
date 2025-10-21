@@ -143,7 +143,7 @@
     <!-- The following ensure small classes -->
     <rule ref="ObjectCalisthenics.Files.ClassTraitAndInterfaceLength">
         <properties>
-            <property name="maxLength" value="510"/>
+            <property name="maxLength" value="540"/>
         </properties>
         <exclude-pattern>*/src/PaymentMethods/Base/BasePaymentMethod.php</exclude-pattern>
         <exclude-pattern>*/src/Settings/SystemReport.php</exclude-pattern>

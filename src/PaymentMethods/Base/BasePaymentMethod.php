@@ -447,10 +447,14 @@ class BasePaymentMethod extends WC_Payment_Gateway {
 
             $route = MULTISAFEPAY_PLUGIN_URL . '/assets/public/js/multisafepay-payment-component.js';
             wp_enqueue_script( 'multisafepay-payment-component-js', $route, array( 'jquery' ), MULTISAFEPAY_PLUGIN_VERSION, true );
-            wp_localize_script( 'multisafepay-payment-component-js', 'payment_component_config_' . $this->id, $multisafepay_payment_component_config );
-            wp_localize_script( 'multisafepay-payment-component-js', 'multisafepay_payment_component_gateways', $gateways_with_payment_component );
-            wp_enqueue_script( 'multisafepay-payment-component-js' );
 
+            static $enabled_gateways_added = false;
+            if ( ! $enabled_gateways_added ) {
+                wp_localize_script( 'multisafepay-payment-component-js', 'multisafepay_payment_component_gateways', $gateways_with_payment_component );
+                $enabled_gateways_added = true;
+            }
+            wp_localize_script( 'multisafepay-payment-component-js', 'payment_component_config_' . $this->id, $multisafepay_payment_component_config );
+            wp_enqueue_script( 'multisafepay-payment-component-js' );
         }
     }
 
