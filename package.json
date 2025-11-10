@@ -12,6 +12,7 @@
     },
     "license": "GPL-3.0-or-later",
     "devDependencies": {
+        "@babel/runtime": "^7.28.4",
         "@wordpress/scripts": "^28.1.0",
         "@wordpress/dependency-extraction-webpack-plugin": "^6.1.0"
     },
