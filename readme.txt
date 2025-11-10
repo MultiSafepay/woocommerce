@@ -2,9 +2,9 @@
 Contributors: multisafepayplugin
 Tags: multisafepay, payment gateway, credit cards, ideal, bnpl
 Requires at least: 6.0
-Tested up to: 6.8.1
+Tested up to: 6.8.3
 Requires PHP: 7.3
-Stable tag: 6.9.0
+Stable tag: 6.10.0
 License: MIT
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -79,7 +79,7 @@ To use the plugin you need a MultiSafepay account.
 * Press the 'Install now' button
 
 = Manual Installation =
-* Download the plugin from the Wordpress Plugin Directory
+* Download the plugin from the WordPress Plugin Directory
 * Unzip the downloaded file to a local directory
 * Upload the directory 'multisafepay' to /wp-content/plugins/ on the remote server
 
@@ -109,7 +109,7 @@ Before you update the plugin, we strongly recommend you the following:
 = How can I generate a payment link in the backend of WooCommerce? =
 
 It is possible to generate a payment link when an order has been created at the backend in WooCommerce.
-The customer will receive the payment link in the email send by WooCommerce with the order details. Also the payment link will be added to the order notes.
+The customer will receive the payment link in the email send by WooCommerce with the order details. Also, the payment link will be added to the order notes.
 
 Please follow these steps:
 
@@ -138,11 +138,20 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 9. Embedded Credit Card form using MultiSafepay Payment Component
 
 == Changelog ==
+= Release Notes - WooCommerce 6.10.0 (Nov 10th, 2025) =
+
+### Added
++ PLGWOOS-1010: Add contract type selection for Billink between B2C and B2B
++ PLGWOOS-1006: Add support custom image size for Bancontact QR codes
+
+### Fixed
++ PLGWOOS-956: MultiSafepay PostePay is being listed as only one payment method, but it should be two
+
 = Release Notes - WooCommerce 6.9.0 (Jun 5th, 2025) =
 
 ### Added
 + PLGWOOS-1003: Add zip code and email format validation to QR code implementation
-+ PLGWOOS-1001: Improvement over QR code implementation validating checkout when"ship to a different address" is checked.
++ PLGWOOS-1001: Improvement over QR code implementation validating checkout when "ship to a different address" is checked.
 
 ### Fixed
 + PLGWOOS-1009: Fix Bancontact QR showing up even when it hasn’t been explicitly enabled
@@ -383,7 +392,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 
 ### Changed
 + DAVAMS-547: AfterPay -> Riverty rebrand
-+ PLGWOOS-837: Declare support for Wordpress version 6.1 and WooCommerce version 7.1
++ PLGWOOS-837: Declare support for WordPress version 6.1 and WooCommerce version 7.1
 
 = Release Notes - WooCommerce 5.1.0 (Sep 30th, 2022) =
 
@@ -403,12 +412,12 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 ### Changed
 + PLGWOOS-827: Drop support for PHP 7.2
 
-= Release Notes - WooCommerce 4.17.2 (Jul 22st, 2022) =
+= Release Notes - WooCommerce 4.17.2 (Jul 22nd, 2022) =
 
 ### Fixed
 + PLGWOOS-825: Fix an issue in which some payment methods are not being shown in the checkout, because of the setting field country selector is assuming the wrong value in some cases
 
-= Release Notes - WooCommerce 4.17.1 (Jul 22st, 2022) =
+= Release Notes - WooCommerce 4.17.1 (Jul 22nd, 2022) =
 
 ### Changed
 + PLGWOOS-817: Improvement in the escaping of the outputs of the settings page
@@ -444,13 +453,13 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 + DAVAMS-476: Add Alipay+
 
 ### Changed
-+ PLGWOOS-804: Use default locale if get_locale returns null to prevent third party plugin errors
++ PLGWOOS-804: Use default locale if 'get_locale' returns null to prevent third party plugin errors
 + PHPSDK-93: Upgrade the [PHP-SDK](https://github.com/MultiSafepay/php-sdk) dependency to 5.5.0
 
-= Release Notes - WooCommerce 4.13.1 (Mar 23th, 2022) =
+= Release Notes - WooCommerce 4.13.1 (Mar 23rd, 2022) =
 
 ### Added
-+ PLGWOOS-792: Declare support for Wordpress 5.9.2 and WooCommerce 6.3.1
++ PLGWOOS-792: Declare support for WordPress 5.9.2 and WooCommerce 6.3.1
 + PLGWOOS-790: Improvement on debug mode, logging the body of the POST notification request
 
 ### Fixed
@@ -482,7 +491,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 + PLGWOOS-745: Tokenization now works through the Payment Component
 
 ### Fixed
-+ PLGWOOS-763: Fix error on plugin list when application can not connect with wordpress network
++ PLGWOOS-763: Fix error on plugin list when application can not connect with WordPress network
 
 = Release Notes - WooCommerce 4.10.0 (Dec 13th, 2021) =
 
@@ -504,7 +513,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 
 ### Added
 + PLGWOOS-715: Add 2 "Generic Gateways" which include a flexible gateway code that allows any merchant to connect to almost every payment method we offer.
-+ PLGWOOS-746: Declare support for Wordpress 5.8.1 and WooCommerce 5.8.0
++ PLGWOOS-746: Declare support for WordPress 5.8.1 and WooCommerce 5.8.0
 
 ### Changed
 + PLGWOOS-740: Improve the helper text of the Google Analytics ID setting field, adding a link to Documentation Center
@@ -532,13 +541,13 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 = Release Notes - WooCommerce 4.8.0 (Aug 4th, 2021) =
 
 ### Added
-+ PLGWOOS-723: Declare support for WooCommerce 5.5.2 and Wordpress 5.8
++ PLGWOOS-723: Declare support for WooCommerce 5.5.2 and WordPress 5.8
 + PLGWOOS-711: Add missing titles in setting pages
 
 ### Changed
 + PLGWOOS-718: Remove PSP ID string when register the transaction ID in WC_Order->payment_complete()
 
-= Release Notes - WooCommerce 4.7.0 (Jun 23th, 2021) =
+= Release Notes - WooCommerce 4.7.0 (Jun 23rd, 2021) =
 
 ### Added
 + PLGWOOS-706: Declare support for WooCommerce 5.4.1
@@ -568,10 +577,10 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 + PLGWOOS-661: Fix payment methods ids to match list of gateway lists keys, which was producing an error to process notification for Sofort payments
 + PLGWOOS-663: Fix stock decreasing error, in relation with Bank Transfer gateway and notification flows
 
-= Release Notes - WooCommerce 4.5.0 (Mar 31th, 2021) =
+= Release Notes - WooCommerce 4.5.0 (Mar 31st, 2021) =
 
 ### Fixed
-+ PLGWOOS-659: Fix initialization of the plugin on multisite environments in which WooCommerce has been activate network wide
++ PLGWOOS-659: Fix initialization of the plugin on multisite environments in which WooCommerce has been activated network wide
 
 ### Added
 + PLGWOOS-534: Add generic gateway
@@ -581,7 +590,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 ### Fixed
 + PLGWOOS-653: Fix overwriting initial order status when transaction is initialized
 
-= Release Notes - WooCommerce 4.4.0 (Mar 23th, 2021) =
+= Release Notes - WooCommerce 4.4.0 (Mar 23rd, 2021) =
 
 ### Fixed
 + PLGWOOS-648: Return 0 as tax rate, if WooCommerce taxes are disabled but tax rules are registered
@@ -601,7 +610,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 ### Added
 + PLGWOOS-629: Add shipping item to the order request, even if this one is free
 + PLGWOOS-631: Add delivery address in order request even if the shipping amount is 0
-+ PLGWOOS-634: Add settings field to redirect to checkout page or cart page on cancelling the order
++ PLGWOOS-634: Add settings field to redirect to check out page or cart page on cancelling the order
 + PLGWOOS-635: Add suggestion to set default initial order status for bank transfer to wc-on-hold
 + PLGWOOS-636: Add notification endpoint from version 3.8.0 to process deprecated notifications
 
@@ -620,7 +629,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 + PLGWOOS-613: Fix error related with multiple forwarded IPs by updating the PHP-SDK to 5.0.1
 
 ### Added
-+ PLGWOOS-398: Add support to change the data in the OrderRequest using Wordpress filters
++ PLGWOOS-398: Add support to change the data in the OrderRequest using WordPress filters
 
 ### Changed
 + PLGWOOS-614: Avoid changing order status if transaction is partially refunded
@@ -641,7 +650,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 + PLGWOOS-603: Add setting field for custom order description
 + PLGWOOS-604: Add forwarded IP to the CustomerDetails object
 + PLGWOOS-597: Support for orders with is_vat_exempt
-+ PLGWOOS-606: Add chargedback transaction status in plugin settings
++ PLGWOOS-606: Add chargeback transaction status in plugin settings
 
 = Release Notes - WooCommerce 4.1.8 (Mar 5th, 2021) =
 
@@ -652,7 +661,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 ### Fixed
 + PLGWOOS-594: Fix Credit Card payment method form, to show description if customer is not logged in
 
-= Release Notes - WooCommerce 4.1.7 (Mar 3th, 2021) =
+= Release Notes - WooCommerce 4.1.7 (Mar 3rd, 2021) =
 
 ### Changed
 + PLGWOOS-579: Remove warning message on validation, when enabling CREDITCARD gateway
@@ -680,7 +689,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 + PLGWOOS-552: Fix product item price with discounts introduced by third party plugins (#252)
 
 
-= Release Notes - WooCommerce 4.1.4 (Feb 23th, 2021) =
+= Release Notes - WooCommerce 4.1.4 (Feb 23rd, 2021) =
 
 ### Fixed
 + PLGWOOS-563: Remove some nonce validations to support custom checkouts forms (#249)
@@ -691,7 +700,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 + PLGWOOS-562: Add fallback for in3, in case no fields is filled in checkout, convert the transaction to redirect type (#250)
 
 
-= Release Notes - WooCommerce 4.1.3 (Feb 21th, 2021) =
+= Release Notes - WooCommerce 4.1.3 (Feb 21st, 2021) =
 
 ### Fixed
 + PLGWOOS-549: Support custom order numbers generated by third party plugins in notification method
@@ -716,7 +725,7 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 + PLGWOOS-512: Add support for tokenization.
 + PLGWOOS-521: Change order status on callback even if merchant did not save the settings, using defaults.
 + PLGWOOS-530: Process notification, even when the payment method returned by MultiSafepay is not registered as WooCommerce gateway.
-+ PLGWOOS-531: Avoid process refund if amount submited in backend is 0
++ PLGWOOS-531: Avoid process refund if amount submitted in backend is 0
 
 ### Fixed
 + PLGWOOS-535: Fix bug min_amount filter
