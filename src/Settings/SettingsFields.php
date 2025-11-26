@@ -88,21 +88,6 @@ class SettingsFields {
             'intro'  => '',
             'fields' => array(
                 array(
-                    'id'           => 'multisafepay_group_credit_cards',
-                    'label'        => __( 'Group debit and credit cards', 'multisafepay' ),
-                    'description'  => __( 'If is enabled, payment methods classified as debit and credit cards  (Amex, Maestro, Mastercard, and Visa) will shown grouped as a single payment method', 'multisafepay' ),
-                    'type'         => 'checkbox',
-                    'default'      => (bool) get_option(
-                        'multisafepay_group_credit_cards',
-                        PaymentMethodService::is_multisafepay_credit_card_woocommerce_payment_gateway_enabled()
-                    ),
-                    'placeholder'  => __( 'Group debit and credit cards', 'multisafepay' ),
-                    'tooltip'      => '',
-                    'callback'     => '',
-                    'setting_type' => 'boolean',
-                    'sort_order'   => 3,
-                ),
-                array(
                     'id'           => 'multisafepay_debugmode',
                     'label'        => __( 'Debug Mode', 'multisafepay' ),
                     'description'  => 'Is recommended to keep debug mode disabled in live environment',
@@ -115,16 +100,19 @@ class SettingsFields {
                     'sort_order'   => 1,
                 ),
                 array(
-                    'id'           => 'multisafepay_disable_shopping_cart',
-                    'label'        => __( 'Disable Shopping Cart on the MultiSafepay payment page', 'multisafepay' ),
-                    'description'  => 'Enable this option to hide the cart items on the MultiSafepay payment page, leaving only the total order amount. Note: This behavior won\'t be adopted by the the payment methods which require shopping cart like Riverty, E-Invoicing, in3, Klarna and Pay After Delivery.',
+                    'id'           => 'multisafepay_group_credit_cards',
+                    'label'        => __( 'Group debit and credit cards', 'multisafepay' ),
+                    'description'  => __( 'If is enabled, payment methods classified as debit and credit cards  (Amex, Maestro, Mastercard, and Visa) will be shown grouped as a single payment method', 'multisafepay' ),
                     'type'         => 'checkbox',
-                    'default'      => false,
-                    'placeholder'  => __( 'Disable Shopping Cart', 'multisafepay' ),
+                    'default'      => (bool) get_option(
+                        'multisafepay_group_credit_cards',
+                        PaymentMethodService::is_multisafepay_credit_card_woocommerce_payment_gateway_enabled()
+                    ),
+                    'placeholder'  => __( 'Group debit and credit cards', 'multisafepay' ),
                     'tooltip'      => '',
                     'callback'     => '',
                     'setting_type' => 'boolean',
-                    'sort_order'   => 100,
+                    'sort_order'   => 3,
                 ),
                 array(
                     'id'           => 'multisafepay_order_request_description',
@@ -267,6 +255,30 @@ class SettingsFields {
                     'callback'     => '',
                     'setting_type' => 'string',
                     'sort_order'   => 55,
+                ),
+                array(
+                    'id'           => 'multisafepay_checkout_block_payment_icons',
+                    'label'        => __( 'Show Payment Icons in WooCommerce Checkout Block', 'multisafepay' ),
+                    'description'  => __( 'Enable this option to show payment icons on the Checkout Block', 'multisafepay' ),
+                    'type'         => 'checkbox',
+                    'default'      => false,
+                    'placeholder'  => __( 'Show Payment Icons in WooCommerce Checkout Block', 'multisafepay' ),
+                    'tooltip'      => '',
+                    'callback'     => '',
+                    'setting_type' => 'boolean',
+                    'sort_order'   => 60,
+                ),
+                array(
+                    'id'           => 'multisafepay_disable_shopping_cart',
+                    'label'        => __( 'Disable Shopping Cart on the MultiSafepay payment page', 'multisafepay' ),
+                    'description'  => __( 'Enable this option to hide the cart items on the MultiSafepay payment page, leaving only the total order amount. Note: This behavior won\'t be adopted by the the payment methods which require shopping cart like Riverty, E-Invoicing, in3, Klarna and Pay After Delivery.', 'multisafepay' ),
+                    'type'         => 'checkbox',
+                    'default'      => false,
+                    'placeholder'  => __( 'Disable Shopping Cart', 'multisafepay' ),
+                    'tooltip'      => '',
+                    'callback'     => '',
+                    'setting_type' => 'boolean',
+                    'sort_order'   => 80,
                 ),
             ),
         );

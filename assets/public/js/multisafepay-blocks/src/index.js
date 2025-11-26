@@ -36,15 +36,36 @@ const registerMultiSafepayPaymentMethods = ( { wc, multisafepay_gateways } ) => 
     );
 }
 
-const createOptions = ( gateway ) => {
+const createOptions     = ( gateway ) => {
+    const labelElements = [];
+
+    if ( gateway.icon ) {
+        labelElements.push(
+            React.createElement(
+                'img',
+                {
+                    src: gateway.icon,
+                    alt: gateway.title,
+                    style: { height: '24px', width: 'auto', marginRight: '8px' }
+                }
+            )
+        );
+    }
+
+    labelElements.push( gateway.title );
+
     return {
         name: gateway.id,
-        label: gateway.title,
-        paymentMethodId: gateway.id,
-        edit: React.createElement( 'div', null, '' ),
-        canMakePayment: () => true,
-        ariaLabel: gateway.title,
-        content: React.createElement( 'div', null, gateway.description ),
+        label: React.createElement(
+            'span',
+            { style: { display: 'flex', alignItems: 'center' } },
+            ...labelElements
+        ),
+    paymentMethodId: gateway.id,
+    edit: React.createElement( 'div', null, '' ),
+    canMakePayment: () => true,
+    ariaLabel: gateway.title,
+    content: React.createElement( 'div', null, gateway.description ),
     };
 };
 

@@ -117,11 +117,13 @@ final class BasePaymentMethodBlocks extends AbstractPaymentMethodType {
      */
     public function get_payment_method_data(): array {
         $payment_methods_data = array();
+        $show_icons           = (bool) get_option( 'multisafepay_checkout_block_payment_icons', false );
         foreach ( $this->gateways as $gateway ) {
             $payment_methods_data[] = array(
                 'id'          => $gateway->get_payment_method_id(),
                 'title'       => $gateway->get_title(),
                 'description' => $gateway->get_description(),
+                'icon'        => $show_icons ? $gateway->get_payment_method_icon() : '',
                 'is_admin'    => is_admin(),
             );
         }
