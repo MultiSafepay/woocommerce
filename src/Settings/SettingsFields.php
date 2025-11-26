@@ -228,23 +228,6 @@ class SettingsFields {
                     'sort_order'   => 50,
                 ),
                 array(
-                    'id'           => 'multisafepay_time_unit',
-                    'label'        => __( 'Unit lifetime of payment link', 'multisafepay' ),
-                    'description'  => __( 'The lifetime of a payment link by default is 30 days. This means that the customer has 30 days to complete the transaction using the payment link', 'multisafepay' ),
-                    'type'         => 'select',
-                    'options'      => array(
-                        'days'    => __( 'Days', 'multisafepay' ),
-                        'hours'   => __( 'Hours', 'multisafepay' ),
-                        'seconds' => __( 'Seconds', 'multisafepay' ),
-                    ),
-                    'default'      => 'days',
-                    'placeholder'  => __( 'Unit lifetime of payment link', 'multisafepay' ),
-                    'tooltip'      => '',
-                    'callback'     => '',
-                    'setting_type' => 'string',
-                    'sort_order'   => 40,
-                ),
-                array(
                     'id'           => 'multisafepay_payment_component_template_id',
                     'label'        => __( 'Payment Component Template ID', 'multisafepay' ),
                     'description'  => __( 'If empty, the default one will be used', 'multisafepay' ),
