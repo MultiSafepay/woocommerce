@@ -12,9 +12,11 @@ use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Utils\Hpos;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use MultiSafepay\WooCommerce\Utils\Order;
+use MultiSafepay\WooCommerce\Utils\RestResponseBuilder;
 use WC_Data_Exception;
 use WC_Order;
 use WP_REST_Request;
+use WP_REST_Response;
 
 /**
  * Class QrPaymentWebhook
@@ -39,16 +41,16 @@ class QrPaymentWebhook {
      * Create a WooCommerce order based on QR transaction
      *
      * @param TransactionResponse $multisafepay_transaction
-     * @return void
+     * @return WP_REST_Response
      */
-    public function create_woocommerce_order( TransactionResponse $multisafepay_transaction ): void {
+    public function create_woocommerce_order( TransactionResponse $multisafepay_transaction ): WP_REST_Response {
         $multisafepay_order_id = $multisafepay_transaction->getOrderId();
 
         $checkout_data = $this->get_checkout_data( $multisafepay_order_id );
 
         if ( empty( $checkout_data ) ) {
             $this->logger->log_error( 'Could not create order for order id ' . $multisafepay_order_id . ' because checkout data is empty' );
-            return;
+            return RestResponseBuilder::build_response();
         }
 
         try {
@@ -132,14 +134,12 @@ class QrPaymentWebhook {
                 Hpos::update_meta( $order, '_multisafepay_order_environment', get_option( 'multisafepay_testmode', false ) ? 'test' : 'live' );
             }
 
-            header( 'Content-type: text/plain' );
-            die( 'OK' );
+            return RestResponseBuilder::build_response();
 
         } catch ( Exception | WC_Data_Exception  $exception ) {
             $this->logger->log_error( 'Something went wrong when creating WooCommerce order for MultiSafepay order id ' . $multisafepay_order_id . ' with message: ' . $exception->getMessage() );
 
-            header( 'Content-type: text/plain' );
-            die( 'OK' );
+            return RestResponseBuilder::build_response();
         }
     }
 
@@ -232,22 +232,23 @@ class QrPaymentWebhook {
 
     /**
      * @param WP_REST_Request $request
-     * @return void
+     * @return WP_REST_Response
      */
-    public function process_webhook( WP_REST_Request $request ): void {
+    public function process_webhook( WP_REST_Request $request ): WP_REST_Response {
         if ( ! ( new PaymentMethodService() )->is_any_woocommerce_payment_gateway_with_payment_component_qr_enabled() ) {
             $this->logger->log_error( 'Payment component QR is not enabled' );
-            header( 'Content-type: text/plain' );
-            die( 'OK' );
+            return RestResponseBuilder::build_response();
         }
 
         try {
             $multisafepay_transaction = $this->validate_webhook_request( $request );
-            $this->create_woocommerce_order( $multisafepay_transaction );
+            if ( ! $multisafepay_transaction ) {
+                return RestResponseBuilder::build_response();
+            }
+            return $this->create_woocommerce_order( $multisafepay_transaction );
         } catch ( Exception | InvalidArgumentException $exception ) {
             $this->logger->log_error( 'Something went wrong when processing webhook for transaction id ' . ( $request->get_param( 'transactionid' ) ?? 'unknown' ) . ' with message: ' . $exception->getMessage() );
-            header( 'Content-type: text/plain' );
-            die( 'OK' );
+            return RestResponseBuilder::build_response();
         }
     }
 
@@ -262,28 +263,31 @@ class QrPaymentWebhook {
         $transactionid = $request->get_param( 'transactionid' );
 
         if ( ! $request->sanitize_params() ) {
-            $this->logger->log_info( 'Notification for transactionid . ' . $transactionid . ' has been received but could not be sanitized' );
-            header( 'Content-type: text/plain' );
-            die( 'OK' );
+            $this->logger->log_info( 'Notification for transactionid ' . $transactionid . ' has been received but could not be sanitized' );
+            return null;
         }
 
         $payload_type = $request->get_param( 'payload_type' ) ?? '';
 
         if ( 'pretransaction' === $payload_type ) {
-            $this->logger->log_info( 'Notification for transactionid . ' . $transactionid . ' has been received but is going to be ignored, because is pretransaction type' );
-            header( 'Content-type: text/plain' );
-            die( 'OK' );
+            $this->logger->log_info( 'Notification for transactionid ' . $transactionid . ' has been received but is going to be ignored, because is pretransaction type' );
+            return null;
         }
 
-        $auth                = $request->get_header( 'auth' );
-        $body                = $request->get_body();
-        $api_key             = ( new SdkService() )->get_api_key();
+        $auth    = (string) ( $request->get_header( 'auth' ) ?? '' );
+        $body    = $request->get_body();
+        $api_key = ( new SdkService() )->get_api_key();
+
+        if ( '' === $auth ) {
+            $this->logger->log_info( 'Notification for transactionid ' . $transactionid . ' has been received but auth header is missing' );
+            return null;
+        }
+
         $verify_notification = Notification::verifyNotification( $body, $auth, $api_key );
 
         if ( ! $verify_notification ) {
-            $this->logger->log_info( 'Notification for transactionid . ' . $transactionid . ' has been received but is not validated' );
-            header( 'Content-type: text/plain' );
-            die( 'OK' );
+            $this->logger->log_info( 'Notification for transactionid ' . $transactionid . ' has been received but is not validated' );
+            return null;
         }
 
         if ( get_option( 'multisafepay_debugmode', false ) ) {
@@ -297,8 +301,7 @@ class QrPaymentWebhook {
         $multisafepay_transaction = new TransactionResponse( $request->get_json_params(), $body );
 
         if ( Transaction::COMPLETED !== $multisafepay_transaction->getStatus() ) {
-            header( 'Content-type: text/plain' );
-            die( 'OK' );
+            return null;
         }
 
         return $multisafepay_transaction;
@@ -308,27 +311,24 @@ class QrPaymentWebhook {
      * Process balancer
      *
      * @param WP_REST_Request $request
-     * @return void
+     * @return WP_REST_Response
      */
-    public function process_balancer( WP_REST_Request $request ): void {
+    public function process_balancer( WP_REST_Request $request ): WP_REST_Response {
         $order_id = sanitize_text_field( wp_unslash( $request->get_param( 'transactionid' ) ?? '' ) );
 
         if ( ! $request->sanitize_params() ) {
-            $this->logger->log_info( 'Notification for transactionid . ' . $order_id . ' has been received but could not be sanitized' );
-            wp_safe_redirect( wc_get_cart_url(), 302 );
-            exit;
+            $this->logger->log_info( 'Notification for transactionid ' . $order_id . ' has been received but could not be sanitized' );
+            return RestResponseBuilder::build_response( 302, null, array( 'Location' => wc_get_cart_url() ) );
         }
 
         if ( empty( $order_id ) ) {
             $this->logger->log_info( 'Request received without transaction ID' );
-            wp_safe_redirect( wc_get_cart_url(), 302 );
-            exit;
+            return RestResponseBuilder::build_response( 302, null, array( 'Location' => wc_get_cart_url() ) );
         }
 
         if ( ! ( new PaymentMethodService() )->is_any_woocommerce_payment_gateway_with_payment_component_qr_enabled() ) {
             $this->logger->log_error( 'Payment component QR is not enabled' );
-            wp_safe_redirect( wc_get_cart_url(), 302 );
-            exit();
+            return RestResponseBuilder::build_response( 302, null, array( 'Location' => wc_get_cart_url() ) );
         }
 
         $token = $request->get_param( 'token' );
@@ -336,8 +336,7 @@ class QrPaymentWebhook {
             $expected_token = get_transient( 'multisafepay_token_' . $order_id );
             if ( $token !== $expected_token ) {
                 $this->logger->log_warning( 'Invalid token for transaction: ' . $order_id );
-                wp_safe_redirect( wc_get_cart_url(), 302 );
-                exit;
+                return RestResponseBuilder::build_response( 302, null, array( 'Location' => wc_get_cart_url() ) );
             }
         }
 
@@ -352,16 +351,14 @@ class QrPaymentWebhook {
 
             $woocommerce_order = wc_get_order( $woocommerce_order_id );
 
-            wp_safe_redirect( $woocommerce_order->get_checkout_order_received_url(), 302 );
-            exit;
+            return RestResponseBuilder::build_response( 302, null, array( 'Location' => $woocommerce_order->get_checkout_order_received_url() ) );
         }
 
         $redirect_url = ( get_option( 'multisafepay_redirect_after_cancel', 'cart' ) === 'cart' ) ?
             wc_get_cart_url() :
             wc_get_checkout_url();
 
-        wp_safe_redirect( $redirect_url, 302 );
-        exit;
+        return RestResponseBuilder::build_response( 302, null, array( 'Location' => $redirect_url ) );
     }
 
     /**

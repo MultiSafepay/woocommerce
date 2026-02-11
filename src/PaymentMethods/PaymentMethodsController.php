@@ -15,10 +15,12 @@ use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Utils\Hpos;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use MultiSafepay\WooCommerce\Utils\Order as OrderUtil;
+use MultiSafepay\WooCommerce\Utils\RestResponseBuilder;
 use Psr\Http\Client\ClientExceptionInterface;
 use WC_Data_Exception;
 use WC_Order;
 use WP_REST_Request;
+use WP_REST_Response;
 
 /**
  * Defines all the methods needed to register related with Payment Methods actions and filters
@@ -204,34 +206,37 @@ class PaymentMethodsController {
      * Process the POST notification
      *
      * @param WP_REST_Request $request
-     * @return void
+     * @return WP_REST_Response
      * @throws WC_Data_Exception
      */
-    public function process_post_notification( WP_REST_Request $request ): void {
+    public function process_post_notification( WP_REST_Request $request ): WP_REST_Response {
         $transactionid = $request->get_param( 'transactionid' );
 
         if ( ! $request->sanitize_params() ) {
-            $this->logger->log_info( 'Notification for transactionid . ' . $transactionid . ' has been received but could not be sanitized' );
-            header( 'Content-type: text/plain' );
-            die( 'OK' );
+            $this->logger->log_info( 'Notification for transactionid ' . $transactionid . ' has been received but could not be sanitized' );
+            return RestResponseBuilder::build_response();
         }
 
         $payload_type = $request->get_param( 'payload_type' ) ?? '';
         if ( 'pretransaction' === $payload_type ) {
-            $this->logger->log_info( 'Notification for transactionid . ' . $transactionid . ' has been received but is going to be ignored, because is pretransaction type' );
-            header( 'Content-type: text/plain' );
-            die( 'OK' );
+            $this->logger->log_info( 'Notification for transactionid ' . $transactionid . ' has been received but is going to be ignored, because is pretransaction type' );
+            return RestResponseBuilder::build_response();
         }
 
-        $auth                = $request->get_header( 'auth' );
-        $body                = $request->get_body();
-        $api_key             = ( new SdkService() )->get_api_key();
+        $auth    = (string) ( $request->get_header( 'auth' ) ?? '' );
+        $body    = $request->get_body();
+        $api_key = ( new SdkService() )->get_api_key();
+
+        if ( '' === $auth ) {
+            $this->logger->log_info( 'Notification for transactionid ' . $transactionid . ' has been received but auth header is missing' );
+            return RestResponseBuilder::build_response();
+        }
+
         $verify_notification = Notification::verifyNotification( $body, $auth, $api_key );
 
         if ( ! $verify_notification ) {
-            $this->logger->log_info( 'Notification for transactionid . ' . $transactionid . ' has been received but is not validated' );
-            header( 'Content-type: text/plain' );
-            die( 'OK' );
+            $this->logger->log_info( 'Notification for transactionid ' . $transactionid . ' has been received but is not validated' );
+            return RestResponseBuilder::build_response();
         }
 
         if ( get_option( 'multisafepay_debugmode', false ) ) {
@@ -244,6 +249,8 @@ class PaymentMethodsController {
 
         $multisafepay_transaction = new TransactionResponse( $request->get_json_params(), $body );
         ( new PaymentMethodCallback( (string) $transactionid, $multisafepay_transaction ) )->process_callback();
+
+        return RestResponseBuilder::build_response();
     }
 
     /**
