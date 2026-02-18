@@ -464,7 +464,17 @@ class BasePaymentMethod extends WC_Payment_Gateway {
      * @return bool
      */
     private function is_woocommerce_checkout_block_active(): bool {
-        return WC_Blocks_Utils::has_block_in_page( wc_get_page_id( 'checkout' ), 'woocommerce/checkout' );
+        $checkout_page_id = wc_get_page_id( 'checkout' );
+        $checkout_page    = get_post( $checkout_page_id );
+        $has_block        = WC_Blocks_Utils::has_block_in_page( $checkout_page_id, 'woocommerce/checkout' );
+
+        // Fallback: WC_Blocks_Utils::has_block_in_page() doesn't detect nested blocks (e.g., inside columns).
+        // If not detected, check directly in post content.
+        if ( ! $has_block && $checkout_page ) {
+            $has_block = strpos( $checkout_page->post_content, 'wp:woocommerce/checkout' ) !== false;
+        }
+
+        return $has_block;
     }
 
     /**
