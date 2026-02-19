@@ -2,12 +2,12 @@
     "name": "multisafepay/woocommerce",
     "description": "A new WooCommerce plugin",
     "type": "wordpress-plugin",
-    "version": "6.10.0",
+    "version": "6.11.0",
     "license": "GPL-3.0-or-later",
     "minimum-stability": "RC",
     "keywords" : [ "wordpress", "multisafepay" ],
     "require": {
-        "multisafepay/php-sdk": "^5.17",
+        "multisafepay/php-sdk": "^5.20",
         "nyholm/psr7": "^1.4",
         "psr/http-client": "^1.0"
     },

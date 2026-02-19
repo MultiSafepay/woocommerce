@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.11.0
+Release Date: Feb 19th, 2026
+
+### Added
++ PLGWOOS-1018: Add payment icons to Checkout Block
+
+### Fixed
++ PLGWOOS-1032: Fix WC_Blocks_Utils::has_block_in_page() fails to detect checkout block when nested inside other blocks
++ PLGWOOS-1019: Fix the duplicated 'multisafepay_time_unit' setting field argument
+
+### Changed
++ PLGWOOS-1029: REST Response Cache Control
+
+***
+
 ## 6.10.0
 Release Date: Nov 10th, 2025
 

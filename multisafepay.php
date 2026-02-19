@@ -4,16 +4,16 @@
  * Plugin Name:             MultiSafepay
  * Plugin URI:              https://docs.multisafepay.com/docs/woocommerce
  * Description:             MultiSafepay Payment Plugin
- * Version:                 6.10.0
+ * Version:                 6.11.0
  * Author:                  MultiSafepay
  * Author URI:              https://www.multisafepay.com
  * Copyright:               Copyright (c) MultiSafepay, Inc. (https://www.multisafepay.com)
  * License:                 GNU General Public License v3.0
  * License URI:             http://www.gnu.org/licenses/gpl-3.0.html
  * Requires at least:       6.0
- * Tested up to:            6.8.3
+ * Tested up to:            6.9.1
  * WC requires at least:    6.0.0
- * WC tested up to:         10.2.2
+ * WC tested up to:         10.5.2
  * Requires PHP:            7.3
  * Text Domain:             multisafepay
  * Domain Path:             /languages
