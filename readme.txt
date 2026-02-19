@@ -4,7 +4,7 @@ Tags: multisafepay, payment gateway, credit cards, ideal, bnpl
 Requires at least: 6.0
 Tested up to: 6.9.1
 Requires PHP: 7.3
-Stable tag: 6.11.0
+Stable tag: 6.11.1
 License: GPL-3.0-or-later
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -141,6 +141,11 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 9. Embedded Credit Card form using MultiSafepay Payment Component
 
 == Changelog ==
+
+= Release Notes - MultiSafepay 6.11.1 (Feb 19th, 2026) =
+
+### Fixed
++ PLGWOOS-1035: Fix incorrect plugin version constant in settings and order request
 
 = Release Notes - MultiSafepay 6.11.0 (Feb 19th, 2026) =
 
