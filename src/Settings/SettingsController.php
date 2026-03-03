@@ -54,6 +54,16 @@ class SettingsController {
         $sections = array( 'multisafepay_applepay', 'multisafepay_googlepay', 'multisafepay_bancontact' );
         if ( isset( $_GET['section'] ) && in_array( $_GET['section'], $sections, true ) ) {
             wp_enqueue_script( 'multisafepay-admin-js', MULTISAFEPAY_PLUGIN_URL . '/assets/admin/js/multisafepay-admin.js', array(), MULTISAFEPAY_PLUGIN_VERSION, true );
+            wp_localize_script(
+                'multisafepay-admin-js',
+                'multisafepayAdminData',
+                array(
+                    'directPaymentConfirmation' => array(
+                        'title'           => __( 'Direct payment activation confirmation', 'multisafepay' ),
+                        'messageTemplate' => __( "Before enabling %payment_method% Direct, ensure all technical and configuration prerequisites are completed.\n\nBy clicking OK, you explicitly confirm that all prerequisites have been fulfilled.", 'multisafepay' ),
+                    ),
+                )
+            );
         }
     }
 
