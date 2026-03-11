@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ***
 
+## 6.12.0
+Release Date: Mar 11th, 2026
+
+### Added
++ DAVAMS-980: Add confirmation prompt when enabling direct Google Pay or Apple Pay
+
+### Fixed
++ PLGWOOS-1037: Potential fix for 'No payment method provided' error on WooCommerce Checkout Blocks
+
+***
+
 ## 6.11.1
 Release Date: Feb 19th, 2026
 
