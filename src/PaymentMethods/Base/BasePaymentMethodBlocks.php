@@ -125,6 +125,7 @@ final class BasePaymentMethodBlocks extends AbstractPaymentMethodType {
                 'description' => $gateway->get_description(),
                 'icon'        => $show_icons ? $gateway->get_payment_method_icon() : '',
                 'is_admin'    => is_admin(),
+                'supports'    => $gateway->supports,
             );
         }
 

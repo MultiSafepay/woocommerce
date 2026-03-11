@@ -19,21 +19,11 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+const { registerPaymentMethod } = window.wc.wcBlocksRegistry;
+const { getSetting }            = window.wc.wcSettings;
+
 function check_apple_pay_availability() {
     return window.ApplePaySession && ApplePaySession.canMakePayments();
-}
-
-const registerMultiSafepayPaymentMethods = ( { wc, multisafepay_gateways } ) => {
-    const { registerPaymentMethod }      = wc.wcBlocksRegistry;
-
-    multisafepay_gateways.forEach(
-        ( gateway ) =>
-        {
-            if ( gateway.is_admin || ( gateway.id !== 'multisafepay_applepay' ) || check_apple_pay_availability() ) {
-                registerPaymentMethod( createOptions( gateway ) );
-            }
-        }
-    );
 }
 
 const createOptions     = ( gateway ) => {
@@ -54,6 +44,9 @@ const createOptions     = ( gateway ) => {
 
     labelElements.push( gateway.title );
 
+    const defaultSupports = ['products', 'refunds'];
+    const gatewaySupports = gateway.supports || defaultSupports;
+
     return {
         name: gateway.id,
         label: React.createElement(
@@ -66,15 +59,19 @@ const createOptions     = ( gateway ) => {
     canMakePayment: () => true,
     ariaLabel: gateway.title,
     content: React.createElement( 'div', null, gateway.description ),
+    supports: {
+        features: gatewaySupports,
+        },
+        placeOrderButtonLabel: undefined,
     };
 };
 
-document.addEventListener(
-    'DOMContentLoaded',
-    () =>
-    {
-        registerMultiSafepayPaymentMethods(
-            window
-        );
-    }
-);
+if ( typeof window.multisafepay_gateways !== 'undefined' && Array.isArray( window.multisafepay_gateways ) ) {
+    window.multisafepay_gateways.forEach(
+        ( gateway ) => {
+            if ( gateway.is_admin || ( gateway.id !== 'multisafepay_applepay' ) || check_apple_pay_availability() ) {
+                registerPaymentMethod( createOptions( gateway ) );
+            }
+        }
+    );
+}
