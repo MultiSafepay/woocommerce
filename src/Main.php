@@ -3,6 +3,7 @@
 namespace MultiSafepay\WooCommerce;
 
 use MultiSafepay\WooCommerce\Blocks\BlocksController;
+use MultiSafepay\WooCommerce\PaymentMethods\Filters\PaymentMethodTitle;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodsController;
 use MultiSafepay\WooCommerce\Services\PaymentComponentService;
 use MultiSafepay\WooCommerce\Services\PostepayMigrationService;
@@ -126,7 +127,8 @@ class Main {
      * @return void
      */
     private function payment_methods_hooks(): void {
-        $payment_methods = new PaymentMethodsController();
+        $payment_methods             = new PaymentMethodsController();
+        $payment_method_title_filter = new PaymentMethodTitle();
         // Enqueue styles in payment methods
         $this->loader->add_action( 'wp_enqueue_scripts', $payment_methods, 'enqueue_styles' );
         // Register the MultiSafepay payment gateways in WooCommerce.
@@ -165,6 +167,10 @@ class Main {
         $this->loader->add_action( 'wp_ajax_nopriv_get_updated_total_price', $payment_methods, 'get_updated_total_price' );
         // Add the MultiSafepay transaction link in the order details page
         $this->loader->add_action( 'woocommerce_admin_order_data_after_payment_info', $payment_methods, 'add_multisafepay_transaction_link' );
+        // Use the stored order payment method title in the admin order context
+        if ( is_admin() && ! wp_doing_ajax() ) {
+            $this->loader->add_filter( 'woocommerce_gateway_title', $payment_method_title_filter, 'filter_gateway_title_by_order_payment_method_title', 10, 2 );
+        }
     }
 
     /**

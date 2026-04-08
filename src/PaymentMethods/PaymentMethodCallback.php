@@ -10,6 +10,7 @@ use MultiSafepay\WooCommerce\Services\SdkService;
 use MultiSafepay\WooCommerce\Settings\SettingsFields;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use MultiSafepay\WooCommerce\Utils\Order as OrderUtil;
+use MultiSafepay\WooCommerce\Utils\PaymentMethodTitleBuilder;
 use Psr\Http\Client\ClientExceptionInterface;
 use WC_Data_Exception;
 use WC_Order;
@@ -119,21 +120,32 @@ class PaymentMethodCallback {
     /**
      * Return the gateway code registered in MultiSafepay for this transaction
      *
+     * @param bool $apply_group_credit_cards
      * @return string
      */
-    private function get_multisafepay_transaction_gateway_code(): string {
+    private function get_multisafepay_transaction_gateway_code( bool $apply_group_credit_cards = true ): string {
         $code = $this->multisafepay_transaction->getPaymentDetails()->getType();
         if (
+            $apply_group_credit_cards &&
             in_array( $code, self::CREDIT_CARD_GATEWAYS, true ) &&
             get_option( 'multisafepay_group_credit_cards', false )
         ) {
             $code = 'CREDITCARD';
         }
-        if ( strpos( $code, 'Coupon::' ) !== false ) {
+        if ( 0 === stripos( $code, 'coupon::' ) ) {
             $data = $this->multisafepay_transaction->getPaymentDetails()->getData();
             return $data['coupon_brand'];
         }
         return $code;
+    }
+
+    /**
+     * Return the wallet code registered in MultiSafepay for this transaction
+     *
+     * @return string
+     */
+    private function get_multisafepay_transaction_wallet_code(): string {
+        return (string) $this->multisafepay_transaction->getPaymentDetails()->get( 'wallet' );
     }
 
     /**
@@ -169,10 +181,11 @@ class PaymentMethodCallback {
     /**
      * Return the initial order status configured in the payment method settings
      *
+     * @param PaymentMethodService $payment_method_service
      * @return string|null
      */
-    private function get_initial_order_status(): ?string {
-        $registered_payment_method = ( new PaymentMethodService() )->get_woocommerce_payment_gateway_by_id( $this->order->get_payment_method() );
+    private function get_initial_order_status( PaymentMethodService $payment_method_service ): ?string {
+        $registered_payment_method = $payment_method_service->get_woocommerce_payment_gateway_by_id( $this->order->get_payment_method() );
         return $registered_payment_method ? $registered_payment_method->initial_order_status : null;
     }
 
@@ -233,13 +246,33 @@ class PaymentMethodCallback {
             die( 'OK' );
         }
 
-        $registered_by_multisafepay_payment_method_object = ( new PaymentMethodService() )->get_woocommerce_payment_gateway_by_multisafepay_gateway_code( $this->get_multisafepay_transaction_gateway_code() );
-        $payment_method_id_registered_by_multisafepay     = $registered_by_multisafepay_payment_method_object ? $registered_by_multisafepay_payment_method_object->get_payment_method_id() : false;
-        $payment_method_title_registered_by_multisafepay  = $registered_by_multisafepay_payment_method_object ? $registered_by_multisafepay_payment_method_object->get_payment_method_title() : false;
-        $payment_method_id_registered_by_wc               = $this->order->get_payment_method();
-        $payment_method_title_registered_by_wc            = $this->order->get_payment_method_title();
-        $initial_order_status                             = $this->get_initial_order_status();
-        $default_order_status                             = SettingsFields::get_multisafepay_order_statuses();
+        $payment_method_service                           = new PaymentMethodService();
+        $payment_method_title_builder                     = new PaymentMethodTitleBuilder();
+        $registered_by_multisafepay_payment_method_object = $payment_method_service->get_woocommerce_payment_gateway_by_multisafepay_gateway_code( $this->get_multisafepay_transaction_gateway_code() );
+        $payment_method_title_registered_by_multisafepay  = $registered_by_multisafepay_payment_method_object ? $registered_by_multisafepay_payment_method_object->get_payment_method_title() : '';
+        $wallet_code                                      = $this->get_multisafepay_transaction_wallet_code();
+        $wallet_payment_method_object                     = $wallet_code ? $payment_method_service->get_woocommerce_payment_gateway_by_multisafepay_gateway_code( $wallet_code ) : false;
+        $wallet_payment_method_title                      = $wallet_payment_method_object ? $wallet_payment_method_object->get_payment_method_title() : '';
+        $payment_method_object_to_persist                 = $registered_by_multisafepay_payment_method_object;
+        if ( $wallet_payment_method_object ) {
+            $payment_method_object_to_persist = $wallet_payment_method_object;
+        }
+        $payment_method_id_to_persist = $payment_method_object_to_persist ? $payment_method_object_to_persist->get_payment_method_id() : false;
+        // Keep the gateway title as fallback and only enrich it when wallet context is available.
+        $payment_method_title_to_display = $payment_method_title_registered_by_multisafepay;
+        if ( ! empty( $wallet_payment_method_title ) ) {
+            $payment_method_title_to_display = $wallet_payment_method_title;
+            // Use the raw transaction gateway code (without CREDITCARD grouping) to decide wallet-title eligibility.
+            $underlying_payment_method_gateway_code = $this->get_multisafepay_transaction_gateway_code( false );
+            if ( $payment_method_title_builder->can_build_wallet_combined_payment_method_title( $underlying_payment_method_gateway_code ) ) {
+                $underlying_payment_method_title = $payment_method_title_builder->get_underlying_payment_method_title( $underlying_payment_method_gateway_code );
+                $payment_method_title_to_display = $payment_method_title_builder->build_combined_payment_method_title( $wallet_payment_method_title, $underlying_payment_method_title );
+            }
+        }
+        $payment_method_id_registered_by_wc    = $this->order->get_payment_method();
+        $payment_method_title_registered_by_wc = $this->order->get_payment_method_title();
+        $initial_order_status                  = $this->get_initial_order_status( $payment_method_service );
+        $default_order_status                  = SettingsFields::get_multisafepay_order_statuses();
 
         // Check if the WooCommerce Order status do not match with the order status received in notification, to avoid to process repeated of notification.
         // Or if the custom initial order status of the gateway is different than the general one, and the MultiSafepay transaction status is initialized, and custom initial order status is different than the current WooCommerce order status
@@ -281,12 +314,20 @@ class PaymentMethodCallback {
         }
 
         // If the payment method changed in MultiSafepay payment page, after leave WooCommerce checkout page
-        if ( $payment_method_id_registered_by_multisafepay && $payment_method_id_registered_by_wc !== $payment_method_id_registered_by_multisafepay ) {
-            $message = 'Callback received with a different payment method for Order ID: ' . $this->woocommerce_order_id . ' and Order Number: ' . $this->multisafepay_order_id . ' on ' . $this->time_stamp . '. Payment method changed from ' . $payment_method_title_registered_by_wc . ' to ' . $payment_method_title_registered_by_multisafepay . '.';
+        if ( $payment_method_id_to_persist && $payment_method_id_registered_by_wc !== $payment_method_id_to_persist ) {
+            $message = 'Callback received with a different payment method for Order ID: ' . $this->woocommerce_order_id . ' and Order Number: ' . $this->multisafepay_order_id . ' on ' . $this->time_stamp . '. Payment method changed from ' . $payment_method_title_registered_by_wc . ' to ' . $payment_method_title_to_display . '.';
             $this->logger->log_info( $message );
             OrderUtil::add_order_note( $this->order, $message, true );
             $this->order = wc_get_order( $this->woocommerce_order_id );
-            $this->order->set_payment_method( $registered_by_multisafepay_payment_method_object );
+            $this->order->set_payment_method( $payment_method_object_to_persist );
+            if ( ! empty( $payment_method_title_to_display ) ) {
+                $this->order->set_payment_method_title( $payment_method_title_to_display );
+            }
+            $this->order->save();
+        }
+
+        if ( ! empty( $wallet_payment_method_title ) && ! empty( $payment_method_title_to_display ) && $this->order->get_payment_method_title() !== $payment_method_title_to_display ) {
+            $this->order->set_payment_method_title( $payment_method_title_to_display );
             $this->order->save();
         }
 

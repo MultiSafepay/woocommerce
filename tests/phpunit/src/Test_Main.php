@@ -70,6 +70,7 @@ class Test_Main extends WP_UnitTestCase {
             array_merge(
             self::FILTER_HOOKS,
                 [
+                    'woocommerce_gateway_title',
                     'woocommerce_screen_ids',
                     'multisafepay_common_settings_fields'
                 ]

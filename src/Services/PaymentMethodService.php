@@ -41,6 +41,21 @@ class PaymentMethodService {
     private $logger;
 
     /**
+     * In-request cache for WooCommerce gateway objects.
+     *
+     * This avoids rebuilding gateway objects multiple times in the same request
+     * while still relying on transients for API-level caching.
+     *
+     * @var array
+     */
+    private $woocommerce_payment_gateways = array();
+
+    /**
+     * @var bool
+     */
+    private $woocommerce_payment_gateways_loaded = false;
+
+    /**
      * @param Logger|null $logger
      */
     public function __construct( ?Logger $logger = null ) {
@@ -111,9 +126,19 @@ class PaymentMethodService {
     /**
      * Return an array with WC_Payment_Gateway objects, created from the results of the API.
      *
+     * This method memoizes the gateway objects in-memory for the current request.
+     * The API response is already cached in transients, but object creation is still
+     * relatively expensive and this method is called multiple times in callbacks
+     * (for example: original gateway + wallet gateway lookup).
+     *
      * @return array
      */
     public function get_woocommerce_payment_gateways() : array {
+        // Reuse the same in-memory gateway objects for all lookups in this request.
+        if ( $this->woocommerce_payment_gateways_loaded ) {
+            return $this->woocommerce_payment_gateways;
+        }
+
         $woocommerce_payment_gateways = array();
         $multisafepay_payment_methods = $this->get_multisafepay_payment_methods_from_api();
         foreach ( $multisafepay_payment_methods as $multisafepay_payment_method ) {
@@ -122,7 +147,10 @@ class PaymentMethodService {
             }
         }
 
-        return $woocommerce_payment_gateways;
+        $this->woocommerce_payment_gateways        = $woocommerce_payment_gateways;
+        $this->woocommerce_payment_gateways_loaded = true;
+
+        return $this->woocommerce_payment_gateways;
     }
 
     /**
@@ -172,17 +200,20 @@ class PaymentMethodService {
     }
 
     /**
+     * Return the WooCommerce payment method object by WooCommerce gateway id.
+     *
+     * Since gateways are indexed by id when created, this is an O(1) lookup and
+     * avoids iterating through the full list on every call.
+     *
      * @param string $woocommerce_payment_gateway_id
      * @return BasePaymentMethod|null
      */
     public function get_woocommerce_payment_gateway_by_id( string $woocommerce_payment_gateway_id ): ?BasePaymentMethod {
         $woocommerce_payment_gateways = $this->get_woocommerce_payment_gateways();
-        /** @var BasePaymentMethod $woocommerce_payment_gateway */
-        foreach ( $woocommerce_payment_gateways as $woocommerce_payment_gateway ) {
-            if ( $woocommerce_payment_gateway->get_payment_method_id() === $woocommerce_payment_gateway_id ) {
-                return $woocommerce_payment_gateway;
-            }
+        if ( isset( $woocommerce_payment_gateways[ $woocommerce_payment_gateway_id ] ) ) {
+            return $woocommerce_payment_gateways[ $woocommerce_payment_gateway_id ];
         }
+
         return null;
     }
 
@@ -202,17 +233,22 @@ class PaymentMethodService {
     /**
      * Return the WooCommerce payment method object by MultiSafepay gateway code.
      *
+     * The gateway code is first converted to the internal WooCommerce id format,
+     * then resolved through direct array access against the memoized gateway list.
+     * This avoids repeated list rebuilds and linear scans in hot paths.
+     *
      * @param string $code
      * @return ?BasePaymentMethod
      */
     public function get_woocommerce_payment_gateway_by_multisafepay_gateway_code( string $code ): ?BasePaymentMethod {
-        $woocommerce_payment_gateways = ( new PaymentMethodService() )->get_woocommerce_payment_gateways();
-        /** @var BasePaymentMethod $woocommerce_payment_gateway */
-        foreach ( $woocommerce_payment_gateways as $woocommerce_payment_gateway ) {
-            if ( self::get_legacy_woocommerce_payment_gateway_ids( $code ) === $woocommerce_payment_gateway->get_payment_method_id() ) {
-                return $woocommerce_payment_gateway;
-            }
+        $woocommerce_payment_gateway_id = self::get_legacy_woocommerce_payment_gateway_ids( $code );
+        $woocommerce_payment_gateways   = $this->get_woocommerce_payment_gateways();
+
+        // Direct array access avoids iterating over all gateways on each lookup.
+        if ( isset( $woocommerce_payment_gateways[ $woocommerce_payment_gateway_id ] ) ) {
+            return $woocommerce_payment_gateways[ $woocommerce_payment_gateway_id ];
         }
+
         return null;
     }
 

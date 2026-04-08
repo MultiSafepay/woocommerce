@@ -70,6 +70,15 @@ class Test_PaymentMethodService extends WP_UnitTestCase {
         }
     }
 
+    public function test_get_woocommerce_payment_gateways_returns_cached_instances_in_same_request() {
+        delete_transient('multisafepay_payment_methods');
+
+        $first_gateways  = $this->payment_method_service->get_woocommerce_payment_gateways();
+        $second_gateways = $this->payment_method_service->get_woocommerce_payment_gateways();
+
+        $this->assertSame( $first_gateways['multisafepay_ideal'], $second_gateways['multisafepay_ideal'] );
+    }
+
     public function test_get_woocommerce_payment_gateway_by_id() {
         delete_transient('multisafepay_payment_methods');
         $woocommerce_payment_gateway = $this->payment_method_service->get_woocommerce_payment_gateway_by_id( 'multisafepay_ideal' );
