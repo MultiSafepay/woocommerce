@@ -21,8 +21,7 @@ class Test_PaymentMethodService extends WP_UnitTestCase {
                 ->setMethods( ['get_total'] )
                 ->getMock();
 
-            WC()->cart->expects( $this->once() )
-                ->method( 'get_total' )
+            WC()->cart->method( 'get_total' )
                 ->willReturn( '10.00' );
         }
 

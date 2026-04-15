@@ -3,7 +3,15 @@
 namespace MultiSafepay\WooCommerce;
 
 use MultiSafepay\WooCommerce\Blocks\BlocksController;
+use MultiSafepay\WooCommerce\PaymentMethods\Filters\CancelOrderStatuses;
+use MultiSafepay\WooCommerce\PaymentMethods\Filters\CheckoutPaymentUrl;
+use MultiSafepay\WooCommerce\PaymentMethods\Filters\GatewayByCountry;
+use MultiSafepay\WooCommerce\PaymentMethods\Filters\GatewayByMinAmount;
+use MultiSafepay\WooCommerce\PaymentMethods\Filters\GatewayByUserRole;
+use MultiSafepay\WooCommerce\PaymentMethods\Filters\NonDuplicatedBrandedNames;
+use MultiSafepay\WooCommerce\PaymentMethods\Filters\PaymentGatewaysRegistration;
 use MultiSafepay\WooCommerce\PaymentMethods\Filters\PaymentMethodTitle;
+use MultiSafepay\WooCommerce\PaymentMethods\Filters\TransactionOrderId;
 use MultiSafepay\WooCommerce\PaymentMethods\PaymentMethodsController;
 use MultiSafepay\WooCommerce\Services\PaymentComponentService;
 use MultiSafepay\WooCommerce\Services\PostepayMigrationService;
@@ -127,22 +135,47 @@ class Main {
      * @return void
      */
     private function payment_methods_hooks(): void {
-        $payment_methods             = new PaymentMethodsController();
-        $payment_method_title_filter = new PaymentMethodTitle();
+        $this->payment_methods_filters_hooks();
+        $this->payment_methods_actions_hooks( new PaymentMethodsController() );
+    }
+
+    /**
+     * Register payment methods filter hooks.
+     *
+     * @return void
+     */
+    private function payment_methods_filters_hooks(): void {
+        // Register the MultiSafepay payment gateways in WooCommerce.
+        $this->loader->add_filter( 'woocommerce_payment_gateways', ( new PaymentGatewaysRegistration() ), 'get_woocommerce_payment_gateways' );
+        // Filter transaction order id on callback
+        $this->loader->add_filter( 'multisafepay_transaction_order_id', ( new TransactionOrderId() ), 'multisafepay_transaction_order_id', 11 );
+        // Filter per country
+        $this->loader->add_filter( 'woocommerce_available_payment_gateways', ( new GatewayByCountry() ), 'filter_gateway_per_country', 11 );
+        // Filter per min amount
+        $this->loader->add_filter( 'woocommerce_available_payment_gateways', ( new GatewayByMinAmount() ), 'filter_gateway_per_min_amount', 12 );
+        // Filter per user role
+        $this->loader->add_filter( 'woocommerce_available_payment_gateways', ( new GatewayByUserRole() ), 'filter_gateway_per_user_roles', 13 );
+        // Filter duplicated branded payment methods
+        $this->loader->add_filter( 'woocommerce_available_payment_gateways', ( new NonDuplicatedBrandedNames() ), 'filter_non_duplicated_branded_names', 14 );
+        // Replace checkout payment url if a payment link has been generated in backoffice
+        $this->loader->add_filter( 'woocommerce_get_checkout_payment_url', ( new CheckoutPaymentUrl() ), 'replace_checkout_payment_url', 10, 2 );
+        // Allow cancel orders for on-hold status
+        $this->loader->add_filter( 'woocommerce_valid_order_statuses_for_cancel', ( new CancelOrderStatuses() ), 'allow_cancel_multisafepay_orders_with_on_hold_status', 10, 2 );
+        // Use the stored order payment method title in the admin order context
+        if ( is_admin() && ! wp_doing_ajax() ) {
+            $this->loader->add_filter( 'woocommerce_gateway_title', ( new PaymentMethodTitle() ), 'filter_gateway_title_by_order_payment_method_title', 10, 2 );
+        }
+    }
+
+    /**
+     * Register payment methods action hooks.
+     *
+     * @param PaymentMethodsController $payment_methods
+     * @return void
+     */
+    private function payment_methods_actions_hooks( PaymentMethodsController $payment_methods ): void {
         // Enqueue styles in payment methods
         $this->loader->add_action( 'wp_enqueue_scripts', $payment_methods, 'enqueue_styles' );
-        // Register the MultiSafepay payment gateways in WooCommerce.
-        $this->loader->add_filter( 'woocommerce_payment_gateways', $payment_methods, 'get_woocommerce_payment_gateways' );
-        // Filter transaction order id on callback
-        $this->loader->add_filter( 'multisafepay_transaction_order_id', $payment_methods, 'multisafepay_transaction_order_id', 11 );
-        // Filter per country
-        $this->loader->add_filter( 'woocommerce_available_payment_gateways', $payment_methods, 'filter_gateway_per_country', 11 );
-        // Filter per min amount
-        $this->loader->add_filter( 'woocommerce_available_payment_gateways', $payment_methods, 'filter_gateway_per_min_amount', 12 );
-        // Filter per user role
-        $this->loader->add_filter( 'woocommerce_available_payment_gateways', $payment_methods, 'filter_gateway_per_user_roles', 13 );
-        // Filter duplicated branded payment methods
-        $this->loader->add_filter( 'woocommerce_available_payment_gateways', $payment_methods, 'filter_non_duplicated_branded_names', 14 );
         // Set MultiSafepay transaction as shipped
         $this->loader->add_action( 'woocommerce_order_status_' . str_replace( 'wc-', '', get_option( 'multisafepay_trigger_transaction_to_shipped', 'wc-completed' ) ), $payment_methods, 'set_multisafepay_transaction_as_shipped', 10, 1 );
         // Set MultiSafepay transaction as invoiced
@@ -151,14 +184,10 @@ class Main {
         if ( is_admin() ) {
             $this->loader->add_action( 'woocommerce_new_order', $payment_methods, 'generate_orders_from_backend', 10, 1 );
         }
-        // Replace checkout payment url if a payment link has been generated in backoffice
-        $this->loader->add_filter( 'woocommerce_get_checkout_payment_url', $payment_methods, 'replace_checkout_payment_url', 10, 2 );
         // One notification URL for all payment methods
         $this->loader->add_action( 'woocommerce_api_multisafepay', $payment_methods, 'callback' );
         // One endpoint to handle notifications via POST.
         $this->loader->add_action( 'rest_api_init', $payment_methods, 'multisafepay_register_rest_route' );
-        // Allow cancel orders for on-hold status
-        $this->loader->add_filter( 'woocommerce_valid_order_statuses_for_cancel', $payment_methods, 'allow_cancel_multisafepay_orders_with_on_hold_status', 10, 2 );
         // Ajax related to Apple Pay Direct validation
         $this->loader->add_action( 'wp_ajax_applepay_direct_validation', $payment_methods, 'applepay_direct_validation' );
         $this->loader->add_action( 'wp_ajax_nopriv_applepay_direct_validation', $payment_methods, 'applepay_direct_validation' );
@@ -167,10 +196,6 @@ class Main {
         $this->loader->add_action( 'wp_ajax_nopriv_get_updated_total_price', $payment_methods, 'get_updated_total_price' );
         // Add the MultiSafepay transaction link in the order details page
         $this->loader->add_action( 'woocommerce_admin_order_data_after_payment_info', $payment_methods, 'add_multisafepay_transaction_link' );
-        // Use the stored order payment method title in the admin order context
-        if ( is_admin() && ! wp_doing_ajax() ) {
-            $this->loader->add_filter( 'woocommerce_gateway_title', $payment_method_title_filter, 'filter_gateway_title_by_order_payment_method_title', 10, 2 );
-        }
     }
 
     /**

@@ -4,6 +4,11 @@ class Multisite_Test_Activator extends WP_UnitTestCase {
 
     public function set_up() {
         parent::set_up();
+
+        if ( ! function_exists( 'is_multisite' ) || ! is_multisite() || ! function_exists( 'wpmu_create_user' ) || ! function_exists( 'wpmu_create_blog' ) ) {
+            $this->markTestSkipped( 'Multisite environment is not available in this PHPUnit configuration.' );
+        }
+
         $username = 'user-' . rand( 1, 2000 );
         $password = wp_generate_password(12, false);
         $email = $username . '@example.org';

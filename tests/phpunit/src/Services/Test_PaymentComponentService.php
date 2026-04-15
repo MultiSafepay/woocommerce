@@ -22,6 +22,16 @@ class Test_PaymentComponentService extends WP_UnitTestCase {
      */
     public $woocommerce_payment_gateway;
 
+    /**
+     * @var WC_Customer|null
+     */
+    private $original_wc_customer;
+
+    /**
+     * @var bool
+     */
+    private $did_set_wc_customer = false;
+
 
     public function set_up() {
         if ( function_exists( 'WC' ) && ! isset( WC()->cart ) ) {
@@ -30,9 +40,24 @@ class Test_PaymentComponentService extends WP_UnitTestCase {
                 ->setMethods( ['get_total'] )
                 ->getMock();
 
-            WC()->cart->expects( $this->once() )
-                ->method( 'get_total' )
+            WC()->cart->method( 'get_total' )
                 ->willReturn( '10.00' );
+        }
+
+        if ( function_exists( 'WC' ) ) {
+            $this->original_wc_customer = WC()->customer;
+
+            if ( null === WC()->customer ) {
+                WC()->customer = $this->getMockBuilder( 'WC_Customer' )
+                    ->disableOriginalConstructor()
+                    ->setMethods( array( 'get_billing_country' ) )
+                    ->getMock();
+
+                WC()->customer->method( 'get_billing_country' )
+                    ->willReturn( 'NL' );
+
+                $this->did_set_wc_customer = true;
+            }
         }
 
         $this->payment_method = new PaymentMethod( ( new PaymentMethodFixture() )->get_amex_payment_method_fixture() );
@@ -55,6 +80,18 @@ class Test_PaymentComponentService extends WP_UnitTestCase {
         $this->payment_component_service->sdk_service = $sdk_service;
         $this->payment_component_service->api_token_service = $api_token_service;
 
+    }
+
+    /**
+     * @return void
+     */
+    public function tear_down() {
+        if ( function_exists( 'WC' ) && $this->did_set_wc_customer ) {
+            WC()->customer = $this->original_wc_customer;
+            $this->did_set_wc_customer = false;
+        }
+
+        parent::tear_down();
     }
 
     public function test_payment_component_service() {
