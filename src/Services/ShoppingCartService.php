@@ -155,7 +155,7 @@ class ShoppingCartService {
                 break;
         }
 
-        return $this->rounding_filter( $tax_rate, $gateway_code );
+        return $this->rounding_filter( (float) $tax_rate, $gateway_code );
     }
 
     /**
