@@ -4,6 +4,7 @@ parameters:
     bootstrapFiles:
         - %currentWorkingDirectory%/vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
         - %currentWorkingDirectory%/vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+        - %currentWorkingDirectory%/vendor/php-stubs/woocommerce-stubs/woocommerce-packages-stubs.php
     paths:
         - ../../src/
         - ../../multisafepay.php
@@ -22,6 +23,4 @@ parameters:
         - '#Call to an undefined method [a-zA-Z0-9\\_]+::addLocale\(\).#'
         - '#Property WC_Payment_Gateway::\$max_amount \(int\) does not accept string.#'
         - '#Property WC_Payment_Gateway::\$countries \(array\) does not accept string.#'
-        - '#Parameter \$payment_method_registry of anonymous function has invalid type Automattic\\WooCommerce\\Blocks\\Payments\\PaymentMethodRegistry\.#'
-        - '#Call to method register\(\) on an unknown class Automattic\\WooCommerce\\Blocks\\Payments\\PaymentMethodRegistry\.#'
         - '#Call to an undefined method WC_Cart::get_shipping_methods\(\).#'

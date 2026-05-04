@@ -18,7 +18,7 @@ class Test_PaymentMethodService extends WP_UnitTestCase {
         if ( function_exists( 'WC' ) && ! isset( WC()->cart ) ) {
             WC()->cart = $this->getMockBuilder( 'WC_Cart' )
                 ->disableOriginalConstructor()
-                ->setMethods( ['get_total'] )
+                ->setMethods( array( 'get_total' ) )
                 ->getMock();
 
             WC()->cart->method( 'get_total' )

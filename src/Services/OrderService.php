@@ -12,6 +12,7 @@ use MultiSafepay\Api\Transactions\OrderRequest\Arguments\TaxTable\TaxRate;
 use MultiSafepay\Api\Transactions\OrderRequest\Arguments\TaxTable\TaxRule;
 use MultiSafepay\Exception\InvalidArgumentException;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
+use MultiSafepay\WooCommerce\Services\Blocks\BlocksContextService;
 use WC_Order;
 
 /**
@@ -37,12 +38,103 @@ class OrderService {
     public $payment_method_service;
 
     /**
+     * @var BlocksPaymentDataService
+     */
+    public $blocks_payment_data_service;
+
+    /**
      * OrderService constructor.
      */
     public function __construct() {
-        $this->customer_service       = new CustomerService();
-        $this->shopping_cart_service  = new ShoppingCartService();
-        $this->payment_method_service = new PaymentMethodService();
+        $this->customer_service            = new CustomerService();
+        $this->shopping_cart_service       = new ShoppingCartService();
+        $this->payment_method_service      = new PaymentMethodService();
+        $this->blocks_payment_data_service = new BlocksPaymentDataService();
+    }
+
+    /**
+     * Wallet payloads (Google Pay token, etc.) are JSON strings.
+     * Treat them as opaque: do not run sanitize_text_field() to avoid corrupting JSON.
+     *
+     * @param string $value
+     * @return string
+     */
+    private function normalize_wallet_payload( string $value ): string {
+        $value = trim( $value );
+        if ( '' === $value ) {
+            return '';
+        }
+
+        // Remove null bytes to avoid storage / transport issues.
+        $value = str_replace( "\0", '', $value );
+
+        // Defensive limit: Google Pay tokens are ~1-3KB; allow plenty.
+        if ( strlen( $value ) > 20000 ) {
+            $value = substr( $value, 0, 20000 );
+        }
+
+        return $value;
+    }
+
+    /**
+     * Get a wallet payment token from the current request or from Blocks order meta.
+     *
+     * Wallet Direct (Apple Pay / Google Pay) can send the token either as:
+     * - $_POST['payment_token'] (legacy)
+     * - $_POST['<payment_method_id>_payment_token'] (Blocks/JS)
+     * - Order meta '_multisafepay_blocks_payment_data[<payment_method_id>_payment_token]' (Blocks persisted)
+     *
+     * @param WC_Order $order
+     * @return string
+     */
+    public function get_wallet_payment_token( WC_Order $order ): string {
+        $payment_method_id = (string) $order->get_payment_method();
+
+        $is_store_api_request = ( new BlocksContextService() )->is_store_api_request();
+        $read_request_value   = static function ( string $key ) use ( $is_store_api_request ): string {
+            if ( ! isset( $_POST[ $key ] ) ) {
+                return '';
+            }
+
+            // Store API requests are already unslashed by the REST layer.
+            // Do not modify opaque wallet payloads (tokens/JSON).
+            // phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+            $value = '';
+
+            if ( $is_store_api_request ) {
+                $value = (string) $_POST[ $key ]; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+            }
+
+            if ( ! $is_store_api_request ) {
+                $value = (string) wp_unslash( $_POST[ $key ] );
+            }
+            // phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+            return $value;
+        };
+
+        $payment_token = $this->normalize_wallet_payload( $read_request_value( 'payment_token' ) );
+        if ( ! empty( $payment_token ) ) {
+            return $payment_token;
+        }
+
+        $payment_method_wallet_key     = $payment_method_id . '_payment_token';
+        $payment_token_from_method_key = $this->normalize_wallet_payload( $read_request_value( $payment_method_wallet_key ) );
+        if ( ! empty( $payment_token_from_method_key ) ) {
+            return $payment_token_from_method_key;
+        }
+
+        $token_from_blocks_method_key = $this->normalize_wallet_payload(
+            (string) $this->blocks_payment_data_service->get_blocks_payment_data_value( $order, $payment_method_wallet_key )
+        );
+        if ( ! empty( $token_from_blocks_method_key ) ) {
+            return $token_from_blocks_method_key;
+        }
+
+        // Legacy-compatible fallback for Blocks: some flows can send/store just `payment_token`.
+        return $this->normalize_wallet_payload(
+            (string) $this->blocks_payment_data_service->get_blocks_payment_data_value( $order, 'payment_token' )
+        );
     }
 
     /**
@@ -75,23 +167,26 @@ class OrderService {
             $order_request->addShoppingCart( $this->shopping_cart_service->create_shopping_cart( $order, $order->get_currency(), $gateway_code ) );
         }
 
-        if ( ! empty( $_POST[ $order->get_payment_method() . '_payment_component_payload' ] ) ) {
-            $payment_method_id             = $order->get_payment_method();
-            $payment_component_payload_key = $payment_method_id . '_payment_component_payload';
-            $payment_component_payload     = sanitize_text_field( wp_unslash( $_POST[ $payment_component_payload_key ] ?? '' ) );
-            if ( ! empty( $payment_component_payload ) ) {
-                $order_request->addType( 'direct' );
-                $order_request->addData(
-                    array(
-                        'payment_data' => array(
-                            'payload' => $payment_component_payload,
-                        ),
-                    )
-                );
-            }
+        $payment_method_id             = $order->get_payment_method();
+        $payment_component_payload_key = $payment_method_id . '_payment_component_payload';
+
+        $payment_component_payload = sanitize_text_field( wp_unslash( $_POST[ $payment_component_payload_key ] ?? '' ) );
+        if ( empty( $payment_component_payload ) ) {
+            $payment_component_payload = $this->blocks_payment_data_service->get_blocks_payment_data_value( $order, $payment_component_payload_key );
         }
 
-        $payment_token = sanitize_text_field( wp_unslash( $_POST['payment_token'] ?? '' ) );
+        if ( ! empty( $payment_component_payload ) ) {
+            $order_request->addType( 'direct' );
+            $order_request->addData(
+                array(
+                    'payment_data' => array(
+                        'payload' => $payment_component_payload,
+                    ),
+                )
+            );
+        }
+
+        $payment_token = $this->get_wallet_payment_token( $order );
         if ( ! empty( $payment_token ) && ( ( 'APPLEPAY' === $gateway_code ) || ( 'GOOGLEPAY' === $gateway_code ) ) ) {
             $order_request->addType( 'direct' );
             $order_request->addGatewayInfo( ( new Wallet() )->addPaymentToken( $payment_token ) );
@@ -173,7 +268,7 @@ class OrderService {
      * @param string $order_number
      * @return string $order_description
      */
-    protected function get_order_description_text( $order_number ): string {
+    protected function get_order_description_text( string $order_number ): string {
         /* translators: %s: order id */
         $order_description = sprintf( __( 'Payment for order: %s', 'multisafepay' ), $order_number );
         if ( get_option( 'multisafepay_order_request_description', false ) ) {
@@ -200,11 +295,12 @@ class OrderService {
     }
 
     /**
-     * This method add a tax rate of 0, in case is not being created automatically by the shopping cart.
+     * This method adds a tax rate of 0, in case is not being created automatically by the shopping cart.
      * This is required to process refunds, based on shopping cart items
      *
      * @param OrderRequest $order_request
      * @return OrderRequest
+     * @throws InvalidArgumentException
      */
     public function add_none_tax_rate( OrderRequest $order_request ): OrderRequest {
         if ( $order_request->getShoppingCart() === null ) {

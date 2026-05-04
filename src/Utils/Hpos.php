@@ -42,13 +42,13 @@ class Hpos {
     }
 
     /**
-     * @param WC_Order $order
-     * @param string   $key
-     * @param string   $value
+     * @param WC_Order          $order
+     * @param string            $key
+     * @param string|array|bool $value
      *
      * @return bool|int
      */
-    public static function update_meta( WC_Order $order, string $key, string $value ) {
+    public static function update_meta( WC_Order $order, string $key, $value ) {
         if ( self::is_active() ) {
             $order->update_meta_data( $key, $value );
             return $order->save();
@@ -58,7 +58,24 @@ class Hpos {
     }
 
     /**
-     * Get the order meta-data
+     * Queue order meta-data deletion.
+     *
+     * @param WC_Order $order
+     * @param string   $key
+     *
+     * @return int|void
+     */
+    public static function delete_meta( WC_Order $order, string $key ) {
+        if ( self::is_active() ) {
+            $order->delete_meta_data( $key );
+            return $order->save();
+        }
+
+        delete_post_meta( $order->get_id(), $key );
+    }
+
+    /**
+     * Get the order metadata
      *
      * @param WC_Order $order
      * @param string   $key

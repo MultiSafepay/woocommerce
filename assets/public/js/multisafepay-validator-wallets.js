@@ -604,8 +604,10 @@ class FieldsValidator {
         // Getting the customer details element which includes all the user fields
         const customerDetails = document.getElementById( 'customer_details' );
         if ( ! customerDetails ) {
-            debugDirect( 'Customer details element not found', debugStatus, 'error' );
-            return false;
+            // On the order-pay page there are no customer fields to validate;
+            // the billing/shipping data is already stored in the order.
+            debugDirect( 'Customer details element not found — skipping field validation (order-pay context)', debugStatus, 'log' );
+            return true;
         }
 
         // Are all fields valid? For now, yes
@@ -840,7 +842,7 @@ class FieldsValidator {
      * @returns {void}
      */
     appendErrorMessage( error, isRealtimeValidation = false ) {
-        const formElement = document.querySelector( 'form[name="checkout"]' );
+        const formElement = document.querySelector( 'form[name="checkout"]' ) || document.querySelector( '#order_review' );
         if ( ! formElement ) {
             debugDirect( 'Checkout form not found', debugStatus );
             return;

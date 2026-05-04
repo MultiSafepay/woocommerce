@@ -21,9 +21,13 @@
 
 (function (multisafepay_payment_component_gateways, $) {
 
-    const FORM_SELECTOR           = 'form.checkout';
+    // Support both the standard checkout (`form.checkout`) and the
+    // "Pay for order" endpoint (`form#order_review`), which uses a different
+    // form element and does not trigger `init_checkout`.
+    const FORM_SELECTOR           = 'form.checkout, form#order_review';
     const PAYMENT_METHOD_SELECTOR = 'ul.wc_payment_methods input[type=\'radio\'][name=\'payment_method\']';
     const FORM_BUTTON_SELECTOR    = '#place_order';
+    const IS_ORDER_PAY            = $( 'form#order_review' ).length > 0;
 
     class MultiSafepayPaymentComponent {
 
@@ -50,6 +54,13 @@
 
             // Triggered when the checkout loads
             $( document ).on( 'init_checkout', ( event ) => { this.on_init_checkout( event ); } );
+
+            // The "Pay for order" endpoint does not fire `init_checkout`, so trigger an
+            // initialization on DOM ready and whenever the payment method radio changes.
+            if ( IS_ORDER_PAY ) {
+                $( () => { this.on_init_checkout( { type: 'order_pay_ready' } ); } );
+                $( document ).on( 'change', PAYMENT_METHOD_SELECTOR, ( event ) => { this.on_payment_method_selected( event ); } );
+            }
 
             // Triggered when a user clicks on the 'submit' button of the checkout form
             $( document ).on( 'click', FORM_BUTTON_SELECTOR, ( event ) => { this.on_click_place_order( event ); } );
@@ -163,9 +174,22 @@
                     const tokenize = this.get_payment_component().getPaymentData().tokenize ? this.get_payment_component().getPaymentData().tokenize : '0';
                     this.insert_payload_and_tokenize( payload, tokenize );
                 }
-                $( '.woocommerce-checkout' ).submit();
+                $( this.get_checkout_form() ).submit();
             }
 
+        }
+
+        /**
+         * Returns the form that contains the place-order button.
+         * Works for both the standard checkout (`form.checkout`) and the
+         * "Pay for order" endpoint (`form#order_review`).
+         */
+        get_checkout_form() {
+            const $form = $( FORM_BUTTON_SELECTOR ).closest( 'form' );
+            if ( $form.length > 0 ) {
+                return $form;
+            }
+            return $( FORM_SELECTOR ).first();
         }
 
         is_selected() {
@@ -215,7 +239,7 @@
             );
         }
 
-        get_qr_order_redirect_url( order_id ) {
+        get_qr_order_redirect_url( order_id, qr_status = '' ) {
             this.logger( 'Getting redirect URL' );
             return new Promise(
                 ( resolve, reject ) => {
@@ -227,7 +251,8 @@
                                 'nonce': this.config.nonce,
                                 'action': 'get_qr_order_redirect_url',
                                 'gateway_id': this.gateway,
-                                'order_id': order_id
+                                'order_id': order_id,
+                                'qr_status': qr_status,
                             },
                             success: function( response ) {
                                 resolve( response );
@@ -240,6 +265,24 @@
                     );
                 }
             );
+        }
+
+        redirect_to_qr_outcome( qr_status ) {
+            this.get_qr_order_redirect_url( this.order_id, qr_status )
+                .then(
+                    response => {
+                        if ( response && response.success && response.redirect_url ) {
+                            window.location.href = response.redirect_url;
+                            return;
+                        }
+                        this.logger( 'Missing or invalid redirect URL in QR outcome response: ' + JSON.stringify( response, null, 2 ) );
+                    }
+                )
+                .catch(
+                    error => {
+                        this.logger( 'Error redirecting to QR outcome: ' + JSON.stringify( error, null, 2 ) );
+                    }
+                );
         }
 
         get_payment_component() {
@@ -300,22 +343,9 @@
                                         this.disable_place_order_button();
                                         break;
                                     case 'completed':
-                                        this.get_qr_order_redirect_url( this.order_id ).then(
-                                            response => {
-                                                if ( response.success ) {
-                                                    window.location.href = response.redirect_url;
-                                                }
-                                            }
-                                        );
-                                        break;
                                     case 'declined':
-                                        this.get_qr_order_redirect_url( this.order_id ).then(
-                                            response => {
-                                                if ( response.success ) {
-                                                    window.location.href = response.redirect_url;
-                                                }
-                                            }
-                                        );
+                                    case 'cancelled':
+                                        this.redirect_to_qr_outcome( state.data.qr_status );
                                         break;
                                     default:
                                         this.logger( 'Unknown QR status: ' + state.data.qr_status );
@@ -364,10 +394,11 @@
 
         insert_errors( errors ) {
             const gateway_id = this.gateway;
+            const $form      = this.get_checkout_form();
             $.each(
                 errors.errors,
                 function( index, value ) {
-                    $( 'form.woocommerce-checkout' ).append(
+                    $form.append(
                         '<input type="hidden" class="' + gateway_id + '_payment_component_errors" name="' + gateway_id + '_payment_component_errors[]" value="' + value.message + '" />'
                     );
                 }
@@ -375,7 +406,7 @@
         }
 
         remove_errors() {
-            $( 'form.woocommerce-checkout .' + this.gateway + '_payment_component_errors' ).remove();
+            this.get_checkout_form().find( '.' + this.gateway + '_payment_component_errors' ).remove();
         }
 
         logger( argument ) {

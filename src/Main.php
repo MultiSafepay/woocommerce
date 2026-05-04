@@ -245,7 +245,10 @@ class Main {
      */
     public function block_hooks(): void {
         $blocks = new BlocksController();
+        // Use the dedicated WooCommerce Blocks lifecycle hook; it is the safe init point after Blocks dependencies are loaded.
         $this->loader->add_action( 'woocommerce_blocks_loaded', $blocks, 'register_multisafepay_payment_methods_blocks' );
+        // Map MultiSafepay Payment Component data from WooCommerce Blocks into WC_Order metadata.
+        $this->loader->add_action( 'woocommerce_rest_checkout_process_payment_with_context', $blocks, 'map_blocks_payment_data_to_order_meta', 10, 2 );
     }
 
     /**

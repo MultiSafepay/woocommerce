@@ -373,7 +373,7 @@ class ApplePayDirect {
             return false;
         }
 
-        const applepayForm = document.querySelector( 'form[name="checkout"]' );
+        const applepayForm = document.querySelector( 'form[name="checkout"]' ) || document.querySelector( '#order_review' );
 
         if ( ! applepayForm ) {
             debugDirect( 'Apple Pay form not found', this.debug );

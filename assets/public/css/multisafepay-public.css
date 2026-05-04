@@ -43,7 +43,7 @@
     min-width: 160px;
     height: 65px;
     min-height: 40px;
-    border-radius: 0;
+    border-radius: 3px;
 }
 .apple-pay-button-black {
     -apple-pay-button-style: black;
@@ -51,6 +51,61 @@
 .gpay-button.short, .gpay-button.plain {
     min-width: 160px !important;
     min-height: 40px !important;
-    border-radius: 0 !important;
-    background-size: 84px 33px !important;
+    border-radius: 3px !important;
+}
+
+/* WooCommerce Blocks: scope wallet button styles to Blocks wrappers */
+.multisafepay-googlepay-direct,
+.multisafepay-applepay-direct {
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+/* Keep wallet buttons from stretching full-width in Blocks */
+.multisafepay-googlepay-direct {
+    width: 100% !important;
+    max-width: 240px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.multisafepay-googlepay-direct .gpay-button.short,
+.multisafepay-googlepay-direct .gpay-button.plain {
+    border-radius: inherit !important;
+    background-size: contain !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+}
+
+.multisafepay-applepay-direct .apple-pay-button {
+    border-radius: inherit;
+}
+
+/* Payment Component loading spinner (Blocks checkout) */
+.multisafepay-payment-component-loader-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;
+    width: 100%;
+    padding: 16px 0;
+}
+
+.multisafepay-payment-component-loader {
+    display: block;
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(0, 0, 0, 0.12);
+    border-top-color: #6c757d;
+    border-radius: 50%;
+    animation: msp-blocks-spin 0.8s linear infinite;
+}
+
+@keyframes msp-blocks-spin {
+    to {
+        transform: rotate(360deg);
+    }
 }

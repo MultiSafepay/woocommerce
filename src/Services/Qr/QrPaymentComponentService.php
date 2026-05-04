@@ -84,7 +84,21 @@ class QrPaymentComponentService {
             wp_send_json( array() );
         }
 
-        $order_id = sanitize_text_field( wp_unslash( $_POST['order_id'] ?? '' ) );
+        $order_id      = sanitize_text_field( wp_unslash( $_POST['order_id'] ?? '' ) );
+        $raw_qr_status = sanitize_text_field( wp_unslash( $_POST['qr_status'] ?? '' ) );
+        $qr_status     = sanitize_key( $raw_qr_status );
+
+        // Declined/cancelled QR outcomes do not create an order, so skip polling and redirect immediately.
+        if ( in_array( $qr_status, array( 'declined', 'cancelled' ), true ) ) {
+            $this->maybe_add_qr_status_notice( $qr_status );
+
+            wp_send_json(
+                array(
+                    'success'      => true,
+                    'redirect_url' => $this->get_qr_fallback_redirect_url(),
+                )
+            );
+        }
 
         for ( $count = 0; $count < 5; $count++ ) {
             // Get WooCommerce Order ID where meta value key is 'multisafepay_transaction_id' and value is $order_id
@@ -108,12 +122,58 @@ class QrPaymentComponentService {
         wp_send_json(
             array(
                 'success'      => true,
-                'redirect_url' => ( get_option( 'multisafepay_redirect_after_cancel', 'cart' ) === 'cart' ) ?
-                    wc_get_cart_url() :
-                    wc_get_checkout_url(),
+                'redirect_url' => $this->get_qr_fallback_redirect_url(),
             )
         );
 
         exit();
+    }
+
+    /**
+     * Returns the fallback redirect URL for cancelled/failed QR outcomes.
+     *
+     * Based on multisafepay_redirect_after_cancel, this can point to cart or checkout.
+     *
+     * @return string
+     */
+    private function get_qr_fallback_redirect_url(): string {
+        return ( get_option( 'multisafepay_redirect_after_cancel', 'cart' ) === 'cart' )
+            ? wc_get_cart_url()
+            : wc_get_checkout_url();
+    }
+
+    /**
+     * Add a user-facing WooCommerce notice for QR failure outcomes.
+     *
+     * @param string $qr_status
+     * @return void
+     */
+    private function maybe_add_qr_status_notice( string $qr_status ): void {
+        if (
+            ! function_exists( 'wc_add_notice' ) ||
+            ! did_action( 'woocommerce_init' ) ||
+            ! function_exists( 'WC' ) ||
+            ! WC() ||
+            ! WC()->session
+        ) {
+            return;
+        }
+
+        switch ( $qr_status ) {
+            case 'declined':
+                $notice_message = __( 'Your payment was declined. Please choose another payment method or try again.', 'multisafepay' );
+                break;
+            case 'cancelled':
+                $notice_message = __( 'Your payment was cancelled. Please try again to complete your order.', 'multisafepay' );
+                break;
+            default:
+                return;
+        }
+
+        if ( function_exists( 'wc_has_notice' ) && wc_has_notice( $notice_message, 'error' ) ) {
+            return;
+        }
+
+        wc_add_notice( $notice_message, 'error' );
     }
 }

@@ -41,21 +41,26 @@ class PaymentComponentService {
      *
      * @param BasePaymentMethod $woocommerce_payment_gateway
      * @param bool              $validate_checkout
+     * @param bool              $include_api_token
      * @return array
      */
-    public function get_payment_component_arguments( BasePaymentMethod $woocommerce_payment_gateway, bool $validate_checkout = false ): array {
+    public function get_payment_component_arguments( BasePaymentMethod $woocommerce_payment_gateway, bool $validate_checkout = false, bool $include_api_token = true ): array {
+        $customer         = ( function_exists( 'WC' ) && WC() && WC()->customer ) ? WC()->customer : null;
+        $billing_country  = $customer ? $customer->get_billing_country() : '';
+        $fallback_country = ( function_exists( 'WC' ) && WC() && WC()->countries ) ? WC()->countries->get_base_country() : '';
+
         $payment_component_arguments = array(
             'debug'        => (bool) get_option( 'multisafepay_debugmode', false ),
             'env'          => $this->sdk_service->get_test_mode() ? 'test' : 'live',
             'ajax_url'     => admin_url( 'admin-ajax.php' ),
             'nonce'        => wp_create_nonce( 'payment_component_arguments_nonce' ),
-            'api_token'    => $this->api_token_service->get_api_token(),
+            'api_token'    => $include_api_token ? $this->api_token_service->get_api_token() : '',
             'orderData'    => array(
                 'currency'        => get_woocommerce_currency(),
                 'amount'          => ( $this->get_total_amount() * 100 ),
                 'customer'        => array(
                     'locale'  => strtoupper( substr( ( new CustomerService() )->get_locale(), 0, 2 ) ),
-                    'country' => ( WC()->customer )->get_billing_country(),
+                    'country' => ! empty( $billing_country ) ? $billing_country : $fallback_country,
                 ),
                 'payment_options' => $this->build_payment_options(),
             ),
@@ -70,7 +75,7 @@ class PaymentComponentService {
         }
 
         // Tokenization and recurring model
-        if ( $woocommerce_payment_gateway->is_tokenization_enabled() && is_user_logged_in() ) {
+        if ( $include_api_token && $woocommerce_payment_gateway->is_tokenization_enabled() && is_user_logged_in() ) {
             $payment_component_arguments['recurring'] = array(
                 'model'  => 'cardOnFile',
                 'tokens' => $this->sdk_service->get_payment_tokens(
@@ -175,7 +180,7 @@ class PaymentComponentService {
      * @return float
      */
     private function get_total_amount(): float {
-        $total_amount = ( WC()->cart ) ? (float) WC()->cart->get_total( '' ) : null;
+        $total_amount = ( WC()->cart ) ? (float) WC()->cart->get_total( '' ) : 0.0;
 
         if ( is_wc_endpoint_url( 'order-pay' ) ) {
             $order_id = absint( get_query_var( 'order-pay' ) );
@@ -187,6 +192,6 @@ class PaymentComponentService {
             }
         }
 
-        return $total_amount;
+        return (float) $total_amount;
     }
 }

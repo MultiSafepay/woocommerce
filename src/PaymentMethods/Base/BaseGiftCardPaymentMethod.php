@@ -32,7 +32,7 @@ class BaseGiftCardPaymentMethod extends BasePaymentMethod {
      * @param WC_Order $order
      * @return bool
      */
-    public function can_refund_order( $order ) {
+    public function can_refund_order( $order ): bool {
         return false;
     }
 

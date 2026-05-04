@@ -259,7 +259,7 @@ class GooglePayDirect {
             return false;
         }
 
-        const googlepayForm = document.querySelector( 'form[name="checkout"]' );
+        const googlepayForm = document.querySelector( 'form[name="checkout"]' ) || document.querySelector( '#order_review' );
 
         if ( ! googlepayForm ) {
             debugDirect( 'Google Pay form not found', this.debug );

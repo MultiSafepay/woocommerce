@@ -19,59 +19,27 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const { registerPaymentMethod } = window.wc.wcBlocksRegistry;
-const { getSetting }            = window.wc.wcSettings;
+// Ensure any global CSS overrides are injected as early as possible.
+import './lib/wallet/googlePayStyles';
 
-function check_apple_pay_availability() {
-    return window.ApplePaySession && ApplePaySession.canMakePayments();
-}
+import { bootstrapMultisafepayBlocksPaymentMethods } from './lib/register/registerPaymentMethods';
 
-const createOptions     = ( gateway ) => {
-    const labelElements = [];
+/**
+ * @file Blocks bundle entrypoint.
+ *
+ * Side effects:
+ * - Imports a side effect module that injects early CSS overrides for Google Pay button rendering in Blocks.
+ * - Registers MultiSafepay payment methods into the WooCommerce Blocks registry.
+ */
 
-    if ( gateway.icon ) {
-        labelElements.push(
-            React.createElement(
-                'img',
-                {
-                    src: gateway.icon,
-                    alt: gateway.title,
-                    style: { height: '24px', width: 'auto', marginRight: '8px' }
-                }
-            )
-        );
-    }
+/**
+ * Bootstraps payment-method registration.
+ *
+ * This is intentionally executed immediately on the module load because Woo Blocks expects
+ * payment methods to register as soon as the registry is available.
+ *
+ * @returns {void}
+ */
+bootstrapMultisafepayBlocksPaymentMethods();
 
-    labelElements.push( gateway.title );
-
-    const defaultSupports = ['products', 'refunds'];
-    const gatewaySupports = gateway.supports || defaultSupports;
-
-    return {
-        name: gateway.id,
-        label: React.createElement(
-            'span',
-            { style: { display: 'flex', alignItems: 'center' } },
-            ...labelElements
-        ),
-    paymentMethodId: gateway.id,
-    edit: React.createElement( 'div', null, '' ),
-    canMakePayment: () => true,
-    ariaLabel: gateway.title,
-    content: React.createElement( 'div', null, gateway.description ),
-    supports: {
-        features: gatewaySupports,
-        },
-        placeOrderButtonLabel: undefined,
-    };
-};
-
-if ( typeof window.multisafepay_gateways !== 'undefined' && Array.isArray( window.multisafepay_gateways ) ) {
-    window.multisafepay_gateways.forEach(
-        ( gateway ) => {
-            if ( gateway.is_admin || ( gateway.id !== 'multisafepay_applepay' ) || check_apple_pay_availability() ) {
-                registerPaymentMethod( createOptions( gateway ) );
-            }
-        }
-    );
-}
+// phpcs:enable

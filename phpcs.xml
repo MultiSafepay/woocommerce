@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="MultiSafepay`s Wordpress WooCommerce" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
-    <description>A custom coding standard for MultiSafepay`s Wordpress WooCommerce plugin.</description>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="MultiSafepay's Wordpress WooCommerce" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
+    <description>A custom coding standard for MultiSafepay’s WordPress WooCommerce plugin.</description>
 
     <!-- Exclude folders and files from being checked. -->
     <exclude-pattern>./bin/*</exclude-pattern>
@@ -26,23 +26,23 @@
         <exclude name="Squiz.Commenting.FileComment.Missing"/>
         <!-- Not every @param needs to be commented  -->
         <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment"/>
-        <!-- Not every method functions needs to be commented  -->
+        <!-- Not every method function needs to be commented  -->
         <exclude name="Generic.Commenting.DocComment.MissingShort"/>
-        <!-- At this moment we are not using Wordpress conventions for the classes names  -->
+        <!-- At this moment we are not using WordPress conventions for the classes names  -->
         <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
-        <!-- At this moment we are not using Wordpress conventions for the files names  -->
+        <!-- At this moment we are not using WordPress conventions for the file names  -->
         <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
-        <!-- We dont require and need a dot at the end of each comment -->
+        <!-- We don't require and need a dot at the end of each comment -->
         <exclude name="Squiz.Commenting.InlineComment.InvalidEndChar"/>
-        <!-- We dont require a comment for each @throws comment -->
+        <!-- We don't require a comment for each @throws comment -->
         <exclude name="Squiz.Commenting.FunctionComment.EmptyThrows"/>
-        <!-- We dont require each comment ends in a characters that means the end of the line; like a dot. -->
+        <!-- We don't require each comment ends in characters that mean the end of the line; like a dot. -->
         <exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop"/>
         <!-- In some places we use date() function. We want to use TimeZone set in the store and not gmdate() suggestion from PHPCS -->
         <exclude name="WordPress.DateTime.RestrictedFunctions.date_date"/>
         <!-- Exclude warning if founds a method which does not use a parameter -->
         <exclude name="Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed"/>
-        <!-- Exclude warning if founds a method which does not use a parameter in a extended class -->
+        <!-- Exclude warning if founds a method which does not use a parameter in an extended class -->
         <exclude name="Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClass"/>
     </rule>
 
@@ -74,7 +74,7 @@
         <exclude-pattern>*/src/Services/CustomerService.php</exclude-pattern>
     </rule>
 
-    <!-- Exclude nonce verification recomendation -->
+    <!-- Exclude nonce verification recommendation -->
     <rule ref="WordPress.Security.NonceVerification.Recommended">
         <exclude-pattern>*/src/Settings/SettingsController.php</exclude-pattern>
     </rule>
@@ -105,7 +105,7 @@
     <config name="testVersion" value="7.3-"/>
     <rule ref="PHPCompatibilityWP"/>
 
-    <!-- Minimum Wordpress version supported -->
+    <!-- Minimum WordPress version supported -->
     <config name="minimum_supported_wp_version" value="5.0"/>
 
     <!-- Check text domain for I18n -->
@@ -122,7 +122,7 @@
         <exclude-pattern>*/src/Utils/QrCheckoutManager.php</exclude-pattern>
     </rule>
 
-    <!-- Only 3 indentation level per function/method -->
+    <!-- Only 3 indentation levels per function/method -->
     <rule ref="ObjectCalisthenics.Metrics.MaxNestingLevel">
         <properties>
             <property name="maxNestingLevel" value="3"/>
@@ -132,11 +132,11 @@
         <exclude-pattern>*/src/Services/PaymentMethodService.php</exclude-pattern>
     </rule>
 
-    <!-- Minimal length for variables names -->
+    <!-- Minimal length for variable names -->
     <rule ref="ObjectCalisthenics.NamingConventions.ElementNameMinimalLength">
         <properties>
             <property name="minLength" value="3"/>
-            <property name="allowedShortNames" type="array" value=""/>
+            <property name="allowedShortNames" type="array" value="wp"/>
         </properties>
     </rule>
 
@@ -174,5 +174,4 @@
 
     <!-- Report @todo comments  -->
     <rule ref="Generic.Commenting.Todo.CommentFound"/>
-
 </ruleset>

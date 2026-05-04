@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 
+use MultiSafepay\WooCommerce\Blocks\BlocksController;
 use MultiSafepay\WooCommerce\Main;
 
 class Test_Main extends WP_UnitTestCase {
@@ -25,6 +26,7 @@ class Test_Main extends WP_UnitTestCase {
     public const ACTION_HOOKS = array (
         'before_woocommerce_init',
         'plugins_loaded',
+        'woocommerce_rest_checkout_process_payment_with_context',
         'woocommerce_blocks_loaded',
         'wp_enqueue_scripts',
         'woocommerce_order_status_completed',
@@ -96,5 +98,26 @@ class Test_Main extends WP_UnitTestCase {
                 ]
             )
         ), $loader->actions);
+    }
+
+    public function test_blocks_payment_data_hook_is_registered_in_blocks_controller(): void {
+        $main   = new Main();
+        $loader = $main->loader;
+
+        $blocks_payment_data_hook = null;
+
+        foreach ( $loader->actions as $action ) {
+            if ( 'woocommerce_rest_checkout_process_payment_with_context' !== $action['hook'] ) {
+                continue;
+            }
+
+            $blocks_payment_data_hook = $action;
+            break;
+        }
+
+        $this->assertNotNull( $blocks_payment_data_hook );
+        $this->assertInstanceOf( BlocksController::class, $blocks_payment_data_hook['component'] );
+        $this->assertSame( 'map_blocks_payment_data_to_order_meta', $blocks_payment_data_hook['callback'] );
+        $this->assertSame( 2, $blocks_payment_data_hook['accepted_args'] );
     }
 }

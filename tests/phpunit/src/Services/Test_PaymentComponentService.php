@@ -1,11 +1,32 @@
 <?php declare(strict_types=1);
 
+use MultiSafepay\Exception\InvalidDataInitializationException;
 use MultiSafepay\WooCommerce\Services\PaymentComponentService;
 use MultiSafepay\Api\PaymentMethods\PaymentMethod;
 use MultiSafepay\WooCommerce\PaymentMethods\Base\BasePaymentMethod;
 use MultiSafepay\WooCommerce\Tests\Fixtures\PaymentMethodFixture;
 
+/**
+ * Covers building Payment Component arguments in a WP unit test environment.
+ *
+ * @covers \MultiSafepay\WooCommerce\Services\PaymentComponentService
+ */
 class Test_PaymentComponentService extends WP_UnitTestCase {
+
+    /**
+     * @var mixed
+     */
+    private $original_wc_countries;
+
+    /**
+     * @var mixed
+     */
+    private $original_wc_customer;
+
+    /**
+     * @var mixed
+     */
+    private $original_wc_cart;
 
     /**
      * @var PaymentComponentService
@@ -22,42 +43,37 @@ class Test_PaymentComponentService extends WP_UnitTestCase {
      */
     public $woocommerce_payment_gateway;
 
-    /**
-     * @var WC_Customer|null
-     */
-    private $original_wc_customer;
-
-    /**
-     * @var bool
-     */
-    private $did_set_wc_customer = false;
-
-
     public function set_up() {
-        if ( function_exists( 'WC' ) && ! isset( WC()->cart ) ) {
+        $this->original_wc_countries = function_exists( 'WC' ) ? ( WC()->countries ?? null ) : null;
+        $this->original_wc_customer  = function_exists( 'WC' ) ? ( WC()->customer ?? null ) : null;
+        $this->original_wc_cart      = function_exists( 'WC' ) ? ( WC()->cart ?? null ) : null;
+
+        if ( function_exists( 'WC' ) ) {
+            WC()->countries = $this->getMockBuilder( 'WC_Countries' )
+                ->disableOriginalConstructor()
+                ->setMethods( array( 'get_base_country' ) )
+                ->getMock();
+
+            WC()->countries->method( 'get_base_country' )->willReturn( 'NL' );
+        }
+
+        if ( function_exists( 'WC' ) ) {
+            WC()->customer = $this->getMockBuilder( 'WC_Customer' )
+                ->disableOriginalConstructor()
+                ->setMethods( array( 'get_billing_country' ) )
+                ->getMock();
+
+            WC()->customer->method( 'get_billing_country' )->willReturn( 'BE' );
+        }
+
+        if ( function_exists( 'WC' ) ) {
             WC()->cart = $this->getMockBuilder( 'WC_Cart' )
                 ->disableOriginalConstructor()
-                ->setMethods( ['get_total'] )
+                ->setMethods( array( 'get_total' ) )
                 ->getMock();
 
             WC()->cart->method( 'get_total' )
                 ->willReturn( '10.00' );
-        }
-
-        if ( function_exists( 'WC' ) ) {
-            $this->original_wc_customer = WC()->customer;
-
-            if ( null === WC()->customer ) {
-                WC()->customer = $this->getMockBuilder( 'WC_Customer' )
-                    ->disableOriginalConstructor()
-                    ->setMethods( array( 'get_billing_country' ) )
-                    ->getMock();
-
-                WC()->customer->method( 'get_billing_country' )
-                    ->willReturn( 'NL' );
-
-                $this->did_set_wc_customer = true;
-            }
         }
 
         $this->payment_method = new PaymentMethod( ( new PaymentMethodFixture() )->get_amex_payment_method_fixture() );
@@ -86,9 +102,10 @@ class Test_PaymentComponentService extends WP_UnitTestCase {
      * @return void
      */
     public function tear_down() {
-        if ( function_exists( 'WC' ) && $this->did_set_wc_customer ) {
+        if ( function_exists( 'WC' ) ) {
+            WC()->countries = $this->original_wc_countries;
             WC()->customer = $this->original_wc_customer;
-            $this->did_set_wc_customer = false;
+            WC()->cart = $this->original_wc_cart;
         }
 
         parent::tear_down();
@@ -108,6 +125,7 @@ class Test_PaymentComponentService extends WP_UnitTestCase {
         $this->assertIsArray( $payment_component_arguments['orderData']['customer'] );
         $this->assertArrayHasKey( 'locale', $payment_component_arguments['orderData']['customer'] );
         $this->assertArrayHasKey( 'country', $payment_component_arguments['orderData']['customer'] );
+        $this->assertEquals( 'BE', $payment_component_arguments['orderData']['customer']['country'] );
         $this->assertArrayHasKey( 'payment_options', $payment_component_arguments['orderData'] );
         $this->assertIsArray( $payment_component_arguments['orderData']['payment_options'] );
         $this->assertArrayHasKey( 'settings', $payment_component_arguments['orderData']['payment_options']['template'] );
