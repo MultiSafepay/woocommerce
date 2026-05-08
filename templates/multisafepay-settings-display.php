@@ -5,7 +5,6 @@
     <h2 class="nav-tab-wrapper">
         <?php // phpcs:disable ?>
         <a href="<?php echo esc_url( admin_url( 'admin.php?page=multisafepay-settings&tab=general' ) ); ?>" class="nav-tab <?php if ( 'general' === $tab_active ) { ?> nav-tab-active <?php } ?>"><?php echo esc_html__( 'Account', 'multisafepay' ); ?></a>
-        <a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout' ) ); ?>" class="nav-tab"><?php echo esc_html__( 'Payment Methods', 'multisafepay' ); ?></a>
         <a href="<?php echo esc_url( admin_url( 'admin.php?page=multisafepay-settings&tab=order_status' ) ); ?>" class="nav-tab <?php if ( 'order_status' === $tab_active ) { ?> nav-tab-active<?php } ?>"><?php echo esc_html__( 'Order Status', 'multisafepay' ); ?></a>
         <a href="<?php echo esc_url( admin_url( 'admin.php?page=multisafepay-settings&tab=options' ) ); ?>" class="nav-tab <?php if ( 'options' === $tab_active ) { ?> nav-tab-active<?php } ?>"><?php echo esc_html__( 'Options', 'multisafepay' ); ?></a>
         <a href="<?php echo esc_url( admin_url( 'admin.php?page=multisafepay-settings&tab=logs' ) ); ?>" class="nav-tab <?php if ( 'logs' === $tab_active ) { ?> nav-tab-active<?php } ?>"><?php echo esc_html__( 'Logs', 'multisafepay' ); ?></a>
