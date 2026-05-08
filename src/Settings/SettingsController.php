@@ -48,7 +48,7 @@ class SettingsController {
      * @return void
      */
     public function enqueue_styles_and_scripts(): void {
-        if ( get_current_screen()->base === 'woocommerce_page_multisafepay-settings' ) {
+        if ( get_current_screen()->base === 'toplevel_page_multisafepay-settings' ) {
             wp_enqueue_style( 'multisafepay-admin-css', MULTISAFEPAY_PLUGIN_URL . '/assets/admin/css/multisafepay-admin.css', array(), MULTISAFEPAY_PLUGIN_VERSION, 'all' );
         }
         $sections = array( 'multisafepay_applepay', 'multisafepay_googlepay', 'multisafepay_bancontact' );
@@ -68,22 +68,73 @@ class SettingsController {
     }
 
     /**
-     * Register the common settings page in WooCommerce menu section.
+     * Register the top-level "MultiSafepay" admin menu and the Settings entry.
      *
-     * @see https://developer.wordpress.org/reference/functions/add_submenu_page/
+     * The parent menu slug is `multisafepay-settings` so the existing URL
+     * (admin.php?page=multisafepay-settings) keeps working without any
+     * redirect. Sibling plugins can attach their own
+     * sub-pages to this same parent via `add_submenu_page`.
+     *
+     * @see https://developer.wordpress.org/reference/functions/add_menu_page/
      *
      * @return void
      */
     public function register_common_settings_page(): void {
         $title = sprintf( __( 'MultiSafepay Settings v. %s', 'multisafepay' ), MULTISAFEPAY_PLUGIN_VERSION ); // phpcs:ignore WordPress.WP.I18n.MissingTranslatorsComment
-        add_submenu_page(
-            'woocommerce',
+
+        add_menu_page(
             esc_html( $title ),
-            __( 'MultiSafepay Settings', 'multisafepay' ),
+            __( 'MultiSafepay', 'multisafepay' ),
+            'manage_woocommerce',
+            'multisafepay-settings',
+            array( $this, 'display_multisafepay_settings' ),
+            $this->get_menu_icon(),
+            57
+        );
+
+        // Override the auto-generated first submenu label ("MultiSafepay") with "Settings".
+        add_submenu_page(
+            'multisafepay-settings',
+            esc_html( $title ),
+            __( 'Settings', 'multisafepay' ),
             'manage_woocommerce',
             'multisafepay-settings',
             array( $this, 'display_multisafepay_settings' )
         );
+    }
+
+    /**
+     * Resolve the icon shown next to the top-level "MultiSafepay" admin menu.
+     *
+     * Returns a base64-encoded data URI of the SVG file if it exists, allowing
+     * WordPress to apply its automatic admin-theme color filters. Falls back to
+     * a Dashicon if the file is missing.
+     *
+     * The result is cached in a static variable to avoid repeated filesystem reads
+     * and base64 encoding on every admin request.
+     *
+     * @return string
+     */
+    private function get_menu_icon(): string {
+        static $cached_icon = null;
+
+        if ( null !== $cached_icon ) {
+            return $cached_icon;
+        }
+
+        $svg_path = MULTISAFEPAY_PLUGIN_DIR_PATH . 'assets/admin/img/multisafepay-menu-icon.svg';
+
+        if ( is_readable( $svg_path ) ) {
+            $svg = file_get_contents( $svg_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+            if ( ! empty( $svg ) ) {
+                // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- Used for SVG data URI, not for obfuscation.
+                $cached_icon = 'data:image/svg+xml;base64,' . base64_encode( $svg );
+                return $cached_icon;
+            }
+        }
+
+        $cached_icon = 'dashicons-cart';
+        return $cached_icon;
     }
 
     /**
@@ -198,7 +249,7 @@ class SettingsController {
      * @return  array
      */
     public function set_wc_screen_options_in_common_settings_page( array $screen ): array {
-        $screen[] = 'woocommerce_page_multisafepay-settings';
+        $screen[] = 'toplevel_page_multisafepay-settings';
         return $screen;
     }
 
