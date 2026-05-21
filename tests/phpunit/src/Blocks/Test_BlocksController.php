@@ -20,6 +20,15 @@ class Test_BlocksController extends WP_UnitTestCase {
      */
     private function set_fake_current_screen(): void
     {
+        if ( class_exists( 'WP_Screen' ) ) {
+            $screen = WP_Screen::get( 'post' );
+            $screen->is_block_editor( true );
+
+            $GLOBALS['current_screen'] = $screen;
+
+            return;
+        }
+
         $screen = new class(true) {
             /** @var bool */
             private $is_block_editor;
