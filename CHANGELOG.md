@@ -5,6 +5,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [6.13.0] - 2026-05-21
+
+### Added
+- PLGWOOS-998: Add support for Payment Components in WooCommerce Checkout Blocks
+
+### Fixed
+- PLGWOOS-1040: Fix TypeError when using third party EU VAT module
+
+### Changed
+- DAVAMS-984: Assign Apple Pay and Google Pay as payment method, instead of using the card brand name as payment method, to avoid confusion in the order details and system report
+- PLGWOOS-1039: Refactor remaining Payment Methods filters into dedicated classes
+- PLGWOOS-1047: Remove redundant shortcut to WooCommerce payment methods page
+- PLGWOOS-1046: Refactor submenu into standalone admin menu
+
 
 ## [6.12.0] - 2026-03-11
 

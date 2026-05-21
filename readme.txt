@@ -2,9 +2,9 @@
 Contributors: multisafepayplugin
 Tags: multisafepay, payment gateway, credit cards, ideal, bnpl
 Requires at least: 6.0
-Tested up to: 6.9.3
+Tested up to: 7.0.0
 Requires PHP: 7.3
-Stable tag: 6.12.0
+Stable tag: 6.13.0
 License: GPL-3.0-or-later
 
 MultiSafepay offers the most comprehensive payment solutions. Easily integrate the payment solutions of MultiSafepay into your webshop.
@@ -141,6 +141,20 @@ You can also refund from your [MultiSafepay Control](https://merchant.multisafep
 9. Embedded Credit Card form using MultiSafepay Payment Component
 
 == Changelog ==
+
+= Release Notes - MultiSafepay 6.13.0 (May 21st, 2026) =
+
+### Added
++ PLGWOOS-998: Add support for Payment Components in WooCommerce Checkout Blocks
+
+### Fixed
++ PLGWOOS-1040: Fix TypeError when using third party EU VAT module
+
+### Changed
++ DAVAMS-984: Assign Apple Pay and Google Pay as payment method, instead of using the card brand name as payment method, to avoid confusion in the order details and system report
++ PLGWOOS-1039: Refactor remaining Payment Methods filters into dedicated classes
++ PLGWOOS-1047: Remove redundant shortcut to WooCommerce payment methods page
++ PLGWOOS-1046: Refactor submenu into standalone admin menu
 
 = Release Notes - MultiSafepay 6.12.0 (Mar 11th, 2026) =
 
