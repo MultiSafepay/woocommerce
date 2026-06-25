@@ -27,16 +27,30 @@ class TaxesFixture {
     private $tax_class_name;
 
     /**
+     * @var int
+     */
+    private $tax_rate_priority;
+
+    /**
+     * @var bool
+     */
+    private $tax_rate_compound;
+
+    /**
      * TaxesFixture constructor.
      *
      * @param string $tax_rate_name
      * @param float $tax_rate
      * @param string $tax_class_name
+     * @param int $tax_rate_priority
+     * @param bool $tax_rate_compound
      */
-    public function __construct(  string $tax_rate_name, float $tax_rate, string $tax_class_name ) {
-        $this->tax_rate         = $tax_rate_name;
-        $this->tax_rate         = $tax_rate;
-        $this->tax_class_name   = $tax_class_name;
+    public function __construct(  string $tax_rate_name, float $tax_rate, string $tax_class_name, int $tax_rate_priority = 1, bool $tax_rate_compound = false ) {
+        $this->tax_rate_name     = $tax_rate_name;
+        $this->tax_rate          = $tax_rate;
+        $this->tax_class_name    = $tax_class_name;
+        $this->tax_rate_priority = $tax_rate_priority;
+        $this->tax_rate_compound = $tax_rate_compound;
         add_filter('woocommerce_get_tax_location', function($location, $tax_class, $customer) { return array( 'NL', '', '1033 SC', 'Amsterdam' ); }, 10, 3);
     }
 
@@ -52,8 +66,8 @@ class TaxesFixture {
             'tax_rate_state'    => '*',
             'tax_rate'          => $this->tax_rate,
             'tax_rate_name'     => $this->tax_rate_name,
-            'tax_rate_priority' => 1,
-            'tax_rate_compound' => 0,
+            'tax_rate_priority' => $this->tax_rate_priority,
+            'tax_rate_compound' => $this->tax_rate_compound ? 1 : 0,
             'tax_rate_shipping' => 1,
             'tax_rate_order'    => 0,
             'tax_rate_class'    => sanitize_title($this->tax_class_name)

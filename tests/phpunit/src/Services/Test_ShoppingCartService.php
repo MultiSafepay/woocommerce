@@ -12,7 +12,11 @@ use MultiSafepay\Api\Transactions\OrderRequest\Arguments\ShoppingCart\ShippingIt
 class Test_ShoppingCartService extends WP_UnitTestCase {
 
     public function set_up() {
+        parent::set_up();
         update_option( 'woocommerce_calc_taxes', 'yes');
+        if ( null === WC()->countries ) {
+            WC()->countries = new WC_Countries();
+        }
     }
 
     /**
@@ -340,8 +344,49 @@ class Test_ShoppingCartService extends WP_UnitTestCase {
         $this->assertEquals( '', $product_fee['weight']['value'] );
     }
 
+    /**
+     * @covers \MultiSafepay\WooCommerce\Services\ShoppingCartService::create_shopping_cart
+     */
+    public function test_create_shopping_cart_handles_free_product_with_multiple_tax_rates() {
+        $product_id          = 11;
+        $product_name        = 'Free taxable product';
+        $product_price       = 0.00;
+        $product_tax_rate    = 0;
+        $product_quantity    = 1;
+        $shipping_total      = 0;
+        $shipping_tax_rate   = 0;
+        $tax_class_name      = 'Tax Class Name';
+        $tax_class_sanitized = sanitize_title( $tax_class_name );
+
+        // Set multiple taxes for the same tax class.
+        $tax_fixture = new TaxesFixture( 'Tax Rate Name 21', 21, $tax_class_name );
+        $tax_fixture->register_tax_rate();
+        $tax_fixture_2 = new TaxesFixture( 'Tax Rate Name 10', 10, $tax_class_name, 2, true );
+        $tax_fixture_2->register_tax_rate();
+
+        $wc_order = (new WC_Order_Fixture( $shipping_total, $shipping_tax_rate ))->get_wc_order_mock();
+
+        // Set Products.
+        $wc_order_item_product = (new WC_Order_Item_Product_Fixture( $product_id, $product_name, $product_price, $product_quantity, $product_tax_rate, 0, $tax_class_sanitized ))->get_wc_order_item_product_mock( $wc_order );
+
+        // Consecutive calls for WC_Order->get_items()
+        $wc_order->method( 'get_items' )->withConsecutive( array('line_item'), array('shipping'), array('fee'), array('coupon') )
+                 ->willReturnOnConsecutiveCalls( array( $wc_order_item_product ), array(), array(), array() );
+
+        $shopping_cart_service = new ShoppingCartService();
+        $shopping_cart = $shopping_cart_service->create_shopping_cart($wc_order, 'EUR');
+        $output = $shopping_cart->getData();
+
+        $product_item = $output['items'][0];
+
+        $this->assertEquals( 'Free taxable product', $product_item['name'] );
+        $this->assertEquals( '0.00', $product_item['unit_price'] );
+        $this->assertEquals( '33.1', $product_item['tax_table_selector'] );
+    }
+
     public function tear_down() {
         TaxesFixture::delete_tax_classes();
+        parent::tear_down();
     }
 
 }

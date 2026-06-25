@@ -8,6 +8,7 @@ use MultiSafepay\Api\Transactions\OrderRequest\Arguments\ShoppingCart\ShippingIt
 use MultiSafepay\Exception\InvalidArgumentException;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
+use MultiSafepay\WooCommerce\Utils\TaxUtil;
 use WC_Cart;
 use WC_Coupon;
 use WC_Tax;
@@ -145,9 +146,13 @@ class QrShoppingCartService {
                 $tax_rate = $tax['rate'];
                 break;
             default:
-                $price_including_tax = wc_get_price_including_tax( $product );
-                $price_excluding_tax = wc_get_price_excluding_tax( $product );
-                $tax_rate            = ( ( $price_including_tax / $price_excluding_tax ) - 1 ) * 100;
+                $price_including_tax = (float) wc_get_price_including_tax( $product );
+                $price_excluding_tax = (float) wc_get_price_excluding_tax( $product );
+                if ( 0.00 === $price_excluding_tax ) {
+                    $tax_rate = TaxUtil::get_effective_tax_rate( $tax_rates );
+                    break;
+                }
+                $tax_rate = ( ( $price_including_tax / $price_excluding_tax ) - 1 ) * 100;
                 break;
         }
 

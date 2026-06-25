@@ -9,6 +9,7 @@ use MultiSafepay\Exception\InvalidArgumentException;
 use MultiSafepay\WooCommerce\Utils\Hpos;
 use MultiSafepay\WooCommerce\Utils\Logger;
 use MultiSafepay\WooCommerce\Utils\MoneyUtil;
+use MultiSafepay\WooCommerce\Utils\TaxUtil;
 use WC_Order;
 use WC_Order_Item_Fee;
 use WC_Order_Item_Product;
@@ -151,7 +152,13 @@ class ShoppingCartService {
                 $tax_rate = $tax['rate'];
                 break;
             default:
-                $tax_rate = ( ( wc_get_price_including_tax( $item->get_product() ) / wc_get_price_excluding_tax( $item->get_product() ) ) - 1 ) * 100;
+                $price_excluding_tax = (float) wc_get_price_excluding_tax( $item->get_product() );
+                if ( 0.00 === $price_excluding_tax ) {
+                    $tax_rate = TaxUtil::get_effective_tax_rate( $tax_rates );
+                    break;
+                }
+                $price_including_tax = (float) wc_get_price_including_tax( $item->get_product() );
+                $tax_rate            = ( ( $price_including_tax / $price_excluding_tax ) - 1 ) * 100;
                 break;
         }
 
