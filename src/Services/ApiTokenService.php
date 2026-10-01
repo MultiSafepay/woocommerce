@@ -40,9 +40,8 @@ class ApiTokenService {
     }
 
     /**
-     * Returns a MultiSafepay ApiToken
-     *
      * @return string
+     * @throws \MultiSafepay\Exception\InvalidDataInitializationException
      */
     public function get_api_token(): string {
         if ( null === $this->api_token_manager ) {

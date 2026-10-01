@@ -79,14 +79,14 @@
         <exclude-pattern>*/src/Settings/SettingsController.php</exclude-pattern>
     </rule>
 
-    <!-- Exclude BasePaymentMethod.php length limit -->
-    <rule ref="ObjectCalisthenics.Files.ClassTraitAndInterfaceLength.ObjectCalisthenics\Sniffs\Files\ClassTraitAndInterfaceLengthSniff">
-        <exclude-pattern>*/src/PaymentMethods/BasePaymentMethod.php</exclude-pattern>
-    </rule>
-
     <!-- Exclude multisafepay-google-pay.js -->
     <rule ref="PEAR.Functions.FunctionCallSignature.Indent">
         <exclude-pattern>*/assets/public/js/multisafepay-google-pay.js</exclude-pattern>
+    </rule>
+
+    <!-- Generic scope indentation handles destructured JavaScript arguments. -->
+    <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.Indent">
+        <exclude-pattern>*/assets/public/js/multisafepay-blocks/src/lib/dom/retry.js</exclude-pattern>
     </rule>
 
     <!-- -->
@@ -117,52 +117,13 @@
         </properties>
     </rule>
 
-    <!-- No "else" -->
-    <rule ref="ObjectCalisthenics.ControlStructures.NoElse">
-        <exclude-pattern>*/src/Utils/QrCheckoutManager.php</exclude-pattern>
-    </rule>
-
-    <!-- Only 3 indentation levels per function/method -->
-    <rule ref="ObjectCalisthenics.Metrics.MaxNestingLevel">
+    <!-- Register WooCommerce capabilities that are not part of WordPress core. -->
+    <rule ref="WordPress.WP.Capabilities">
         <properties>
-            <property name="maxNestingLevel" value="3"/>
+            <property name="custom_capabilities" type="array">
+                <element value="manage_woocommerce"/>
+            </property>
         </properties>
-        <exclude-pattern>*/src/Utils/QrCheckoutManager.php</exclude-pattern>
-        <exclude-pattern>*/src/PaymentMethods/Base/BasePaymentMethodBlocks.php</exclude-pattern>
-        <exclude-pattern>*/src/Services/PaymentMethodService.php</exclude-pattern>
-    </rule>
-
-    <!-- Minimal length for variable names -->
-    <rule ref="ObjectCalisthenics.NamingConventions.ElementNameMinimalLength">
-        <properties>
-            <property name="minLength" value="3"/>
-            <property name="allowedShortNames" type="array" value="wp"/>
-        </properties>
-    </rule>
-
-    <!-- The following ensure small classes -->
-    <rule ref="ObjectCalisthenics.Files.ClassTraitAndInterfaceLength">
-        <properties>
-            <property name="maxLength" value="550"/>
-        </properties>
-        <exclude-pattern>*/src/PaymentMethods/Base/BasePaymentMethod.php</exclude-pattern>
-        <exclude-pattern>*/src/Settings/SystemReport.php</exclude-pattern>
-    </rule>
-    <rule ref="ObjectCalisthenics.Files.FunctionLength">
-        <properties>
-            <property name="maxLength" value="500"/>
-        </properties>
-    </rule>
-    <rule ref="ObjectCalisthenics.Metrics.PropertyPerClassLimit">
-        <properties>
-            <property name="maxCount" value="25"/>
-        </properties>
-    </rule>
-    <rule ref="ObjectCalisthenics.Metrics.MethodPerClassLimit">
-        <properties>
-            <property name="maxCount" value="30"/>
-        </properties>
-        <exclude-pattern>*/src/PaymentMethods/Base/BasePaymentMethod.php</exclude-pattern>
     </rule>
 
     <!-- Detect unused imports -->

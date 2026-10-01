@@ -19,13 +19,13 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-(function($) {
+(function ($) {
     'use strict';
     $(
-        function() {
+        function () {
             check_if_google_pay_is_available();
             $( document ).ajaxComplete(
-                function( e, xhr, settings ) {
+                function ( e, xhr, settings ) {
                     if ( settings.url.indexOf( '?wc-ajax=update_order_review' ) !== -1 ) {
                         check_if_google_pay_is_available();
                     }

@@ -366,12 +366,12 @@ class QrCheckoutManager {
      */
     public function get_shipping_fields( array $billing_required_fields, array $billing_extra_fields ): array {
         return array_map(
-            static function( $field ) {
+            static function ( $field ) {
                 return str_replace( 'billing_', 'shipping_', $field );
             },
             array_filter(
                 array_merge( $billing_required_fields, $billing_extra_fields ),
-                static function( $field ) {
+                static function ( $field ) {
                     // Exclude email and phone fields to be created as shipping fields.
                     return ! in_array( $field, array( 'billing_email', 'billing_phone' ), true );
                 }

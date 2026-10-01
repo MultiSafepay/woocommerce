@@ -23,7 +23,7 @@ class DependencyChecker {
     public function check(): void {
         $missing_plugins = $this->get_missing_plugins_list();
         if ( ! empty( $missing_plugins ) ) {
-            throw new MissingDependencyException( $missing_plugins );
+            throw new MissingDependencyException( $missing_plugins ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Plugin names are structured exception data, not output.
         }
     }
 

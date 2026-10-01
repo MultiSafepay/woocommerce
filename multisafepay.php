@@ -1,5 +1,4 @@
-<?php declare(strict_types=1);
-
+<?php
 /**
  * Plugin Name:             MultiSafepay
  * Plugin URI:              https://docs.multisafepay.com/docs/woocommerce
@@ -17,7 +16,11 @@
  * Requires PHP:            7.3
  * Text Domain:             multisafepay
  * Domain Path:             /languages
+ *
+ * @package MultiSafepay
  */
+
+declare(strict_types=1);
 
 if ( ! defined( 'ABSPATH' ) ) {
     die();

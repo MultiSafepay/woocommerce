@@ -53,6 +53,4 @@ class BaseBrandedPaymentMethod extends BasePaymentMethod {
     public function get_payment_method_id(): string {
         return PaymentMethodService::get_legacy_woocommerce_payment_gateway_ids( $this->brand['id'] );
     }
-
-
 }

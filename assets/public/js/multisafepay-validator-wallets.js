@@ -21,7 +21,7 @@
 
 // Check if the debugDirect function is available, if not define it
 if ( typeof debugDirect !== 'function' ) {
-    window.debugDirect = function( debugMessage, debugEnabled, loggingType = 'error' ) {
+    window.debugDirect = function ( debugMessage, debugEnabled, loggingType = 'error' ) {
         const allowedTypeArray = ['log', 'info', 'warn', 'error', 'debug'];
 
         if ( ! allowedTypeArray.includes( loggingType ) ) {

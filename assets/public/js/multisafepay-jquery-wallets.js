@@ -38,10 +38,10 @@
              */
             function select2Validation() {
                 $( 'select' ).each(
-                    function() {
+                    function () {
                         $( this ).on(
                             'select2:select',
-                            function() {
+                            function () {
                                 debugDirect( 'Select2 action initialized for field: ' + this.name, debugStatus, 'log' );
 
                                 const wrapper          = $( this ).closest( '.validate-required' );
@@ -165,7 +165,7 @@
              * and enable the Google Pay and Apple Pay buttons
              */
             $( document ).ajaxComplete(
-                function( e, xhr, settings ) {
+                function ( e, xhr, settings ) {
                     if ( settings.url.indexOf( '?wc-ajax=update_order_review' ) !== -1 ) {
                         $( document ).one(
                             'update_checkout',

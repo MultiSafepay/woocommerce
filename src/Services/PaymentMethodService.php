@@ -133,7 +133,7 @@ class PaymentMethodService {
      *
      * @return array
      */
-    public function get_woocommerce_payment_gateways() : array {
+    public function get_woocommerce_payment_gateways(): array {
         // Reuse the same in-memory gateway objects for all lookups in this request.
         if ( $this->woocommerce_payment_gateways_loaded ) {
             return $this->woocommerce_payment_gateways;
@@ -158,7 +158,7 @@ class PaymentMethodService {
      * @param array $woocommerce_payment_gateways
      * @return array
      */
-    public function create_woocommerce_payment_gateways( array $multisafepay_payment_method, array $woocommerce_payment_gateways ) : array {
+    public function create_woocommerce_payment_gateways( array $multisafepay_payment_method, array $woocommerce_payment_gateways ): array {
         $payment_method_id = self::get_legacy_woocommerce_payment_gateway_ids( $multisafepay_payment_method['id'] );
 
         try {
@@ -186,7 +186,7 @@ class PaymentMethodService {
      * @param PaymentMethod $payment_method
      * @return array
      */
-    public function create_branded_woocommerce_payment_gateways( array $multisafepay_payment_method, array $woocommerce_payment_gateways, PaymentMethod $payment_method ) : array {
+    public function create_branded_woocommerce_payment_gateways( array $multisafepay_payment_method, array $woocommerce_payment_gateways, PaymentMethod $payment_method ): array {
         foreach ( $multisafepay_payment_method['brands'] as $brand ) {
             if ( ! empty( $brand['allowed_countries'] ) && ! get_option( 'multisafepay_group_credit_cards', false ) ) {
                 $brand['id']                                       .= '_' . $multisafepay_payment_method['id'];

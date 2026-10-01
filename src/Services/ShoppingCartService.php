@@ -91,7 +91,6 @@ class ShoppingCartService {
         }
 
         return $shopping_cart;
-
     }
 
     /**

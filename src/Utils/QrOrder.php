@@ -36,5 +36,4 @@ class QrOrder {
     public function get_user_agent(): string {
         return sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ?? '' ) );
     }
-
 }

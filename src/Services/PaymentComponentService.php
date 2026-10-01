@@ -169,7 +169,7 @@ class PaymentComponentService {
         }
         $gateway_id                  = sanitize_key( $_POST['gateway_id'] ?? '' );
         $woocommerce_payment_gateway = $this->payment_method_service->get_woocommerce_payment_gateway_by_id( $gateway_id );
-        $validate_checkout_fields    = ( $woocommerce_payment_gateway->is_payment_component_enabled() && $woocommerce_payment_gateway->is_qr_enabled() || $woocommerce_payment_gateway->is_qr_only_enabled() );
+        $validate_checkout_fields    = ( ( $woocommerce_payment_gateway->is_payment_component_enabled() && $woocommerce_payment_gateway->is_qr_enabled() ) || $woocommerce_payment_gateway->is_qr_only_enabled() );
         $payment_component_arguments = $this->get_payment_component_arguments( $woocommerce_payment_gateway, $validate_checkout_fields );
         wp_send_json( $payment_component_arguments );
     }

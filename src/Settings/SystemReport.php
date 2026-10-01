@@ -614,5 +614,4 @@ class SystemReport {
         }
         return $plain_text_status_report;
     }
-
 }

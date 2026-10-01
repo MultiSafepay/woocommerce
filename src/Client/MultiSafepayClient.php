@@ -45,7 +45,7 @@ class MultiSafepayClient implements ClientInterface {
             }
         } catch ( Exception $exception ) {
             $this->logger->log_error( 'Error when process request via MultiSafepayClient: ' . $exception->getMessage() );
-            throw new Exception( $exception->getMessage() );
+            throw $exception;
         }
 
         $body     = wp_remote_retrieve_body( $response_data );

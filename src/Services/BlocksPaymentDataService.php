@@ -144,7 +144,7 @@ class BlocksPaymentDataService {
                     ', max allowed length ' . self::MAX_STORED_PAYMENT_DATA_VALUE_LENGTH
                 );
 
-                throw new Exception( __( 'We could not process your payment details. Please try again.', 'multisafepay' ) );
+                throw new Exception( esc_html__( 'We could not process your payment details. Please try again.', 'multisafepay' ) );
             }
 
             $filtered_payment_data[ $key ] = $value;

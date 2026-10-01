@@ -143,7 +143,7 @@
                         'gateway': this.config.gateway,
                         'form_data': $( FORM_SELECTOR ).serialize(),
                     },
-                    beforeSend: function() {
+                    beforeSend: function () {
                         $( this.payment_component_container_selector ).html( '' );
                         this.show_loader();
                     }.bind( this ),
@@ -226,10 +226,10 @@
                                 'payload': payload,
                                 'form_data': $( FORM_SELECTOR ).serialize(),
                             },
-                            success: function( response ) {
+                            success: function ( response ) {
                                 resolve( response );
                             }.bind( this ),
-                            error: function( error ) {
+                            error: function ( error ) {
                                 this.logger( 'Error receiving QR Data: ' + JSON.stringify( error, null, 2 ) );
                                 reject( error );
                             }.bind( this )
@@ -254,10 +254,10 @@
                                 'order_id': order_id,
                                 'qr_status': qr_status,
                             },
-                            success: function( response ) {
+                            success: function ( response ) {
                                 resolve( response );
                             }.bind( this ),
-                            error: function( error ) {
+                            error: function ( error ) {
                                 this.logger( 'Error on get_qr_order_redirect_url AJAX: ' + JSON.stringify( error, null, 2 ) );
                                 reject( error );
                             }.bind( this )
@@ -397,7 +397,7 @@
             const $form      = this.get_checkout_form();
             $.each(
                 errors.errors,
-                function( index, value ) {
+                function ( index, value ) {
                     $form.append(
                         '<input type="hidden" class="' + gateway_id + '_payment_component_errors" name="' + gateway_id + '_payment_component_errors[]" value="' + value.message + '" />'
                     );

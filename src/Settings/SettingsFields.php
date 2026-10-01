@@ -296,7 +296,7 @@ class SettingsFields {
                 'setting_type' => 'string',
                 'sort_order'   => $sort_order,
             );
-            $sort_order++;
+            ++$sort_order;
         }
 
         return array(

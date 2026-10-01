@@ -278,7 +278,11 @@ class PaymentMethodCallback {
         // Or if the custom initial order status of the gateway is different than the general one, and the MultiSafepay transaction status is initialized, and custom initial order status is different than the current WooCommerce order status
         if (
             $this->get_woocommerce_order_status() !== str_replace( 'wc-', '', get_option( 'multisafepay_' . $this->get_multisafepay_transaction_status() . '_status', $default_order_status[ $this->get_multisafepay_transaction_status() . '_status' ]['default'] ) ) ||
-            get_option( 'multisafepay_' . $this->get_multisafepay_transaction_status() . '_status', $default_order_status[ $this->get_multisafepay_transaction_status() . '_status' ]['default'] ) !== $initial_order_status && $this->get_multisafepay_transaction_status() === Transaction::INITIALIZED && $this->get_woocommerce_order_status() !== $initial_order_status
+            (
+                get_option( 'multisafepay_' . $this->get_multisafepay_transaction_status() . '_status', $default_order_status[ $this->get_multisafepay_transaction_status() . '_status' ]['default'] ) !== $initial_order_status &&
+                $this->get_multisafepay_transaction_status() === Transaction::INITIALIZED &&
+                $this->get_woocommerce_order_status() !== $initial_order_status
+            )
         ) {
             // If MultiSafepay transaction status is initialized, check if there is a custom initial order status for this payment method.
             if ( $this->get_multisafepay_transaction_status() === Transaction::INITIALIZED ) {

@@ -142,5 +142,4 @@ class SettingsFieldsDisplay {
 
         echo wp_kses( $html, EscapeUtil::get_allowed_html_tags() );
     }
-
 }

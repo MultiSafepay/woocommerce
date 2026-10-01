@@ -98,5 +98,4 @@ trait BaseRefunds {
 
         return false;
     }
-
 }
