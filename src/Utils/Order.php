@@ -50,10 +50,13 @@ class Order {
     public static function get_order_id_by_multisafepay_transaction_id_key( string $order_id ) {
         $orders = wc_get_orders(
             array(
-                'limit'      => 1,
-                'meta_key'   => 'multisafepay_transaction_id',
-                'meta_value' => $order_id,
-                'return'     => 'ids',
+                'limit'         => 1,
+                'meta_key'      => 'multisafepay_transaction_id',
+                'meta_value'    => $order_id,
+                'return'        => 'ids',
+                // The order is created by the webhook in another request while callers poll this method,
+                // so skip the query cache to avoid getting the previously cached empty result.
+                'cache_results' => false,
             )
         );
         return ! empty( $orders ) ? $orders[0] : false;
