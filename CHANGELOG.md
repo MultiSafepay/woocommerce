@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [6.13.1] - 2026-10-02
+
+### Fixed
+- PLGWOOS-1075: Payment with QR sometimes fails to redirect the user to thank you page
+- PLGWOOS-1073: Fix uncaught Exception in ApiTokenService, thanks to @FacundoSolis
+- PLGWOOS-1072: Fix division by zero when calculating tax rate for zero-price products
+
 ## [6.13.0] - 2026-05-21
 
 ### Added
